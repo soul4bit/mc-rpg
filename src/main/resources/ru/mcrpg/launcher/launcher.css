@@ -1,13 +1,17 @@
 .root {
     -fx-font-family: "Segoe UI";
-    -fx-base: #10141a;
+    -fx-base: #14171d;
+    -fx-accent: #ff6a3d;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 
 .app-root {
     -fx-background-color:
-        radial-gradient(center 18% 12%, radius 35%, rgba(255, 131, 84, 0.12), transparent),
-        radial-gradient(center 88% 10%, radius 28%, rgba(255, 255, 255, 0.05), transparent),
-        linear-gradient(to bottom right, #080b10 0%, #0f141a 36%, #161116 100%);
+        radial-gradient(center 18% 10%, radius 42%, rgba(255, 116, 64, 0.18), transparent),
+        radial-gradient(center 85% 16%, radius 34%, rgba(244, 177, 56, 0.08), transparent),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04), transparent 18%),
+        linear-gradient(to bottom, #14161b 0%, #101217 46%, #0b0d11 100%);
 }
 
 .shell {
@@ -24,386 +28,456 @@
     -fx-background-color: transparent;
 }
 
+.shell-scroll .scroll-bar:vertical,
+.shell-scroll .scroll-bar:horizontal,
+.settings-scroll .scroll-bar:vertical,
+.settings-scroll .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.shell-scroll .thumb,
+.settings-scroll .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.14);
+    -fx-background-radius: 999px;
+}
+
 .content-shell {
     -fx-background-color: transparent;
 }
 
+.main-flow {
+    -fx-alignment: top-center;
+}
+
+.quick-deck {
+    -fx-alignment: top-left;
+}
+
+.showcase-column {
+    -fx-min-width: 620px;
+}
+
+.activity-column {
+    -fx-max-width: 400px;
+}
+
 .surface-card {
     -fx-background-color:
-        linear-gradient(to bottom, rgba(28, 34, 42, 0.96), rgba(17, 20, 27, 0.98));
-    -fx-background-radius: 28px;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-radius: 28px;
-    -fx-padding: 20px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 34, 0.18, 0, 16);
-}
-
-.sidebar-rail {
-    -fx-background-color:
-        linear-gradient(to bottom, rgba(17, 21, 28, 0.98), rgba(9, 11, 16, 0.98));
-    -fx-background-radius: 32px;
-    -fx-border-color: rgba(255, 255, 255, 0.07);
-    -fx-border-radius: 32px;
-    -fx-padding: 22px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.36), 34, 0.2, 0, 16);
-}
-
-.sidebar-brand {
-    -fx-padding: 2px 0 0 0;
-}
-
-.sidebar-overline {
-    -fx-text-fill: #f2c45e;
-    -fx-font-size: 10px;
-    -fx-font-weight: 800;
-    -fx-letter-spacing: 1.1px;
-}
-
-.sidebar-title {
-    -fx-text-fill: #fff6f0;
-    -fx-font-size: 30px;
-    -fx-font-weight: 900;
-}
-
-.sidebar-copy {
-    -fx-text-fill: #8e98a7;
-    -fx-font-size: 12px;
-    -fx-line-spacing: 2px;
-}
-
-.sidebar-panel {
-    -fx-background-color: rgba(255, 255, 255, 0.035);
-    -fx-background-radius: 22px;
-    -fx-border-color: rgba(255, 255, 255, 0.06);
-    -fx-border-radius: 22px;
-    -fx-padding: 12px;
-}
-
-.sidebar-panel-title {
-    -fx-text-fill: #f1f5fa;
-    -fx-font-size: 13px;
-    -fx-font-weight: 800;
-}
-
-.rail-item,
-.rail-item-active {
-    -fx-background-radius: 18px;
-    -fx-border-radius: 18px;
-    -fx-padding: 12px 14px;
-}
-
-.rail-item {
-    -fx-background-color: rgba(255, 255, 255, 0.02);
-    -fx-border-color: transparent;
-}
-
-.rail-item-active {
-    -fx-background-color: linear-gradient(to right, rgba(255, 111, 73, 0.24), rgba(255, 111, 73, 0.08));
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-}
-
-.rail-item-title {
-    -fx-text-fill: #eef3f9;
-    -fx-font-size: 12px;
-    -fx-font-weight: 800;
-}
-
-.rail-item-copy {
-    -fx-text-fill: #8e97a4;
-    -fx-font-size: 11px;
-}
-
-.sidebar-metric {
-    -fx-background-color: rgba(0, 0, 0, 0.15);
-    -fx-background-radius: 16px;
+        rgba(255, 255, 255, 0.06),
+        linear-gradient(to bottom, rgba(28, 32, 39, 0.96), rgba(16, 18, 24, 0.98));
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 26px, 25px;
     -fx-border-color: rgba(255, 255, 255, 0.05);
-    -fx-border-radius: 16px;
-    -fx-padding: 10px 12px;
-}
-
-.sidebar-metric-title {
-    -fx-text-fill: #f2c45e;
-    -fx-font-size: 10px;
-    -fx-font-weight: 700;
-}
-
-.sidebar-metric-value {
-    -fx-text-fill: #eff4fa;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-}
-
-.sidebar-footer .separator *.line {
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-}
-
-.sidebar-footer-title {
-    -fx-text-fill: #e8edf5;
-    -fx-font-size: 12px;
-    -fx-font-weight: 700;
-}
-
-.sidebar-footer-copy {
-    -fx-text-fill: #808897;
-    -fx-font-size: 11px;
+    -fx-border-radius: 26px;
+    -fx-border-width: 1px;
+    -fx-padding: 22px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.34), 24, 0.18, 0, 12);
 }
 
 .masthead-bar {
+    -fx-background-color:
+        rgba(255, 255, 255, 0.08),
+        linear-gradient(to bottom, rgba(24, 27, 34, 0.90), rgba(18, 20, 26, 0.94));
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 24px, 23px;
     -fx-padding: 20px 22px;
 }
 
 .masthead-overline {
-    -fx-text-fill: #f2c45e;
-    -fx-font-size: 10px;
-    -fx-font-weight: 800;
+    -fx-text-fill: #ff9a55;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1.4px;
 }
 
 .masthead-title {
-    -fx-text-fill: #f7fafc;
-    -fx-font-size: 32px;
-    -fx-font-weight: 900;
+    -fx-text-fill: #f8fafd;
+    -fx-font-family: "Bahnschrift SemiBold";
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
 }
 
 .masthead-subtitle {
-    -fx-text-fill: #8f99a8;
-    -fx-font-size: 13px;
+    -fx-text-fill: #aab2bf;
+    -fx-font-size: 12px;
 }
 
 .top-chip {
-    -fx-background-color: rgba(255, 255, 255, 0.035);
-    -fx-background-radius: 18px;
-    -fx-border-color: rgba(255, 255, 255, 0.07);
-    -fx-border-radius: 18px;
-    -fx-padding: 11px 14px;
-    -fx-min-width: 150px;
+    -fx-background-color:
+        rgba(255, 255, 255, 0.08),
+        linear-gradient(to bottom, rgba(36, 41, 49, 0.94), rgba(22, 25, 31, 0.98));
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 18px, 17px;
+    -fx-padding: 10px 14px;
+    -fx-min-width: 164px;
 }
 
 .chip-title {
-    -fx-text-fill: #f2c45e;
+    -fx-text-fill: #8f99a7;
     -fx-font-size: 10px;
     -fx-font-weight: 700;
 }
 
 .chip-value {
-    -fx-text-fill: #eef3f9;
+    -fx-text-fill: #f8fafd;
     -fx-font-size: 14px;
-    -fx-font-weight: 800;
+    -fx-font-weight: 700;
 }
 
 .hero-card {
     -fx-background-color:
-        linear-gradient(from 0% 0% to 100% 100%, rgba(255, 255, 255, 0.06), transparent),
-        radial-gradient(center 82% 18%, radius 38%, rgba(255, 162, 120, 0.22), transparent),
-        linear-gradient(to bottom right, #271116 0%, #541719 33%, #8e2c24 68%, #d55d35 100%);
-    -fx-background-radius: 34px;
-    -fx-border-color: rgba(255, 255, 255, 0.09);
-    -fx-border-radius: 34px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.38), 48, 0.2, 0, 24);
+        rgba(255, 255, 255, 0.08),
+        linear-gradient(from 0% 0% to 100% 100%, rgba(88, 23, 22, 0.92), rgba(28, 22, 28, 0.96)),
+        linear-gradient(to bottom, rgba(255, 118, 67, 0.30), rgba(255, 118, 67, 0.00) 42%);
+    -fx-background-insets: 0, 1, 1;
+    -fx-background-radius: 30px, 29px, 29px;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-radius: 30px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.42), 32, 0.18, 0, 14);
 }
 
 .hero-accents {
     -fx-background-color:
-        linear-gradient(to top, rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.04)),
-        linear-gradient(from 76% 8% to 94% 88%, rgba(255, 255, 255, 0.08), transparent);
-    -fx-background-radius: 34px;
+        linear-gradient(to right,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.08) 3%,
+            transparent 3%,
+            transparent 36%,
+            rgba(255, 255, 255, 0.04) 36%,
+            rgba(255, 255, 255, 0.04) 37%,
+            transparent 37%,
+            transparent 100%
+        ),
+        radial-gradient(center 78% 18%, radius 34%, rgba(255, 145, 92, 0.28), transparent),
+        linear-gradient(to top, rgba(9, 12, 16, 0.62), rgba(9, 12, 16, 0.04));
+    -fx-background-radius: 29px;
 }
 
 .hero-title {
-    -fx-text-fill: #fff7f1;
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Bahnschrift SemiBold";
     -fx-font-size: 46px;
-    -fx-font-weight: 900;
+    -fx-font-weight: 700;
 }
 
 .hero-copy {
-    -fx-text-fill: rgba(255, 242, 234, 0.92);
-    -fx-font-size: 15px;
-    -fx-max-width: 560px;
-    -fx-line-spacing: 3px;
+    -fx-text-fill: #f4d8d0;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 1px;
+    -fx-max-width: 540px;
 }
 
 .hero-badge {
-    -fx-text-fill: #fff8f3;
-    -fx-font-size: 11px;
-    -fx-font-weight: 800;
-    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-color: rgba(255, 255, 255, 0.14);
     -fx-background-radius: 999px;
-    -fx-border-color: rgba(255, 255, 255, 0.12);
-    -fx-border-radius: 999px;
+    -fx-text-fill: #fcfeff;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
     -fx-padding: 7px 12px;
 }
 
 .gold-badge {
-    -fx-background-color: rgba(242, 196, 94, 0.18);
+    -fx-background-color: rgba(255, 171, 72, 0.20);
 }
 
 .accent-badge {
-    -fx-background-color: rgba(255, 105, 71, 0.18);
+    -fx-background-color: rgba(255, 106, 61, 0.22);
 }
 
 .green-badge {
-    -fx-background-color: rgba(101, 195, 63, 0.18);
+    -fx-background-color: rgba(89, 194, 130, 0.18);
 }
 
 .status-badge {
     -fx-background-color: rgba(255, 255, 255, 0.12);
-    -fx-text-fill: #fff6f0;
+    -fx-text-fill: #f7fbff;
+    -fx-padding: 8px 12px;
+}
+
+.hero-stats-row {
+    -fx-alignment: center-left;
 }
 
 .hero-stat {
-    -fx-background-color: rgba(0, 0, 0, 0.16);
-    -fx-background-radius: 18px;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-radius: 18px;
+    -fx-background-color:
+        rgba(255, 255, 255, 0.10),
+        rgba(16, 18, 24, 0.56);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 18px, 17px;
     -fx-padding: 14px 16px;
-    -fx-min-width: 170px;
+    -fx-min-width: 154px;
 }
 
 .stat-title {
-    -fx-text-fill: rgba(255, 231, 221, 0.82);
+    -fx-text-fill: #f6a165;
     -fx-font-size: 10px;
     -fx-font-weight: 700;
 }
 
 .stat-value {
-    -fx-text-fill: #fff8f2;
-    -fx-font-size: 15px;
-    -fx-font-weight: 800;
-}
-
-.hero-footnote {
-    -fx-text-fill: rgba(255, 239, 230, 0.88);
-    -fx-font-size: 13px;
-}
-
-.hero-action-panel {
-    -fx-background-color: rgba(11, 14, 20, 0.22);
-    -fx-background-radius: 24px;
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-border-radius: 24px;
-    -fx-padding: 18px;
-}
-
-.hero-action-overline {
-    -fx-text-fill: rgba(255, 229, 215, 0.72);
-    -fx-font-size: 10px;
-    -fx-font-weight: 800;
-}
-
-.hero-action-title {
-    -fx-text-fill: #fff8f2;
-    -fx-font-size: 23px;
-    -fx-font-weight: 900;
-}
-
-.hero-action-copy {
-    -fx-text-fill: rgba(255, 235, 226, 0.82);
-    -fx-font-size: 12px;
-    -fx-line-spacing: 2px;
-}
-
-.card-eyebrow {
-    -fx-text-fill: #f2c45e;
-    -fx-font-size: 10px;
-    -fx-font-weight: 800;
-}
-
-.card-title {
-    -fx-text-fill: #f4f7fb;
-    -fx-font-size: 24px;
-    -fx-font-weight: 900;
-}
-
-.card-description {
-    -fx-text-fill: #97a2b0;
-    -fx-font-size: 13px;
-    -fx-line-spacing: 2px;
-}
-
-.wide-card {
-    -fx-min-width: 420px;
-}
-
-.field-label {
-    -fx-text-fill: #edf2f8;
+    -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
     -fx-font-weight: 700;
 }
 
-.field-hint {
-    -fx-text-fill: #8f9baa;
+.hero-footnote {
+    -fx-text-fill: rgba(255, 241, 236, 0.76);
     -fx-font-size: 12px;
+}
+
+.hero-action-panel {
+    -fx-background-color:
+        rgba(255, 255, 255, 0.10),
+        linear-gradient(to bottom, rgba(19, 22, 28, 0.92), rgba(15, 17, 22, 0.98));
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 24px, 23px;
+    -fx-padding: 18px;
+    -fx-pref-width: 282px;
+}
+
+.hero-action-overline {
+    -fx-text-fill: #ff9a55;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1.3px;
+}
+
+.hero-action-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Bahnschrift SemiBold";
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+}
+
+.hero-action-copy {
+    -fx-text-fill: #b1bac7;
+    -fx-font-size: 12px;
+    -fx-line-spacing: 1px;
+}
+
+.card-eyebrow {
+    -fx-text-fill: #ff9a55;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1.4px;
+}
+
+.card-title {
+    -fx-text-fill: #f9fbff;
+    -fx-font-family: "Bahnschrift SemiBold";
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+}
+
+.card-description {
+    -fx-text-fill: #9ea7b4;
+    -fx-font-size: 12px;
+}
+
+.wide-card {
+    -fx-min-width: 320px;
+}
+
+.guide-card {
+    -fx-max-width: 360px;
+}
+
+.showcase-card {
+    -fx-min-width: 460px;
+}
+
+.play-panel-card {
+    -fx-background-color:
+        rgba(255, 255, 255, 0.07),
+        linear-gradient(to bottom, rgba(21, 25, 31, 0.98), rgba(12, 15, 20, 0.98));
+}
+
+.field-label {
+    -fx-text-fill: #f1f5fb;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+
+.field-hint {
+    -fx-text-fill: #8c96a4;
+    -fx-font-size: 11px;
+}
+
+.inline-field-row {
+    -fx-alignment: center-left;
 }
 
 .launcher-input,
 .launcher-textarea,
 .log-area {
-    -fx-background-color: rgba(255, 255, 255, 0.05);
-    -fx-control-inner-background: rgba(255, 255, 255, 0.03);
-    -fx-background-radius: 16px;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-background-color:
+        rgba(255, 255, 255, 0.08),
+        linear-gradient(to bottom, rgba(19, 21, 28, 0.98), rgba(12, 14, 19, 0.98));
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 16px, 15px;
+    -fx-border-color: rgba(255, 255, 255, 0.06);
     -fx-border-radius: 16px;
-    -fx-text-fill: #f2f6fb;
-    -fx-prompt-text-fill: #758090;
-    -fx-highlight-fill: #ff6f49;
-    -fx-highlight-text-fill: white;
+    -fx-border-width: 1px;
+    -fx-text-fill: #f6f9fc;
+    -fx-prompt-text-fill: #6f7987;
+    -fx-highlight-fill: #ff6a3d;
+    -fx-highlight-text-fill: #ffffff;
     -fx-padding: 12px 14px;
 }
 
 .launcher-input:focused,
 .launcher-textarea:focused,
 .log-area:focused {
-    -fx-border-color: rgba(255, 111, 73, 0.55);
+    -fx-background-color:
+        rgba(255, 127, 84, 0.22),
+        linear-gradient(to bottom, rgba(19, 21, 28, 0.98), rgba(12, 14, 19, 0.98));
+    -fx-border-color: rgba(255, 127, 84, 0.46);
 }
 
 .launcher-textarea .content,
 .log-area .content {
-    -fx-background-color: rgba(255, 255, 255, 0.02);
-    -fx-background-radius: 16px;
+    -fx-background-color: #12151b;
+    -fx-background-radius: 15px;
 }
 
 .launcher-check {
-    -fx-text-fill: #ecf2f8;
-    -fx-font-size: 13px;
+    -fx-text-fill: #e8edf5;
+    -fx-font-size: 12px;
 }
 
 .launcher-check .box {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-border-color: rgba(255, 255, 255, 0.18);
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
+    -fx-background-color:
+        rgba(255, 255, 255, 0.10),
+        rgba(13, 15, 19, 0.96);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 8px, 7px;
+    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-border-radius: 8px;
+}
+
+.launcher-check:selected .box {
+    -fx-background-color:
+        rgba(255, 106, 61, 0.24),
+        rgba(13, 15, 19, 0.96);
 }
 
 .launcher-check:selected .mark {
-    -fx-background-color: #ff6f49;
+    -fx-background-color: #ff8d4d;
 }
 
-.note-box {
-    -fx-background-color: rgba(255, 255, 255, 0.03);
-    -fx-background-radius: 18px;
-    -fx-border-color: rgba(255, 255, 255, 0.06);
-    -fx-border-radius: 18px;
-    -fx-padding: 14px 16px;
+.note-box,
+.checklist-box {
+    -fx-background-color:
+        rgba(255, 255, 255, 0.05),
+        linear-gradient(to bottom, rgba(27, 31, 38, 0.94), rgba(16, 18, 24, 0.98));
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 18px, 17px;
+    -fx-padding: 16px;
+}
+
+.spotlight-grid {
+    -fx-alignment: top-left;
+}
+
+.spotlight-tile {
+    -fx-background-color:
+        rgba(255, 255, 255, 0.08),
+        linear-gradient(to bottom, rgba(37, 42, 51, 0.92), rgba(20, 23, 29, 0.98));
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 20px, 19px;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-radius: 20px;
+    -fx-border-width: 1px;
+    -fx-padding: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 14, 0.12, 0, 6);
+}
+
+.spotlight-fire {
+    -fx-background-color:
+        rgba(255, 131, 86, 0.14),
+        linear-gradient(to bottom, rgba(75, 32, 28, 0.95), rgba(24, 20, 24, 0.98));
+}
+
+.spotlight-copper {
+    -fx-background-color:
+        rgba(255, 185, 94, 0.14),
+        linear-gradient(to bottom, rgba(74, 48, 26, 0.95), rgba(24, 21, 20, 0.98));
+}
+
+.spotlight-emerald {
+    -fx-background-color:
+        rgba(84, 195, 140, 0.14),
+        linear-gradient(to bottom, rgba(25, 63, 46, 0.95), rgba(19, 23, 21, 0.98));
+}
+
+.spotlight-eyebrow {
+    -fx-text-fill: rgba(255, 255, 255, 0.72);
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1.2px;
+}
+
+.spotlight-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Bahnschrift SemiBold";
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+}
+
+.spotlight-copy {
+    -fx-text-fill: rgba(239, 244, 249, 0.82);
+    -fx-font-size: 12px;
 }
 
 .note-title {
-    -fx-text-fill: #f4f7fb;
-    -fx-font-size: 13px;
+    -fx-text-fill: #f9fbff;
+    -fx-font-size: 12px;
     -fx-font-weight: 700;
 }
 
 .note-copy {
-    -fx-text-fill: #94a0af;
-    -fx-font-size: 12px;
-    -fx-line-spacing: 2px;
+    -fx-text-fill: #9aa4b1;
+    -fx-font-size: 11px;
 }
 
 .checklist-box {
-    -fx-background-color: rgba(0, 0, 0, 0.18);
-    -fx-background-radius: 22px;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-radius: 22px;
-    -fx-padding: 16px;
     -fx-pref-width: 260px;
+}
+
+.news-card {
+    -fx-min-width: 340px;
+}
+
+.news-feed {
+    -fx-spacing: 10px;
+}
+
+.news-entry {
+    -fx-background-color:
+        rgba(255, 255, 255, 0.05),
+        linear-gradient(to bottom, rgba(27, 31, 38, 0.94), rgba(15, 18, 23, 0.98));
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 18px, 17px;
+    -fx-padding: 14px;
+}
+
+.news-tag {
+    -fx-text-fill: #ff9a55;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: 1.2px;
+}
+
+.news-title {
+    -fx-text-fill: #f9fbff;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.news-copy {
+    -fx-text-fill: #a9b2bf;
+    -fx-font-size: 11px;
 }
 
 .checklist-row {
@@ -411,118 +485,73 @@
 }
 
 .checklist-marker {
-    -fx-text-fill: #ff8b61;
+    -fx-text-fill: #ff8f52;
     -fx-font-size: 15px;
-    -fx-font-weight: 900;
-}
-
-.checklist-copy {
-    -fx-text-fill: #d7e0ea;
-    -fx-font-size: 12px;
-}
-
-.session-card {
-    -fx-padding: 18px;
-}
-
-.session-row {
-    -fx-background-color: rgba(255, 255, 255, 0.03);
-    -fx-background-radius: 16px;
-    -fx-border-color: rgba(255, 255, 255, 0.06);
-    -fx-border-radius: 16px;
-    -fx-padding: 11px 14px;
-}
-
-.session-title {
-    -fx-text-fill: #f2c45e;
-    -fx-font-size: 10px;
-    -fx-font-weight: 800;
-}
-
-.session-value {
-    -fx-text-fill: #eef3f9;
-    -fx-font-size: 13px;
     -fx-font-weight: 700;
 }
 
+.checklist-copy {
+    -fx-text-fill: #eef3f8;
+    -fx-font-size: 11px;
+}
+
 .log-card {
-    -fx-min-width: 400px;
+    -fx-min-width: 320px;
 }
 
 .log-area {
     -fx-font-family: "Consolas";
     -fx-font-size: 12px;
-    -fx-control-inner-background: rgba(5, 7, 10, 0.96);
-    -fx-background-color: rgba(7, 9, 13, 0.96);
-}
-
-.footer-bar {
-    -fx-padding: 14px 16px;
-}
-
-.dock-item {
-    -fx-background-color: rgba(255, 255, 255, 0.03);
-    -fx-background-radius: 16px;
-    -fx-border-color: rgba(255, 255, 255, 0.06);
-    -fx-border-radius: 16px;
-    -fx-padding: 11px 14px;
-    -fx-min-width: 170px;
-}
-
-.dock-title {
-    -fx-text-fill: #f2c45e;
-    -fx-font-size: 10px;
-    -fx-font-weight: 800;
-}
-
-.dock-value {
-    -fx-text-fill: #eff4fa;
-    -fx-font-size: 14px;
-    -fx-font-weight: 700;
-}
-
-.footer-meta {
-    -fx-padding: 4px 6px 4px 10px;
-}
-
-.footer-config-value {
-    -fx-text-fill: #8b95a4;
-    -fx-font-size: 12px;
+    -fx-control-inner-background: #0f1217;
 }
 
 .action-button {
-    -fx-background-radius: 16px;
+    -fx-background-color:
+        rgba(255, 255, 255, 0.08),
+        linear-gradient(to bottom, rgba(53, 59, 69, 0.98), rgba(29, 33, 40, 0.98));
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 16px, 15px;
+    -fx-border-color: rgba(255, 255, 255, 0.06);
     -fx-border-radius: 16px;
+    -fx-border-width: 1px;
+    -fx-text-fill: #ffffff;
     -fx-font-size: 13px;
-    -fx-font-weight: 800;
-    -fx-padding: 12px 18px;
+    -fx-font-weight: 700;
+    -fx-padding: 12px 16px;
     -fx-cursor: hand;
 }
 
 .action-button:hover {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 16, 0.1, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(255, 122, 73, 0.22), 18, 0.18, 0, 6);
+}
+
+.action-button:pressed {
+    -fx-translate-y: 1px;
 }
 
 .action-button:disabled {
-    -fx-opacity: 0.55;
+    -fx-opacity: 0.56;
 }
 
 .primary-action {
-    -fx-background-color: linear-gradient(to bottom, #ff8a5b, #ef583c);
-    -fx-border-color: rgba(255, 255, 255, 0.05);
-    -fx-text-fill: white;
+    -fx-background-color:
+        rgba(255, 152, 98, 0.18),
+        linear-gradient(to bottom, #ff8150 0%, #ef5a34 100%);
+    -fx-text-fill: #ffffff;
 }
 
 .secondary-action {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-border-color: rgba(255, 255, 255, 0.1);
-    -fx-text-fill: #eff4fa;
+    -fx-background-color:
+        rgba(255, 255, 255, 0.08),
+        linear-gradient(to bottom, rgba(45, 50, 59, 0.98), rgba(23, 26, 32, 0.98));
+    -fx-text-fill: #f6f9fc;
 }
 
 .utility-action {
-    -fx-background-color: rgba(255, 255, 255, 0.035);
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-text-fill: #dbe4ee;
+    -fx-background-color:
+        rgba(255, 255, 255, 0.05),
+        linear-gradient(to bottom, rgba(33, 37, 45, 0.98), rgba(19, 22, 28, 0.98));
+    -fx-text-fill: #dce3eb;
 }
 
 .hero-button {
@@ -530,13 +559,13 @@
 }
 
 .mini-action {
-    -fx-padding: 10px 14px;
+    -fx-padding: 10px 13px;
 }
 
 .dialog-root {
     -fx-background-color:
-        radial-gradient(center 18% 12%, radius 28%, rgba(255, 131, 84, 0.12), transparent),
-        linear-gradient(to bottom right, #0f1319, #141920);
+        radial-gradient(center 18% 10%, radius 34%, rgba(255, 116, 64, 0.12), transparent),
+        linear-gradient(to bottom, #14161b 0%, #0d1014 100%);
 }
 
 .dialog-header {
@@ -562,30 +591,20 @@
 }
 
 .dialog-path {
-    -fx-text-fill: #8d97a5;
-    -fx-font-size: 12px;
+    -fx-text-fill: #9099a6;
+    -fx-font-size: 11px;
 }
 
 .compact-mode .surface-card {
     -fx-padding: 18px;
-    -fx-background-radius: 24px;
-    -fx-border-radius: 24px;
 }
 
 .compact-mode .masthead-title {
-    -fx-font-size: 28px;
-}
-
-.compact-mode .masthead-subtitle {
-    -fx-font-size: 12px;
+    -fx-font-size: 25px;
 }
 
 .compact-mode .hero-title {
     -fx-font-size: 40px;
-}
-
-.compact-mode .hero-copy {
-    -fx-font-size: 14px;
 }
 
 .compact-mode .hero-action-panel {
@@ -596,26 +615,20 @@
     -fx-min-width: 320px;
 }
 
-.compact-mode .checklist-box {
-    -fx-pref-width: 220px;
-}
-
-.compact-mode .top-chip {
-    -fx-min-width: 132px;
+.compact-mode .guide-card {
+    -fx-max-width: 340px;
 }
 
 .compact-mode .hero-stat {
-    -fx-min-width: 150px;
+    -fx-min-width: 144px;
 }
 
 .condensed-mode .surface-card {
     -fx-padding: 16px;
-    -fx-background-radius: 22px;
-    -fx-border-radius: 22px;
 }
 
 .condensed-mode .masthead-title {
-    -fx-font-size: 24px;
+    -fx-font-size: 22px;
 }
 
 .condensed-mode .hero-title {
@@ -623,30 +636,27 @@
 }
 
 .condensed-mode .card-title {
-    -fx-font-size: 20px;
+    -fx-font-size: 19px;
 }
 
+.condensed-mode .hero-copy,
+.condensed-mode .hero-footnote,
 .condensed-mode .card-description,
 .condensed-mode .field-hint,
 .condensed-mode .note-copy {
     -fx-font-size: 11px;
 }
 
-.condensed-mode .hero-copy,
-.condensed-mode .hero-footnote {
-    -fx-font-size: 12px;
-}
-
 .condensed-mode .top-chip {
+    -fx-min-width: 138px;
     -fx-padding: 9px 12px;
-    -fx-min-width: 124px;
 }
 
 .condensed-mode .hero-stat {
+    -fx-min-width: 130px;
     -fx-padding: 12px 14px;
-    -fx-min-width: 132px;
 }
 
 .condensed-mode .action-button {
-    -fx-padding: 10px 14px;
+    -fx-padding: 10px 13px;
 }
