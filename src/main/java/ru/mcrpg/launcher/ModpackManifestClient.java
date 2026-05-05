@@ -2,8 +2,12 @@ package ru.mcrpg.launcher;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -27,7 +31,39 @@ public final class ModpackManifestClient {
             ModpackManifest manifest = objectMapper.readValue(inputStream, ModpackManifest.class);
             validate(manifest);
             return new LoadedManifest(url, manifest);
+        } catch (IOException exception) {
+            throw describeLoadFailure(url, exception);
         }
+    }
+
+    private static IOException describeLoadFailure(URL url, IOException exception) {
+        String location = url.toString();
+        if (exception instanceof ConnectException) {
+            return new IOException(
+                "Не удалось подключиться к " + location
+                    + ". Лаунчер ожидает manifest.json по HTTP(S). Проверь, что по этому адресу запущен веб-сервер; сам Minecraft-сервер на порту 25565 manifest не раздаёт.",
+                exception
+            );
+        }
+        if (exception instanceof UnknownHostException) {
+            return new IOException(
+                "Не удалось найти хост для manifest.json: " + location + ". Проверь адрес сервера и DNS/hosts.",
+                exception
+            );
+        }
+        if (exception instanceof SocketTimeoutException) {
+            return new IOException(
+                "Таймаут при загрузке manifest.json: " + location + ". Проверь доступность HTTP-сервера и сеть.",
+                exception
+            );
+        }
+        if (exception instanceof FileNotFoundException) {
+            return new IOException(
+                "manifest.json не найден по адресу " + location + ". Проверь путь и настройку раздачи файлов.",
+                exception
+            );
+        }
+        return exception;
     }
 
     private static void validate(ModpackManifest manifest) {

@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.BorderFactory;
@@ -407,6 +408,17 @@ public final class LauncherFrame extends JFrame {
         constraints.weightx = 1;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         panel.add(hint, constraints);
+
+        JLabel authHint = new JLabel("<html>" + ServerAuthHints.launcherHelpHtml() + "</html>");
+        authHint.setBorder(new EmptyBorder(4, 0, 0, 0));
+
+        constraints = baseConstraints();
+        constraints.gridy = row + 1;
+        constraints.gridx = 1;
+        constraints.gridwidth = 2;
+        constraints.weightx = 1;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(authHint, constraints);
     }
 
     private static GridBagConstraints baseConstraints() {
@@ -464,6 +476,7 @@ public final class LauncherFrame extends JFrame {
             }
             processBuilder.redirectErrorStream(true);
 
+            LinkedHashSet<String> emittedHints = new LinkedHashSet<String>();
             Process process = processBuilder.start();
             try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8)
@@ -471,6 +484,11 @@ public final class LauncherFrame extends JFrame {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     publishLine(line);
+                    for (String hint : ServerAuthHints.detect(line)) {
+                        if (emittedHints.add(hint)) {
+                            publishLine(hint);
+                        }
+                    }
                 }
             }
             return process.waitFor();
