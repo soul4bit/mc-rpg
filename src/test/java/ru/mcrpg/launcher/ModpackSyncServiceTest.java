@@ -1,5 +1,6 @@
 package ru.mcrpg.launcher;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -230,6 +231,7 @@ class ModpackSyncServiceTest {
         assertEquals(clientDirectory.toString(), result.getResolvedConfig().getWorkingDirectory());
         assertTrue(result.getResolvedConfig().getLaunchTemplate().contains("net.minecraft.launchwrapper.Launch"));
         assertTrue(result.getResolvedConfig().getLaunchTemplate().contains("--tweakClass"));
+        assertFalse(result.getResolvedConfig().getLaunchTemplate().contains("\\"));
 
         List<String> command = new LaunchCommandBuilder().build(result.getResolvedConfig());
         assertTrue(command.contains("net.minecraft.launchwrapper.Launch"));

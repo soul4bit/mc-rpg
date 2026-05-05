@@ -432,11 +432,11 @@ public final class MinecraftBootstrapService {
         tokens.add("{java}");
 
         if (nativesDirectory != null) {
-            tokens.add("-Djava.library.path=" + nativesDirectory.toString());
+            tokens.add("-Djava.library.path=" + toTemplatePath(nativesDirectory));
         }
         if (loggingConfigFile != null && baseVersion.logging != null && baseVersion.logging.client != null
             && hasText(baseVersion.logging.client.argument)) {
-            tokens.add(baseVersion.logging.client.argument.replace("${path}", loggingConfigFile.toString()));
+            tokens.add(baseVersion.logging.client.argument.replace("${path}", toTemplatePath(loggingConfigFile)));
         }
 
         tokens.add("-cp");
@@ -447,7 +447,7 @@ public final class MinecraftBootstrapService {
         replacements.put("auth_player_name", "{username}");
         replacements.put("version_name", forgeVersionId);
         replacements.put("game_directory", "{gameDir}");
-        replacements.put("assets_root", assetsDirectory.toString());
+        replacements.put("assets_root", toTemplatePath(assetsDirectory));
         replacements.put("assets_index_name", requireText(baseVersion.assetIndex.id, "Asset index id is missing."));
         replacements.put("auth_uuid", "{uuid}");
         replacements.put("auth_access_token", "{accessToken}");
@@ -509,9 +509,13 @@ public final class MinecraftBootstrapService {
             if (builder.length() > 0) {
                 builder.append(File.pathSeparatorChar);
             }
-            builder.append(path.toAbsolutePath().normalize().toString());
+            builder.append(toTemplatePath(path));
         }
         return builder.toString();
+    }
+
+    private static String toTemplatePath(Path path) {
+        return path.toAbsolutePath().normalize().toString().replace('\\', '/');
     }
 
     private static String buildNativeFingerprint(List<NativeLibrary> nativeLibraries) {
