@@ -146,9 +146,51 @@ Linux:
 sha256sum mods/examplemod.jar
 ```
 
+## Генератор manifest
+
+Чтобы не собирать `files[]` руками, в проект добавлен CLI-генератор manifest из готовой клиентской папки.
+
+Запуск:
+
+```bash
+java -cp target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar ru.mcrpg.launcher.ManifestGeneratorApp --source /path/to/client
+```
+
+Полезный пример под ваш сервер:
+
+```bash
+java -cp target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar ru.mcrpg.launcher.ManifestGeneratorApp \
+  --source /home/minecraft/mc-rpg-client \
+  --output /var/www/mc-rpg/manifest.json \
+  --id mc-rpg \
+  --version 2026.05.05 \
+  --base-url http://192.168.1.103/client/ \
+  --server-host 192.168.1.103 \
+  --server-port 25565 \
+  --working-directory . \
+  --launch-template "{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}" \
+  --exclude "logs/**" \
+  --exclude "crash-reports/**"
+```
+
+Если `--output` не указан, manifest будет записан в `<source>/manifest.json`. Этот файл автоматически исключается из списка `files[]`, чтобы он не попадал в манифест при повторной генерации.
+
+Поддерживаемые опции:
+
+- `--source`: исходная папка клиента, обязательна.
+- `--output`: путь, куда записать `manifest.json`.
+- `--id`: идентификатор сборки.
+- `--version`: версия сборки.
+- `--base-url`: базовый URL для скачивания файлов.
+- `--server-host`: хост Minecraft-сервера.
+- `--server-port`: порт Minecraft-сервера.
+- `--working-directory`: рабочая папка относительно `game directory`.
+- `--launch-template`: шаблон запуска клиента.
+- `--exclude`: glob-паттерн для исключения файлов. Опцию можно повторять.
+
 ## Что логично сделать дальше
 
-- Добавить `prune`-режим для удаления файлов, которых больше нет в manifest.
+- Добавить CLI-режим `prune` и dry-run для синхронизации.
 - Сделать backend API для логина/регистрации и выдачи manifest.
 - Добавить токены авторизации и проверку на стороне сервера.
 - Добавить профили сборок и несколько каналов обновления: `stable`, `test`, `dev`.
