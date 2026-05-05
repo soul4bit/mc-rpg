@@ -13,6 +13,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -29,6 +31,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -62,14 +65,34 @@ public final class LauncherFxApplication extends Application {
     private final Button settingsButton = new Button("Настройки");
     private final Button browseGameDirectoryButton = new Button("Обзор");
 
+    private StackPane appRoot;
+    private ScrollPane shellScroll;
+    private HBox shellRow;
+    private VBox sidebarRail;
+    private VBox contentShell;
+    private FlowPane mainFlow;
+    private FlowPane quickDeckFlow;
+    private BorderPane heroLayout;
+    private VBox heroActionPanel;
+    private HBox footerBar;
+    private VBox sessionCardBox;
+
     private final Label headerProfileLabel = new Label();
     private final Label headerModeLabel = new Label();
     private final Label heroPlayerLabel = new Label();
     private final Label heroInstallLabel = new Label();
-    private final Label heroRouteLabel = new Label();
+    private final Label heroModeLabel = new Label();
+    private final Label heroStateBadge = new Label("Ready");
+    private final Label sidebarRouteLabel = new Label();
+    private final Label sidebarStateLabel = new Label("Ready");
     private final Label dockPlayerLabel = new Label();
     private final Label dockFolderLabel = new Label();
     private final Label dockModeLabel = new Label();
+    private final Label sessionModeLabel = new Label();
+    private final Label sessionRouteLabel = new Label();
+    private final Label sessionStateLabel = new Label("Ready");
+    private final StringProperty mastheadTitle = new SimpleStringProperty("Добро пожаловать");
+    private final StringProperty mastheadSubtitle = new SimpleStringProperty("Единый launcher-shell для Redstone Realm");
 
     public static void launchApp(String[] args) {
         launch(args);
@@ -86,45 +109,115 @@ public final class LauncherFxApplication extends Application {
         );
 
         stage.setTitle(LauncherBrand.APP_NAME);
-        stage.setMinWidth(1180);
-        stage.setMinHeight(820);
+        stage.setMinWidth(920);
+        stage.setMinHeight(700);
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> persistCurrentConfigQuietly());
 
         installBehavior();
         applyConfigToView(currentConfig);
+        installResponsiveBehavior(scene);
         stage.show();
     }
 
     private Parent buildShell() {
-        StackPane root = new StackPane();
-        root.getStyleClass().add("app-root");
+        appRoot = new StackPane();
+        appRoot.getStyleClass().add("app-root");
 
-        VBox shell = new VBox(16);
-        shell.getStyleClass().add("shell");
-        shell.setPadding(new Insets(18));
+        shellRow = new HBox(18);
+        shellRow.getStyleClass().add("shell");
+        shellRow.setPadding(new Insets(18));
+
+        Node sidebar = buildSidebar();
+        contentShell = new VBox(16);
+        contentShell.getStyleClass().add("content-shell");
 
         Node topBar = buildTopBar();
         Node main = buildMainPanel();
         Node dock = buildDockBar();
         VBox.setVgrow(main, Priority.ALWAYS);
+        HBox.setHgrow(contentShell, Priority.ALWAYS);
 
-        shell.getChildren().addAll(topBar, main, dock);
-        root.getChildren().add(shell);
-        return root;
+        contentShell.getChildren().addAll(topBar, main, dock);
+        shellRow.getChildren().addAll(sidebar, contentShell);
+
+        shellScroll = new ScrollPane(shellRow);
+        shellScroll.setFitToWidth(true);
+        shellScroll.setFitToHeight(true);
+        shellScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        shellScroll.getStyleClass().add("shell-scroll");
+
+        appRoot.getChildren().add(shellScroll);
+        return appRoot;
+    }
+
+    private Node buildSidebar() {
+        sidebarRail = new VBox(20);
+        sidebarRail.getStyleClass().add("sidebar-rail");
+        sidebarRail.setPrefWidth(250);
+        sidebarRail.setMinWidth(250);
+
+        VBox brandBlock = new VBox(8);
+        brandBlock.getStyleClass().add("sidebar-brand");
+        Label overline = new Label("REDSTONE NETWORK");
+        overline.getStyleClass().add("sidebar-overline");
+        Label title = new Label(LauncherBrand.APP_TITLE.toUpperCase());
+        title.getStyleClass().add("sidebar-title");
+        Label copy = new Label("Minecraft mod launcher with one clean path from sync to play.");
+        copy.getStyleClass().add("sidebar-copy");
+        copy.setWrapText(true);
+        brandBlock.getChildren().addAll(overline, title, copy);
+
+        VBox nav = new VBox(8);
+        nav.getStyleClass().add("sidebar-panel");
+        nav.getChildren().addAll(
+            createRailItem("PLAY DECK", "Активный экран запуска", true),
+            createRailItem("INSTALL", "Каталог клиента и auto-sync", false),
+            createRailItem("CONSOLE", "Live log и runtime output", false),
+            createRailItem("SETTINGS", "Техпараметры отдельно", false)
+        );
+
+        VBox realmPanel = new VBox(10);
+        realmPanel.getStyleClass().add("sidebar-panel");
+        Label realmTitle = new Label("Realm status");
+        realmTitle.getStyleClass().add("sidebar-panel-title");
+        realmPanel.getChildren().addAll(
+            realmTitle,
+            createSidebarMetric("Route", sidebarRouteLabel),
+            createSidebarMetric("State", sidebarStateLabel)
+        );
+
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
+        VBox footer = new VBox(6);
+        footer.getStyleClass().add("sidebar-footer");
+        Label footerLabel = new Label("JavaFX Edition");
+        footerLabel.getStyleClass().add("sidebar-footer-title");
+        Label footerCopy = new Label("Forge 1.12.2 // one-server launcher shell");
+        footerCopy.getStyleClass().add("sidebar-footer-copy");
+        footer.getChildren().addAll(new Separator(), footerLabel, footerCopy);
+
+        sidebarRail.getChildren().addAll(brandBlock, nav, realmPanel, spacer, footer);
+        return sidebarRail;
     }
 
     private Node buildTopBar() {
-        HBox bar = new HBox(16);
-        bar.getStyleClass().addAll("surface-card", "top-bar");
+        HBox bar = new HBox(18);
+        bar.getStyleClass().addAll("surface-card", "masthead-bar");
         bar.setAlignment(Pos.CENTER_LEFT);
 
-        VBox branding = new VBox(4);
-        Label brandTitle = new Label(LauncherBrand.APP_TITLE.toUpperCase());
-        brandTitle.getStyleClass().add("brand-title");
-        Label brandSubtitle = new Label(LauncherBrand.APP_SUBTITLE);
-        brandSubtitle.getStyleClass().add("brand-subtitle");
-        branding.getChildren().addAll(brandTitle, brandSubtitle);
+        VBox branding = new VBox(6);
+        Label overline = new Label("LAUNCHER DECK");
+        overline.getStyleClass().add("masthead-overline");
+        Label brandTitle = new Label();
+        brandTitle.textProperty().bind(mastheadTitle);
+        brandTitle.getStyleClass().add("masthead-title");
+        Label brandSubtitle = new Label();
+        brandSubtitle.textProperty().bind(mastheadSubtitle);
+        brandSubtitle.getStyleClass().add("masthead-subtitle");
+        brandSubtitle.setWrapText(true);
+        branding.getChildren().addAll(overline, brandTitle, brandSubtitle);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -140,54 +233,68 @@ public final class LauncherFxApplication extends Application {
     }
 
     private Node buildMainPanel() {
-        HBox main = new HBox(16);
-        main.setFillHeight(true);
+        mainFlow = new FlowPane(18, 18);
+        mainFlow.getStyleClass().add("main-flow");
+        mainFlow.setAlignment(Pos.TOP_LEFT);
+        mainFlow.prefWrapLengthProperty().bind(contentShell.widthProperty().subtract(24));
 
-        VBox showcase = new VBox(14);
-        HBox.setHgrow(showcase, Priority.ALWAYS);
-        VBox.setVgrow(showcase, Priority.ALWAYS);
-
-        Label sectionTitle = new Label("PLAY REDSTONE");
-        sectionTitle.getStyleClass().add("section-title");
-        Label sectionSubtitle = new Label(
-            "JavaFX позволяет перейти от формы настроек к нормальной витрине лаунчера: герой, профиль, установка и live console."
-        );
-        sectionSubtitle.getStyleClass().add("section-subtitle");
-        sectionSubtitle.setWrapText(true);
-
-        HBox showcaseGrid = new HBox(16);
-        VBox.setVgrow(showcaseGrid, Priority.ALWAYS);
-
-        VBox sideStack = new VBox(14);
-        sideStack.setPrefWidth(360);
-        sideStack.getChildren().addAll(buildProfileCard(), buildInstallCard());
-        VBox.setVgrow(sideStack.getChildren().get(0), Priority.ALWAYS);
-        VBox.setVgrow(sideStack.getChildren().get(1), Priority.ALWAYS);
-
+        VBox leftColumn = new VBox(18);
+        leftColumn.getStyleClass().add("showcase-column");
+        VBox.setVgrow(leftColumn, Priority.ALWAYS);
         Node heroCard = buildHeroCard();
-        HBox.setHgrow(heroCard, Priority.ALWAYS);
+        Node quickDeck = buildQuickDeck();
+        VBox.setVgrow(quickDeck, Priority.ALWAYS);
+        leftColumn.getChildren().addAll(heroCard, quickDeck);
+        leftColumn.setMinWidth(520);
 
-        showcaseGrid.getChildren().addAll(heroCard, sideStack);
-        showcase.getChildren().addAll(sectionTitle, sectionSubtitle, showcaseGrid);
-
+        VBox rightColumn = new VBox(18);
+        rightColumn.getStyleClass().add("activity-column");
+        rightColumn.setPrefWidth(400);
+        Node sessionCard = buildSessionCard();
         Node logCard = buildLogCard();
-        HBox.setHgrow(logCard, Priority.NEVER);
+        VBox.setVgrow(logCard, Priority.ALWAYS);
+        rightColumn.getChildren().addAll(sessionCard, logCard);
+        rightColumn.setMinWidth(340);
 
-        main.getChildren().addAll(showcase, logCard);
-        return main;
+        mainFlow.getChildren().addAll(leftColumn, rightColumn);
+        return mainFlow;
+    }
+
+    private Node buildQuickDeck() {
+        quickDeckFlow = new FlowPane(18, 18);
+        quickDeckFlow.getStyleClass().add("quick-deck");
+        quickDeckFlow.setAlignment(Pos.TOP_LEFT);
+        quickDeckFlow.prefWrapLengthProperty().bind(mainFlow.widthProperty().subtract(24));
+
+        VBox leftStack = new VBox(18);
+        leftStack.setPrefWidth(360);
+        Node profileCard = buildProfileCard();
+        Node installCard = buildInstallCard();
+        VBox.setVgrow(profileCard, Priority.ALWAYS);
+        VBox.setVgrow(installCard, Priority.ALWAYS);
+        leftStack.getChildren().addAll(profileCard, installCard);
+
+        Node helpCard = buildHelpCard();
+        if (helpCard instanceof Region) {
+            ((Region) helpCard).setPrefWidth(420);
+            ((Region) helpCard).setMinWidth(320);
+        }
+
+        quickDeckFlow.getChildren().addAll(leftStack, helpCard);
+        return quickDeckFlow;
     }
 
     private Node buildHeroCard() {
         StackPane hero = new StackPane();
         hero.getStyleClass().add("hero-card");
-        hero.setMinHeight(520);
+        hero.setMinHeight(460);
 
         Pane accents = new Pane();
         accents.getStyleClass().add("hero-accents");
         accents.setMouseTransparent(true);
 
-        BorderPane layout = new BorderPane();
-        layout.setPadding(new Insets(28));
+        heroLayout = new BorderPane();
+        heroLayout.setPadding(new Insets(30));
 
         VBox content = new VBox(18);
         content.setAlignment(Pos.TOP_LEFT);
@@ -202,7 +309,7 @@ public final class LauncherFxApplication extends Application {
         Label title = new Label("Redstone Realm");
         title.getStyleClass().add("hero-title");
         Label copy = new Label(
-            "Один главный мир, единый modpack-профиль и быстрый вход без ручной возни с runtime, forge и библиотеками."
+            "Один главный мир, единый modpack-профиль и launcher-shell, который ведёт игрока от manifest до входа без ручной настройки Java, Forge и bootstrap."
         );
         copy.getStyleClass().add("hero-copy");
         copy.setWrapText(true);
@@ -211,22 +318,55 @@ public final class LauncherFxApplication extends Application {
         stats.getChildren().addAll(
             createHeroStat("Игрок", heroPlayerLabel),
             createHeroStat("Установка", heroInstallLabel),
-            createHeroStat("Маршрут", heroRouteLabel)
+            createHeroStat("Режим", heroModeLabel)
         );
 
         Region stretch = new Region();
         VBox.setVgrow(stretch, Priority.ALWAYS);
 
         Label flow = new Label(
-            "Поток запуска: синхронизация файлов, затем старт Minecraft. Низкоуровневые параметры убраны в отдельные настройки."
+            "Поток запуска: sync modpack, bootstrap runtime, запуск клиента. Все raw-поля и launch template спрятаны в тех. настройках."
         );
         flow.getStyleClass().add("hero-footnote");
         flow.setWrapText(true);
 
         content.getChildren().addAll(badges, title, copy, stats, stretch, flow);
-        layout.setCenter(content);
+        heroLayout.setCenter(content);
 
-        hero.getChildren().addAll(accents, layout);
+        heroActionPanel = new VBox(12);
+        heroActionPanel.getStyleClass().add("hero-action-panel");
+        heroActionPanel.setPrefWidth(260);
+
+        Label actionOverline = new Label("Launch deck");
+        actionOverline.getStyleClass().add("hero-action-overline");
+        Label actionTitle = new Label("Быстрый вход");
+        actionTitle.getStyleClass().add("hero-action-title");
+        Label actionCopy = new Label("Играй, синхронизируй и открывай тех. настройки без ухода с главного экрана.");
+        actionCopy.getStyleClass().add("hero-action-copy");
+        actionCopy.setWrapText(true);
+
+        heroStateBadge.getStyleClass().addAll("hero-badge", "status-badge");
+        heroStateBadge.setMaxWidth(Double.MAX_VALUE);
+
+        launchButton.getStyleClass().addAll("action-button", "primary-action", "hero-button");
+        syncButton.getStyleClass().addAll("action-button", "secondary-action", "hero-button");
+        settingsButton.getStyleClass().addAll("action-button", "utility-action", "hero-button");
+        launchButton.setMaxWidth(Double.MAX_VALUE);
+        syncButton.setMaxWidth(Double.MAX_VALUE);
+        settingsButton.setMaxWidth(Double.MAX_VALUE);
+
+        heroActionPanel.getChildren().addAll(
+            actionOverline,
+            actionTitle,
+            actionCopy,
+            heroStateBadge,
+            launchButton,
+            syncButton,
+            settingsButton
+        );
+        heroLayout.setRight(heroActionPanel);
+
+        hero.getChildren().addAll(accents, heroLayout);
         return hero;
     }
 
@@ -250,7 +390,7 @@ public final class LauncherFxApplication extends Application {
             ),
             createInfoNote(
                 "Журнал справа",
-                "Console показывает этапы синхронизации, manifest, stdout клиента и подсказки по авторизации."
+                "Activity feed показывает sync, manifest, stdout клиента и любые auth-hints по /register и /login."
             )
         );
 
@@ -263,12 +403,12 @@ public final class LauncherFxApplication extends Application {
         VBox card = createCard(
             "INSTALL",
             "Modpack install",
-            "Папка клиента и режим автообновления, без лишнего технического шума."
+            "Каталог клиента и режим обновления. Никаких raw URL и launch template на поверхности."
         );
 
         HBox pathRow = new HBox(10);
         HBox.setHgrow(gameDirectoryField, Priority.ALWAYS);
-        browseGameDirectoryButton.getStyleClass().addAll("action-button", "secondary-action");
+        browseGameDirectoryButton.getStyleClass().addAll("action-button", "secondary-action", "mini-action");
         pathRow.getChildren().addAll(gameDirectoryField, browseGameDirectoryButton);
 
         VBox body = new VBox(14);
@@ -290,11 +430,74 @@ public final class LauncherFxApplication extends Application {
         return card;
     }
 
+    private Node buildHelpCard() {
+        VBox card = createCard(
+            "ACCESS",
+            "Server access",
+            "Что нужно знать игроку до входа: регистрация, повторный вход и где смотреть ошибки."
+        );
+        card.getStyleClass().add("wide-card");
+
+        FlowPane content = new FlowPane(16, 16);
+        content.setAlignment(Pos.TOP_LEFT);
+        content.prefWrapLengthProperty().bind(quickDeckFlow.widthProperty().subtract(24));
+        VBox.setVgrow(content, Priority.ALWAYS);
+
+        VBox guide = new VBox(12);
+        HBox.setHgrow(guide, Priority.ALWAYS);
+        guide.getChildren().addAll(
+            createInfoNote(
+                "Первый вход",
+                "Если сервер попросил авторизацию, введи /register <пароль> <пароль>. Если аккаунт уже существует, используй /login <пароль>."
+            ),
+            createInfoNote(
+                "Как идёт запуск",
+                "Сначала launcher синхронизирует manifest и client files, затем поднимает runtime и только потом открывает Minecraft."
+            )
+        );
+
+        VBox checklist = new VBox(10);
+        checklist.getStyleClass().add("checklist-box");
+        Label checklistTitle = new Label("Launch checklist");
+        checklistTitle.getStyleClass().add("note-title");
+        checklist.getChildren().addAll(
+            checklistTitle,
+            createChecklistRow("Проверь папку клиента"),
+            createChecklistRow("Оставь auto-sync включённым"),
+            createChecklistRow("Следи за Activity feed"),
+            createChecklistRow("Auth-команды вводятся уже в игре")
+        );
+
+        content.getChildren().addAll(guide, checklist);
+        card.getChildren().add(content);
+        return card;
+    }
+
+    private Node buildSessionCard() {
+        VBox card = createCard(
+            "SESSION",
+            "Краткая сессия",
+            "Только текущий режим, маршрут и состояние лаунчера без дубля всех карточек."
+        );
+        card.getStyleClass().add("session-card");
+
+        VBox stats = new VBox(10);
+        stats.getChildren().addAll(
+            createSessionRow("Режим", sessionModeLabel),
+            createSessionRow("Маршрут", sessionRouteLabel),
+            createSessionRow("Состояние", sessionStateLabel)
+        );
+
+        card.getChildren().add(stats);
+        sessionCardBox = card;
+        return card;
+    }
+
     private Node buildLogCard() {
         VBox card = createCard(
-            "CONSOLE",
-            "Живой журнал",
-            "События синхронизации, stdout клиента и любые ошибки запуска."
+            "ACTIVITY",
+            "Activity feed",
+            "Живой поток sync, manifest, stdout клиента и любых ошибок во время запуска."
         );
         card.getStyleClass().add("log-card");
         card.setPrefWidth(390);
@@ -308,9 +511,9 @@ public final class LauncherFxApplication extends Application {
     }
 
     private Node buildDockBar() {
-        HBox dock = new HBox(14);
-        dock.getStyleClass().addAll("surface-card", "dock-bar");
-        dock.setAlignment(Pos.CENTER_LEFT);
+        footerBar = new HBox(16);
+        footerBar.getStyleClass().addAll("surface-card", "footer-bar");
+        footerBar.setAlignment(Pos.CENTER_LEFT);
 
         HBox summary = new HBox(12);
         HBox.setHgrow(summary, Priority.ALWAYS);
@@ -320,15 +523,16 @@ public final class LauncherFxApplication extends Application {
             createDockItem("Режим", dockModeLabel)
         );
 
-        launchButton.getStyleClass().addAll("action-button", "primary-action");
-        syncButton.getStyleClass().addAll("action-button", "secondary-action");
-        settingsButton.getStyleClass().addAll("action-button", "utility-action");
+        VBox meta = new VBox(4);
+        meta.getStyleClass().add("footer-meta");
+        Label configTitle = new Label("CONFIG");
+        configTitle.getStyleClass().add("dock-title");
+        Label configValue = new Label(compact(configStore.getConfigFile().toString(), 48));
+        configValue.getStyleClass().add("footer-config-value");
+        meta.getChildren().addAll(configTitle, configValue);
 
-        HBox actions = new HBox(10, syncButton, settingsButton, launchButton);
-        actions.setAlignment(Pos.CENTER_RIGHT);
-
-        dock.getChildren().addAll(summary, actions);
-        return dock;
+        footerBar.getChildren().addAll(summary, meta);
+        return footerBar;
     }
 
     private VBox createCard(String eyebrow, String title, String description) {
@@ -359,6 +563,29 @@ public final class LauncherFxApplication extends Application {
 
         chip.getChildren().addAll(titleLabel, valueLabel);
         return chip;
+    }
+
+    private Node createRailItem(String title, String copy, boolean active) {
+        VBox item = new VBox(3);
+        item.getStyleClass().add(active ? "rail-item-active" : "rail-item");
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("rail-item-title");
+        Label copyLabel = new Label(copy);
+        copyLabel.getStyleClass().add("rail-item-copy");
+        copyLabel.setWrapText(true);
+        item.getChildren().addAll(titleLabel, copyLabel);
+        return item;
+    }
+
+    private Node createSidebarMetric(String title, Label valueLabel) {
+        VBox box = new VBox(4);
+        box.getStyleClass().add("sidebar-metric");
+        Label titleLabel = new Label(title.toUpperCase());
+        titleLabel.getStyleClass().add("sidebar-metric-title");
+        valueLabel.getStyleClass().add("sidebar-metric-value");
+        valueLabel.setWrapText(true);
+        box.getChildren().addAll(titleLabel, valueLabel);
+        return box;
     }
 
     private Node createBadge(String text, String extraClass) {
@@ -392,6 +619,20 @@ public final class LauncherFxApplication extends Application {
         return item;
     }
 
+    private Node createSessionRow(String title, Label valueLabel) {
+        HBox row = new HBox(10);
+        row.getStyleClass().add("session-row");
+        row.setAlignment(Pos.CENTER_LEFT);
+        Label titleLabel = new Label(title.toUpperCase());
+        titleLabel.getStyleClass().add("session-title");
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        valueLabel.getStyleClass().add("session-value");
+        valueLabel.setWrapText(true);
+        row.getChildren().addAll(titleLabel, spacer, valueLabel);
+        return row;
+    }
+
     private VBox createFieldGroup(String title, String hint, Node field) {
         VBox group = new VBox(8);
         Label titleLabel = new Label(title);
@@ -417,6 +658,18 @@ public final class LauncherFxApplication extends Application {
         return note;
     }
 
+    private Node createChecklistRow(String text) {
+        HBox row = new HBox(8);
+        row.getStyleClass().add("checklist-row");
+        Label marker = new Label("+");
+        marker.getStyleClass().add("checklist-marker");
+        Label copy = new Label(text);
+        copy.getStyleClass().add("checklist-copy");
+        copy.setWrapText(true);
+        row.getChildren().addAll(marker, copy);
+        return row;
+    }
+
     private void installBehavior() {
         styleMainControls();
         browseGameDirectoryButton.setOnAction(event -> chooseDirectory(gameDirectoryField, "Выбери папку клиента"));
@@ -429,10 +682,60 @@ public final class LauncherFxApplication extends Application {
         updateFilesBeforeLaunchCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> refreshSummaryFromVisibleFields());
     }
 
+    private void installResponsiveBehavior(Scene scene) {
+        scene.widthProperty().addListener((observable, oldValue, newValue) -> applyResponsiveLayout(newValue.doubleValue()));
+        applyResponsiveLayout(scene.getWidth());
+    }
+
+    private void applyResponsiveLayout(double width) {
+        boolean compact = width < 1280;
+        boolean condensed = width < 1080;
+
+        setNodeVisible(sidebarRail, !compact);
+        setNodeVisible(sessionCardBox, !condensed);
+        setNodeVisible(footerBar, !condensed);
+
+        if (compact) {
+            heroLayout.setRight(null);
+            heroLayout.setBottom(heroActionPanel);
+            BorderPane.setMargin(heroActionPanel, new Insets(18, 0, 0, 0));
+        } else {
+            heroLayout.setBottom(null);
+            heroLayout.setRight(heroActionPanel);
+            BorderPane.setMargin(heroActionPanel, Insets.EMPTY);
+        }
+
+        toggleStyleClass(appRoot, "compact-mode", compact);
+        toggleStyleClass(appRoot, "condensed-mode", condensed);
+    }
+
+    private static void setNodeVisible(Node node, boolean visible) {
+        if (node == null) {
+            return;
+        }
+        node.setManaged(visible);
+        node.setVisible(visible);
+    }
+
+    private static void toggleStyleClass(Node node, String styleClass, boolean enabled) {
+        if (node == null) {
+            return;
+        }
+        if (enabled) {
+            if (!node.getStyleClass().contains(styleClass)) {
+                node.getStyleClass().add(styleClass);
+            }
+        } else {
+            node.getStyleClass().remove(styleClass);
+        }
+    }
+
     private void styleMainControls() {
         usernameField.getStyleClass().add("launcher-input");
+        usernameField.setPromptText("Player");
         usernameField.setTooltip(new Tooltip("Ник для запуска клиента"));
         gameDirectoryField.getStyleClass().add("launcher-input");
+        gameDirectoryField.setPromptText(LauncherDefaults.defaultGameDirectory());
         gameDirectoryField.setTooltip(new Tooltip("Куда будет установлена сборка"));
         updateFilesBeforeLaunchCheckBox.getStyleClass().add("launcher-check");
     }
@@ -467,11 +770,17 @@ public final class LauncherFxApplication extends Application {
 
         heroPlayerLabel.setText(username);
         heroInstallLabel.setText(folderName);
-        heroRouteLabel.setText(route);
+        heroModeLabel.setText(mode);
+        sidebarRouteLabel.setText(route);
 
         dockPlayerLabel.setText(username);
         dockFolderLabel.setText(folderName);
         dockModeLabel.setText(mode);
+        sessionModeLabel.setText(mode);
+        sessionRouteLabel.setText(route);
+
+        mastheadTitle.set("Добро пожаловать, " + username);
+        mastheadSubtitle.set("Redstone Realm готовит один чистый маршрут от синхронизации modpack до входа на сервер.");
     }
 
     private void refreshSummaryFromVisibleFields() {
@@ -520,6 +829,7 @@ public final class LauncherFxApplication extends Application {
 
     private void runTask(LauncherAction action, LauncherConfig requestedConfig) {
         setBusy(true);
+        updateStatusState(action == LauncherAction.SYNC_ONLY ? "Syncing" : "Launching");
 
         Task<LauncherTaskResult> task = new Task<LauncherTaskResult>() {
             @Override
@@ -551,6 +861,7 @@ public final class LauncherFxApplication extends Application {
 
         task.setOnSucceeded(event -> {
             setBusy(false);
+            updateStatusState("Ready");
             LauncherTaskResult result = task.getValue();
             try {
                 persistConfig(result.getResolvedConfig(), false);
@@ -565,11 +876,15 @@ public final class LauncherFxApplication extends Application {
 
         task.setOnFailed(event -> {
             setBusy(false);
+            updateStatusState("Attention");
             Throwable exception = task.getException();
             showError(exception == null ? "Неизвестная ошибка." : exception.getMessage());
         });
 
-        task.setOnCancelled(event -> setBusy(false));
+        task.setOnCancelled(event -> {
+            setBusy(false);
+            updateStatusState("Idle");
+        });
 
         Thread thread = new Thread(task, "launcher-" + action.name().toLowerCase());
         thread.setDaemon(true);
@@ -815,6 +1130,9 @@ public final class LauncherFxApplication extends Application {
         syncButton.setDisable(busy);
         settingsButton.setDisable(busy);
         browseGameDirectoryButton.setDisable(busy);
+        usernameField.setDisable(busy);
+        gameDirectoryField.setDisable(busy);
+        updateFilesBeforeLaunchCheckBox.setDisable(busy);
     }
 
     private void persistConfig(LauncherConfig config, boolean logPath) throws IOException {
@@ -844,6 +1162,7 @@ public final class LauncherFxApplication extends Application {
 
     private void showError(String message) {
         String resolvedMessage = hasText(message) ? message : "Неизвестная ошибка.";
+        updateStatusState("Attention");
         appendLog("Ошибка: " + resolvedMessage);
 
         Alert alert = new Alert(Alert.AlertType.ERROR, resolvedMessage, ButtonType.OK);
@@ -851,6 +1170,12 @@ public final class LauncherFxApplication extends Application {
         alert.setTitle(LauncherBrand.APP_NAME);
         alert.setHeaderText("Ошибка");
         alert.showAndWait();
+    }
+
+    private void updateStatusState(String state) {
+        heroStateBadge.setText(state);
+        sidebarStateLabel.setText(state);
+        sessionStateLabel.setText(state);
     }
 
     private Path resolveWorkingDirectory(LauncherConfig config) {
