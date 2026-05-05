@@ -1,0 +1,334 @@
+.root {
+    -fx-font-family: "Segoe UI";
+}
+
+.app-root {
+    -fx-background-color:
+        linear-gradient(to bottom right, #0a0d11 0%, #10151b 35%, #140d0d 100%);
+}
+
+.shell {
+    -fx-background-color: transparent;
+}
+
+.surface-card {
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(30, 34, 41, 0.96), rgba(19, 22, 28, 0.98));
+    -fx-background-radius: 24px;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 24px;
+    -fx-padding: 18px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 28, 0.2, 0, 14);
+}
+
+.top-bar {
+    -fx-padding: 18px 20px;
+}
+
+.brand-title {
+    -fx-text-fill: #fff5ed;
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1.2px;
+}
+
+.brand-subtitle {
+    -fx-text-fill: #a7b2c0;
+    -fx-font-size: 13px;
+}
+
+.top-chip {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 18px;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 18px;
+    -fx-padding: 10px 14px;
+    -fx-min-width: 140px;
+}
+
+.chip-title {
+    -fx-text-fill: #f2c45e;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+
+.chip-value {
+    -fx-text-fill: #eef3f9;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.section-title {
+    -fx-text-fill: #ff6947;
+    -fx-font-size: 23px;
+    -fx-font-weight: 800;
+}
+
+.section-subtitle {
+    -fx-text-fill: #9da7b5;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 2px;
+}
+
+.hero-card {
+    -fx-background-color:
+        radial-gradient(center 85% 20%, radius 38%, rgba(255, 141, 88, 0.18), transparent),
+        linear-gradient(to bottom right, #2e1115 0%, #591819 35%, #b33f2b 100%);
+    -fx-background-radius: 30px;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 30px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.34), 40, 0.24, 0, 18);
+}
+
+.hero-accents {
+    -fx-background-color:
+        linear-gradient(to top, rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0.04)),
+        linear-gradient(from 75% 10% to 95% 85%, rgba(255, 255, 255, 0.07), transparent);
+    -fx-background-radius: 30px;
+}
+
+.hero-title {
+    -fx-text-fill: #fff6f0;
+    -fx-font-size: 42px;
+    -fx-font-weight: 800;
+}
+
+.hero-copy {
+    -fx-text-fill: rgba(255, 243, 235, 0.92);
+    -fx-font-size: 15px;
+    -fx-max-width: 560px;
+    -fx-line-spacing: 3px;
+}
+
+.hero-badge {
+    -fx-text-fill: #fff8f3;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-radius: 999px;
+    -fx-border-color: rgba(255, 255, 255, 0.12);
+    -fx-border-radius: 999px;
+    -fx-padding: 7px 12px;
+}
+
+.gold-badge {
+    -fx-background-color: rgba(242, 196, 94, 0.18);
+}
+
+.accent-badge {
+    -fx-background-color: rgba(255, 105, 71, 0.18);
+}
+
+.green-badge {
+    -fx-background-color: rgba(101, 195, 63, 0.18);
+}
+
+.hero-stat {
+    -fx-background-color: rgba(0, 0, 0, 0.18);
+    -fx-background-radius: 18px;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 18px;
+    -fx-padding: 14px 16px;
+    -fx-min-width: 170px;
+}
+
+.stat-title {
+    -fx-text-fill: rgba(255, 229, 219, 0.8);
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+
+.stat-value {
+    -fx-text-fill: #fff7f1;
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+}
+
+.hero-footnote {
+    -fx-text-fill: rgba(255, 236, 227, 0.88);
+    -fx-font-size: 13px;
+}
+
+.card-eyebrow {
+    -fx-text-fill: #f2c45e;
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+}
+
+.card-title {
+    -fx-text-fill: #f4f7fb;
+    -fx-font-size: 24px;
+    -fx-font-weight: 800;
+}
+
+.card-description {
+    -fx-text-fill: #9ea8b7;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 2px;
+}
+
+.field-label {
+    -fx-text-fill: #edf2f8;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.field-hint {
+    -fx-text-fill: #98a2b0;
+    -fx-font-size: 12px;
+}
+
+.launcher-input,
+.launcher-textarea,
+.log-area {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-control-inner-background: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 16px;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 16px;
+    -fx-text-fill: #f2f6fb;
+    -fx-prompt-text-fill: #7f8896;
+    -fx-highlight-fill: #ff6947;
+    -fx-highlight-text-fill: white;
+    -fx-padding: 12px 14px;
+}
+
+.launcher-textarea .content,
+.log-area .content {
+    -fx-background-color: rgba(255, 255, 255, 0.02);
+    -fx-background-radius: 16px;
+}
+
+.launcher-check {
+    -fx-text-fill: #eef4fb;
+    -fx-font-size: 13px;
+}
+
+.launcher-check .box {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: rgba(255, 255, 255, 0.18);
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.launcher-check:selected .mark {
+    -fx-background-color: #ff6947;
+}
+
+.note-box {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-background-radius: 18px;
+    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-border-radius: 18px;
+    -fx-padding: 14px 16px;
+}
+
+.note-title {
+    -fx-text-fill: #f4f7fb;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+
+.note-copy {
+    -fx-text-fill: #98a2b0;
+    -fx-font-size: 12px;
+    -fx-line-spacing: 2px;
+}
+
+.log-card {
+    -fx-min-width: 390px;
+}
+
+.log-area {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 12px;
+    -fx-control-inner-background: rgba(4, 6, 10, 0.95);
+    -fx-background-color: rgba(8, 10, 14, 0.96);
+}
+
+.dock-bar {
+    -fx-padding: 14px 16px;
+}
+
+.dock-item {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-background-radius: 18px;
+    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-border-radius: 18px;
+    -fx-padding: 12px 14px;
+    -fx-min-width: 170px;
+}
+
+.dock-title {
+    -fx-text-fill: #f2c45e;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+
+.dock-value {
+    -fx-text-fill: #eff4fa;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.action-button {
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-padding: 12px 18px;
+    -fx-cursor: hand;
+}
+
+.action-button:disabled {
+    -fx-opacity: 0.55;
+}
+
+.primary-action {
+    -fx-background-color: linear-gradient(to bottom, #ff7a54, #ed5538);
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-text-fill: white;
+}
+
+.secondary-action {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: #eff4fa;
+}
+
+.utility-action {
+    -fx-background-color: rgba(255, 255, 255, 0.035);
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: #dbe4ee;
+}
+
+.dialog-root {
+    -fx-background-color: linear-gradient(to bottom right, #101319, #141920);
+}
+
+.dialog-header {
+    -fx-padding: 18px;
+}
+
+.settings-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.settings-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.settings-card {
+    -fx-padding: 18px;
+}
+
+.settings-actions {
+    -fx-alignment: center-left;
+}
+
+.dialog-path {
+    -fx-text-fill: #8e98a6;
+    -fx-font-size: 12px;
+}

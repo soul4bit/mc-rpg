@@ -1,5 +1,6 @@
 package ru.mcrpg.launcher;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -55,36 +56,40 @@ public final class LauncherFrame extends JFrame {
 
     private static final DateTimeFormatter LOG_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private static final Color CANVAS = new Color(11, 13, 16);
-    private static final Color SURFACE = new Color(32, 35, 40);
-    private static final Color SURFACE_ALT = new Color(43, 47, 54);
-    private static final Color SURFACE_SOFT = new Color(52, 37, 33);
-    private static final Color BORDER = new Color(96, 104, 116);
+    private static final Color CANVAS = new Color(10, 12, 15);
+    private static final Color SURFACE = new Color(31, 35, 41);
+    private static final Color SURFACE_RAISED = new Color(40, 45, 53);
+    private static final Color SURFACE_ALT = new Color(50, 40, 38);
+    private static final Color SURFACE_DARK = new Color(18, 20, 24);
+    private static final Color BORDER = new Color(99, 106, 118);
+    private static final Color BORDER_SOFT = new Color(72, 78, 89);
     private static final Color INK = new Color(247, 240, 232);
-    private static final Color INK_MUTED = new Color(183, 189, 198);
-    private static final Color HERO_TOP = new Color(48, 10, 12);
-    private static final Color HERO_BOTTOM = new Color(171, 44, 31);
+    private static final Color INK_MUTED = new Color(184, 191, 201);
+    private static final Color HERO_TOP = new Color(44, 8, 10);
+    private static final Color HERO_BOTTOM = new Color(171, 43, 29);
     private static final Color HERO_TEXT = new Color(255, 247, 240);
-    private static final Color HERO_MUTED = new Color(244, 214, 203);
-    private static final Color HERO_BORDER = new Color(255, 255, 255, 55);
-    private static final Color ACCENT = new Color(255, 75, 54);
-    private static final Color ACCENT_DEEP = new Color(189, 48, 35);
-    private static final Color ACCENT_SOFT = new Color(91, 48, 43);
-    private static final Color SLATE = new Color(67, 76, 89);
-    private static final Color LOG_BG = new Color(8, 10, 13);
-    private static final Color LOG_TEXT = new Color(229, 235, 240);
-    private static final Color LOG_BORDER = new Color(71, 78, 88);
-    private static final int PANEL_CUT = 12;
-    private static final int BUTTON_CUT = 8;
+    private static final Color HERO_MUTED = new Color(243, 214, 204);
+    private static final Color ACCENT = new Color(255, 88, 60);
+    private static final Color ACCENT_DEEP = new Color(194, 50, 37);
+    private static final Color ACCENT_SOFT = new Color(90, 47, 42);
+    private static final Color GOLD = new Color(242, 196, 94);
+    private static final Color GREEN = new Color(101, 195, 63);
+    private static final Color LOG_BG = new Color(9, 11, 15);
+    private static final Color LOG_BORDER = new Color(72, 79, 90);
+    private static final Color LOG_TEXT = new Color(226, 233, 239);
 
-    private static final Font HERO_TITLE_FONT = new Font("Arial Black", Font.PLAIN, 42);
-    private static final Font HERO_SUBTITLE_FONT = new Font("Segoe UI", Font.BOLD, 18);
-    private static final Font TITLE_FONT = new Font("Segoe UI Black", Font.PLAIN, 22);
+    private static final int PANEL_CUT = 12;
+    private static final int CHIP_CUT = 8;
+
+    private static final Font BRAND_FONT = new Font("Arial Black", Font.PLAIN, 26);
+    private static final Font HERO_FONT = new Font("Arial Black", Font.PLAIN, 38);
+    private static final Font HEADLINE_FONT = new Font("Segoe UI Black", Font.PLAIN, 22);
+    private static final Font TITLE_FONT = new Font("Segoe UI Black", Font.PLAIN, 18);
     private static final Font BODY_FONT = new Font("Segoe UI", Font.PLAIN, 14);
     private static final Font LABEL_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 13);
     private static final Font CAPTION_FONT = new Font("Consolas", Font.BOLD, 11);
-    private static final Font FIELD_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 15);
     private static final Font BUTTON_FONT = new Font("Segoe UI Black", Font.PLAIN, 14);
+    private static final Font FIELD_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 15);
     private static final Font MONO_FONT = new Font("Consolas", Font.PLAIN, 12);
 
     private final LauncherConfigStore configStore;
@@ -100,17 +105,22 @@ public final class LauncherFrame extends JFrame {
     private final JTextField serverPortField = new JTextField();
     private final JTextArea launchTemplateArea = new JTextArea(8, 60);
     private final JCheckBox updateFilesBeforeLaunchCheckBox =
-        new JCheckBox("Проверять и обновлять сборку перед запуском", true);
+        new JCheckBox("Автоматически обновлять сборку перед запуском", true);
     private final JTextArea logArea = new JTextArea();
 
-    private final JButton browseGameDirectoryButton = createDirectoryButton(gameDirectoryField, "Выбрать");
-    private final JButton launchButton = new JButton("Играть");
-    private final JButton syncButton = new JButton("Синхронизировать");
-    private final JButton settingsButton = new JButton("Расширенные настройки");
+    private final JButton launchButton = new PixelButton("ИГРАТЬ");
+    private final JButton syncButton = new PixelButton("ОБНОВИТЬ");
+    private final JButton settingsButton = new PixelButton("НАСТРОЙКИ");
+    private final JButton browseGameDirectoryButton = createDirectoryButton(gameDirectoryField, "ПАПКА");
 
-    private final JLabel playerSummaryLabel = new JLabel();
-    private final JLabel directorySummaryLabel = new JLabel();
-    private final JLabel updateSummaryLabel = new JLabel();
+    private final JLabel headerProfileLabel = new JLabel();
+    private final JLabel headerModeLabel = new JLabel();
+    private final JLabel heroPlayerLabel = new JLabel();
+    private final JLabel heroInstallLabel = new JLabel();
+    private final JLabel heroRouteLabel = new JLabel();
+    private final JLabel dockPlayerLabel = new JLabel();
+    private final JLabel dockFolderLabel = new JLabel();
+    private final JLabel dockModeLabel = new JLabel();
 
     public LauncherFrame(
         LauncherConfigStore configStore,
@@ -123,8 +133,8 @@ public final class LauncherFrame extends JFrame {
         this.modpackSyncService = modpackSyncService;
 
         setContentPane(buildContent());
-        setMinimumSize(new Dimension(1120, 780));
-        setPreferredSize(new Dimension(1240, 860));
+        setMinimumSize(new Dimension(1200, 820));
+        setPreferredSize(new Dimension(1320, 900));
         getContentPane().setBackground(CANVAS);
         pack();
         setLocationRelativeTo(null);
@@ -137,165 +147,207 @@ public final class LauncherFrame extends JFrame {
     }
 
     private JPanel buildContent() {
-        JPanel root = new JPanel(new BorderLayout(0, 18));
-        root.setBackground(CANVAS);
-        root.setBorder(new EmptyBorder(18, 18, 18, 18));
-        root.add(buildHeroPanel(), BorderLayout.NORTH);
+        JPanel root = new PatternPanel(new BorderLayout(0, 16));
+        root.setBorder(new EmptyBorder(16, 16, 16, 16));
+        root.add(buildTopBar(), BorderLayout.NORTH);
         root.add(buildMainPanel(), BorderLayout.CENTER);
+        root.add(buildDockBar(), BorderLayout.SOUTH);
         return root;
     }
 
-    private JPanel buildHeroPanel() {
-        GradientPanel hero = new GradientPanel(new BorderLayout(24, 20), HERO_TOP, HERO_BOTTOM, HERO_BORDER, PANEL_CUT);
-        hero.setBorder(new EmptyBorder(24, 28, 24, 28));
-        hero.setPreferredSize(new Dimension(0, 244));
+    private JPanel buildTopBar() {
+        BlockPanel topBar = new BlockPanel(new BorderLayout(16, 0), SURFACE_DARK, BORDER, CHIP_CUT);
+        topBar.setBorder(new EmptyBorder(14, 18, 14, 18));
 
-        JPanel copy = new JPanel();
-        copy.setOpaque(false);
-        copy.setLayout(new BoxLayout(copy, BoxLayout.Y_AXIS));
+        JPanel branding = new JPanel();
+        branding.setOpaque(false);
+        branding.setLayout(new BoxLayout(branding, BoxLayout.Y_AXIS));
+        branding.add(createLabel(LauncherBrand.APP_TITLE.toUpperCase(), BRAND_FONT, HERO_TEXT));
+        branding.add(Box.createVerticalStrut(3));
+        branding.add(createLabel(LauncherBrand.APP_SUBTITLE, BODY_FONT, INK_MUTED));
 
-        copy.add(createLabel(LauncherBrand.APP_SUBTITLE.toUpperCase(), CAPTION_FONT, HERO_MUTED));
-        copy.add(Box.createVerticalStrut(10));
-        copy.add(createLabel(LauncherBrand.APP_TITLE, HERO_TITLE_FONT, HERO_TEXT));
-        copy.add(Box.createVerticalStrut(10));
-        copy.add(createLabel("Лаунчер для обычного игрока, а не панель администратора.", HERO_SUBTITLE_FONT, HERO_TEXT));
-        copy.add(Box.createVerticalStrut(8));
-        copy.add(createHtmlLabel(
-            "<html>Redstone сам подтянет runtime, серверный маршрут и client files. На главном экране остаётся только то, что реально нужно для игры.</html>",
-            BODY_FONT,
-            HERO_MUTED
-        ));
+        JPanel chips = new JPanel();
+        chips.setOpaque(false);
+        chips.setLayout(new BoxLayout(chips, BoxLayout.X_AXIS));
+        chips.add(createStatusChip("PROFILE", headerProfileLabel, SURFACE_RAISED, BORDER));
+        chips.add(Box.createHorizontalStrut(10));
+        chips.add(createStatusChip("MODE", headerModeLabel, SURFACE_RAISED, BORDER));
 
-        copy.add(Box.createVerticalStrut(14));
-        copy.add(createHeroBadgeRow("MODPACK", "FORGE 1.12.2", "REDSTONE READY"));
-
-        RoundedPanel metrics = new RoundedPanel(new GridLayout(3, 1, 0, 12), new Color(255, 255, 255, 18), HERO_BORDER, PANEL_CUT);
-        metrics.setBorder(new EmptyBorder(18, 18, 18, 18));
-        metrics.setPreferredSize(new Dimension(340, 0));
-        metrics.add(createHeroMetric("Игрок", playerSummaryLabel));
-        metrics.add(createHeroMetric("Папка клиента", directorySummaryLabel));
-        metrics.add(createHeroMetric("Режим обновления", updateSummaryLabel));
-
-        hero.add(copy, BorderLayout.CENTER);
-        hero.add(metrics, BorderLayout.EAST);
-        return hero;
+        topBar.add(branding, BorderLayout.WEST);
+        topBar.add(chips, BorderLayout.EAST);
+        return topBar;
     }
 
     private JPanel buildMainPanel() {
         JPanel main = new JPanel(new GridBagLayout());
         main.setOpaque(false);
 
-        JPanel leftColumn = createColumnPanel();
-        addColumnCard(leftColumn, 0, buildPlayCard(), 0.0, new Insets(0, 0, 16, 0));
-        addColumnCard(leftColumn, 1, buildInstallCard(), 0.0, new Insets(0, 0, 16, 0));
-        addColumnCard(leftColumn, 2, buildHelpCard(), 1.0, new Insets(0, 0, 0, 0));
-
-        JPanel rightColumn = createColumnPanel();
-        addColumnCard(rightColumn, 0, buildLogCard(), 1.0, new Insets(0, 0, 0, 0));
-
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridy = 0;
         constraints.gridx = 0;
-        constraints.weightx = 0.42;
+        constraints.gridy = 0;
+        constraints.weightx = 0.63;
         constraints.weighty = 1.0;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.insets = new Insets(0, 0, 0, 10);
-        main.add(leftColumn, constraints);
+        main.add(buildShowcasePanel(), constraints);
 
         constraints = new GridBagConstraints();
-        constraints.gridy = 0;
         constraints.gridx = 1;
-        constraints.weightx = 0.58;
+        constraints.gridy = 0;
+        constraints.weightx = 0.37;
         constraints.weighty = 1.0;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.insets = new Insets(0, 10, 0, 0);
-        main.add(rightColumn, constraints);
+        main.add(buildLogCard(), constraints);
         return main;
     }
 
-    private JPanel buildPlayCard() {
-        RoundedPanel card = createCard(
-            "Play",
-            "Вход в мир",
-            "Ник, кнопка запуска и основные действия. Серверный IP, manifest и Java скрыты в расширенных настройках."
-        );
+    private JPanel buildShowcasePanel() {
+        JPanel showcase = new JPanel(new BorderLayout(0, 14));
+        showcase.setOpaque(false);
+        showcase.add(buildShowcaseHeader(), BorderLayout.NORTH);
+        showcase.add(buildShowcaseGrid(), BorderLayout.CENTER);
+        return showcase;
+    }
 
-        JPanel body = createBodyStack();
-        body.add(createFieldBlock(
-            "Ник игрока",
-            "Это имя уйдёт в шаблон запуска и в offline UUID клиента.",
-            usernameField,
-            null
+    private JPanel buildShowcaseHeader() {
+        JPanel header = new JPanel();
+        header.setOpaque(false);
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+        header.add(createLabel("PLAY REDSTONE", HEADLINE_FONT, ACCENT));
+        header.add(Box.createVerticalStrut(4));
+        header.add(createHtmlLabel(
+            "<html>Главный экран теперь ведёт себя как mod launcher: витрина профиля, быстрый вход и минимум технических полей.</html>",
+            BODY_FONT,
+            INK_MUTED
         ));
-        body.add(createSpacer(16));
+        return header;
+    }
 
-        launchButton.setPreferredSize(new Dimension(0, 50));
-        body.add(prepareWideComponent(launchButton));
-        body.add(createSpacer(10));
+    private JPanel buildShowcaseGrid() {
+        JPanel grid = new JPanel(new GridBagLayout());
+        grid.setOpaque(false);
 
-        JPanel secondaryRow = new JPanel(new GridLayout(1, 2, 10, 0));
-        secondaryRow.setOpaque(false);
-        secondaryRow.add(syncButton);
-        secondaryRow.add(settingsButton);
-        body.add(prepareWideComponent(secondaryRow));
-        body.add(createSpacer(16));
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 0.66;
+        constraints.weighty = 1.0;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.insets = new Insets(0, 0, 0, 8);
+        grid.add(buildFeaturedServerCard(), constraints);
 
-        body.add(createNotePanel(
-            "Что скрыто",
-            "<html>Manifest URL, Java, рабочая папка, серверный IP и launch template убраны с основного экрана. Они доступны только через <b>Расширенные настройки</b>.</html>"
+        JPanel sideStack = new JPanel(new GridLayout(2, 1, 0, 14));
+        sideStack.setOpaque(false);
+        sideStack.add(buildProfileCard());
+        sideStack.add(buildInstallCard());
+
+        constraints = new GridBagConstraints();
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.weightx = 0.34;
+        constraints.weighty = 1.0;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.insets = new Insets(0, 8, 0, 0);
+        grid.add(sideStack, constraints);
+        return grid;
+    }
+
+    private JPanel buildFeaturedServerCard() {
+        HeroCardPanel card = new HeroCardPanel(new BorderLayout());
+        card.setBorder(new EmptyBorder(22, 24, 22, 24));
+
+        JPanel content = new JPanel();
+        content.setOpaque(false);
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+
+        JPanel chipRow = new JPanel();
+        chipRow.setOpaque(false);
+        chipRow.setLayout(new BoxLayout(chipRow, BoxLayout.X_AXIS));
+        chipRow.add(createStaticChip("FORGE 1.12.2", GOLD));
+        chipRow.add(Box.createHorizontalStrut(8));
+        chipRow.add(createStaticChip("MAIN SERVER", ACCENT));
+        chipRow.add(Box.createHorizontalStrut(8));
+        chipRow.add(createStaticChip("READY", GREEN));
+
+        content.add(chipRow);
+        content.add(Box.createVerticalStrut(18));
+        content.add(createLabel("Redstone Realm", HERO_FONT, HERO_TEXT));
+        content.add(Box.createVerticalStrut(8));
+        content.add(createHtmlLabel(
+            "<html>Один главный мир, единый modpack-профиль и быстрый вход без ручной возни с runtime, forge и библиотеками.</html>",
+            BODY_FONT,
+            HERO_MUTED
+        ));
+        content.add(Box.createVerticalStrut(18));
+
+        JPanel infoGrid = new JPanel(new GridLayout(1, 3, 12, 0));
+        infoGrid.setOpaque(false);
+        infoGrid.add(createHeroInfoCard("Игрок", heroPlayerLabel));
+        infoGrid.add(createHeroInfoCard("Установка", heroInstallLabel));
+        infoGrid.add(createHeroInfoCard("Маршрут", heroRouteLabel));
+        content.add(infoGrid);
+        content.add(Box.createVerticalGlue());
+        content.add(Box.createVerticalStrut(14));
+        content.add(createHtmlLabel(
+            "<html><b>Поток запуска:</b> синхронизация файлов, затем старт Minecraft. Технические настройки убраны в отдельное окно.</html>",
+            BODY_FONT,
+            HERO_MUTED
         ));
 
-        card.add(body, BorderLayout.CENTER);
+        card.add(content, BorderLayout.CENTER);
         return card;
     }
 
     private JPanel buildInstallCard() {
-        RoundedPanel card = createCard(
-            "Install",
-            "Папка клиента",
-            "Куда Redstone складывает runtime, конфиги, моды и bootstrap Minecraft."
+        BlockPanel card = createCard(
+            "INSTALL",
+            "Modpack install",
+            "Оставляем на главном экране только путь установки и режим обновления."
         );
 
         JPanel body = createBodyStack();
         body.add(createFieldBlock(
-            "Каталог установки",
-            "Обычно менять его нужно только один раз.",
+            "Каталог сборки",
+            "Сюда Redstone складывает runtime, моды, конфиги и bootstrap Minecraft.",
             gameDirectoryField,
             browseGameDirectoryButton
         ));
-        body.add(createSpacer(14));
+        body.add(Box.createVerticalStrut(14));
         body.add(prepareWideComponent(updateFilesBeforeLaunchCheckBox));
-        body.add(createSpacer(14));
+        body.add(Box.createVerticalStrut(14));
         body.add(createNotePanel(
-            "Как это работает",
-            "<html>Если автообновление включено, лаунчер перед игрой проверит manifest, доберёт недостающие файлы и только потом запустит клиент.</html>"
+            "Что делает обновление",
+            "<html>Лаунчер сверит manifest, скачает недостающие файлы и только потом откроет Minecraft.</html>"
         ));
 
         card.add(body, BorderLayout.CENTER);
         return card;
     }
 
-    private JPanel buildHelpCard() {
-        RoundedPanel card = createCard(
-            "Help",
-            "Подсказки",
-            "Минимум нужной информации для первого входа и диагностики проблем без показа внутренней кухни."
+    private JPanel buildProfileCard() {
+        BlockPanel card = createCard(
+            "PROFILE",
+            "Игровой профиль",
+            "Ник и подсказки авторизации остаются в витрине, всё остальное скрыто."
         );
 
         JPanel body = createBodyStack();
+        body.add(createFieldBlock(
+            "Ник Minecraft",
+            "Имя профиля, которое уйдёт прямо в запуск клиента.",
+            usernameField,
+            null
+        ));
+        body.add(Box.createVerticalStrut(14));
         body.add(createNotePanel(
             "Первый вход",
             "<html>" + ServerAuthHints.launcherHelpHtml() + "</html>"
         ));
-        body.add(createSpacer(10));
+        body.add(Box.createVerticalStrut(10));
         body.add(createNotePanel(
-            "Если что-то не запускается",
-            "<html>Смотри лог справа. Именно туда попадают этапы синхронизации, ошибки manifest, подсказки по авторизации и вывод клиента.</html>"
-        ));
-        body.add(createSpacer(10));
-        body.add(createNotePanel(
-            "Когда нужны расширенные настройки",
-            "<html>Только если меняется адрес manifest, серверный endpoint, Java-команда или launch template. Обычному игроку туда обычно заходить не нужно.</html>"
+            "Если что-то сломалось",
+            "<html>Правый журнал показывает этапы синхронизации, ошибки manifest и вывод клиента.</html>"
         ));
 
         card.add(body, BorderLayout.CENTER);
@@ -303,47 +355,58 @@ public final class LauncherFrame extends JFrame {
     }
 
     private JPanel buildLogCard() {
-        RoundedPanel card = createCard(
-            "Live Feed",
-            "Живой лог",
-            "Последние шаги синхронизации, stdout клиента и системные подсказки в одном месте."
+        BlockPanel card = createCard(
+            "CONSOLE",
+            "Живой журнал",
+            "Сюда уходит синхронизация, stdout клиента и любые ошибки запуска."
         );
         card.add(createEditorScroll(logArea, 0, LOG_BG, LOG_BORDER), BorderLayout.CENTER);
         return card;
     }
 
-    private RoundedPanel createCard(String eyebrowText, String titleText, String descriptionText) {
-        RoundedPanel card = new RoundedPanel(new BorderLayout(0, 16), SURFACE, BORDER, PANEL_CUT);
+    private JPanel buildDockBar() {
+        BlockPanel dock = new BlockPanel(new BorderLayout(14, 0), SURFACE_DARK, BORDER, CHIP_CUT);
+        dock.setBorder(new EmptyBorder(12, 14, 12, 14));
+
+        JPanel summary = new JPanel(new GridLayout(1, 3, 10, 0));
+        summary.setOpaque(false);
+        summary.add(createDockSummary("Игрок", dockPlayerLabel));
+        summary.add(createDockSummary("Папка", dockFolderLabel));
+        summary.add(createDockSummary("Режим", dockModeLabel));
+
+        JPanel actions = new JPanel();
+        actions.setOpaque(false);
+        actions.setLayout(new BoxLayout(actions, BoxLayout.X_AXIS));
+        actions.add(syncButton);
+        actions.add(Box.createHorizontalStrut(10));
+        actions.add(settingsButton);
+        actions.add(Box.createHorizontalStrut(10));
+        actions.add(launchButton);
+
+        launchButton.setPreferredSize(new Dimension(190, 48));
+        syncButton.setPreferredSize(new Dimension(150, 48));
+        settingsButton.setPreferredSize(new Dimension(185, 48));
+
+        dock.add(summary, BorderLayout.CENTER);
+        dock.add(actions, BorderLayout.EAST);
+        return dock;
+    }
+
+    private BlockPanel createCard(String eyebrowText, String titleText, String descriptionText) {
+        BlockPanel card = new BlockPanel(new BorderLayout(0, 16), SURFACE, BORDER, PANEL_CUT);
         card.setBorder(new EmptyBorder(18, 18, 18, 18));
 
         JPanel header = new JPanel();
         header.setOpaque(false);
         header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
-        header.add(createLabel(eyebrowText.toUpperCase(), CAPTION_FONT, HERO_MUTED));
-        header.add(createSpacer(6));
-        header.add(createLabel(titleText, TITLE_FONT, INK));
-        header.add(createSpacer(6));
+        header.add(createLabel(eyebrowText, CAPTION_FONT, GOLD));
+        header.add(Box.createVerticalStrut(6));
+        header.add(createLabel(titleText, HEADLINE_FONT, INK));
+        header.add(Box.createVerticalStrut(6));
         header.add(createHtmlLabel("<html>" + descriptionText + "</html>", BODY_FONT, INK_MUTED));
 
         card.add(header, BorderLayout.NORTH);
         return card;
-    }
-
-    private JPanel createColumnPanel() {
-        JPanel column = new JPanel(new GridBagLayout());
-        column.setOpaque(false);
-        return column;
-    }
-
-    private void addColumnCard(JPanel column, int row, JComponent card, double weighty, Insets insets) {
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridy = row;
-        constraints.gridx = 0;
-        constraints.weightx = 1.0;
-        constraints.weighty = weighty;
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.insets = insets;
-        column.add(card, constraints);
     }
 
     private JPanel createBodyStack() {
@@ -361,65 +424,70 @@ public final class LauncherFrame extends JFrame {
         header.setOpaque(false);
         header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
         header.add(createLabel(title, LABEL_FONT, INK));
-        if (hasText(hint)) {
-            header.add(createSpacer(4));
-            header.add(createHtmlLabel("<html>" + hint + "</html>", BODY_FONT, INK_MUTED));
-        }
+        header.add(Box.createVerticalStrut(4));
+        header.add(createHtmlLabel("<html>" + hint + "</html>", BODY_FONT, INK_MUTED));
 
-        block.add(header, BorderLayout.NORTH);
-        block.add(createInputShell(input, extraButton), BorderLayout.CENTER);
-        return prepareWideComponent(block);
-    }
-
-    private JPanel createInputShell(JComponent input, JButton extraButton) {
         JPanel shell = new JPanel(new BorderLayout(8, 0));
         shell.setOpaque(false);
         shell.add(input, BorderLayout.CENTER);
         if (extraButton != null) {
             shell.add(extraButton, BorderLayout.EAST);
         }
-        return prepareWideComponent(shell);
+
+        block.add(header, BorderLayout.NORTH);
+        block.add(prepareWideComponent(shell), BorderLayout.CENTER);
+        return prepareWideComponent(block);
     }
 
-    private RoundedPanel createNotePanel(String title, String body) {
-        RoundedPanel note = new RoundedPanel(new BorderLayout(0, 6), SURFACE_SOFT, BORDER, BUTTON_CUT);
+    private BlockPanel createNotePanel(String title, String body) {
+        BlockPanel note = new BlockPanel(new BorderLayout(0, 6), SURFACE_ALT, BORDER_SOFT, CHIP_CUT);
         note.setBorder(new EmptyBorder(12, 12, 12, 12));
         note.add(createLabel(title, LABEL_FONT, INK), BorderLayout.NORTH);
         note.add(createHtmlLabel(body, BODY_FONT, INK_MUTED), BorderLayout.CENTER);
         return note;
     }
 
-    private JPanel createHeroMetric(String caption, JLabel valueLabel) {
-        JPanel metric = new JPanel();
-        metric.setOpaque(false);
-        metric.setLayout(new BoxLayout(metric, BoxLayout.Y_AXIS));
-        metric.add(createLabel(caption.toUpperCase(), CAPTION_FONT, HERO_MUTED));
-        metric.add(createSpacer(5));
-        valueLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 16));
+    private JPanel createDockSummary(String title, JLabel valueLabel) {
+        JPanel block = new JPanel();
+        block.setOpaque(false);
+        block.setLayout(new BoxLayout(block, BoxLayout.Y_AXIS));
+        block.add(createLabel(title.toUpperCase(), CAPTION_FONT, GOLD));
+        block.add(Box.createVerticalStrut(4));
+        valueLabel.setFont(BODY_FONT);
+        valueLabel.setForeground(INK);
+        valueLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        block.add(valueLabel);
+        return block;
+    }
+
+    private JPanel createHeroInfoCard(String title, JLabel valueLabel) {
+        BlockPanel info = new BlockPanel(new BorderLayout(0, 6), new Color(0, 0, 0, 82), new Color(255, 255, 255, 42), CHIP_CUT);
+        info.setBorder(new EmptyBorder(10, 12, 10, 12));
+        info.add(createLabel(title.toUpperCase(), CAPTION_FONT, HERO_MUTED), BorderLayout.NORTH);
+        valueLabel.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 15));
         valueLabel.setForeground(HERO_TEXT);
         valueLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        metric.add(valueLabel);
-        return metric;
+        info.add(valueLabel, BorderLayout.CENTER);
+        return info;
     }
 
-    private JPanel createHeroBadgeRow(String first, String second, String third) {
-        JPanel row = new JPanel(new GridLayout(1, 3, 8, 0));
-        row.setOpaque(false);
-        row.setAlignmentX(Component.LEFT_ALIGNMENT);
-        row.setMaximumSize(new Dimension(420, 30));
-        row.add(createHeroBadge(first));
-        row.add(createHeroBadge(second));
-        row.add(createHeroBadge(third));
-        return row;
+    private JPanel createStatusChip(String title, JLabel valueLabel, Color fill, Color stroke) {
+        BlockPanel chip = new BlockPanel(new BorderLayout(8, 0), fill, stroke, CHIP_CUT);
+        chip.setBorder(new EmptyBorder(8, 10, 8, 10));
+        chip.add(createLabel(title, CAPTION_FONT, GOLD), BorderLayout.WEST);
+        valueLabel.setFont(BODY_FONT);
+        valueLabel.setForeground(INK);
+        chip.add(valueLabel, BorderLayout.CENTER);
+        return chip;
     }
 
-    private JComponent createHeroBadge(String text) {
-        JLabel badge = createLabel(text, CAPTION_FONT, HERO_TEXT);
-        badge.setBorder(new EmptyBorder(6, 8, 6, 8));
-        RoundedPanel shell = new RoundedPanel(new BorderLayout(), new Color(0, 0, 0, 55), new Color(255, 255, 255, 40), BUTTON_CUT);
-        shell.setBorder(new EmptyBorder(0, 0, 0, 0));
-        shell.add(badge, BorderLayout.CENTER);
-        return shell;
+    private JComponent createStaticChip(String text, Color accent) {
+        BlockPanel chip = new BlockPanel(new BorderLayout(), new Color(0, 0, 0, 70), new Color(255, 255, 255, 36), CHIP_CUT);
+        chip.setBorder(new EmptyBorder(6, 10, 6, 10));
+        JLabel label = createLabel(text, CAPTION_FONT, HERO_TEXT);
+        chip.add(label, BorderLayout.CENTER);
+        chip.setOverlayColor(adjustColor(accent, -30));
+        return chip;
     }
 
     private JScrollPane createEditorScroll(JTextArea textArea, int preferredHeight, Color background, Color borderColor) {
@@ -427,7 +495,7 @@ public final class LauncherFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setBorder(
             new CompoundBorder(
-                new LineBorder(adjustColor(borderColor, 22), 1, false),
+                new LineBorder(adjustColor(borderColor, 18), 1, false),
                 new CompoundBorder(new LineBorder(borderColor, 1, false), new EmptyBorder(0, 0, 0, 0))
             )
         );
@@ -457,10 +525,6 @@ public final class LauncherFrame extends JFrame {
         return label;
     }
 
-    private Component createSpacer(int height) {
-        return Box.createVerticalStrut(height);
-    }
-
     private <T extends JComponent> T prepareWideComponent(T component) {
         component.setAlignmentX(Component.LEFT_ALIGNMENT);
         Dimension preferred = component.getPreferredSize();
@@ -477,14 +541,14 @@ public final class LauncherFrame extends JFrame {
         styleTextField(serverHostField);
         styleTextField(serverPortField);
 
-        styleTextArea(launchTemplateArea, SURFACE_ALT, INK);
+        styleTextArea(launchTemplateArea, SURFACE_RAISED, INK);
         styleTextArea(logArea, LOG_BG, LOG_TEXT);
         logArea.setEditable(false);
 
-        styleActionButton(launchButton, ACCENT, Color.WHITE, ACCENT_DEEP);
-        styleActionButton(syncButton, SLATE, Color.WHITE, BORDER);
-        styleActionButton(settingsButton, SURFACE_ALT, INK, BORDER);
-        styleActionButton(browseGameDirectoryButton, ACCENT_SOFT, INK, BORDER);
+        stylePixelButton(launchButton, ACCENT, Color.WHITE, ACCENT_DEEP);
+        stylePixelButton(syncButton, SURFACE_RAISED, INK, BORDER_SOFT);
+        stylePixelButton(settingsButton, SURFACE_RAISED, INK, BORDER_SOFT);
+        stylePixelButton(browseGameDirectoryButton, ACCENT_SOFT, INK, BORDER_SOFT);
 
         updateFilesBeforeLaunchCheckBox.setOpaque(false);
         updateFilesBeforeLaunchCheckBox.setFont(BODY_FONT);
@@ -495,13 +559,13 @@ public final class LauncherFrame extends JFrame {
 
     private void styleTextField(JTextField field) {
         field.setFont(FIELD_FONT);
-        field.setBackground(SURFACE_ALT);
+        field.setBackground(SURFACE_RAISED);
         field.setForeground(INK);
         field.setCaretColor(ACCENT);
         field.setBorder(
             new CompoundBorder(
-                new LineBorder(adjustColor(BORDER, 22), 1, false),
-                new CompoundBorder(new LineBorder(BORDER, 1, false), new EmptyBorder(11, 12, 11, 12))
+                new LineBorder(adjustColor(BORDER, 18), 1, false),
+                new CompoundBorder(new LineBorder(BORDER_SOFT, 1, false), new EmptyBorder(11, 12, 11, 12))
             )
         );
     }
@@ -515,25 +579,16 @@ public final class LauncherFrame extends JFrame {
         textArea.setCaretColor(ACCENT);
     }
 
-    private void styleActionButton(JButton button, Color background, Color foreground, Color borderColor) {
+    private void stylePixelButton(JButton button, Color background, Color foreground, Color border) {
         button.setFont(BUTTON_FONT);
-        button.setBackground(background);
         button.setForeground(foreground);
-        button.setBorder(
-            new CompoundBorder(
-                new LineBorder(adjustColor(borderColor, 24), 1, false),
-                new CompoundBorder(new LineBorder(borderColor, 1, false), new EmptyBorder(11, 14, 11, 14))
-            )
-        );
-        button.setFocusPainted(false);
-        button.setOpaque(true);
-        button.setContentAreaFilled(true);
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        if (button instanceof PixelButton) {
+            ((PixelButton) button).setTheme(background, border, adjustColor(background, 18), adjustColor(background, -24));
+        }
     }
 
     private JButton createDirectoryButton(JTextField targetField, String label) {
-        JButton button = new JButton(label);
-        styleActionButton(button, ACCENT_SOFT, INK, BORDER);
+        JButton button = new PixelButton(label);
         button.addActionListener(event -> chooseDirectory(targetField));
         return button;
     }
@@ -604,15 +659,29 @@ public final class LauncherFrame extends JFrame {
     }
 
     private void refreshSummary(LauncherConfig config) {
-        playerSummaryLabel.setText(valueOrFallback(config.getUsername(), LauncherDefaults.defaultUsername()));
-        directorySummaryLabel.setText(compact(valueOrFallback(config.getGameDirectory(), LauncherDefaults.defaultGameDirectory()), 34));
-        updateSummaryLabel.setText(config.isUpdateFilesBeforeLaunch() ? "Автосинхронизация" : "Только ручной запуск");
+        String username = valueOrFallback(config.getUsername(), LauncherDefaults.defaultUsername());
+        String folderName = displayFolderName(valueOrFallback(config.getGameDirectory(), LauncherDefaults.defaultGameDirectory()));
+        String mode = config.isUpdateFilesBeforeLaunch() ? "Auto-sync" : "Manual";
+        String route = valueOrFallback(config.getServerHost(), "server") + ":" + config.getServerPort();
+
+        headerProfileLabel.setText(username);
+        headerModeLabel.setText(mode);
+
+        heroPlayerLabel.setText(username);
+        heroInstallLabel.setText(folderName);
+        heroRouteLabel.setText(route);
+
+        dockPlayerLabel.setText(username);
+        dockFolderLabel.setText(folderName);
+        dockModeLabel.setText(mode);
     }
 
     private void refreshSummaryFromVisibleFields() {
         LauncherConfig preview = LauncherConfig.defaults();
         preview.setUsername(usernameField.getText().trim());
         preview.setGameDirectory(gameDirectoryField.getText().trim());
+        preview.setServerHost(serverHostField.getText().trim());
+        preview.setServerPort(parsePortOrDefault(serverPortField.getText()));
         preview.setUpdateFilesBeforeLaunch(updateFilesBeforeLaunchCheckBox.isSelected());
         LauncherDefaults.applyMissingValues(preview);
         refreshSummary(preview);
@@ -654,10 +723,10 @@ public final class LauncherFrame extends JFrame {
         final LauncherConfig snapshot = readConfig();
         final boolean[] applied = new boolean[] {false};
 
-        JDialog dialog = new JDialog(this, "Настройки " + LauncherBrand.APP_TITLE, true);
+        JDialog dialog = new JDialog(this, "Технические настройки " + LauncherBrand.APP_TITLE, true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setContentPane(buildSettingsContent(dialog, snapshot, applied));
-        dialog.setMinimumSize(new Dimension(900, 760));
+        dialog.setMinimumSize(new Dimension(920, 780));
         dialog.pack();
         dialog.setLocationRelativeTo(this);
         dialog.addWindowListener(new WindowAdapter() {
@@ -679,21 +748,20 @@ public final class LauncherFrame extends JFrame {
     }
 
     private JPanel buildSettingsContent(JDialog dialog, LauncherConfig snapshot, boolean[] applied) {
-        JPanel root = new JPanel(new BorderLayout(0, 16));
-        root.setBackground(CANVAS);
+        JPanel root = new PatternPanel(new BorderLayout(0, 16));
         root.setBorder(new EmptyBorder(18, 18, 18, 18));
 
-        RoundedPanel header = new RoundedPanel(new BorderLayout(0, 8), SURFACE, BORDER, PANEL_CUT);
+        BlockPanel header = new BlockPanel(new BorderLayout(0, 8), SURFACE_DARK, BORDER, CHIP_CUT);
         header.setBorder(new EmptyBorder(18, 18, 18, 18));
-        header.add(createLabel("Расширенные настройки", TITLE_FONT, INK), BorderLayout.NORTH);
+        header.add(createLabel("Технические настройки", HEADLINE_FONT, INK), BorderLayout.NORTH);
         header.add(createHtmlLabel(
-            "<html>Эти поля нужны только для настройки окружения. Обычный игрок может сюда не заходить.</html>",
+            "<html>Сюда вынесены raw-поля, которые не нужны обычному игроку: manifest URL, Java, сетевой маршрут и launch template.</html>",
             BODY_FONT,
             INK_MUTED
         ), BorderLayout.CENTER);
 
-        JPanel content = new JPanel(new GridBagLayout());
-        content.setOpaque(false);
+        JPanel cards = new JPanel(new GridBagLayout());
+        cards.setOpaque(false);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
@@ -702,23 +770,23 @@ public final class LauncherFrame extends JFrame {
         constraints.weighty = 0.0;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(0, 0, 14, 0);
-        content.add(buildEnvironmentSettingsCard(), constraints);
+        cards.add(buildEnvironmentSettingsCard(), constraints);
 
         constraints.gridy = 1;
-        content.add(buildServerSettingsCard(), constraints);
+        cards.add(buildServerSettingsCard(), constraints);
 
         constraints.gridy = 2;
         constraints.weighty = 1.0;
         constraints.fill = GridBagConstraints.BOTH;
         constraints.insets = new Insets(0, 0, 0, 0);
-        content.add(buildLaunchSettingsCard(), constraints);
+        cards.add(buildLaunchSettingsCard(), constraints);
 
-        JButton previewButton = new JButton("Проверить команду");
-        JButton applyButton = new JButton("Применить");
-        JButton cancelButton = new JButton("Отмена");
-        styleActionButton(previewButton, SURFACE_ALT, INK, BORDER);
-        styleActionButton(applyButton, ACCENT, Color.WHITE, ACCENT_DEEP);
-        styleActionButton(cancelButton, SURFACE_ALT, INK, BORDER);
+        JButton previewButton = new PixelButton("ПРОВЕРИТЬ КОМАНДУ");
+        JButton applyButton = new PixelButton("ПРИМЕНИТЬ");
+        JButton cancelButton = new PixelButton("ОТМЕНА");
+        stylePixelButton(previewButton, SURFACE_RAISED, INK, BORDER_SOFT);
+        stylePixelButton(applyButton, ACCENT, Color.WHITE, ACCENT_DEEP);
+        stylePixelButton(cancelButton, SURFACE_RAISED, INK, BORDER_SOFT);
 
         previewButton.addActionListener(event -> previewCommand());
         applyButton.addActionListener(event -> {
@@ -751,53 +819,53 @@ public final class LauncherFrame extends JFrame {
         buttonBar.add(applyButton);
 
         root.add(header, BorderLayout.NORTH);
-        root.add(content, BorderLayout.CENTER);
+        root.add(cards, BorderLayout.CENTER);
         root.add(buttonBar, BorderLayout.SOUTH);
         return root;
     }
 
     private JPanel buildEnvironmentSettingsCard() {
-        RoundedPanel card = createCard(
-            "Environment",
+        BlockPanel card = createCard(
+            "ENVIRONMENT",
             "Runtime и manifest",
-            "Настройки локальной Java-команды, адреса manifest и рабочей директории."
+            "Низкоуровневые настройки локальной Java-команды, manifest и рабочей директории."
         );
 
         JPanel body = createBodyStack();
         body.add(createFieldBlock("Java", "Команда запуска Java или путь к java.exe.", javaCommandField, null));
-        body.add(createSpacer(12));
+        body.add(Box.createVerticalStrut(12));
         body.add(createFieldBlock("Manifest URL", "HTTP(S)-адрес manifest.json.", manifestUrlField, null));
-        body.add(createSpacer(12));
+        body.add(Box.createVerticalStrut(12));
         body.add(createFieldBlock(
             "Рабочая папка",
             "Каталог, из которого запускается клиент. Может быть переопределён manifest.",
             workingDirectoryField,
-            createDirectoryButton(workingDirectoryField, "Выбрать")
+            createDirectoryButton(workingDirectoryField, "ПАПКА")
         ));
         card.add(body, BorderLayout.CENTER);
         return card;
     }
 
     private JPanel buildServerSettingsCard() {
-        RoundedPanel card = createCard(
-            "Server",
+        BlockPanel card = createCard(
+            "SERVER",
             "Сетевой маршрут",
-            "Серверный endpoint и служебные параметры подключения."
+            "Технические параметры подключения к игровому серверу."
         );
 
         JPanel body = createBodyStack();
         body.add(createFieldBlock("IP сервера", "Хост Minecraft-сервера.", serverHostField, null));
-        body.add(createSpacer(12));
+        body.add(Box.createVerticalStrut(12));
         body.add(createFieldBlock("Порт", "Порт игрового сервера.", serverPortField, null));
         card.add(body, BorderLayout.CENTER);
         return card;
     }
 
     private JPanel buildLaunchSettingsCard() {
-        RoundedPanel card = createCard(
-            "Launch",
+        BlockPanel card = createCard(
+            "LAUNCH",
             "Launch template",
-            "Низкоуровневая команда запуска. Менять только если точно понимаешь, зачем."
+            "Низкоуровневая команда запуска. Менять только если понимаешь, зачем."
         );
 
         JPanel body = createBodyStack();
@@ -806,11 +874,11 @@ public final class LauncherFrame extends JFrame {
             "<html><code>{java}</code>, <code>{username}</code>, <code>{gameDir}</code>, <code>{workingDir}</code>, "
                 + "<code>{serverHost}</code>, <code>{serverPort}</code>, <code>{uuid}</code>, <code>{accessToken}</code>, <code>{userType}</code>.</html>"
         ));
-        body.add(createSpacer(12));
+        body.add(Box.createVerticalStrut(12));
         body.add(createFieldBlock(
             "Команда запуска",
             "Итоговая строка будет собрана через launch template и текущий config.",
-            createEditorScroll(launchTemplateArea, 240, SURFACE_ALT, BORDER),
+            createEditorScroll(launchTemplateArea, 250, SURFACE_RAISED, BORDER_SOFT),
             null
         ));
         card.add(body, BorderLayout.CENTER);
@@ -958,6 +1026,16 @@ public final class LauncherFrame extends JFrame {
 
     private static String valueOrFallback(String value, String fallback) {
         return hasText(value) ? value.trim() : fallback;
+    }
+
+    private static String displayFolderName(String value) {
+        try {
+            Path path = Paths.get(value).normalize();
+            Path fileName = path.getFileName();
+            return fileName == null ? compact(value, 24) : compact(fileName.toString(), 24);
+        } catch (Exception exception) {
+            return compact(value, 24);
+        }
     }
 
     private static String compact(String value, int maxLength) {
@@ -1108,18 +1186,37 @@ public final class LauncherFrame extends JFrame {
         }
     }
 
-    private static final class RoundedPanel extends JPanel {
+    private static class BlockPanel extends JPanel {
 
         private final Color fillColor;
         private final Color borderColor;
-        private final int arc;
+        private final int cut;
+        private Color overlayColor = null;
 
-        private RoundedPanel(LayoutManager layout, Color fillColor, Color borderColor, int arc) {
+        private BlockPanel(LayoutManager layout, Color fillColor, Color borderColor, int cut) {
             super(layout);
             this.fillColor = fillColor;
             this.borderColor = borderColor;
-            this.arc = arc;
+            this.cut = cut;
             setOpaque(false);
+        }
+
+        private void setOverlayColor(Color overlayColor) {
+            this.overlayColor = overlayColor;
+        }
+
+        protected void paintPanel(Graphics2D g2) {
+            g2.setColor(fillColor);
+            fillBlockShape(g2, getWidth(), getHeight(), cut);
+
+            if (overlayColor != null) {
+                g2.setColor(new Color(overlayColor.getRed(), overlayColor.getGreen(), overlayColor.getBlue(), 35));
+                g2.fillRect(cut + 2, cut + 2, Math.max(0, getWidth() - (cut * 2) - 4), 6);
+            }
+
+            g2.setColor(adjustColor(fillColor, 18));
+            g2.drawLine(cut, 1, getWidth() - cut - 2, 1);
+            g2.drawLine(1, cut, 1, getHeight() - cut - 2);
         }
 
         @Override
@@ -1127,11 +1224,7 @@ public final class LauncherFrame extends JFrame {
             Graphics2D g2 = (Graphics2D) graphics.create();
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(fillColor);
-                fillBlockShape(g2, getWidth(), getHeight(), arc);
-                g2.setColor(adjustColor(fillColor, 16));
-                g2.drawLine(arc, 1, getWidth() - arc - 2, 1);
-                g2.drawLine(1, arc, 1, getHeight() - arc - 2);
+                paintPanel(g2);
             } finally {
                 g2.dispose();
             }
@@ -1144,30 +1237,76 @@ public final class LauncherFrame extends JFrame {
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(borderColor);
-                drawBlockShape(g2, getWidth(), getHeight(), arc);
+                drawBlockShape(g2, getWidth(), getHeight(), cut);
                 g2.setColor(adjustColor(borderColor, -28));
-                g2.drawLine(getWidth() - arc - 2, getHeight() - 2, arc + 1, getHeight() - 2);
-                g2.drawLine(getWidth() - 2, arc + 1, getWidth() - 2, getHeight() - arc - 2);
+                g2.drawLine(getWidth() - cut - 2, getHeight() - 2, cut + 1, getHeight() - 2);
+                g2.drawLine(getWidth() - 2, cut + 1, getWidth() - 2, getHeight() - cut - 2);
             } finally {
                 g2.dispose();
             }
         }
     }
 
-    private static final class GradientPanel extends JPanel {
+    private static final class HeroCardPanel extends BlockPanel {
 
-        private final Color startColor;
-        private final Color endColor;
-        private final Color borderColor;
-        private final int arc;
+        private HeroCardPanel(LayoutManager layout) {
+            super(layout, SURFACE_DARK, new Color(255, 255, 255, 52), PANEL_CUT);
+        }
 
-        private GradientPanel(LayoutManager layout, Color startColor, Color endColor, Color borderColor, int arc) {
-            super(layout);
-            this.startColor = startColor;
-            this.endColor = endColor;
-            this.borderColor = borderColor;
-            this.arc = arc;
+        @Override
+        protected void paintPanel(Graphics2D g2) {
+            g2.setPaint(new GradientPaint(0, 0, HERO_TOP, getWidth(), getHeight(), HERO_BOTTOM));
+            fillBlockShape(g2, getWidth(), getHeight(), PANEL_CUT);
+
+            g2.setColor(new Color(255, 255, 255, 16));
+            for (int x = getWidth() - 300; x < getWidth() - 24; x += 24) {
+                for (int y = 24; y < getHeight() - 24; y += 24) {
+                    g2.drawRect(x, y, 12, 12);
+                }
+            }
+
+            g2.setColor(new Color(255, 116, 82, 92));
+            g2.fillRect(getWidth() - 250, 42, 12, 12);
+            g2.fillRect(getWidth() - 194, 86, 12, 12);
+            g2.fillRect(getWidth() - 136, 130, 12, 12);
+            g2.setStroke(new BasicStroke(3f));
+            g2.drawLine(getWidth() - 238, 48, getWidth() - 188, 92);
+            g2.drawLine(getWidth() - 182, 92, getWidth() - 130, 136);
+
+            g2.setColor(new Color(255, 255, 255, 20));
+            g2.fillRect(getWidth() - 96, 18, 42, 42);
+            g2.fillRect(getWidth() - 60, 54, 24, 24);
+
+            g2.setColor(new Color(0, 0, 0, 54));
+            g2.fillRect(0, getHeight() - 72, getWidth(), 72);
+
+            g2.setColor(new Color(255, 255, 255, 18));
+            g2.drawLine(PANEL_CUT, 1, getWidth() - PANEL_CUT - 2, 1);
+            g2.drawLine(1, PANEL_CUT, 1, getHeight() - PANEL_CUT - 2);
+        }
+    }
+
+    private static final class PixelButton extends JButton {
+
+        private Color fill = SURFACE_RAISED;
+        private Color border = BORDER_SOFT;
+        private Color hover = adjustColor(SURFACE_RAISED, 18);
+        private Color pressed = adjustColor(SURFACE_RAISED, -18);
+
+        private PixelButton(String text) {
+            super(text);
+            setContentAreaFilled(false);
+            setBorderPainted(false);
+            setFocusPainted(false);
             setOpaque(false);
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
+
+        private void setTheme(Color fill, Color border, Color hover, Color pressed) {
+            this.fill = fill;
+            this.border = border;
+            this.hover = hover;
+            this.pressed = pressed;
         }
 
         @Override
@@ -1175,26 +1314,20 @@ public final class LauncherFrame extends JFrame {
             Graphics2D g2 = (Graphics2D) graphics.create();
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setPaint(new GradientPaint(0, 0, startColor, getWidth(), getHeight(), endColor));
-                fillBlockShape(g2, getWidth(), getHeight(), arc);
-
-                g2.setColor(new Color(255, 255, 255, 18));
-                for (int x = getWidth() - 280; x < getWidth() - 24; x += 24) {
-                    for (int y = 26; y < getHeight() - 26; y += 24) {
-                        g2.drawRect(x, y, 12, 12);
-                    }
+                Color active = fill;
+                if (!isEnabled()) {
+                    active = adjustColor(fill, -22);
+                } else if (getModel().isPressed()) {
+                    active = pressed;
+                } else if (getModel().isRollover()) {
+                    active = hover;
                 }
 
-                g2.setColor(new Color(255, 118, 86, 80));
-                g2.fillRect(getWidth() - 238, 44, 12, 12);
-                g2.fillRect(getWidth() - 178, 92, 12, 12);
-                g2.fillRect(getWidth() - 118, 140, 12, 12);
-                g2.drawLine(getWidth() - 226, 50, getWidth() - 172, 98);
-                g2.drawLine(getWidth() - 166, 98, getWidth() - 112, 146);
-
-                g2.setColor(new Color(255, 255, 255, 22));
-                g2.fillRect(getWidth() - 90, 18, 42, 42);
-                g2.fillRect(getWidth() - 58, 50, 26, 26);
+                g2.setColor(active);
+                fillBlockShape(g2, getWidth(), getHeight(), CHIP_CUT);
+                g2.setColor(adjustColor(active, 18));
+                g2.drawLine(CHIP_CUT, 1, getWidth() - CHIP_CUT - 2, 1);
+                g2.drawLine(1, CHIP_CUT, 1, getHeight() - CHIP_CUT - 2);
             } finally {
                 g2.dispose();
             }
@@ -1206,11 +1339,41 @@ public final class LauncherFrame extends JFrame {
             Graphics2D g2 = (Graphics2D) graphics.create();
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(borderColor);
-                drawBlockShape(g2, getWidth(), getHeight(), arc);
+                g2.setColor(border);
+                drawBlockShape(g2, getWidth(), getHeight(), CHIP_CUT);
+                g2.setColor(adjustColor(border, -26));
+                g2.drawLine(getWidth() - CHIP_CUT - 2, getHeight() - 2, CHIP_CUT + 1, getHeight() - 2);
+                g2.drawLine(getWidth() - 2, CHIP_CUT + 1, getWidth() - 2, getHeight() - CHIP_CUT - 2);
             } finally {
                 g2.dispose();
             }
+        }
+    }
+
+    private static final class PatternPanel extends JPanel {
+
+        private PatternPanel(LayoutManager layout) {
+            super(layout);
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics graphics) {
+            Graphics2D g2 = (Graphics2D) graphics.create();
+            try {
+                g2.setColor(CANVAS);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+
+                g2.setColor(new Color(255, 255, 255, 8));
+                for (int x = 0; x < getWidth(); x += 28) {
+                    for (int y = 0; y < getHeight(); y += 28) {
+                        g2.drawRect(x, y, 14, 14);
+                    }
+                }
+            } finally {
+                g2.dispose();
+            }
+            super.paintComponent(graphics);
         }
     }
 
