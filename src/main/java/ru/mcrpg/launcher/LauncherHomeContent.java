@@ -9,6 +9,7 @@ public final class LauncherHomeContent {
     private String heroTitle;
     private String heroDescription;
     private String heroFootnote;
+    private List<CommunityLink> community = new ArrayList<CommunityLink>();
     private List<SpotlightCard> spotlight = new ArrayList<SpotlightCard>();
     private List<NewsEntry> news = new ArrayList<NewsEntry>();
 
@@ -22,6 +23,12 @@ public final class LauncherHomeContent {
         content.setHeroFootnote(
             "Баннеры, витрина и лента новостей теперь живут отдельно от backend-логики запуска."
         );
+
+        List<CommunityLink> communityLinks = new ArrayList<CommunityLink>();
+        communityLinks.add(new CommunityLink("VK", ""));
+        communityLinks.add(new CommunityLink("Discord", ""));
+        communityLinks.add(new CommunityLink("Telegram", ""));
+        content.setCommunity(communityLinks);
 
         List<SpotlightCard> spotlightCards = new ArrayList<SpotlightCard>();
         spotlightCards.add(new SpotlightCard(
@@ -101,6 +108,14 @@ public final class LauncherHomeContent {
         return spotlight;
     }
 
+    public List<CommunityLink> getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(List<CommunityLink> community) {
+        this.community = community == null ? new ArrayList<CommunityLink>() : community;
+    }
+
     public void setSpotlight(List<SpotlightCard> spotlight) {
         this.spotlight = spotlight == null ? new ArrayList<SpotlightCard>() : spotlight;
     }
@@ -115,6 +130,36 @@ public final class LauncherHomeContent {
 
     private static String sanitize(String value) {
         return value == null ? "" : value;
+    }
+
+    public static final class CommunityLink {
+
+        private String label;
+        private String url;
+
+        public CommunityLink() {
+        }
+
+        public CommunityLink(String label, String url) {
+            setLabel(label);
+            setUrl(url);
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = sanitize(label);
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = sanitize(url);
+        }
     }
 
     public static final class SpotlightCard {

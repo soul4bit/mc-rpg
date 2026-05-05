@@ -3,6 +3,20 @@
   "heroTitle": "Redstone Realm",
   "heroDescription": "Один вход в ваш основной мир: лаунчер синхронизирует модпак, подтягивает runtime и запускает клиент без ручной возни с файлами.",
   "heroFootnote": "Эта витрина редактируется отдельно от backend-логики. Дальше сюда можно безболезненно добавлять баннеры, карточки и новости.",
+  "community": [
+    {
+      "label": "VK",
+      "url": ""
+    },
+    {
+      "label": "Discord",
+      "url": ""
+    },
+    {
+      "label": "Telegram",
+      "url": ""
+    }
+  ],
   "spotlight": [
     {
       "eyebrow": "SERVER",

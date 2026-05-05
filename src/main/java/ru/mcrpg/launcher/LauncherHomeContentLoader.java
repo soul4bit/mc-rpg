@@ -50,6 +50,9 @@ public final class LauncherHomeContentLoader {
         if (!hasText(content.getHeroFootnote())) {
             content.setHeroFootnote(defaults.getHeroFootnote());
         }
+        if (content.getCommunity() == null || content.getCommunity().isEmpty()) {
+            content.setCommunity(defaults.getCommunity());
+        }
         if (content.getSpotlight() == null || content.getSpotlight().isEmpty()) {
             content.setSpotlight(defaults.getSpotlight());
         }

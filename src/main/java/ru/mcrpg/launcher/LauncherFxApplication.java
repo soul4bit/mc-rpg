@@ -64,6 +64,7 @@ public final class LauncherFxApplication extends Application {
     private final Button launchButton = new Button("Играть");
     private final Button syncButton = new Button("Синхронизация");
     private final Button settingsButton = new Button("Настройки");
+    private final Button toggleLogButton = new Button("Открыть лог");
     private final Button browseGameDirectoryButton = new Button("Обзор");
 
     private StackPane appRoot;
@@ -75,6 +76,7 @@ public final class LauncherFxApplication extends Application {
     private FlowPane quickDeckFlow;
     private BorderPane heroLayout;
     private VBox heroActionPanel;
+    private VBox logDrawerBox;
     private HBox footerBar;
     private VBox sessionCardBox;
 
@@ -209,7 +211,7 @@ public final class LauncherFxApplication extends Application {
         bar.setAlignment(Pos.CENTER_LEFT);
 
         VBox branding = new VBox(6);
-        Label overline = new Label("REDSTONE LAUNCHER");
+        Label overline = new Label("REDSTONE NETWORK");
         overline.getStyleClass().add("masthead-overline");
         Label brandTitle = new Label();
         brandTitle.textProperty().bind(mastheadTitle);
@@ -220,6 +222,12 @@ public final class LauncherFxApplication extends Application {
         brandSubtitle.setWrapText(true);
         branding.getChildren().addAll(overline, brandTitle, brandSubtitle);
 
+        HBox communityBar = new HBox(10);
+        communityBar.getStyleClass().add("community-bar");
+        for (LauncherHomeContent.CommunityLink link : homeContent.getCommunity()) {
+            communityBar.getChildren().add(createCommunityButton(link));
+        }
+
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -229,7 +237,7 @@ public final class LauncherFxApplication extends Application {
             createTopChip("Режим", headerModeLabel)
         );
 
-        bar.getChildren().addAll(branding, spacer, chips);
+        bar.getChildren().addAll(branding, communityBar, spacer, chips);
         return bar;
     }
 
@@ -286,7 +294,7 @@ public final class LauncherFxApplication extends Application {
     private Node buildHeroCard() {
         StackPane hero = new StackPane();
         hero.getStyleClass().add("hero-card");
-        hero.setMinHeight(440);
+        hero.setMinHeight(460);
 
         Pane accents = new Pane();
         accents.getStyleClass().add("hero-accents");
@@ -300,9 +308,9 @@ public final class LauncherFxApplication extends Application {
 
         HBox badges = new HBox(8);
         badges.getChildren().addAll(
-            createBadge(homeContent.getHeroEyebrow(), "gold-badge"),
+            createBadge("MAIN SERVER", "gold-badge"),
             createBadge("FORGE 1.12.2", "accent-badge"),
-            createBadge("AUTO-SYNC", "green-badge")
+            createBadge(homeContent.getHeroEyebrow(), "green-badge")
         );
 
         Label title = new Label(homeContent.getHeroTitle());
@@ -314,8 +322,8 @@ public final class LauncherFxApplication extends Application {
         HBox stats = new HBox(12);
         stats.getStyleClass().add("hero-stats-row");
         stats.getChildren().addAll(
-            createHeroStat("Игрок", heroPlayerLabel),
-            createHeroStat("Установка", heroInstallLabel),
+            createHeroStat("Версия", heroPlayerLabel),
+            createHeroStat("Сервер", heroInstallLabel),
             createHeroStat("Режим", heroModeLabel)
         );
 
@@ -328,39 +336,8 @@ public final class LauncherFxApplication extends Application {
 
         content.getChildren().addAll(badges, title, copy, stats, stretch, flow);
         heroLayout.setCenter(content);
-
-        heroActionPanel = new VBox(12);
-        heroActionPanel.getStyleClass().add("hero-action-panel");
-        heroActionPanel.setPrefWidth(260);
-
-        Label actionOverline = new Label("QUICK LAUNCH");
-        actionOverline.getStyleClass().add("hero-action-overline");
-        Label actionTitle = new Label("Запуск клиента");
-        actionTitle.getStyleClass().add("hero-action-title");
-        Label actionCopy = new Label("Играй, обновляй сборку и открывай технастройки из одного экрана.");
-        actionCopy.getStyleClass().add("hero-action-copy");
-        actionCopy.setWrapText(true);
-
-        heroStateBadge.getStyleClass().addAll("hero-badge", "status-badge");
-        heroStateBadge.setMaxWidth(Double.MAX_VALUE);
-
-        launchButton.getStyleClass().addAll("action-button", "primary-action", "hero-button");
-        syncButton.getStyleClass().addAll("action-button", "secondary-action", "hero-button");
-        settingsButton.getStyleClass().addAll("action-button", "utility-action", "hero-button");
-        launchButton.setMaxWidth(Double.MAX_VALUE);
-        syncButton.setMaxWidth(Double.MAX_VALUE);
-        settingsButton.setMaxWidth(Double.MAX_VALUE);
-
-        heroActionPanel.getChildren().addAll(
-            actionOverline,
-            actionTitle,
-            actionCopy,
-            heroStateBadge,
-            launchButton,
-            syncButton,
-            settingsButton
-        );
-        heroLayout.setRight(heroActionPanel);
+        heroLayout.setRight(null);
+        heroActionPanel = null;
 
         hero.getChildren().addAll(accents, heroLayout);
         return hero;
@@ -369,8 +346,8 @@ public final class LauncherFxApplication extends Application {
     private Node buildProfileCard() {
         VBox card = createCard(
             "PLAY",
-            "Профиль запуска",
-            "Правый блок для игрока: профиль, папка клиента и режим обновления без лишней технички."
+            "Играть на сервере",
+            "Компактная правая колонка как в серверных лаунчерах: профиль, запуск, синхронизация и доступ к логу."
         );
         card.getStyleClass().add("play-panel-card");
 
@@ -380,8 +357,24 @@ public final class LauncherFxApplication extends Application {
         browseGameDirectoryButton.getStyleClass().addAll("action-button", "secondary-action", "mini-action");
         pathRow.getChildren().addAll(gameDirectoryField, browseGameDirectoryButton);
 
+        heroStateBadge.getStyleClass().add("status-chip");
+        sidebarRouteLabel.getStyleClass().add("play-route-value");
+
+        VBox actions = new VBox(10);
+        actions.getStyleClass().add("play-actions");
+        launchButton.getStyleClass().addAll("action-button", "primary-action", "hero-button");
+        syncButton.getStyleClass().addAll("action-button", "secondary-action", "hero-button");
+        settingsButton.getStyleClass().addAll("action-button", "utility-action", "hero-button");
+        toggleLogButton.getStyleClass().addAll("action-button", "ghost-action", "hero-button");
+        launchButton.setMaxWidth(Double.MAX_VALUE);
+        syncButton.setMaxWidth(Double.MAX_VALUE);
+        settingsButton.setMaxWidth(Double.MAX_VALUE);
+        toggleLogButton.setMaxWidth(Double.MAX_VALUE);
+        actions.getChildren().addAll(launchButton, syncButton, toggleLogButton, settingsButton);
+
         VBox body = new VBox(14);
         body.getChildren().addAll(
+            createPlayRouteBox(),
             createFieldGroup(
                 "Ник в игре",
                 "Имя профиля, под которым клиент зайдёт на сервер.",
@@ -393,6 +386,8 @@ public final class LauncherFxApplication extends Application {
                 pathRow
             ),
             updateFilesBeforeLaunchCheckBox,
+            heroStateBadge,
+            actions,
             createInfoNote(
                 "После входа",
                 "Если сервер требует авторизацию, используй /register <пароль> <пароль> при первом входе и /login <пароль> при повторном."
@@ -437,9 +432,9 @@ public final class LauncherFxApplication extends Application {
 
     private Node buildHelpCard() {
         VBox card = createCard(
-            "SHOWCASE",
-            "Витрина лаунчера",
-            "Крупные блоки как в нормальном mod launcher: здесь не настройки, а короткая витрина сервера и сборки."
+            "SERVERS",
+            "Карточки сервера",
+            "Нижний блок уже ближе к классическим серверным лаунчерам: крупные карточки, а не форма параметров."
         );
         card.getStyleClass().addAll("wide-card", "showcase-card");
 
@@ -459,8 +454,8 @@ public final class LauncherFxApplication extends Application {
     private Node buildNewsCard() {
         VBox card = createCard(
             "NEWS",
-            "Лента обновлений",
-            "Отдельный блок для заметок по сборке, запуску и состоянию лаунчера."
+            "Новости сервера",
+            "Анонсы, заметки по сборке и короткие статусы, которые можно править через launcher-home.json."
         );
         card.getStyleClass().addAll("wide-card", "news-card");
 
@@ -508,7 +503,11 @@ public final class LauncherFxApplication extends Application {
         logArea.getStyleClass().add("log-area");
         VBox.setVgrow(logArea, Priority.ALWAYS);
         card.getChildren().add(logArea);
-        return card;
+
+        logDrawerBox = new VBox(card);
+        logDrawerBox.getStyleClass().add("log-drawer");
+        setLogDrawerVisible(false);
+        return logDrawerBox;
     }
 
     private Node buildDockBar() {
@@ -564,6 +563,13 @@ public final class LauncherFxApplication extends Application {
 
         chip.getChildren().addAll(titleLabel, valueLabel);
         return chip;
+    }
+
+    private Node createCommunityButton(LauncherHomeContent.CommunityLink link) {
+        Button button = new Button(valueOrFallback(link.getLabel(), "LINK"));
+        button.getStyleClass().addAll("social-chip", "action-button");
+        button.setOnAction(event -> openCommunityLink(link));
+        return button;
     }
 
     private Node createRailItem(String title, String copy, boolean active) {
@@ -707,12 +713,23 @@ public final class LauncherFxApplication extends Application {
         return box;
     }
 
+    private Node createPlayRouteBox() {
+        VBox box = new VBox(6);
+        box.getStyleClass().add("play-route-box");
+        Label title = new Label("Сервер");
+        title.getStyleClass().add("play-route-title");
+        sidebarRouteLabel.setWrapText(true);
+        box.getChildren().addAll(title, sidebarRouteLabel);
+        return box;
+    }
+
     private void installBehavior() {
         styleMainControls();
         browseGameDirectoryButton.setOnAction(event -> chooseDirectory(gameDirectoryField, "Выбери папку клиента"));
         syncButton.setOnAction(event -> syncFiles());
         launchButton.setOnAction(event -> launchClient());
         settingsButton.setOnAction(event -> openSettingsDialog());
+        toggleLogButton.setOnAction(event -> toggleLogDrawer());
 
         usernameField.textProperty().addListener((observable, oldValue, newValue) -> refreshSummaryFromVisibleFields());
         gameDirectoryField.textProperty().addListener((observable, oldValue, newValue) -> refreshSummaryFromVisibleFields());
@@ -805,8 +822,8 @@ public final class LauncherFxApplication extends Application {
         headerProfileLabel.setText(username);
         headerModeLabel.setText(mode);
 
-        heroPlayerLabel.setText(username);
-        heroInstallLabel.setText(folderName);
+        heroPlayerLabel.setText("Forge 1.12.2");
+        heroInstallLabel.setText(route);
         heroModeLabel.setText(mode);
         sidebarRouteLabel.setText(route);
 
@@ -817,7 +834,7 @@ public final class LauncherFxApplication extends Application {
         sessionRouteLabel.setText(route);
 
         mastheadTitle.set(LauncherBrand.APP_NAME);
-        mastheadSubtitle.set("Профиль " + username + " | " + mode + " | Forge 1.12.2");
+        mastheadSubtitle.set("Основной сервер " + route + " | Профиль " + username);
     }
 
     private void refreshSummaryFromVisibleFields() {
@@ -844,6 +861,7 @@ public final class LauncherFxApplication extends Application {
         }
 
         appendLog("Запуск синхронизации файлов.");
+        setLogDrawerVisible(true);
         runTask(LauncherAction.SYNC_ONLY, config);
     }
 
@@ -861,6 +879,7 @@ public final class LauncherFxApplication extends Application {
             appendLog("Перед запуском будет выполнена синхронизация файлов.");
         }
 
+        setLogDrawerVisible(true);
         runTask(LauncherAction.SYNC_AND_LAUNCH, config);
     }
 
@@ -1200,6 +1219,7 @@ public final class LauncherFxApplication extends Application {
     private void showError(String message) {
         String resolvedMessage = hasText(message) ? message : "Неизвестная ошибка.";
         updateStatusState("Внимание");
+        setLogDrawerVisible(true);
         appendLog("Ошибка: " + resolvedMessage);
 
         Alert alert = new Alert(Alert.AlertType.ERROR, resolvedMessage, ButtonType.OK);
@@ -1213,6 +1233,23 @@ public final class LauncherFxApplication extends Application {
         heroStateBadge.setText(state);
         sidebarStateLabel.setText(state);
         sessionStateLabel.setText(state);
+    }
+
+    private void toggleLogDrawer() {
+        setLogDrawerVisible(logDrawerBox == null || !logDrawerBox.isVisible());
+    }
+
+    private void setLogDrawerVisible(boolean visible) {
+        setNodeVisible(logDrawerBox, visible);
+        toggleLogButton.setText(visible ? "Скрыть лог" : "Открыть лог");
+    }
+
+    private void openCommunityLink(LauncherHomeContent.CommunityLink link) {
+        if (link == null || !hasText(link.getUrl())) {
+            appendLog("Ссылка сообщества пока не настроена: " + (link == null ? "community" : valueOrFallback(link.getLabel(), "community")));
+            return;
+        }
+        getHostServices().showDocument(link.getUrl().trim());
     }
 
     private Path resolveWorkingDirectory(LauncherConfig config) {

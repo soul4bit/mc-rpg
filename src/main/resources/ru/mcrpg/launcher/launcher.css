@@ -1,17 +1,19 @@
 .root {
     -fx-font-family: "Segoe UI";
-    -fx-base: #14171d;
-    -fx-accent: #ff6a3d;
+    -fx-base: #f3efe8;
+    -fx-accent: #f05d2e;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
 
 .app-root {
     -fx-background-color:
-        radial-gradient(center 18% 10%, radius 42%, rgba(255, 116, 64, 0.18), transparent),
-        radial-gradient(center 85% 16%, radius 34%, rgba(244, 177, 56, 0.08), transparent),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.04), transparent 18%),
-        linear-gradient(to bottom, #14161b 0%, #101217 46%, #0b0d11 100%);
+        linear-gradient(to right, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        radial-gradient(center 16% 8%, radius 30%, rgba(255, 195, 113, 0.24), transparent),
+        radial-gradient(center 84% 12%, radius 34%, rgba(255, 118, 67, 0.13), transparent),
+        linear-gradient(to bottom, #f7f3ec 0%, #efe8de 100%);
+    -fx-background-size: 64px 64px, 64px 64px, auto, auto, auto;
 }
 
 .shell {
@@ -24,7 +26,8 @@
     -fx-border-color: transparent;
 }
 
-.shell-scroll > .viewport {
+.shell-scroll > .viewport,
+.settings-scroll > .viewport {
     -fx-background-color: transparent;
 }
 
@@ -37,7 +40,7 @@
 
 .shell-scroll .thumb,
 .settings-scroll .thumb {
-    -fx-background-color: rgba(255, 255, 255, 0.14);
+    -fx-background-color: rgba(61, 54, 48, 0.18);
     -fx-background-radius: 999px;
 }
 
@@ -54,7 +57,7 @@
 }
 
 .showcase-column {
-    -fx-min-width: 620px;
+    -fx-min-width: 640px;
 }
 
 .activity-column {
@@ -62,137 +65,137 @@
 }
 
 .surface-card {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.06),
-        linear-gradient(to bottom, rgba(28, 32, 39, 0.96), rgba(16, 18, 24, 0.98));
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 26px, 25px;
-    -fx-border-color: rgba(255, 255, 255, 0.05);
-    -fx-border-radius: 26px;
+    -fx-background-color: rgba(255, 255, 255, 0.96);
+    -fx-background-radius: 28px;
+    -fx-border-color: rgba(106, 84, 66, 0.10);
+    -fx-border-radius: 28px;
     -fx-border-width: 1px;
     -fx-padding: 22px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.34), 24, 0.18, 0, 12);
+    -fx-effect: dropshadow(gaussian, rgba(53, 41, 31, 0.12), 24, 0.16, 0, 12);
 }
 
 .masthead-bar {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.08),
-        linear-gradient(to bottom, rgba(24, 27, 34, 0.90), rgba(18, 20, 26, 0.94));
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 24px, 23px;
-    -fx-padding: 20px 22px;
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(248, 243, 236, 0.98));
+    -fx-background-radius: 24px;
+    -fx-padding: 18px 22px;
 }
 
 .masthead-overline {
-    -fx-text-fill: #ff9a55;
-    -fx-font-size: 11px;
-    -fx-font-weight: 700;
-    -fx-letter-spacing: 1.4px;
+    -fx-text-fill: #ff8c39;
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1.6px;
 }
 
 .masthead-title {
-    -fx-text-fill: #f8fafd;
+    -fx-text-fill: #1e232b;
     -fx-font-family: "Bahnschrift SemiBold";
-    -fx-font-size: 28px;
+    -fx-font-size: 30px;
     -fx-font-weight: 700;
 }
 
 .masthead-subtitle {
-    -fx-text-fill: #aab2bf;
+    -fx-text-fill: #6d737c;
     -fx-font-size: 12px;
 }
 
+.community-bar {
+    -fx-alignment: center-left;
+}
+
+.social-chip {
+    -fx-background-color: rgba(255, 255, 255, 0.98);
+    -fx-background-radius: 16px;
+    -fx-border-color: rgba(37, 41, 47, 0.08);
+    -fx-border-radius: 16px;
+    -fx-border-width: 1px;
+    -fx-text-fill: #30353d;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-padding: 10px 14px;
+    -fx-effect: dropshadow(gaussian, rgba(53, 41, 31, 0.06), 10, 0.08, 0, 4);
+}
+
+.social-chip:hover {
+    -fx-background-color: #ffe08b;
+    -fx-text-fill: #262626;
+}
+
 .top-chip {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.08),
-        linear-gradient(to bottom, rgba(36, 41, 49, 0.94), rgba(22, 25, 31, 0.98));
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 18px, 17px;
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(243, 237, 228, 0.98));
+    -fx-background-radius: 18px;
+    -fx-border-color: rgba(44, 49, 58, 0.08);
+    -fx-border-radius: 18px;
     -fx-padding: 10px 14px;
     -fx-min-width: 164px;
 }
 
 .chip-title {
-    -fx-text-fill: #8f99a7;
+    -fx-text-fill: #878d97;
     -fx-font-size: 10px;
-    -fx-font-weight: 700;
+    -fx-font-weight: 800;
 }
 
 .chip-value {
-    -fx-text-fill: #f8fafd;
+    -fx-text-fill: #1f2530;
     -fx-font-size: 14px;
     -fx-font-weight: 700;
 }
 
 .hero-card {
     -fx-background-color:
-        rgba(255, 255, 255, 0.08),
-        linear-gradient(from 0% 0% to 100% 100%, rgba(88, 23, 22, 0.92), rgba(28, 22, 28, 0.96)),
-        linear-gradient(to bottom, rgba(255, 118, 67, 0.30), rgba(255, 118, 67, 0.00) 42%);
-    -fx-background-insets: 0, 1, 1;
-    -fx-background-radius: 30px, 29px, 29px;
-    -fx-border-color: rgba(255, 255, 255, 0.05);
+        linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        radial-gradient(center 80% 18%, radius 32%, rgba(255, 166, 92, 0.34), transparent),
+        linear-gradient(to bottom right, #5b1413 0%, #281821 58%, #1e2633 100%);
+    -fx-background-size: 88px 88px, 88px 88px, auto, auto;
+    -fx-background-radius: 30px;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
     -fx-border-radius: 30px;
     -fx-border-width: 1px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.42), 32, 0.18, 0, 14);
+    -fx-effect: dropshadow(gaussian, rgba(32, 20, 18, 0.36), 30, 0.18, 0, 16);
 }
 
 .hero-accents {
     -fx-background-color:
-        linear-gradient(to right,
-            rgba(255, 255, 255, 0.08) 0%,
-            rgba(255, 255, 255, 0.08) 3%,
-            transparent 3%,
-            transparent 36%,
-            rgba(255, 255, 255, 0.04) 36%,
-            rgba(255, 255, 255, 0.04) 37%,
-            transparent 37%,
-            transparent 100%
-        ),
-        radial-gradient(center 78% 18%, radius 34%, rgba(255, 145, 92, 0.28), transparent),
-        linear-gradient(to top, rgba(9, 12, 16, 0.62), rgba(9, 12, 16, 0.04));
+        linear-gradient(to top, rgba(7, 10, 14, 0.62), rgba(7, 10, 14, 0.02)),
+        linear-gradient(to right, rgba(255, 255, 255, 0.08), transparent 22%);
     -fx-background-radius: 29px;
 }
 
 .hero-title {
     -fx-text-fill: #ffffff;
     -fx-font-family: "Bahnschrift SemiBold";
-    -fx-font-size: 46px;
+    -fx-font-size: 48px;
     -fx-font-weight: 700;
 }
 
 .hero-copy {
-    -fx-text-fill: #f4d8d0;
+    -fx-text-fill: rgba(255, 244, 236, 0.92);
     -fx-font-size: 14px;
     -fx-line-spacing: 1px;
-    -fx-max-width: 540px;
+    -fx-max-width: 560px;
 }
 
 .hero-badge {
-    -fx-background-color: rgba(255, 255, 255, 0.14);
+    -fx-background-color: rgba(255, 255, 255, 0.15);
     -fx-background-radius: 999px;
-    -fx-text-fill: #fcfeff;
+    -fx-text-fill: #fffdf9;
     -fx-font-size: 11px;
     -fx-font-weight: 700;
     -fx-padding: 7px 12px;
 }
 
 .gold-badge {
-    -fx-background-color: rgba(255, 171, 72, 0.20);
+    -fx-background-color: rgba(255, 205, 89, 0.24);
 }
 
 .accent-badge {
-    -fx-background-color: rgba(255, 106, 61, 0.22);
+    -fx-background-color: rgba(255, 123, 67, 0.22);
 }
 
 .green-badge {
-    -fx-background-color: rgba(89, 194, 130, 0.18);
-}
-
-.status-badge {
-    -fx-background-color: rgba(255, 255, 255, 0.12);
-    -fx-text-fill: #f7fbff;
-    -fx-padding: 8px 12px;
+    -fx-background-color: rgba(94, 191, 140, 0.20);
 }
 
 .hero-stats-row {
@@ -200,19 +203,16 @@
 }
 
 .hero-stat {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.10),
-        rgba(16, 18, 24, 0.56);
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 18px, 17px;
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-background-radius: 18px;
     -fx-padding: 14px 16px;
-    -fx-min-width: 154px;
+    -fx-min-width: 158px;
 }
 
 .stat-title {
-    -fx-text-fill: #f6a165;
+    -fx-text-fill: rgba(255, 198, 150, 0.92);
     -fx-font-size: 10px;
-    -fx-font-weight: 700;
+    -fx-font-weight: 800;
 }
 
 .stat-value {
@@ -222,56 +222,26 @@
 }
 
 .hero-footnote {
-    -fx-text-fill: rgba(255, 241, 236, 0.76);
+    -fx-text-fill: rgba(255, 240, 232, 0.82);
     -fx-font-size: 12px;
-}
-
-.hero-action-panel {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.10),
-        linear-gradient(to bottom, rgba(19, 22, 28, 0.92), rgba(15, 17, 22, 0.98));
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 24px, 23px;
-    -fx-padding: 18px;
-    -fx-pref-width: 282px;
-}
-
-.hero-action-overline {
-    -fx-text-fill: #ff9a55;
-    -fx-font-size: 10px;
-    -fx-font-weight: 700;
-    -fx-letter-spacing: 1.3px;
-}
-
-.hero-action-title {
-    -fx-text-fill: #ffffff;
-    -fx-font-family: "Bahnschrift SemiBold";
-    -fx-font-size: 24px;
-    -fx-font-weight: 700;
-}
-
-.hero-action-copy {
-    -fx-text-fill: #b1bac7;
-    -fx-font-size: 12px;
-    -fx-line-spacing: 1px;
 }
 
 .card-eyebrow {
-    -fx-text-fill: #ff9a55;
+    -fx-text-fill: #f27a31;
     -fx-font-size: 10px;
-    -fx-font-weight: 700;
-    -fx-letter-spacing: 1.4px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1.5px;
 }
 
 .card-title {
-    -fx-text-fill: #f9fbff;
+    -fx-text-fill: #1f2530;
     -fx-font-family: "Bahnschrift SemiBold";
     -fx-font-size: 22px;
     -fx-font-weight: 700;
 }
 
 .card-description {
-    -fx-text-fill: #9ea7b4;
+    -fx-text-fill: #717883;
     -fx-font-size: 12px;
 }
 
@@ -279,28 +249,59 @@
     -fx-min-width: 320px;
 }
 
-.guide-card {
-    -fx-max-width: 360px;
+.showcase-card {
+    -fx-min-width: 480px;
 }
 
-.showcase-card {
-    -fx-min-width: 460px;
+.news-card {
+    -fx-min-width: 340px;
 }
 
 .play-panel-card {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.07),
-        linear-gradient(to bottom, rgba(21, 25, 31, 0.98), rgba(12, 15, 20, 0.98));
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(251, 247, 241, 0.98));
+    -fx-border-color: rgba(240, 93, 46, 0.18);
+}
+
+.play-route-box {
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 240, 231, 0.98), rgba(255, 247, 239, 0.98));
+    -fx-background-radius: 18px;
+    -fx-padding: 14px;
+}
+
+.play-route-title {
+    -fx-text-fill: #a56a4a;
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1.2px;
+}
+
+.play-route-value {
+    -fx-text-fill: #1f2530;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.status-chip {
+    -fx-background-color: linear-gradient(to bottom, #ff8d4d 0%, #ec5c2d 100%);
+    -fx-background-radius: 16px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-padding: 9px 12px;
+}
+
+.play-actions {
+    -fx-spacing: 10px;
 }
 
 .field-label {
-    -fx-text-fill: #f1f5fb;
+    -fx-text-fill: #252b34;
     -fx-font-size: 13px;
     -fx-font-weight: 700;
 }
 
 .field-hint {
-    -fx-text-fill: #8c96a4;
+    -fx-text-fill: #7a818c;
     -fx-font-size: 11px;
 }
 
@@ -311,17 +312,14 @@
 .launcher-input,
 .launcher-textarea,
 .log-area {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.08),
-        linear-gradient(to bottom, rgba(19, 21, 28, 0.98), rgba(12, 14, 19, 0.98));
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 16px, 15px;
-    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(244, 239, 232, 0.98));
+    -fx-background-radius: 16px;
+    -fx-border-color: rgba(45, 49, 56, 0.10);
     -fx-border-radius: 16px;
     -fx-border-width: 1px;
-    -fx-text-fill: #f6f9fc;
-    -fx-prompt-text-fill: #6f7987;
-    -fx-highlight-fill: #ff6a3d;
+    -fx-text-fill: #242b35;
+    -fx-prompt-text-fill: #8b919a;
+    -fx-highlight-fill: #f05d2e;
     -fx-highlight-text-fill: #ffffff;
     -fx-padding: 12px 14px;
 }
@@ -329,51 +327,54 @@
 .launcher-input:focused,
 .launcher-textarea:focused,
 .log-area:focused {
-    -fx-background-color:
-        rgba(255, 127, 84, 0.22),
-        linear-gradient(to bottom, rgba(19, 21, 28, 0.98), rgba(12, 14, 19, 0.98));
-    -fx-border-color: rgba(255, 127, 84, 0.46);
+    -fx-border-color: rgba(240, 93, 46, 0.44);
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 251, 248, 1), rgba(247, 242, 236, 1));
 }
 
 .launcher-textarea .content,
 .log-area .content {
-    -fx-background-color: #12151b;
+    -fx-background-color: #fffaf5;
     -fx-background-radius: 15px;
 }
 
 .launcher-check {
-    -fx-text-fill: #e8edf5;
+    -fx-text-fill: #2a313b;
     -fx-font-size: 12px;
 }
 
 .launcher-check .box {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.10),
-        rgba(13, 15, 19, 0.96);
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 8px, 7px;
-    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-background-color: rgba(255, 255, 255, 0.98);
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(41, 46, 54, 0.12);
     -fx-border-radius: 8px;
 }
 
 .launcher-check:selected .box {
-    -fx-background-color:
-        rgba(255, 106, 61, 0.24),
-        rgba(13, 15, 19, 0.96);
+    -fx-background-color: #fff4eb;
+    -fx-border-color: rgba(240, 93, 46, 0.38);
 }
 
 .launcher-check:selected .mark {
-    -fx-background-color: #ff8d4d;
+    -fx-background-color: #f05d2e;
 }
 
 .note-box,
-.checklist-box {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.05),
-        linear-gradient(to bottom, rgba(27, 31, 38, 0.94), rgba(16, 18, 24, 0.98));
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 18px, 17px;
+.checklist-box,
+.news-entry {
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 248, 241, 1), rgba(247, 241, 233, 1));
+    -fx-background-radius: 18px;
     -fx-padding: 16px;
+}
+
+.note-title {
+    -fx-text-fill: #20252d;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+.note-copy {
+    -fx-text-fill: #777f89;
+    -fx-font-size: 11px;
 }
 
 .spotlight-grid {
@@ -382,117 +383,79 @@
 
 .spotlight-tile {
     -fx-background-color:
-        rgba(255, 255, 255, 0.08),
-        linear-gradient(to bottom, rgba(37, 42, 51, 0.92), rgba(20, 23, 29, 0.98));
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 20px, 19px;
+        linear-gradient(to top, rgba(13, 17, 23, 0.65), rgba(13, 17, 23, 0.00)),
+        linear-gradient(to bottom right, #3a3f4c 0%, #20242d 100%);
+    -fx-background-radius: 22px;
     -fx-border-color: rgba(255, 255, 255, 0.05);
-    -fx-border-radius: 20px;
+    -fx-border-radius: 22px;
     -fx-border-width: 1px;
     -fx-padding: 16px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 14, 0.12, 0, 6);
+    -fx-pref-width: 220px;
+    -fx-min-height: 170px;
+    -fx-effect: dropshadow(gaussian, rgba(38, 27, 22, 0.22), 18, 0.14, 0, 8);
 }
 
 .spotlight-fire {
     -fx-background-color:
-        rgba(255, 131, 86, 0.14),
-        linear-gradient(to bottom, rgba(75, 32, 28, 0.95), rgba(24, 20, 24, 0.98));
+        linear-gradient(to top, rgba(10, 12, 17, 0.66), rgba(10, 12, 17, 0.00)),
+        linear-gradient(to bottom right, #7b211d 0%, #2b2530 100%);
 }
 
 .spotlight-copper {
     -fx-background-color:
-        rgba(255, 185, 94, 0.14),
-        linear-gradient(to bottom, rgba(74, 48, 26, 0.95), rgba(24, 21, 20, 0.98));
+        linear-gradient(to top, rgba(10, 12, 17, 0.66), rgba(10, 12, 17, 0.00)),
+        linear-gradient(to bottom right, #886127 0%, #2c2522 100%);
 }
 
 .spotlight-emerald {
     -fx-background-color:
-        rgba(84, 195, 140, 0.14),
-        linear-gradient(to bottom, rgba(25, 63, 46, 0.95), rgba(19, 23, 21, 0.98));
+        linear-gradient(to top, rgba(10, 12, 17, 0.66), rgba(10, 12, 17, 0.00)),
+        linear-gradient(to bottom right, #2b6b52 0%, #21252d 100%);
 }
 
 .spotlight-eyebrow {
     -fx-text-fill: rgba(255, 255, 255, 0.72);
     -fx-font-size: 10px;
-    -fx-font-weight: 700;
+    -fx-font-weight: 800;
     -fx-letter-spacing: 1.2px;
 }
 
 .spotlight-title {
     -fx-text-fill: #ffffff;
     -fx-font-family: "Bahnschrift SemiBold";
-    -fx-font-size: 18px;
+    -fx-font-size: 19px;
     -fx-font-weight: 700;
 }
 
 .spotlight-copy {
-    -fx-text-fill: rgba(239, 244, 249, 0.82);
+    -fx-text-fill: rgba(240, 245, 250, 0.84);
     -fx-font-size: 12px;
-}
-
-.note-title {
-    -fx-text-fill: #f9fbff;
-    -fx-font-size: 12px;
-    -fx-font-weight: 700;
-}
-
-.note-copy {
-    -fx-text-fill: #9aa4b1;
-    -fx-font-size: 11px;
-}
-
-.checklist-box {
-    -fx-pref-width: 260px;
-}
-
-.news-card {
-    -fx-min-width: 340px;
 }
 
 .news-feed {
     -fx-spacing: 10px;
 }
 
-.news-entry {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.05),
-        linear-gradient(to bottom, rgba(27, 31, 38, 0.94), rgba(15, 18, 23, 0.98));
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 18px, 17px;
-    -fx-padding: 14px;
-}
-
 .news-tag {
-    -fx-text-fill: #ff9a55;
+    -fx-text-fill: #f27a31;
     -fx-font-size: 10px;
-    -fx-font-weight: 700;
+    -fx-font-weight: 800;
     -fx-letter-spacing: 1.2px;
 }
 
 .news-title {
-    -fx-text-fill: #f9fbff;
+    -fx-text-fill: #20252d;
     -fx-font-size: 14px;
     -fx-font-weight: 700;
 }
 
 .news-copy {
-    -fx-text-fill: #a9b2bf;
+    -fx-text-fill: #77808a;
     -fx-font-size: 11px;
 }
 
-.checklist-row {
-    -fx-alignment: center-left;
-}
-
-.checklist-marker {
-    -fx-text-fill: #ff8f52;
-    -fx-font-size: 15px;
-    -fx-font-weight: 700;
-}
-
-.checklist-copy {
-    -fx-text-fill: #eef3f8;
-    -fx-font-size: 11px;
+.log-drawer {
+    -fx-spacing: 0;
 }
 
 .log-card {
@@ -502,19 +465,14 @@
 .log-area {
     -fx-font-family: "Consolas";
     -fx-font-size: 12px;
-    -fx-control-inner-background: #0f1217;
+    -fx-control-inner-background: #fffaf5;
+    -fx-pref-row-count: 16;
 }
 
 .action-button {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.08),
-        linear-gradient(to bottom, rgba(53, 59, 69, 0.98), rgba(29, 33, 40, 0.98));
-    -fx-background-insets: 0, 1;
-    -fx-background-radius: 16px, 15px;
-    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-background-radius: 16px;
     -fx-border-radius: 16px;
     -fx-border-width: 1px;
-    -fx-text-fill: #ffffff;
     -fx-font-size: 13px;
     -fx-font-weight: 700;
     -fx-padding: 12px 16px;
@@ -522,7 +480,7 @@
 }
 
 .action-button:hover {
-    -fx-effect: dropshadow(gaussian, rgba(255, 122, 73, 0.22), 18, 0.18, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(240, 93, 46, 0.12), 14, 0.14, 0, 4);
 }
 
 .action-button:pressed {
@@ -534,24 +492,27 @@
 }
 
 .primary-action {
-    -fx-background-color:
-        rgba(255, 152, 98, 0.18),
-        linear-gradient(to bottom, #ff8150 0%, #ef5a34 100%);
+    -fx-background-color: linear-gradient(to bottom, #ff8d4d 0%, #eb5b2d 100%);
+    -fx-border-color: rgba(175, 67, 34, 0.20);
     -fx-text-fill: #ffffff;
 }
 
 .secondary-action {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.08),
-        linear-gradient(to bottom, rgba(45, 50, 59, 0.98), rgba(23, 26, 32, 0.98));
-    -fx-text-fill: #f6f9fc;
+    -fx-background-color: linear-gradient(to bottom, #fff8ef 0%, #f4eadf 100%);
+    -fx-border-color: rgba(66, 54, 45, 0.12);
+    -fx-text-fill: #272d37;
 }
 
 .utility-action {
-    -fx-background-color:
-        rgba(255, 255, 255, 0.05),
-        linear-gradient(to bottom, rgba(33, 37, 45, 0.98), rgba(19, 22, 28, 0.98));
-    -fx-text-fill: #dce3eb;
+    -fx-background-color: linear-gradient(to bottom, #f0ece6 0%, #e7e0d7 100%);
+    -fx-border-color: rgba(66, 54, 45, 0.12);
+    -fx-text-fill: #3a4049;
+}
+
+.ghost-action {
+    -fx-background-color: rgba(255, 255, 255, 0.96);
+    -fx-border-color: rgba(60, 66, 76, 0.12);
+    -fx-text-fill: #313844;
 }
 
 .hero-button {
@@ -564,8 +525,8 @@
 
 .dialog-root {
     -fx-background-color:
-        radial-gradient(center 18% 10%, radius 34%, rgba(255, 116, 64, 0.12), transparent),
-        linear-gradient(to bottom, #14161b 0%, #0d1014 100%);
+        radial-gradient(center 18% 10%, radius 28%, rgba(255, 188, 112, 0.18), transparent),
+        linear-gradient(to bottom, #f6f2eb 0%, #ece5db 100%);
 }
 
 .dialog-header {
@@ -578,10 +539,6 @@
     -fx-border-color: transparent;
 }
 
-.settings-scroll > .viewport {
-    -fx-background-color: transparent;
-}
-
 .settings-card {
     -fx-padding: 18px;
 }
@@ -591,7 +548,7 @@
 }
 
 .dialog-path {
-    -fx-text-fill: #9099a6;
+    -fx-text-fill: #7a818a;
     -fx-font-size: 11px;
 }
 
@@ -600,23 +557,15 @@
 }
 
 .compact-mode .masthead-title {
-    -fx-font-size: 25px;
+    -fx-font-size: 26px;
 }
 
 .compact-mode .hero-title {
-    -fx-font-size: 40px;
-}
-
-.compact-mode .hero-action-panel {
-    -fx-padding: 16px;
+    -fx-font-size: 42px;
 }
 
 .compact-mode .wide-card {
     -fx-min-width: 320px;
-}
-
-.compact-mode .guide-card {
-    -fx-max-width: 340px;
 }
 
 .compact-mode .hero-stat {
@@ -643,7 +592,8 @@
 .condensed-mode .hero-footnote,
 .condensed-mode .card-description,
 .condensed-mode .field-hint,
-.condensed-mode .note-copy {
+.condensed-mode .note-copy,
+.condensed-mode .news-copy {
     -fx-font-size: 11px;
 }
 
@@ -653,10 +603,11 @@
 }
 
 .condensed-mode .hero-stat {
-    -fx-min-width: 130px;
+    -fx-min-width: 132px;
     -fx-padding: 12px 14px;
 }
 
-.condensed-mode .action-button {
+.condensed-mode .action-button,
+.condensed-mode .social-chip {
     -fx-padding: 10px 13px;
 }

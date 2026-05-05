@@ -11,6 +11,7 @@ class LauncherHomeContentLoaderTest {
         LauncherHomeContent content = new LauncherHomeContentLoader().loadDefault();
 
         assertEquals("Redstone Realm", content.getHeroTitle());
+        assertFalse(content.getCommunity().isEmpty());
         assertFalse(content.getSpotlight().isEmpty());
         assertFalse(content.getNews().isEmpty());
     }
