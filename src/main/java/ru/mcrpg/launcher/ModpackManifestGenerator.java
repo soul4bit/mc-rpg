@@ -46,6 +46,8 @@ public final class ModpackManifestGenerator {
         launcher.setWorkingDirectory(trimToNull(config.getWorkingDirectory()));
         launcher.setLaunchTemplate(trimToNull(config.getLaunchTemplate()));
         manifest.setLauncher(launcher);
+        manifest.setRuntime(buildRuntime(config));
+        manifest.setMinecraft(buildMinecraft(config));
         manifest.setFiles(files);
         return manifest;
     }
@@ -163,6 +165,55 @@ public final class ModpackManifestGenerator {
         return output.toAbsolutePath().normalize();
     }
 
+    private static ModpackRuntime buildRuntime(ManifestGeneratorConfig config) throws IOException {
+        if (config.getRuntimeArchive() == null) {
+            return new ModpackRuntime();
+        }
+
+        Path runtimeArchive = config.getRuntimeArchive().toAbsolutePath().normalize();
+        if (!Files.isRegularFile(runtimeArchive)) {
+            throw new IllegalArgumentException("Runtime archive not found: " + runtimeArchive);
+        }
+
+        RuntimePackage runtimePackage = new RuntimePackage();
+        runtimePackage.setOs(requireText(config.getRuntimeOs(), "Runtime OS is missing."));
+        runtimePackage.setArch(requireText(config.getRuntimeArch(), "Runtime arch is missing."));
+        runtimePackage.setUrl(requireText(config.getRuntimeUrl(), "Runtime URL is missing."));
+        runtimePackage.setExtractDir(requireText(config.getRuntimeExtractDir(), "Runtime extractDir is missing."));
+        runtimePackage.setJavaPath(requireText(config.getRuntimeJavaPath(), "Runtime javaPath is missing."));
+        runtimePackage.setSha256(ChecksumUtils.sha256(runtimeArchive));
+        runtimePackage.setSize(Long.valueOf(Files.size(runtimeArchive)));
+
+        ModpackRuntime runtime = new ModpackRuntime();
+        List<RuntimePackage> packages = new ArrayList<RuntimePackage>(1);
+        packages.add(runtimePackage);
+        runtime.setPackages(packages);
+        return runtime;
+    }
+
+    private static MinecraftBootstrapSettings buildMinecraft(ManifestGeneratorConfig config) {
+        boolean hasMinecraftVersion = hasText(config.getMinecraftVersion());
+        boolean hasForgeVersion = hasText(config.getForgeVersion());
+        boolean hasVersionManifestUrl = hasText(config.getVersionManifestUrl());
+        boolean hasForgeInstallerUrl = hasText(config.getForgeInstallerUrl());
+        boolean hasAssetBaseUrl = hasText(config.getAssetBaseUrl());
+
+        if (!hasMinecraftVersion && !hasForgeVersion && !hasVersionManifestUrl && !hasForgeInstallerUrl && !hasAssetBaseUrl) {
+            return new MinecraftBootstrapSettings();
+        }
+        if (!hasMinecraftVersion || !hasForgeVersion) {
+            throw new IllegalArgumentException("Both minecraftVersion and forgeVersion are required for official bootstrap.");
+        }
+
+        MinecraftBootstrapSettings minecraft = new MinecraftBootstrapSettings();
+        minecraft.setVersion(requireText(config.getMinecraftVersion(), "Minecraft version is missing."));
+        minecraft.setForgeVersion(requireText(config.getForgeVersion(), "Forge version is missing."));
+        minecraft.setVersionManifestUrl(trimToNull(config.getVersionManifestUrl()));
+        minecraft.setForgeInstallerUrl(trimToNull(config.getForgeInstallerUrl()));
+        minecraft.setAssetBaseUrl(trimToNull(config.getAssetBaseUrl()));
+        return minecraft;
+    }
+
     private static String relativizeIfInside(Path sourceDirectory, Path candidate) {
         if (candidate == null) {
             return null;
@@ -186,6 +237,10 @@ public final class ModpackManifestGenerator {
         }
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
     }
 
     private static String toUnixPath(Path path) {

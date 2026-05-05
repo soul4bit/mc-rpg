@@ -19,6 +19,17 @@ public final class ManifestGeneratorConfig {
     private Integer serverPort = Integer.valueOf(LauncherConfig.DEFAULT_SERVER_PORT);
     private String workingDirectory = ".";
     private String launchTemplate = LauncherConfig.DEFAULT_LAUNCH_TEMPLATE;
+    private Path runtimeArchive;
+    private String runtimeUrl = "";
+    private String runtimeOs = "windows";
+    private String runtimeArch = "x86_64";
+    private String runtimeExtractDir = "runtime/jre8";
+    private String runtimeJavaPath = "bin/java.exe";
+    private String minecraftVersion = "";
+    private String forgeVersion = "";
+    private String versionManifestUrl = "";
+    private String forgeInstallerUrl = "";
+    private String assetBaseUrl = "";
     private final List<String> excludePatterns = new ArrayList<String>();
 
     public Path getSourceDirectory() {
@@ -93,8 +104,95 @@ public final class ManifestGeneratorConfig {
         this.launchTemplate = launchTemplate;
     }
 
+    public Path getRuntimeArchive() {
+        return runtimeArchive;
+    }
+
+    public void setRuntimeArchive(Path runtimeArchive) {
+        this.runtimeArchive = runtimeArchive;
+    }
+
+    public String getRuntimeUrl() {
+        return runtimeUrl;
+    }
+
+    public void setRuntimeUrl(String runtimeUrl) {
+        this.runtimeUrl = runtimeUrl;
+    }
+
+    public String getRuntimeOs() {
+        return runtimeOs;
+    }
+
+    public void setRuntimeOs(String runtimeOs) {
+        this.runtimeOs = runtimeOs;
+    }
+
+    public String getRuntimeArch() {
+        return runtimeArch;
+    }
+
+    public void setRuntimeArch(String runtimeArch) {
+        this.runtimeArch = runtimeArch;
+    }
+
+    public String getRuntimeExtractDir() {
+        return runtimeExtractDir;
+    }
+
+    public void setRuntimeExtractDir(String runtimeExtractDir) {
+        this.runtimeExtractDir = runtimeExtractDir;
+    }
+
+    public String getRuntimeJavaPath() {
+        return runtimeJavaPath;
+    }
+
+    public void setRuntimeJavaPath(String runtimeJavaPath) {
+        this.runtimeJavaPath = runtimeJavaPath;
+    }
+
+    public String getMinecraftVersion() {
+        return minecraftVersion;
+    }
+
+    public void setMinecraftVersion(String minecraftVersion) {
+        this.minecraftVersion = minecraftVersion;
+    }
+
+    public String getForgeVersion() {
+        return forgeVersion;
+    }
+
+    public void setForgeVersion(String forgeVersion) {
+        this.forgeVersion = forgeVersion;
+    }
+
+    public String getVersionManifestUrl() {
+        return versionManifestUrl;
+    }
+
+    public void setVersionManifestUrl(String versionManifestUrl) {
+        this.versionManifestUrl = versionManifestUrl;
+    }
+
+    public String getForgeInstallerUrl() {
+        return forgeInstallerUrl;
+    }
+
+    public void setForgeInstallerUrl(String forgeInstallerUrl) {
+        this.forgeInstallerUrl = forgeInstallerUrl;
+    }
+
+    public String getAssetBaseUrl() {
+        return assetBaseUrl;
+    }
+
+    public void setAssetBaseUrl(String assetBaseUrl) {
+        this.assetBaseUrl = assetBaseUrl;
+    }
+
     public List<String> getExcludePatterns() {
         return excludePatterns;
     }
 }
-

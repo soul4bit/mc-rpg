@@ -3,8 +3,10 @@ package ru.mcrpg.launcher;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class LaunchCommandBuilderTest {
@@ -59,7 +61,7 @@ class LaunchCommandBuilderTest {
         );
 
         assertEquals(
-            "Неизвестный плейсхолдер {server}. Доступны: [java, username, gameDir, workingDir, serverHost, serverPort]",
+            "Неизвестный плейсхолдер {server}. Доступны: [java, username, gameDir, workingDir, serverHost, serverPort, uuid, accessToken, userType]",
             exception.getMessage()
         );
     }
@@ -78,5 +80,27 @@ class LaunchCommandBuilderTest {
         List<String> command = builder.build(config);
 
         assertEquals(Arrays.asList("start-client.bat"), command);
+    }
+
+    @Test
+    void buildSupportsOfflineAuthPlaceholders() {
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setUsername("Soul4");
+        config.setLaunchTemplate("{java} --uuid {uuid} --token {accessToken} --userType {userType}");
+
+        List<String> command = builder.build(config);
+
+        assertEquals(
+            Arrays.asList(
+                "java",
+                "--uuid",
+                UUID.nameUUIDFromBytes("OfflinePlayer:Soul4".getBytes(StandardCharsets.UTF_8)).toString(),
+                "--token",
+                "0",
+                "--userType",
+                "legacy"
+            ),
+            command
+        );
     }
 }

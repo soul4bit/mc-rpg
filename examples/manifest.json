@@ -7,14 +7,26 @@
     "serverHost": "192.168.1.103",
     "serverPort": 25565,
     "workingDirectory": ".",
-    "launchTemplate": "{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}"
+    "launchTemplate": ""
+  },
+  "minecraft": {
+    "version": "1.12.2",
+    "forgeVersion": "14.23.5.2864"
+  },
+  "runtime": {
+    "packages": [
+      {
+        "os": "windows",
+        "arch": "x86_64",
+        "url": "runtime/windows-x64/jre8.zip",
+        "sha256": "PUT_RUNTIME_ZIP_SHA256_HERE",
+        "size": 123456789,
+        "extractDir": "runtime/jre8",
+        "javaPath": "bin/java.exe"
+      }
+    ]
   },
   "files": [
-    {
-      "path": "forge-1.12.2-14.23.5.2864.jar",
-      "sha256": "PUT_REAL_SHA256_HERE",
-      "size": 12345678
-    },
     {
       "path": "mods/examplemod.jar",
       "sha256": "PUT_REAL_SHA256_HERE",

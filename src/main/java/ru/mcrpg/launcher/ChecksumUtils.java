@@ -18,8 +18,14 @@ final class ChecksumUtils {
         }
     }
 
+    static String sha1(Path path) throws IOException {
+        try (InputStream inputStream = Files.newInputStream(path)) {
+            return sha1(inputStream);
+        }
+    }
+
     static String sha256(InputStream inputStream) throws IOException {
-        MessageDigest digest = messageDigest();
+        MessageDigest digest = messageDigest("SHA-256");
         byte[] buffer = new byte[8192];
         int read;
         while ((read = inputStream.read(buffer)) != -1) {
@@ -28,11 +34,21 @@ final class ChecksumUtils {
         return toHex(digest.digest());
     }
 
-    private static MessageDigest messageDigest() {
+    static String sha1(InputStream inputStream) throws IOException {
+        MessageDigest digest = messageDigest("SHA-1");
+        byte[] buffer = new byte[8192];
+        int read;
+        while ((read = inputStream.read(buffer)) != -1) {
+            digest.update(buffer, 0, read);
+        }
+        return toHex(digest.digest());
+    }
+
+    private static MessageDigest messageDigest(String algorithm) {
         try {
-            return MessageDigest.getInstance("SHA-256");
+            return MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalStateException("SHA-256 is not available.", exception);
+            throw new IllegalStateException(algorithm + " is not available.", exception);
         }
     }
 
@@ -44,4 +60,3 @@ final class ChecksumUtils {
         return builder.toString();
     }
 }
-

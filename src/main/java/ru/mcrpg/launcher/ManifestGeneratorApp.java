@@ -95,6 +95,28 @@ public final class ManifestGeneratorApp {
             config.setWorkingDirectory(value);
         } else if ("launch-template".equals(name)) {
             config.setLaunchTemplate(value);
+        } else if ("runtime-archive".equals(name)) {
+            config.setRuntimeArchive(Paths.get(value));
+        } else if ("runtime-url".equals(name)) {
+            config.setRuntimeUrl(value);
+        } else if ("runtime-os".equals(name)) {
+            config.setRuntimeOs(value);
+        } else if ("runtime-arch".equals(name)) {
+            config.setRuntimeArch(value);
+        } else if ("runtime-extract-dir".equals(name)) {
+            config.setRuntimeExtractDir(value);
+        } else if ("runtime-java-path".equals(name)) {
+            config.setRuntimeJavaPath(value);
+        } else if ("minecraft-version".equals(name)) {
+            config.setMinecraftVersion(value);
+        } else if ("forge-version".equals(name)) {
+            config.setForgeVersion(value);
+        } else if ("version-manifest-url".equals(name)) {
+            config.setVersionManifestUrl(value);
+        } else if ("forge-installer-url".equals(name)) {
+            config.setForgeInstallerUrl(value);
+        } else if ("asset-base-url".equals(name)) {
+            config.setAssetBaseUrl(value);
         } else {
             throw new IllegalArgumentException("Unknown option: --" + name);
         }
@@ -135,6 +157,17 @@ public final class ManifestGeneratorApp {
             + "  --server-port <port>         Minecraft server port. Default: 25565\n"
             + "  --working-directory <path>   Working directory inside game directory. Default: .\n"
             + "  --launch-template <command>  Launch template stored in manifest.\n"
+            + "  --runtime-archive <file>     Portable runtime zip to include in manifest metadata.\n"
+            + "  --runtime-url <url>          Runtime download URL stored in manifest.\n"
+            + "  --runtime-os <value>         Runtime OS matcher. Default: windows\n"
+            + "  --runtime-arch <value>       Runtime architecture matcher. Default: x86_64\n"
+            + "  --runtime-extract-dir <dir>  Runtime extraction directory inside game directory.\n"
+            + "  --runtime-java-path <path>   Relative path to java executable inside extracted runtime.\n"
+            + "  --minecraft-version <id>     Official Minecraft version to bootstrap, for example 1.12.2.\n"
+            + "  --forge-version <id>         Forge build number, for example 14.23.5.2864.\n"
+            + "  --version-manifest-url <u>   Override Mojang version manifest URL.\n"
+            + "  --forge-installer-url <u>    Override Forge installer URL.\n"
+            + "  --asset-base-url <u>         Override base URL for Minecraft asset objects.\n"
             + "  --exclude <glob>             Exclude file glob. Can be repeated.\n"
             + "  --help                       Show this help.\n";
     }

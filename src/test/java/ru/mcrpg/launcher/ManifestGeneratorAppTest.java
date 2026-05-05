@@ -60,7 +60,9 @@ class ManifestGeneratorAppTest {
             new String[] {
                 "--source", source.toString(),
                 "--output", output.toString(),
-                "--version", "2026.05.05"
+                "--version", "2026.05.05",
+                "--minecraft-version", "1.12.2",
+                "--forge-version", "14.23.5.2864"
             },
             new PrintStream(standardOutput, true, StandardCharsets.UTF_8.name()),
             new PrintStream(standardError, true, StandardCharsets.UTF_8.name())
@@ -70,5 +72,9 @@ class ManifestGeneratorAppTest {
         assertTrue(Files.exists(output));
         assertTrue(new String(standardOutput.toByteArray(), StandardCharsets.UTF_8).contains("Manifest generated:"));
         assertEquals("", new String(standardError.toByteArray(), StandardCharsets.UTF_8));
+
+        LoadedManifest manifest = new ModpackManifestClient().load(output.toUri().toURL().toString());
+        assertEquals("1.12.2", manifest.getManifest().getMinecraft().getVersion());
+        assertEquals("14.23.5.2864", manifest.getManifest().getMinecraft().getForgeVersion());
     }
 }

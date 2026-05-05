@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.nio.charset.StandardCharsets;
 
 public final class LaunchCommandBuilder {
 
@@ -22,6 +24,9 @@ public final class LaunchCommandBuilder {
         placeholders.put("workingDir", trim(config.getWorkingDirectory()));
         placeholders.put("serverHost", trim(config.getServerHost()));
         placeholders.put("serverPort", Integer.toString(config.getServerPort()));
+        placeholders.put("uuid", offlineUuid(trim(config.getUsername())));
+        placeholders.put("accessToken", "0");
+        placeholders.put("userType", "legacy");
 
         List<String> tokens = tokenize(template);
         if (tokens.isEmpty()) {
@@ -148,5 +153,13 @@ public final class LaunchCommandBuilder {
             return value;
         }
         return '"' + value.replace("\"", "\\\"") + '"';
+    }
+
+    private static String offlineUuid(String username) {
+        String normalized = trim(username);
+        if (normalized.isEmpty()) {
+            return "";
+        }
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + normalized).getBytes(StandardCharsets.UTF_8)).toString();
     }
 }

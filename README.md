@@ -66,14 +66,26 @@ java -jar target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar
     "serverHost": "192.168.1.103",
     "serverPort": 25565,
     "workingDirectory": ".",
-    "launchTemplate": "{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}"
+    "launchTemplate": ""
+  },
+  "minecraft": {
+    "version": "1.12.2",
+    "forgeVersion": "14.23.5.2864"
+  },
+  "runtime": {
+    "packages": [
+      {
+        "os": "windows",
+        "arch": "x86_64",
+        "url": "runtime/windows-x64/jre8.zip",
+        "sha256": "PUT_RUNTIME_ZIP_SHA256_HERE",
+        "size": 123456789,
+        "extractDir": "runtime/jre8",
+        "javaPath": "bin/java.exe"
+      }
+    ]
   },
   "files": [
-    {
-      "path": "forge-1.12.2-14.23.5.2864.jar",
-      "sha256": "PUT_REAL_SHA256_HERE",
-      "size": 12345678
-    },
     {
       "path": "mods/examplemod.jar",
       "sha256": "PUT_REAL_SHA256_HERE",
@@ -100,6 +112,19 @@ java -jar target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar
 - `launcher.serverPort`: порт сервера Minecraft.
 - `launcher.workingDirectory`: относительная рабочая папка внутри `game directory`.
 - `launcher.launchTemplate`: шаблон запуска клиента.
+- `minecraft.version`: официальная версия Minecraft для one-click bootstrap, например `1.12.2`.
+- `minecraft.forgeVersion`: build Forge, например `14.23.5.2864`.
+- `minecraft.versionManifestUrl`: необязательный override для Mojang version manifest.
+- `minecraft.forgeInstallerUrl`: необязательный override для Forge installer.
+- `minecraft.assetBaseUrl`: необязательный override для Minecraft asset objects.
+- `runtime.packages[]`: список portable runtime-пакетов для разных платформ.
+- `runtime.packages[].os`: платформа, например `windows`.
+- `runtime.packages[].arch`: архитектура, например `x86_64`.
+- `runtime.packages[].url`: URL zip-архива runtime.
+- `runtime.packages[].sha256`: `SHA-256` zip-архива runtime.
+- `runtime.packages[].size`: размер zip-архива runtime.
+- `runtime.packages[].extractDir`: относительная папка распаковки runtime внутри `game directory`.
+- `runtime.packages[].javaPath`: относительный путь до `java.exe` или `java` внутри распакованного runtime.
 - `files[].path`: относительный путь файла внутри `game directory`.
 - `files[].sha256`: обязательный `SHA-256` файла.
 - `files[].size`: необязательный размер файла в байтах.
@@ -110,6 +135,7 @@ java -jar target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar
 
 - Лаунчер не удаляет лишние локальные файлы, которых больше нет в manifest.
 - `workingDirectory` в manifest должна быть относительной и оставаться внутри `game directory`.
+- `runtime.extractDir` и `runtime.javaPath` тоже должны оставаться внутри `game directory`.
 - `files[].path` тоже должен быть относительным. Выход из `game directory` запрещен.
 
 ## Как раздавать файлы
@@ -122,7 +148,9 @@ java -jar target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar
 /var/www/mc-rpg/
   manifest.json
   client/
-    forge-1.12.2-14.23.5.2864.jar
+    runtime/
+      windows-x64/
+        jre8.zip
     mods/
     config/
 ```
@@ -133,6 +161,33 @@ java -jar target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar
 - `baseUrl` можно указать как `http://192.168.1.103/client/`
 
 Если manifest и клиентские файлы раздаются по этим адресам, пользователь Windows может просто открыть лаунчер и нажать `Запустить`: по умолчанию он скачает клиент в локальную папку `~/mc-rpg-client` и попробует запустить его сразу после синхронизации.
+
+### Portable Java
+
+Если хочешь, чтобы пользователь Windows ничего не ставил вручную, положи zip с JRE 8 рядом с клиентскими файлами, например:
+
+```text
+/var/www/mc-rpg/client/runtime/windows-x64/jre8.zip
+```
+
+И добавь его в `runtime.packages` в manifest. Тогда лаунчер:
+
+- скачает zip с portable Java;
+- проверит `SHA-256`;
+- распакует его в локальную папку клиента;
+- запустит игру через локальный `java.exe`.
+
+### Official Bootstrap
+
+Если в manifest заполнена секция `minecraft`, лаунчер сам:
+
+- скачает официальный client jar Minecraft;
+- скачает libraries, logging config и asset index;
+- скачает asset objects;
+- скачает Forge installer и извлечет из него `version.json` и forge runtime jar;
+- соберет launch-команду для `1.12.2 + Forge` автоматически.
+
+Для этого больше не нужно заранее держать в `client/` готовый `forge-1.12.2-14.23.5.2864.jar`. В modpack-хостинге достаточно `mods/`, `config/`, optional runtime и `manifest.json`.
 
 ## Как посчитать SHA-256
 
@@ -170,9 +225,17 @@ java -cp target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar ru.mcrpg.launcher.ManifestGen
   --server-host 192.168.1.103 \
   --server-port 25565 \
   --working-directory . \
-  --launch-template "{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}" \
+  --minecraft-version 1.12.2 \
+  --forge-version 14.23.5.2864 \
+  --runtime-archive /var/www/mc-rpg/client/runtime/windows-x64/jre8.zip \
+  --runtime-url runtime/windows-x64/jre8.zip \
+  --runtime-os windows \
+  --runtime-arch x86_64 \
+  --runtime-extract-dir runtime/jre8 \
+  --runtime-java-path bin/java.exe \
   --exclude "logs/**" \
-  --exclude "crash-reports/**"
+  --exclude "crash-reports/**" \
+  --exclude "runtime/windows-x64/jre8.zip"
 ```
 
 Если `--output` не указан, manifest будет записан в `<source>/manifest.json`. Этот файл автоматически исключается из списка `files[]`, чтобы он не попадал в манифест при повторной генерации.
@@ -188,6 +251,17 @@ java -cp target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar ru.mcrpg.launcher.ManifestGen
 - `--server-port`: порт Minecraft-сервера.
 - `--working-directory`: рабочая папка относительно `game directory`.
 - `--launch-template`: шаблон запуска клиента.
+- `--runtime-archive`: локальный zip-файл portable runtime, по которому генератор посчитает `sha256` и `size`.
+- `--runtime-url`: URL или относительный путь runtime-архива в manifest.
+- `--runtime-os`: платформа runtime, по умолчанию `windows`.
+- `--runtime-arch`: архитектура runtime, по умолчанию `x86_64`.
+- `--runtime-extract-dir`: папка распаковки runtime внутри `game directory`.
+- `--runtime-java-path`: путь к `java.exe` или `java` внутри распакованного runtime.
+- `--minecraft-version`: официальная версия Minecraft для bootstrap.
+- `--forge-version`: build Forge для bootstrap.
+- `--version-manifest-url`: override для Mojang version manifest.
+- `--forge-installer-url`: override для Forge installer.
+- `--asset-base-url`: override для asset objects.
 - `--exclude`: glob-паттерн для исключения файлов. Опцию можно повторять.
 
 ## Что логично сделать дальше

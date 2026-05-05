@@ -42,6 +42,12 @@ public final class ModpackManifestClient {
         if (manifest.getLauncher() == null) {
             manifest.setLauncher(new LauncherManifestSettings());
         }
+        if (manifest.getRuntime() == null) {
+            manifest.setRuntime(new ModpackRuntime());
+        }
+        if (manifest.getMinecraft() == null) {
+            manifest.setMinecraft(new MinecraftBootstrapSettings());
+        }
         if (manifest.getFiles() == null) {
             manifest.setFiles(null);
         }
@@ -54,4 +60,3 @@ public final class ModpackManifestClient {
         return value.trim();
     }
 }
-

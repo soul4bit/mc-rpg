@@ -10,6 +10,8 @@ public final class ModpackManifest {
     private String version;
     private String baseUrl;
     private LauncherManifestSettings launcher = new LauncherManifestSettings();
+    private ModpackRuntime runtime = new ModpackRuntime();
+    private MinecraftBootstrapSettings minecraft = new MinecraftBootstrapSettings();
     private List<ModpackFile> files = new ArrayList<ModpackFile>();
 
     public int getSchemaVersion() {
@@ -52,6 +54,22 @@ public final class ModpackManifest {
         this.launcher = launcher == null ? new LauncherManifestSettings() : launcher;
     }
 
+    public ModpackRuntime getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(ModpackRuntime runtime) {
+        this.runtime = runtime == null ? new ModpackRuntime() : runtime;
+    }
+
+    public MinecraftBootstrapSettings getMinecraft() {
+        return minecraft;
+    }
+
+    public void setMinecraft(MinecraftBootstrapSettings minecraft) {
+        this.minecraft = minecraft == null ? new MinecraftBootstrapSettings() : minecraft;
+    }
+
     public List<ModpackFile> getFiles() {
         return files;
     }
@@ -60,4 +78,3 @@ public final class ModpackManifest {
         this.files = files == null ? new ArrayList<ModpackFile>() : files;
     }
 }
-

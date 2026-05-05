@@ -18,9 +18,21 @@ public final class ModpackSyncService {
     }
 
     private final ModpackManifestClient manifestClient;
+    private final RuntimeSyncService runtimeSyncService;
+    private final MinecraftBootstrapService minecraftBootstrapService;
 
     public ModpackSyncService(ModpackManifestClient manifestClient) {
+        this(manifestClient, new RuntimeSyncService(), new MinecraftBootstrapService());
+    }
+
+    ModpackSyncService(
+        ModpackManifestClient manifestClient,
+        RuntimeSyncService runtimeSyncService,
+        MinecraftBootstrapService minecraftBootstrapService
+    ) {
         this.manifestClient = manifestClient;
+        this.runtimeSyncService = runtimeSyncService;
+        this.minecraftBootstrapService = minecraftBootstrapService;
     }
 
     public ModpackSyncResult sync(LauncherConfig baseConfig, LogSink logSink) throws IOException {
@@ -47,6 +59,25 @@ public final class ModpackSyncService {
                 downloadedBytes += outcome.getDownloadedBytes();
             } else {
                 reusedFiles++;
+            }
+        }
+
+        RuntimeResolution runtimeResolution = runtimeSyncService.sync(loadedManifest, manifest, gameDirectory, logSink);
+        if (runtimeResolution != null) {
+            resolvedConfig.setJavaCommand(runtimeResolution.getJavaExecutable().toString());
+        }
+
+        MinecraftBootstrapResult bootstrapResult = minecraftBootstrapService.bootstrap(
+            manifest.getMinecraft(),
+            gameDirectory,
+            logSink
+        );
+        if (bootstrapResult != null) {
+            if (hasText(bootstrapResult.getLaunchTemplate())) {
+                resolvedConfig.setLaunchTemplate(bootstrapResult.getLaunchTemplate());
+            }
+            if (hasText(bootstrapResult.getWorkingDirectory())) {
+                resolvedConfig.setWorkingDirectory(bootstrapResult.getWorkingDirectory());
             }
         }
 

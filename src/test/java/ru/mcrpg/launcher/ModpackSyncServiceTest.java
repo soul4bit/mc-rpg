@@ -8,8 +8,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -94,6 +97,150 @@ class ModpackSyncServiceTest {
         assertEquals("Путь файла выходит за пределы папки игры: ../escape.txt", exception.getMessage());
     }
 
+    @Test
+    void syncInstallsPortableRuntimeAndOverridesJavaCommand() throws Exception {
+        PlatformInfo platform = PlatformInfo.current();
+        String javaPath = "windows".equals(platform.getOs()) ? "bin/java.exe" : "bin/java";
+
+        Path sourceDirectory = Files.createDirectories(tempDirectory.resolve("source"));
+        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2864.jar", "forge-client");
+        Path runtimeArchive = sourceDirectory.resolve("runtime/windows-x64/jre8.zip");
+        createRuntimeArchive(runtimeArchive, javaPath, "portable-java");
+
+        Path manifest = tempDirectory.resolve("manifest.json");
+        Files.write(
+            manifest,
+            buildManifestWithRuntime(sourceDirectory, forgeJar, runtimeArchive, platform, javaPath)
+                .getBytes(StandardCharsets.UTF_8)
+        );
+
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setManifestUrl(manifest.toUri().toURL().toString());
+        config.setGameDirectory(tempDirectory.resolve("client").toString());
+        config.setJavaCommand("");
+
+        ModpackSyncService service = new ModpackSyncService(new ModpackManifestClient());
+        ModpackSyncResult result = service.sync(config, null);
+
+        Path resolvedJava = Paths.get(result.getResolvedConfig().getJavaCommand());
+        assertTrue(Files.exists(resolvedJava));
+        assertTrue(result.getResolvedConfig().getJavaCommand().contains("runtime"));
+
+        Files.delete(runtimeArchive);
+        ModpackSyncResult secondRun = service.sync(result.getResolvedConfig(), null);
+        assertEquals(result.getResolvedConfig().getJavaCommand(), secondRun.getResolvedConfig().getJavaCommand());
+        assertTrue(Files.exists(Paths.get(secondRun.getResolvedConfig().getJavaCommand())));
+    }
+
+    @Test
+    void syncBootstrapsOfficialMinecraftAndForge() throws Exception {
+        PlatformInfo platform = PlatformInfo.current();
+        String mojangOs = toMojangOs(platform);
+        String nativeClassifier = "natives-" + mojangOs;
+
+        Path modpackSource = Files.createDirectories(tempDirectory.resolve("modpack-source"));
+        Path modJar = writeFile(modpackSource, "mods/examplemod.jar", "example-mod");
+
+        Path officialSource = Files.createDirectories(tempDirectory.resolve("official-source"));
+        Path clientJar = writeFile(officialSource, "downloads/client.jar", "client-jar");
+        Path baseLibrary = writeFile(officialSource, "downloads/base-lib.jar", "base-library");
+        Path forgeLibrary = writeFile(officialSource, "downloads/forge-lib.jar", "forge-library");
+        Path loggingConfig = writeFile(officialSource, "downloads/client-1.12.xml", "<Configuration/>");
+        Path nativeLibrary = officialSource.resolve("downloads/native-lib-" + nativeClassifier + ".jar");
+        createNativeArchive(nativeLibrary, "native/example.bin", "native-library");
+
+        Path assetPayload = writeFile(officialSource, "downloads/asset-payload.bin", "asset-payload");
+        String assetHash = ChecksumUtils.sha1(assetPayload);
+        Path assetObject = officialSource.resolve("assets-objects/" + assetHash.substring(0, 2) + "/" + assetHash);
+        Files.createDirectories(assetObject.getParent());
+        Files.copy(assetPayload, assetObject);
+
+        Path assetIndex = officialSource.resolve("downloads/1.12-assets.json");
+        Files.write(
+            assetIndex,
+            ("{\n"
+                + "  \"objects\": {\n"
+                + "    \"minecraft/sounds/test.ogg\": {\n"
+                + "      \"hash\": \"" + assetHash + "\",\n"
+                + "      \"size\": " + Files.size(assetObject) + "\n"
+                + "    }\n"
+                + "  }\n"
+                + "}\n").getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path baseVersionJson = officialSource.resolve("1.12.2.json");
+        Files.write(
+            baseVersionJson,
+            buildBaseVersionJson(
+                clientJar,
+                assetIndex,
+                loggingConfig,
+                baseLibrary,
+                nativeLibrary,
+                nativeClassifier,
+                mojangOs
+            ).getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path versionManifest = officialSource.resolve("version_manifest_v2.json");
+        Files.write(
+            versionManifest,
+            ("{\n"
+                + "  \"versions\": [\n"
+                + "    {\n"
+                + "      \"id\": \"1.12.2\",\n"
+                + "      \"url\": \"" + baseVersionJson.toUri().toURL().toString() + "\"\n"
+                + "    }\n"
+                + "  ]\n"
+                + "}\n").getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path forgeInstaller = officialSource.resolve("forge-installer.jar");
+        createForgeInstaller(forgeInstaller, forgeLibrary);
+
+        Path manifest = tempDirectory.resolve("manifest.json");
+        Files.write(
+            manifest,
+            buildManifestWithOfficialBootstrap(modpackSource, modJar, versionManifest, forgeInstaller, officialSource)
+                .getBytes(StandardCharsets.UTF_8)
+        );
+
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setManifestUrl(manifest.toUri().toURL().toString());
+        Path clientDirectory = tempDirectory.resolve("client");
+        config.setGameDirectory(clientDirectory.toString());
+        config.setLaunchTemplate("");
+
+        ModpackSyncService service = new ModpackSyncService(new ModpackManifestClient());
+        ModpackSyncResult result = service.sync(config, null);
+
+        assertTrue(Files.exists(clientDirectory.resolve("mods/examplemod.jar")));
+        assertTrue(Files.exists(clientDirectory.resolve("versions/1.12.2/1.12.2.jar")));
+        assertTrue(Files.exists(clientDirectory.resolve("versions/1.12.2-forge-14.23.5.2864/1.12.2-forge-14.23.5.2864.json")));
+        assertTrue(Files.exists(
+            clientDirectory.resolve("libraries/net/minecraftforge/forge/1.12.2-14.23.5.2864/forge-1.12.2-14.23.5.2864.jar")
+        ));
+        assertTrue(Files.exists(clientDirectory.resolve("libraries/com/example/base-lib/1.0/base-lib-1.0.jar")));
+        assertTrue(Files.exists(clientDirectory.resolve("libraries/com/example/forge-lib/1.0/forge-lib-1.0.jar")));
+        assertTrue(Files.exists(clientDirectory.resolve("assets/indexes/1.12.json")));
+        assertTrue(Files.exists(clientDirectory.resolve("assets/objects/" + assetHash.substring(0, 2) + "/" + assetHash)));
+        assertTrue(Files.exists(clientDirectory.resolve("assets/log_configs/client-1.12.xml")));
+        assertTrue(Files.exists(clientDirectory.resolve("natives")));
+
+        assertEquals(clientDirectory.toString(), result.getResolvedConfig().getWorkingDirectory());
+        assertTrue(result.getResolvedConfig().getLaunchTemplate().contains("net.minecraft.launchwrapper.Launch"));
+        assertTrue(result.getResolvedConfig().getLaunchTemplate().contains("--tweakClass"));
+
+        List<String> command = new LaunchCommandBuilder().build(result.getResolvedConfig());
+        assertTrue(command.contains("net.minecraft.launchwrapper.Launch"));
+        assertTrue(command.contains("--tweakClass"));
+        assertTrue(command.contains("net.minecraftforge.fml.common.launcher.FMLTweaker"));
+        assertTrue(command.contains("--server"));
+        assertTrue(command.contains("192.168.1.103"));
+        assertTrue(command.contains("--port"));
+        assertTrue(command.contains("25565"));
+    }
+
     private static String buildManifest(Path sourceDirectory, Path forgeJar, Path modJar, Path configFile) throws IOException {
         return "{\n"
             + "  \"schemaVersion\": 1,\n"
@@ -114,6 +261,146 @@ class ModpackSyncServiceTest {
             + "}\n";
     }
 
+    private static String buildManifestWithRuntime(
+        Path sourceDirectory,
+        Path forgeJar,
+        Path runtimeArchive,
+        PlatformInfo platform,
+        String javaPath
+    ) throws IOException {
+        return "{\n"
+            + "  \"schemaVersion\": 1,\n"
+            + "  \"id\": \"mc-rpg\",\n"
+            + "  \"version\": \"2026.05.05\",\n"
+            + "  \"baseUrl\": \"" + sourceDirectory.toUri().toURL().toString() + "\",\n"
+            + "  \"launcher\": {\n"
+            + "    \"serverHost\": \"192.168.1.103\",\n"
+            + "    \"serverPort\": 25565,\n"
+            + "    \"workingDirectory\": \".\",\n"
+            + "    \"launchTemplate\": \"{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}\"\n"
+            + "  },\n"
+            + "  \"runtime\": {\n"
+            + "    \"packages\": [\n"
+            + "      {\n"
+            + "        \"os\": \"" + platform.getOs() + "\",\n"
+            + "        \"arch\": \"" + platform.getArch() + "\",\n"
+            + "        \"url\": \"runtime/windows-x64/jre8.zip\",\n"
+            + "        \"sha256\": \"" + ChecksumUtils.sha256(runtimeArchive) + "\",\n"
+            + "        \"size\": " + Files.size(runtimeArchive) + ",\n"
+            + "        \"extractDir\": \"runtime/jre8\",\n"
+            + "        \"javaPath\": \"" + javaPath + "\"\n"
+            + "      }\n"
+            + "    ]\n"
+            + "  },\n"
+            + "  \"files\": [\n"
+            + fileJson("forge-1.12.2-14.23.5.2864.jar", forgeJar) + "\n"
+            + "  ]\n"
+            + "}\n";
+    }
+
+    private static String buildManifestWithOfficialBootstrap(
+        Path sourceDirectory,
+        Path modJar,
+        Path versionManifest,
+        Path forgeInstaller,
+        Path officialSource
+    ) throws IOException {
+        return "{\n"
+            + "  \"schemaVersion\": 1,\n"
+            + "  \"id\": \"mc-rpg\",\n"
+            + "  \"version\": \"2026.05.05\",\n"
+            + "  \"baseUrl\": \"" + sourceDirectory.toUri().toURL().toString() + "\",\n"
+            + "  \"launcher\": {\n"
+            + "    \"serverHost\": \"192.168.1.103\",\n"
+            + "    \"serverPort\": 25565,\n"
+            + "    \"workingDirectory\": \".\",\n"
+            + "    \"launchTemplate\": \"\"\n"
+            + "  },\n"
+            + "  \"minecraft\": {\n"
+            + "    \"version\": \"1.12.2\",\n"
+            + "    \"forgeVersion\": \"14.23.5.2864\",\n"
+            + "    \"versionManifestUrl\": \"" + versionManifest.toUri().toURL().toString() + "\",\n"
+            + "    \"forgeInstallerUrl\": \"" + forgeInstaller.toUri().toURL().toString() + "\",\n"
+            + "    \"assetBaseUrl\": \"" + officialSource.resolve("assets-objects").toUri().toURL().toString() + "\"\n"
+            + "  },\n"
+            + "  \"files\": [\n"
+            + fileJson("mods/examplemod.jar", modJar) + "\n"
+            + "  ]\n"
+            + "}\n";
+    }
+
+    private static String buildBaseVersionJson(
+        Path clientJar,
+        Path assetIndex,
+        Path loggingConfig,
+        Path baseLibrary,
+        Path nativeLibrary,
+        String nativeClassifier,
+        String mojangOs
+    ) throws IOException {
+        return "{\n"
+            + "  \"id\": \"1.12.2\",\n"
+            + "  \"assetIndex\": {\n"
+            + "    \"id\": \"1.12\",\n"
+            + "    \"sha1\": \"" + ChecksumUtils.sha1(assetIndex) + "\",\n"
+            + "    \"size\": " + Files.size(assetIndex) + ",\n"
+            + "    \"url\": \"" + assetIndex.toUri().toURL().toString() + "\"\n"
+            + "  },\n"
+            + "  \"downloads\": {\n"
+            + "    \"client\": {\n"
+            + "      \"sha1\": \"" + ChecksumUtils.sha1(clientJar) + "\",\n"
+            + "      \"size\": " + Files.size(clientJar) + ",\n"
+            + "      \"url\": \"" + clientJar.toUri().toURL().toString() + "\"\n"
+            + "    }\n"
+            + "  },\n"
+            + "  \"libraries\": [\n"
+            + "    {\n"
+            + "      \"name\": \"com.example:base-lib:1.0\",\n"
+            + "      \"downloads\": {\n"
+            + "        \"artifact\": {\n"
+            + "          \"path\": \"com/example/base-lib/1.0/base-lib-1.0.jar\",\n"
+            + "          \"sha1\": \"" + ChecksumUtils.sha1(baseLibrary) + "\",\n"
+            + "          \"size\": " + Files.size(baseLibrary) + ",\n"
+            + "          \"url\": \"" + baseLibrary.toUri().toURL().toString() + "\"\n"
+            + "        }\n"
+            + "      }\n"
+            + "    },\n"
+            + "    {\n"
+            + "      \"name\": \"com.example:native-lib:1.0\",\n"
+            + "      \"downloads\": {\n"
+            + "        \"classifiers\": {\n"
+            + "          \"" + nativeClassifier + "\": {\n"
+            + "            \"path\": \"com/example/native-lib/1.0/native-lib-1.0-" + nativeClassifier + ".jar\",\n"
+            + "            \"sha1\": \"" + ChecksumUtils.sha1(nativeLibrary) + "\",\n"
+            + "            \"size\": " + Files.size(nativeLibrary) + ",\n"
+            + "            \"url\": \"" + nativeLibrary.toUri().toURL().toString() + "\"\n"
+            + "          }\n"
+            + "        }\n"
+            + "      },\n"
+            + "      \"extract\": {\n"
+            + "        \"exclude\": [\"META-INF/\"]\n"
+            + "      },\n"
+            + "      \"natives\": {\n"
+            + "        \"" + mojangOs + "\": \"" + nativeClassifier + "\"\n"
+            + "      }\n"
+            + "    }\n"
+            + "  ],\n"
+            + "  \"logging\": {\n"
+            + "    \"client\": {\n"
+            + "      \"argument\": \"-Dlog4j.configurationFile=${path}\",\n"
+            + "      \"file\": {\n"
+            + "        \"id\": \"client-1.12.xml\",\n"
+            + "        \"sha1\": \"" + ChecksumUtils.sha1(loggingConfig) + "\",\n"
+            + "        \"size\": " + Files.size(loggingConfig) + ",\n"
+            + "        \"url\": \"" + loggingConfig.toUri().toURL().toString() + "\"\n"
+            + "      }\n"
+            + "    }\n"
+            + "  },\n"
+            + "  \"mainClass\": \"net.minecraft.client.main.Main\",\n"
+            + "  \"minecraftArguments\": \"--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userType ${user_type} --versionType ${version_type}\"\n"
+            + "}\n";
+    }
+
     private static String fileJson(String relativePath, Path file) throws IOException {
         return "    {\n"
             + "      \"path\": \"" + relativePath + "\",\n"
@@ -129,5 +416,103 @@ class ModpackSyncServiceTest {
             Files.createDirectories(parent);
         }
         return Files.write(path, content.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static void createForgeInstaller(Path archive, Path forgeLibrary) throws IOException {
+        Path parent = archive.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        byte[] forgeBytes = Files.readAllBytes(forgeLibrary);
+        String versionJson = "{\n"
+            + "  \"id\": \"1.12.2-forge-14.23.5.2864\",\n"
+            + "  \"mainClass\": \"net.minecraft.launchwrapper.Launch\",\n"
+            + "  \"minecraftArguments\": \"--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userType ${user_type} --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge\",\n"
+            + "  \"libraries\": [\n"
+            + "    {\n"
+            + "      \"name\": \"net.minecraftforge:forge:1.12.2-14.23.5.2864\",\n"
+            + "      \"downloads\": {\n"
+            + "        \"artifact\": {\n"
+            + "          \"path\": \"net/minecraftforge/forge/1.12.2-14.23.5.2864/forge-1.12.2-14.23.5.2864.jar\",\n"
+            + "          \"sha1\": \"" + ChecksumUtils.sha1(forgeLibrary) + "\",\n"
+            + "          \"size\": " + Files.size(forgeLibrary) + "\n"
+            + "        }\n"
+            + "      }\n"
+            + "    },\n"
+            + "    {\n"
+            + "      \"name\": \"com.example:forge-lib:1.0\",\n"
+            + "      \"downloads\": {\n"
+            + "        \"artifact\": {\n"
+            + "          \"path\": \"com/example/forge-lib/1.0/forge-lib-1.0.jar\",\n"
+            + "          \"sha1\": \"" + ChecksumUtils.sha1(forgeLibrary) + "\",\n"
+            + "          \"size\": " + Files.size(forgeLibrary) + ",\n"
+            + "          \"url\": \"" + forgeLibrary.toUri().toURL().toString() + "\"\n"
+            + "        }\n"
+            + "      }\n"
+            + "    }\n"
+            + "  ]\n"
+            + "}\n";
+
+        try (ZipOutputStream outputStream = new ZipOutputStream(Files.newOutputStream(archive))) {
+            outputStream.putNextEntry(new ZipEntry("version.json"));
+            outputStream.write(versionJson.getBytes(StandardCharsets.UTF_8));
+            outputStream.closeEntry();
+
+            addZipDirectory(outputStream, "maven/");
+            addZipDirectory(outputStream, "maven/net/");
+            addZipDirectory(outputStream, "maven/net/minecraftforge/");
+            addZipDirectory(outputStream, "maven/net/minecraftforge/forge/");
+            addZipDirectory(outputStream, "maven/net/minecraftforge/forge/1.12.2-14.23.5.2864/");
+            outputStream.putNextEntry(new ZipEntry(
+                "maven/net/minecraftforge/forge/1.12.2-14.23.5.2864/forge-1.12.2-14.23.5.2864.jar"
+            ));
+            outputStream.write(forgeBytes);
+            outputStream.closeEntry();
+        }
+    }
+
+    private static void createRuntimeArchive(Path archive, String javaPath, String payload) throws IOException {
+        Path parent = archive.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        try (ZipOutputStream outputStream = new ZipOutputStream(Files.newOutputStream(archive))) {
+            addZipDirectory(outputStream, "bin/");
+            outputStream.putNextEntry(new ZipEntry(javaPath));
+            outputStream.write(payload.getBytes(StandardCharsets.UTF_8));
+            outputStream.closeEntry();
+        }
+    }
+
+    private static void createNativeArchive(Path archive, String entryName, String payload) throws IOException {
+        Path parent = archive.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        try (ZipOutputStream outputStream = new ZipOutputStream(Files.newOutputStream(archive))) {
+            addZipDirectory(outputStream, "META-INF/");
+            addZipDirectory(outputStream, "native/");
+            outputStream.putNextEntry(new ZipEntry(entryName));
+            outputStream.write(payload.getBytes(StandardCharsets.UTF_8));
+            outputStream.closeEntry();
+        }
+    }
+
+    private static void addZipDirectory(ZipOutputStream outputStream, String name) throws IOException {
+        outputStream.putNextEntry(new ZipEntry(name));
+        outputStream.closeEntry();
+    }
+
+    private static String toMojangOs(PlatformInfo platform) {
+        if ("windows".equals(platform.getOs())) {
+            return "windows";
+        }
+        if ("linux".equals(platform.getOs())) {
+            return "linux";
+        }
+        return "osx";
     }
 }

@@ -22,6 +22,7 @@ class ModpackManifestGeneratorTest {
         Path client = Files.createDirectories(tempDirectory.resolve("client"));
         Path rootJar = writeFile(client, "forge-1.12.2-14.23.5.2864.jar", "forge");
         Path modJar = writeFile(client, "mods/examplemod.jar", "mod");
+        Path runtimeArchive = writeFile(tempDirectory, "runtime/jre8.zip", "portable-jre");
         writeFile(client, "logs/latest.log", "ignore-me");
 
         ManifestGeneratorConfig config = new ManifestGeneratorConfig();
@@ -30,6 +31,10 @@ class ModpackManifestGeneratorTest {
         config.setModpackId("mc-rpg");
         config.setModpackVersion("2026.05.05");
         config.setBaseUrl("http://192.168.1.103/client/");
+        config.setRuntimeArchive(runtimeArchive);
+        config.setRuntimeUrl("runtime/windows-x64/jre8.zip");
+        config.setMinecraftVersion("1.12.2");
+        config.setForgeVersion("14.23.5.2864");
         config.getExcludePatterns().add("logs/**");
 
         ModpackManifestGenerator generator = new ModpackManifestGenerator();
@@ -39,7 +44,19 @@ class ModpackManifestGeneratorTest {
         assertEquals("mc-rpg", manifest.getId());
         assertEquals("2026.05.05", manifest.getVersion());
         assertEquals("http://192.168.1.103/client/", manifest.getBaseUrl());
+        assertEquals("1.12.2", manifest.getMinecraft().getVersion());
+        assertEquals("14.23.5.2864", manifest.getMinecraft().getForgeVersion());
+        assertEquals(1, manifest.getRuntime().getPackages().size());
         assertEquals(2, manifest.getFiles().size());
+
+        RuntimePackage runtimePackage = manifest.getRuntime().getPackages().get(0);
+        assertEquals("windows", runtimePackage.getOs());
+        assertEquals("x86_64", runtimePackage.getArch());
+        assertEquals("runtime/windows-x64/jre8.zip", runtimePackage.getUrl());
+        assertEquals(ChecksumUtils.sha256(runtimeArchive), runtimePackage.getSha256());
+        assertEquals(Long.valueOf(Files.size(runtimeArchive)), runtimePackage.getSize());
+        assertEquals("runtime/jre8", runtimePackage.getExtractDir());
+        assertEquals("bin/java.exe", runtimePackage.getJavaPath());
 
         ModpackFile first = manifest.getFiles().get(0);
         assertEquals("forge-1.12.2-14.23.5.2864.jar", first.getPath());
