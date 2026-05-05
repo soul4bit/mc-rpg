@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "mc-rpg",
+  "version": "2026.05.05",
+  "baseUrl": "http://192.168.1.103:8080/client/",
+  "launcher": {
+    "serverHost": "192.168.1.103",
+    "serverPort": 25565,
+    "workingDirectory": ".",
+    "launchTemplate": "{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}"
+  },
+  "files": [
+    {
+      "path": "forge-1.12.2-14.23.5.2864.jar",
+      "sha256": "PUT_REAL_SHA256_HERE",
+      "size": 12345678
+    },
+    {
+      "path": "mods/examplemod.jar",
+      "sha256": "PUT_REAL_SHA256_HERE",
+      "size": 54321
+    },
+    {
+      "path": "config/rpg.cfg",
+      "sha256": "PUT_REAL_SHA256_HERE",
+      "size": 321
+    }
+  ]
+}

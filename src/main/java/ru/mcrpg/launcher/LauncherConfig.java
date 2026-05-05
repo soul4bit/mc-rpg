@@ -14,6 +14,8 @@ public final class LauncherConfig {
     private String serverHost;
     private int serverPort;
     private String launchTemplate;
+    private String manifestUrl;
+    private boolean updateFilesBeforeLaunch;
 
     public static LauncherConfig defaults() {
         LauncherConfig config = new LauncherConfig();
@@ -24,7 +26,23 @@ public final class LauncherConfig {
         config.setServerHost(DEFAULT_SERVER_HOST);
         config.setServerPort(DEFAULT_SERVER_PORT);
         config.setLaunchTemplate(DEFAULT_LAUNCH_TEMPLATE);
+        config.setManifestUrl("");
+        config.setUpdateFilesBeforeLaunch(true);
         return config;
+    }
+
+    public LauncherConfig copy() {
+        LauncherConfig copy = new LauncherConfig();
+        copy.setUsername(username);
+        copy.setJavaCommand(javaCommand);
+        copy.setGameDirectory(gameDirectory);
+        copy.setWorkingDirectory(workingDirectory);
+        copy.setServerHost(serverHost);
+        copy.setServerPort(serverPort);
+        copy.setLaunchTemplate(launchTemplate);
+        copy.setManifestUrl(manifestUrl);
+        copy.setUpdateFilesBeforeLaunch(updateFilesBeforeLaunch);
+        return copy;
     }
 
     public String getUsername() {
@@ -32,7 +50,7 @@ public final class LauncherConfig {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = sanitize(username);
     }
 
     public String getJavaCommand() {
@@ -40,7 +58,7 @@ public final class LauncherConfig {
     }
 
     public void setJavaCommand(String javaCommand) {
-        this.javaCommand = javaCommand;
+        this.javaCommand = sanitize(javaCommand);
     }
 
     public String getGameDirectory() {
@@ -48,7 +66,7 @@ public final class LauncherConfig {
     }
 
     public void setGameDirectory(String gameDirectory) {
-        this.gameDirectory = gameDirectory;
+        this.gameDirectory = sanitize(gameDirectory);
     }
 
     public String getWorkingDirectory() {
@@ -56,7 +74,7 @@ public final class LauncherConfig {
     }
 
     public void setWorkingDirectory(String workingDirectory) {
-        this.workingDirectory = workingDirectory;
+        this.workingDirectory = sanitize(workingDirectory);
     }
 
     public String getServerHost() {
@@ -64,7 +82,7 @@ public final class LauncherConfig {
     }
 
     public void setServerHost(String serverHost) {
-        this.serverHost = serverHost;
+        this.serverHost = sanitize(serverHost);
     }
 
     public int getServerPort() {
@@ -80,7 +98,26 @@ public final class LauncherConfig {
     }
 
     public void setLaunchTemplate(String launchTemplate) {
-        this.launchTemplate = launchTemplate;
+        this.launchTemplate = sanitize(launchTemplate);
+    }
+
+    public String getManifestUrl() {
+        return manifestUrl;
+    }
+
+    public void setManifestUrl(String manifestUrl) {
+        this.manifestUrl = sanitize(manifestUrl);
+    }
+
+    public boolean isUpdateFilesBeforeLaunch() {
+        return updateFilesBeforeLaunch;
+    }
+
+    public void setUpdateFilesBeforeLaunch(boolean updateFilesBeforeLaunch) {
+        this.updateFilesBeforeLaunch = updateFilesBeforeLaunch;
+    }
+
+    private static String sanitize(String value) {
+        return value == null ? "" : value;
     }
 }
-

@@ -15,7 +15,8 @@ public final class LauncherApp {
 
             LauncherFrame frame = new LauncherFrame(
                 LauncherConfigStore.defaultStore(),
-                new LaunchCommandBuilder()
+                new LaunchCommandBuilder(),
+                new ModpackSyncService(new ModpackManifestClient())
             );
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
@@ -29,4 +30,3 @@ public final class LauncherApp {
         }
     }
 }
-

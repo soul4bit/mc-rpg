@@ -25,6 +25,8 @@ class LauncherConfigStoreTest {
         config.setServerHost("192.168.1.103");
         config.setServerPort(25565);
         config.setLaunchTemplate("{java} -jar forge.jar --username {username}");
+        config.setManifestUrl("https://example.com/manifest.json");
+        config.setUpdateFilesBeforeLaunch(false);
 
         store.save(config);
         LauncherConfig restored = store.load();
@@ -36,6 +38,7 @@ class LauncherConfigStoreTest {
         assertEquals("192.168.1.103", restored.getServerHost());
         assertEquals(25565, restored.getServerPort());
         assertEquals("{java} -jar forge.jar --username {username}", restored.getLaunchTemplate());
+        assertEquals("https://example.com/manifest.json", restored.getManifestUrl());
+        assertEquals(false, restored.isUpdateFilesBeforeLaunch());
     }
 }
-

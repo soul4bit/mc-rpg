@@ -17,6 +17,8 @@ public final class LauncherConfigStore {
     private static final String KEY_SERVER_HOST = "server.host";
     private static final String KEY_SERVER_PORT = "server.port";
     private static final String KEY_LAUNCH_TEMPLATE = "launch.template";
+    private static final String KEY_MANIFEST_URL = "manifest.url";
+    private static final String KEY_UPDATE_FILES_BEFORE_LAUNCH = "update.files.before.launch";
 
     private final Path configFile;
 
@@ -54,6 +56,11 @@ public final class LauncherConfigStore {
             defaults.getServerPort()
         ));
         defaults.setLaunchTemplate(properties.getProperty(KEY_LAUNCH_TEMPLATE, defaults.getLaunchTemplate()));
+        defaults.setManifestUrl(properties.getProperty(KEY_MANIFEST_URL, defaults.getManifestUrl()));
+        defaults.setUpdateFilesBeforeLaunch(parseBoolean(
+            properties.getProperty(KEY_UPDATE_FILES_BEFORE_LAUNCH),
+            defaults.isUpdateFilesBeforeLaunch()
+        ));
         return defaults;
     }
 
@@ -66,6 +73,8 @@ public final class LauncherConfigStore {
         properties.setProperty(KEY_SERVER_HOST, config.getServerHost());
         properties.setProperty(KEY_SERVER_PORT, Integer.toString(config.getServerPort()));
         properties.setProperty(KEY_LAUNCH_TEMPLATE, config.getLaunchTemplate());
+        properties.setProperty(KEY_MANIFEST_URL, config.getManifestUrl());
+        properties.setProperty(KEY_UPDATE_FILES_BEFORE_LAUNCH, Boolean.toString(config.isUpdateFilesBeforeLaunch()));
 
         Path parent = configFile.getParent();
         if (parent != null) {
@@ -92,5 +101,11 @@ public final class LauncherConfigStore {
             return fallback;
         }
     }
-}
 
+    private static boolean parseBoolean(String value, boolean fallback) {
+        if (value == null || value.trim().isEmpty()) {
+            return fallback;
+        }
+        return Boolean.parseBoolean(value.trim());
+    }
+}
