@@ -19,14 +19,14 @@ public final class LauncherConfig {
 
     public static LauncherConfig defaults() {
         LauncherConfig config = new LauncherConfig();
-        config.setUsername("Player");
+        config.setUsername(LauncherDefaults.defaultUsername());
         config.setJavaCommand("java");
-        config.setGameDirectory("");
+        config.setGameDirectory(LauncherDefaults.defaultGameDirectory());
         config.setWorkingDirectory("");
         config.setServerHost(DEFAULT_SERVER_HOST);
         config.setServerPort(DEFAULT_SERVER_PORT);
         config.setLaunchTemplate(DEFAULT_LAUNCH_TEMPLATE);
-        config.setManifestUrl("");
+        config.setManifestUrl(LauncherDefaults.defaultManifestUrl(DEFAULT_SERVER_HOST));
         config.setUpdateFilesBeforeLaunch(true);
         return config;
     }

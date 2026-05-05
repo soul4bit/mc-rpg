@@ -24,9 +24,9 @@ public final class ModpackSyncService {
     }
 
     public ModpackSyncResult sync(LauncherConfig baseConfig, LogSink logSink) throws IOException {
-        LauncherConfig resolvedConfig = baseConfig.copy();
-        String manifestUrl = requireText(baseConfig.getManifestUrl(), "Укажи URL manifest.json.");
-        Path gameDirectory = resolveGameDirectory(baseConfig.getGameDirectory());
+        LauncherConfig resolvedConfig = LauncherDefaults.applyMissingValues(baseConfig.copy());
+        String manifestUrl = requireText(resolvedConfig.getManifestUrl(), "Укажи URL manifest.json.");
+        Path gameDirectory = resolveGameDirectory(resolvedConfig.getGameDirectory());
 
         log(logSink, "Загрузка manifest: " + manifestUrl);
         LoadedManifest loadedManifest = manifestClient.load(manifestUrl);

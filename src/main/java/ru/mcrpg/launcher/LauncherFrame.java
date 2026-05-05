@@ -138,6 +138,7 @@ public final class LauncherFrame extends JFrame {
         LauncherConfig config;
         try {
             config = configStore.load();
+            LauncherDefaults.applyMissingValues(config);
             appendLog("Конфиг загружен из " + configStore.getConfigFile());
         } catch (IOException exception) {
             config = LauncherConfig.defaults();
@@ -224,7 +225,7 @@ public final class LauncherFrame extends JFrame {
         config.setServerPort(parsePortOrDefault(serverPortField.getText()));
         config.setLaunchTemplate(launchTemplateArea.getText().trim());
         config.setUpdateFilesBeforeLaunch(updateFilesBeforeLaunchCheckBox.isSelected());
-        return config;
+        return LauncherDefaults.applyMissingValues(config);
     }
 
     private Path resolveWorkingDirectory(LauncherConfig config) {

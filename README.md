@@ -61,7 +61,7 @@ java -jar target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar
   "schemaVersion": 1,
   "id": "mc-rpg",
   "version": "2026.05.05",
-  "baseUrl": "http://192.168.1.103:8080/client/",
+  "baseUrl": "http://192.168.1.103/client/",
   "launcher": {
     "serverHost": "192.168.1.103",
     "serverPort": 25565,
@@ -131,6 +131,8 @@ java -jar target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar
 
 - `manifest.json` можно раздавать как `http://192.168.1.103/manifest.json`
 - `baseUrl` можно указать как `http://192.168.1.103/client/`
+
+Если manifest и клиентские файлы раздаются по этим адресам, пользователь Windows может просто открыть лаунчер и нажать `Запустить`: по умолчанию он скачает клиент в локальную папку `~/mc-rpg-client` и попробует запустить его сразу после синхронизации.
 
 ## Как посчитать SHA-256
 
