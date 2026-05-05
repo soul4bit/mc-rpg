@@ -55,34 +55,36 @@ public final class LauncherFrame extends JFrame {
 
     private static final DateTimeFormatter LOG_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private static final Color CANVAS = new Color(14, 16, 21);
-    private static final Color SURFACE = new Color(27, 31, 38);
-    private static final Color SURFACE_ALT = new Color(35, 40, 49);
-    private static final Color SURFACE_SOFT = new Color(43, 34, 33);
-    private static final Color BORDER = new Color(73, 80, 94);
-    private static final Color INK = new Color(244, 236, 228);
-    private static final Color INK_MUTED = new Color(176, 182, 192);
-    private static final Color HERO_TOP = new Color(55, 13, 16);
-    private static final Color HERO_BOTTOM = new Color(145, 40, 28);
-    private static final Color HERO_TEXT = new Color(255, 246, 238);
-    private static final Color HERO_MUTED = new Color(242, 208, 195);
-    private static final Color HERO_BORDER = new Color(255, 255, 255, 45);
-    private static final Color ACCENT = new Color(255, 92, 63);
-    private static final Color ACCENT_DEEP = new Color(209, 63, 43);
-    private static final Color ACCENT_SOFT = new Color(83, 44, 39);
-    private static final Color SLATE = new Color(55, 63, 77);
-    private static final Color LOG_BG = new Color(10, 12, 16);
-    private static final Color LOG_TEXT = new Color(226, 232, 238);
-    private static final Color LOG_BORDER = new Color(58, 65, 75);
+    private static final Color CANVAS = new Color(11, 13, 16);
+    private static final Color SURFACE = new Color(32, 35, 40);
+    private static final Color SURFACE_ALT = new Color(43, 47, 54);
+    private static final Color SURFACE_SOFT = new Color(52, 37, 33);
+    private static final Color BORDER = new Color(96, 104, 116);
+    private static final Color INK = new Color(247, 240, 232);
+    private static final Color INK_MUTED = new Color(183, 189, 198);
+    private static final Color HERO_TOP = new Color(48, 10, 12);
+    private static final Color HERO_BOTTOM = new Color(171, 44, 31);
+    private static final Color HERO_TEXT = new Color(255, 247, 240);
+    private static final Color HERO_MUTED = new Color(244, 214, 203);
+    private static final Color HERO_BORDER = new Color(255, 255, 255, 55);
+    private static final Color ACCENT = new Color(255, 75, 54);
+    private static final Color ACCENT_DEEP = new Color(189, 48, 35);
+    private static final Color ACCENT_SOFT = new Color(91, 48, 43);
+    private static final Color SLATE = new Color(67, 76, 89);
+    private static final Color LOG_BG = new Color(8, 10, 13);
+    private static final Color LOG_TEXT = new Color(229, 235, 240);
+    private static final Color LOG_BORDER = new Color(71, 78, 88);
+    private static final int PANEL_CUT = 12;
+    private static final int BUTTON_CUT = 8;
 
-    private static final Font HERO_TITLE_FONT = new Font("Georgia", Font.BOLD, 38);
-    private static final Font HERO_SUBTITLE_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 18);
-    private static final Font TITLE_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 22);
+    private static final Font HERO_TITLE_FONT = new Font("Arial Black", Font.PLAIN, 42);
+    private static final Font HERO_SUBTITLE_FONT = new Font("Segoe UI", Font.BOLD, 18);
+    private static final Font TITLE_FONT = new Font("Segoe UI Black", Font.PLAIN, 22);
     private static final Font BODY_FONT = new Font("Segoe UI", Font.PLAIN, 14);
     private static final Font LABEL_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 13);
-    private static final Font CAPTION_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 11);
+    private static final Font CAPTION_FONT = new Font("Consolas", Font.BOLD, 11);
     private static final Font FIELD_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 15);
-    private static final Font BUTTON_FONT = new Font("Segoe UI Semibold", Font.PLAIN, 14);
+    private static final Font BUTTON_FONT = new Font("Segoe UI Black", Font.PLAIN, 14);
     private static final Font MONO_FONT = new Font("Consolas", Font.PLAIN, 12);
 
     private final LauncherConfigStore configStore;
@@ -144,9 +146,9 @@ public final class LauncherFrame extends JFrame {
     }
 
     private JPanel buildHeroPanel() {
-        GradientPanel hero = new GradientPanel(new BorderLayout(20, 20), HERO_TOP, HERO_BOTTOM, HERO_BORDER, 34);
+        GradientPanel hero = new GradientPanel(new BorderLayout(24, 20), HERO_TOP, HERO_BOTTOM, HERO_BORDER, PANEL_CUT);
         hero.setBorder(new EmptyBorder(24, 28, 24, 28));
-        hero.setPreferredSize(new Dimension(0, 220));
+        hero.setPreferredSize(new Dimension(0, 244));
 
         JPanel copy = new JPanel();
         copy.setOpaque(false);
@@ -164,9 +166,12 @@ public final class LauncherFrame extends JFrame {
             HERO_MUTED
         ));
 
-        RoundedPanel metrics = new RoundedPanel(new GridLayout(3, 1, 0, 12), new Color(255, 255, 255, 22), HERO_BORDER, 24);
+        copy.add(Box.createVerticalStrut(14));
+        copy.add(createHeroBadgeRow("MODPACK", "FORGE 1.12.2", "REDSTONE READY"));
+
+        RoundedPanel metrics = new RoundedPanel(new GridLayout(3, 1, 0, 12), new Color(255, 255, 255, 18), HERO_BORDER, PANEL_CUT);
         metrics.setBorder(new EmptyBorder(18, 18, 18, 18));
-        metrics.setPreferredSize(new Dimension(330, 0));
+        metrics.setPreferredSize(new Dimension(340, 0));
         metrics.add(createHeroMetric("Игрок", playerSummaryLabel));
         metrics.add(createHeroMetric("Папка клиента", directorySummaryLabel));
         metrics.add(createHeroMetric("Режим обновления", updateSummaryLabel));
@@ -308,7 +313,7 @@ public final class LauncherFrame extends JFrame {
     }
 
     private RoundedPanel createCard(String eyebrowText, String titleText, String descriptionText) {
-        RoundedPanel card = new RoundedPanel(new BorderLayout(0, 16), SURFACE, BORDER, 28);
+        RoundedPanel card = new RoundedPanel(new BorderLayout(0, 16), SURFACE, BORDER, PANEL_CUT);
         card.setBorder(new EmptyBorder(18, 18, 18, 18));
 
         JPanel header = new JPanel();
@@ -377,7 +382,7 @@ public final class LauncherFrame extends JFrame {
     }
 
     private RoundedPanel createNotePanel(String title, String body) {
-        RoundedPanel note = new RoundedPanel(new BorderLayout(0, 6), SURFACE_SOFT, BORDER, 20);
+        RoundedPanel note = new RoundedPanel(new BorderLayout(0, 6), SURFACE_SOFT, BORDER, BUTTON_CUT);
         note.setBorder(new EmptyBorder(12, 12, 12, 12));
         note.add(createLabel(title, LABEL_FONT, INK), BorderLayout.NORTH);
         note.add(createHtmlLabel(body, BODY_FONT, INK_MUTED), BorderLayout.CENTER);
@@ -397,10 +402,35 @@ public final class LauncherFrame extends JFrame {
         return metric;
     }
 
+    private JPanel createHeroBadgeRow(String first, String second, String third) {
+        JPanel row = new JPanel(new GridLayout(1, 3, 8, 0));
+        row.setOpaque(false);
+        row.setAlignmentX(Component.LEFT_ALIGNMENT);
+        row.setMaximumSize(new Dimension(420, 30));
+        row.add(createHeroBadge(first));
+        row.add(createHeroBadge(second));
+        row.add(createHeroBadge(third));
+        return row;
+    }
+
+    private JComponent createHeroBadge(String text) {
+        JLabel badge = createLabel(text, CAPTION_FONT, HERO_TEXT);
+        badge.setBorder(new EmptyBorder(6, 8, 6, 8));
+        RoundedPanel shell = new RoundedPanel(new BorderLayout(), new Color(0, 0, 0, 55), new Color(255, 255, 255, 40), BUTTON_CUT);
+        shell.setBorder(new EmptyBorder(0, 0, 0, 0));
+        shell.add(badge, BorderLayout.CENTER);
+        return shell;
+    }
+
     private JScrollPane createEditorScroll(JTextArea textArea, int preferredHeight, Color background, Color borderColor) {
         textArea.setBorder(new EmptyBorder(12, 14, 12, 14));
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setBorder(new LineBorder(borderColor, 1, true));
+        scrollPane.setBorder(
+            new CompoundBorder(
+                new LineBorder(adjustColor(borderColor, 22), 1, false),
+                new CompoundBorder(new LineBorder(borderColor, 1, false), new EmptyBorder(0, 0, 0, 0))
+            )
+        );
         scrollPane.getViewport().setBackground(background);
         scrollPane.setBackground(background);
         scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -468,7 +498,12 @@ public final class LauncherFrame extends JFrame {
         field.setBackground(SURFACE_ALT);
         field.setForeground(INK);
         field.setCaretColor(ACCENT);
-        field.setBorder(new CompoundBorder(new LineBorder(BORDER, 1, true), new EmptyBorder(11, 12, 11, 12)));
+        field.setBorder(
+            new CompoundBorder(
+                new LineBorder(adjustColor(BORDER, 22), 1, false),
+                new CompoundBorder(new LineBorder(BORDER, 1, false), new EmptyBorder(11, 12, 11, 12))
+            )
+        );
     }
 
     private void styleTextArea(JTextArea textArea, Color background, Color foreground) {
@@ -484,9 +519,15 @@ public final class LauncherFrame extends JFrame {
         button.setFont(BUTTON_FONT);
         button.setBackground(background);
         button.setForeground(foreground);
-        button.setBorder(new CompoundBorder(new LineBorder(borderColor, 1, true), new EmptyBorder(11, 14, 11, 14)));
+        button.setBorder(
+            new CompoundBorder(
+                new LineBorder(adjustColor(borderColor, 24), 1, false),
+                new CompoundBorder(new LineBorder(borderColor, 1, false), new EmptyBorder(11, 14, 11, 14))
+            )
+        );
         button.setFocusPainted(false);
         button.setOpaque(true);
+        button.setContentAreaFilled(true);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
@@ -642,7 +683,7 @@ public final class LauncherFrame extends JFrame {
         root.setBackground(CANVAS);
         root.setBorder(new EmptyBorder(18, 18, 18, 18));
 
-        RoundedPanel header = new RoundedPanel(new BorderLayout(0, 8), SURFACE, BORDER, 26);
+        RoundedPanel header = new RoundedPanel(new BorderLayout(0, 8), SURFACE, BORDER, PANEL_CUT);
         header.setBorder(new EmptyBorder(18, 18, 18, 18));
         header.add(createLabel("Расширенные настройки", TITLE_FONT, INK), BorderLayout.NORTH);
         header.add(createHtmlLabel(
@@ -933,6 +974,39 @@ public final class LauncherFrame extends JFrame {
             .replace(">", "&gt;");
     }
 
+    private static Color adjustColor(Color color, int delta) {
+        return new Color(
+            clamp(color.getRed() + delta),
+            clamp(color.getGreen() + delta),
+            clamp(color.getBlue() + delta),
+            color.getAlpha()
+        );
+    }
+
+    private static int clamp(int value) {
+        return Math.max(0, Math.min(255, value));
+    }
+
+    private static void fillBlockShape(Graphics2D g2, int width, int height, int cut) {
+        g2.fillPolygon(blockX(width, cut), blockY(height, cut), 8);
+    }
+
+    private static void drawBlockShape(Graphics2D g2, int width, int height, int cut) {
+        g2.drawPolygon(blockX(width, cut), blockY(height, cut), 8);
+    }
+
+    private static int[] blockX(int width, int cut) {
+        int right = Math.max(0, width - 1);
+        int innerRight = Math.max(cut, right - cut);
+        return new int[] {cut, innerRight, right, right, innerRight, cut, 0, 0};
+    }
+
+    private static int[] blockY(int height, int cut) {
+        int bottom = Math.max(0, height - 1);
+        int innerBottom = Math.max(cut, bottom - cut);
+        return new int[] {0, 0, cut, innerBottom, bottom, bottom, innerBottom, cut};
+    }
+
     private enum LauncherAction {
         SYNC_ONLY,
         SYNC_AND_LAUNCH
@@ -1054,7 +1128,10 @@ public final class LauncherFrame extends JFrame {
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(fillColor);
-                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
+                fillBlockShape(g2, getWidth(), getHeight(), arc);
+                g2.setColor(adjustColor(fillColor, 16));
+                g2.drawLine(arc, 1, getWidth() - arc - 2, 1);
+                g2.drawLine(1, arc, 1, getHeight() - arc - 2);
             } finally {
                 g2.dispose();
             }
@@ -1067,7 +1144,10 @@ public final class LauncherFrame extends JFrame {
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(borderColor);
-                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
+                drawBlockShape(g2, getWidth(), getHeight(), arc);
+                g2.setColor(adjustColor(borderColor, -28));
+                g2.drawLine(getWidth() - arc - 2, getHeight() - 2, arc + 1, getHeight() - 2);
+                g2.drawLine(getWidth() - 2, arc + 1, getWidth() - 2, getHeight() - arc - 2);
             } finally {
                 g2.dispose();
             }
@@ -1096,10 +1176,25 @@ public final class LauncherFrame extends JFrame {
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setPaint(new GradientPaint(0, 0, startColor, getWidth(), getHeight(), endColor));
-                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
-                g2.setColor(new Color(255, 255, 255, 16));
-                g2.fillOval(getWidth() - 240, -70, 250, 250);
-                g2.fillOval(-80, getHeight() - 170, 190, 190);
+                fillBlockShape(g2, getWidth(), getHeight(), arc);
+
+                g2.setColor(new Color(255, 255, 255, 18));
+                for (int x = getWidth() - 280; x < getWidth() - 24; x += 24) {
+                    for (int y = 26; y < getHeight() - 26; y += 24) {
+                        g2.drawRect(x, y, 12, 12);
+                    }
+                }
+
+                g2.setColor(new Color(255, 118, 86, 80));
+                g2.fillRect(getWidth() - 238, 44, 12, 12);
+                g2.fillRect(getWidth() - 178, 92, 12, 12);
+                g2.fillRect(getWidth() - 118, 140, 12, 12);
+                g2.drawLine(getWidth() - 226, 50, getWidth() - 172, 98);
+                g2.drawLine(getWidth() - 166, 98, getWidth() - 112, 146);
+
+                g2.setColor(new Color(255, 255, 255, 22));
+                g2.fillRect(getWidth() - 90, 18, 42, 42);
+                g2.fillRect(getWidth() - 58, 50, 26, 26);
             } finally {
                 g2.dispose();
             }
@@ -1112,7 +1207,7 @@ public final class LauncherFrame extends JFrame {
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(borderColor);
-                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
+                drawBlockShape(g2, getWidth(), getHeight(), arc);
             } finally {
                 g2.dispose();
             }
