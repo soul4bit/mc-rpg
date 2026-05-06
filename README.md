@@ -4,13 +4,14 @@
 
 Текущий инкремент:
 
-- Java 17 + JavaFX.
+- Java 17 + JavaFX + FXML.
 - Сохраняет настройки в `~/.mc-rpg-launcher/launcher.properties`.
 - Поддерживает `manifest.json` с описанием модпака.
 - Скачивает и обновляет клиентские файлы в `game directory`.
 - Проверяет файлы по `SHA-256`.
 - Может автоматически синхронизировать файлы перед запуском клиента.
-- Главный экран лаунчера теперь собирается как content-driven home shell через `src/main/resources/ru/mcrpg/launcher/launcher-home.json`.
+- Главный экран лаунчера теперь собран как `FXML + controller + CSS` shell через `src/main/resources/ru/mcrpg/launcher/launcher-shell.fxml`.
+- Контентные блоки главного экрана по-прежнему наполняются через `src/main/resources/ru/mcrpg/launcher/launcher-home.json`.
 
 ## Сборка
 

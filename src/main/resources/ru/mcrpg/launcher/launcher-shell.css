@@ -1,0 +1,451 @@
+.root {
+    -fx-font-family: "Bahnschrift";
+    -chrome-0: #0f1218;
+    -chrome-1: #171d25;
+    -chrome-2: #202937;
+    -panel: rgba(248, 241, 231, 0.93);
+    -panel-strong: rgba(255, 248, 239, 0.97);
+    -panel-muted: rgba(240, 230, 218, 0.92);
+    -ink: #111722;
+    -ink-soft: #5f6672;
+    -line: rgba(30, 34, 40, 0.10);
+    -accent: #d96a31;
+    -accent-hot: #bc3f1f;
+    -accent-gold: #f1b55c;
+    -success: #5fbd86;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.shell-root {
+    -fx-background-color:
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        radial-gradient(center 14% 6%, radius 26%, rgba(241, 181, 92, 0.30), transparent),
+        radial-gradient(center 88% 12%, radius 32%, rgba(217, 106, 49, 0.18), transparent),
+        linear-gradient(to bottom, #e9dfd0 0%, #c8b59a 38%, #746456 100%);
+    -fx-background-size: 54px 54px, 54px 54px, auto, auto, auto;
+}
+
+.shell-scroll,
+.settings-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.shell-scroll > .viewport,
+.settings-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.shell-scroll .scroll-bar:vertical,
+.shell-scroll .scroll-bar:horizontal,
+.settings-scroll .scroll-bar:vertical,
+.settings-scroll .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.shell-scroll .thumb,
+.settings-scroll .thumb {
+    -fx-background-color: rgba(20, 23, 29, 0.18);
+    -fx-background-radius: 999px;
+}
+
+.shell {
+    -fx-background-color: transparent;
+}
+
+.surface-card,
+.masthead-bar,
+.footer-bar {
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 249, 241, 0.97), rgba(240, 230, 217, 0.96));
+    -fx-background-radius: 28px;
+    -fx-border-color: rgba(37, 41, 48, 0.10);
+    -fx-border-radius: 28px;
+    -fx-border-width: 1px;
+    -fx-padding: 22px;
+    -fx-effect: dropshadow(gaussian, rgba(34, 24, 17, 0.14), 26, 0.18, 0, 12);
+}
+
+.masthead-bar {
+    -fx-padding: 18px 20px;
+}
+
+.masthead-overline,
+.card-eyebrow,
+.chip-title,
+.play-route-title,
+.stat-title,
+.spotlight-eyebrow,
+.news-tag,
+.dock-title,
+.session-title {
+    -fx-text-fill: #9b6f4e;
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1.5px;
+}
+
+.masthead-title,
+.hero-title,
+.card-title,
+.spotlight-title {
+    -fx-text-fill: -ink;
+    -fx-font-family: "Bahnschrift SemiBold";
+    -fx-font-weight: 700;
+}
+
+.masthead-title {
+    -fx-font-size: 31px;
+}
+
+.masthead-subtitle,
+.card-description,
+.field-hint,
+.note-copy,
+.news-copy,
+.hero-footnote {
+    -fx-text-fill: -ink-soft;
+    -fx-font-size: 12px;
+}
+
+.community-button {
+    -fx-padding: 10px 14px;
+}
+
+.top-chip {
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.96), rgba(238, 230, 220, 0.96));
+    -fx-background-radius: 18px;
+    -fx-border-color: rgba(29, 33, 38, 0.08);
+    -fx-border-radius: 18px;
+    -fx-padding: 10px 14px;
+    -fx-min-width: 168px;
+}
+
+.chip-value,
+.play-route-value,
+.dock-value,
+.session-value,
+.field-label,
+.note-title,
+.news-title {
+    -fx-text-fill: -ink;
+}
+
+.chip-value,
+.play-route-value,
+.dock-value,
+.session-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.hero-card {
+    -fx-background-color:
+        linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        radial-gradient(center 82% 18%, radius 34%, rgba(241, 181, 92, 0.34), transparent),
+        linear-gradient(to bottom right, #2d160f 0%, #1b2431 56%, #12171f 100%);
+    -fx-background-radius: 34px;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 34px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(17, 10, 8, 0.36), 34, 0.18, 0, 18);
+}
+
+.hero-grid {
+    -fx-background-color:
+        linear-gradient(to top, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.04)),
+        linear-gradient(to right, rgba(255, 255, 255, 0.05), transparent 28%);
+    -fx-background-radius: 33px;
+}
+
+.hero-badge {
+    -fx-background-radius: 999px;
+    -fx-text-fill: #fff8f0;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-padding: 7px 12px;
+}
+
+.hero-badge-primary {
+    -fx-background-color: rgba(241, 181, 92, 0.22);
+}
+
+.hero-badge-accent {
+    -fx-background-color: rgba(217, 106, 49, 0.24);
+}
+
+.hero-badge-success {
+    -fx-background-color: rgba(95, 189, 134, 0.22);
+}
+
+.hero-title {
+    -fx-text-fill: #fff8ef;
+    -fx-font-size: 48px;
+}
+
+.hero-copy {
+    -fx-text-fill: rgba(255, 243, 231, 0.90);
+    -fx-font-size: 14px;
+    -fx-max-width: 620px;
+}
+
+.hero-stats-row {
+    -fx-alignment: center-left;
+}
+
+.hero-stat {
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+    -fx-background-radius: 18px;
+    -fx-padding: 14px 16px;
+    -fx-min-width: 164px;
+}
+
+.stat-title {
+    -fx-text-fill: rgba(250, 200, 144, 0.86);
+}
+
+.stat-value {
+    -fx-text-fill: #fffaf5;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.hero-footnote {
+    -fx-text-fill: rgba(255, 243, 231, 0.78);
+}
+
+.status-chip {
+    -fx-background-color: linear-gradient(to bottom, #e28a46 0%, #c55225 100%);
+    -fx-background-radius: 16px;
+    -fx-text-fill: #fffaf5;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-padding: 9px 12px;
+}
+
+.play-panel-card {
+    -fx-background-color:
+        linear-gradient(to top right, rgba(217, 106, 49, 0.08), transparent 26%),
+        linear-gradient(to bottom, rgba(255, 249, 241, 0.98), rgba(241, 232, 219, 0.98));
+}
+
+.play-route-box,
+.note-box,
+.news-entry {
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 248, 239, 1.0), rgba(244, 235, 224, 1.0));
+    -fx-background-radius: 18px;
+    -fx-padding: 14px;
+}
+
+.field-label,
+.note-title,
+.news-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+
+.field-group {
+    -fx-spacing: 8px;
+}
+
+.launcher-input,
+.launcher-textarea,
+.log-area {
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(244, 238, 229, 0.98));
+    -fx-background-radius: 16px;
+    -fx-border-color: rgba(24, 28, 34, 0.10);
+    -fx-border-radius: 16px;
+    -fx-border-width: 1px;
+    -fx-text-fill: -ink;
+    -fx-prompt-text-fill: #868d98;
+    -fx-highlight-fill: -accent-hot;
+    -fx-highlight-text-fill: #ffffff;
+    -fx-padding: 12px 14px;
+}
+
+.launcher-input:focused,
+.launcher-textarea:focused,
+.log-area:focused {
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 254, 251, 1.0), rgba(246, 241, 233, 1.0));
+    -fx-border-color: rgba(188, 63, 31, 0.42);
+}
+
+.launcher-textarea .content,
+.log-area .content {
+    -fx-background-color: #fffaf3;
+    -fx-background-radius: 15px;
+}
+
+.launcher-check {
+    -fx-text-fill: -ink;
+    -fx-font-size: 12px;
+}
+
+.launcher-check .box {
+    -fx-background-color: rgba(255, 255, 255, 0.98);
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(24, 28, 34, 0.12);
+    -fx-border-radius: 8px;
+}
+
+.launcher-check:selected .box {
+    -fx-background-color: #fff2e4;
+    -fx-border-color: rgba(217, 106, 49, 0.36);
+}
+
+.launcher-check:selected .mark {
+    -fx-background-color: -accent-hot;
+}
+
+.action-button {
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
+    -fx-border-width: 1px;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-padding: 12px 16px;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(188, 63, 31, 0.12), 14, 0.14, 0, 4);
+}
+
+.action-button:pressed {
+    -fx-translate-y: 1px;
+}
+
+.action-button:disabled {
+    -fx-opacity: 0.56;
+}
+
+.primary-action {
+    -fx-background-color: linear-gradient(to bottom, #e28a46 0%, #c55225 100%);
+    -fx-border-color: rgba(141, 55, 28, 0.20);
+    -fx-text-fill: #fffaf5;
+}
+
+.accent-action {
+    -fx-background-color: linear-gradient(to bottom, #fff3de 0%, #f0dcbf 100%);
+    -fx-border-color: rgba(95, 78, 52, 0.12);
+    -fx-text-fill: #2c3038;
+}
+
+.ghost-action {
+    -fx-background-color: rgba(255, 255, 255, 0.96);
+    -fx-border-color: rgba(24, 28, 34, 0.10);
+    -fx-text-fill: #2e343d;
+}
+
+.spotlight-card {
+    -fx-background-radius: 22px;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 22px;
+    -fx-border-width: 1px;
+    -fx-padding: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(26, 18, 13, 0.24), 18, 0.14, 0, 8);
+}
+
+.spotlight-fire {
+    -fx-background-color:
+        linear-gradient(to top, rgba(13, 17, 23, 0.65), rgba(13, 17, 23, 0.00)),
+        linear-gradient(to bottom right, #69251f 0%, #251f2a 100%);
+}
+
+.spotlight-copper {
+    -fx-background-color:
+        linear-gradient(to top, rgba(13, 17, 23, 0.65), rgba(13, 17, 23, 0.00)),
+        linear-gradient(to bottom right, #8a6030 0%, #2a2424 100%);
+}
+
+.spotlight-emerald {
+    -fx-background-color:
+        linear-gradient(to top, rgba(13, 17, 23, 0.65), rgba(13, 17, 23, 0.00)),
+        linear-gradient(to bottom right, #2d7057 0%, #1f2930 100%);
+}
+
+.spotlight-eyebrow {
+    -fx-text-fill: rgba(255, 255, 255, 0.72);
+}
+
+.spotlight-title {
+    -fx-text-fill: #fffaf5;
+    -fx-font-size: 19px;
+}
+
+.spotlight-copy {
+    -fx-text-fill: rgba(241, 246, 250, 0.82);
+    -fx-font-size: 12px;
+}
+
+.log-card {
+    -fx-background-color:
+        linear-gradient(to top right, rgba(15, 18, 24, 0.10), transparent 30%),
+        linear-gradient(to bottom, rgba(255, 249, 241, 0.98), rgba(242, 233, 220, 0.98));
+}
+
+.log-area {
+    -fx-font-family: "Cascadia Mono";
+    -fx-font-size: 12px;
+    -fx-control-inner-background: #fffaf3;
+}
+
+.footer-bar {
+    -fx-padding: 14px 18px;
+}
+
+.dock-item {
+    -fx-min-width: 140px;
+}
+
+.config-path,
+.dialog-path {
+    -fx-text-fill: #737983;
+    -fx-font-size: 11px;
+}
+
+.dialog-root {
+    -fx-background-color:
+        radial-gradient(center 16% 10%, radius 28%, rgba(241, 181, 92, 0.20), transparent),
+        linear-gradient(to bottom, #ebe0d0 0%, #d9c7ad 100%);
+}
+
+.dialog-header,
+.settings-card {
+    -fx-padding: 18px;
+}
+
+.settings-actions {
+    -fx-alignment: center-left;
+}
+
+.compact-mode .masthead-title {
+    -fx-font-size: 27px;
+}
+
+.compact-mode .hero-title {
+    -fx-font-size: 42px;
+}
+
+.compact-mode .hero-stat {
+    -fx-min-width: 148px;
+}
+
+.condensed-mode .masthead-title {
+    -fx-font-size: 23px;
+}
+
+.condensed-mode .hero-title {
+    -fx-font-size: 34px;
+}
+
+.condensed-mode .card-title {
+    -fx-font-size: 20px;
+}
+
+.condensed-mode .top-chip {
+    -fx-min-width: 142px;
+}

@@ -748,16 +748,8 @@ public final class LauncherFxApplication extends Application {
         setNodeVisible(sidebarRail, !compact);
         setNodeVisible(sessionCardBox, !condensed);
         setNodeVisible(footerBar, !condensed);
-
-        if (compact) {
-            heroLayout.setRight(null);
-            heroLayout.setBottom(heroActionPanel);
-            BorderPane.setMargin(heroActionPanel, new Insets(18, 0, 0, 0));
-        } else {
-            heroLayout.setBottom(null);
-            heroLayout.setRight(heroActionPanel);
-            BorderPane.setMargin(heroActionPanel, Insets.EMPTY);
-        }
+        heroLayout.setBottom(null);
+        heroLayout.setRight(null);
 
         toggleStyleClass(appRoot, "compact-mode", compact);
         toggleStyleClass(appRoot, "condensed-mode", condensed);

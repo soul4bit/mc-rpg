@@ -6,6 +6,6 @@ public final class LauncherApp {
     }
 
     public static void main(String[] args) {
-        LauncherFxApplication.launchApp(args);
+        LauncherShellApplication.launchApp(args);
     }
 }

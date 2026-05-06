@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="appRoot" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ru.mcrpg.launcher.LauncherShellController" styleClass="shell-root">
+    <children>
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="shell-scroll">
+            <content>
+                <VBox fx:id="shell" fillWidth="true" maxWidth="1440.0" spacing="20.0" styleClass="shell">
+                    <padding>
+                        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0"/>
+                    </padding>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="18.0" styleClass="masthead-bar">
+                            <children>
+                                <VBox spacing="6.0">
+                                    <children>
+                                        <Label text="REDSTONE NETWORK" styleClass="masthead-overline"/>
+                                        <Label fx:id="mastheadTitleLabel" styleClass="masthead-title"/>
+                                        <Label fx:id="mastheadSubtitleLabel" styleClass="masthead-subtitle" wrapText="true"/>
+                                    </children>
+                                </VBox>
+                                <HBox fx:id="communityBar" alignment="CENTER_LEFT" spacing="10.0"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <HBox spacing="10.0">
+                                    <children>
+                                        <VBox spacing="4.0" styleClass="top-chip">
+                                            <children>
+                                                <Label text="ПРОФИЛЬ" styleClass="chip-title"/>
+                                                <Label fx:id="headerProfileLabel" styleClass="chip-value"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="4.0" styleClass="top-chip">
+                                            <children>
+                                                <Label text="РЕЖИМ" styleClass="chip-title"/>
+                                                <Label fx:id="headerModeLabel" styleClass="chip-value"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </HBox>
+
+                        <FlowPane fx:id="bodyFlow" hgap="20.0" vgap="20.0" styleClass="body-flow">
+                            <children>
+                                <VBox fx:id="leftColumn" minWidth="760.0" spacing="20.0" styleClass="showcase-column">
+                                    <children>
+                                        <StackPane minHeight="430.0" styleClass="hero-card">
+                                            <children>
+                                                <Pane mouseTransparent="true" styleClass="hero-grid"/>
+                                                <VBox alignment="TOP_LEFT" spacing="20.0">
+                                                    <padding>
+                                                        <Insets bottom="28.0" left="28.0" right="28.0" top="28.0"/>
+                                                    </padding>
+                                                    <children>
+                                                        <HBox spacing="10.0">
+                                                            <children>
+                                                                <Label text="MAIN SERVER" styleClass="hero-badge hero-badge-primary"/>
+                                                                <Label text="FORGE 1.12.2" styleClass="hero-badge hero-badge-accent"/>
+                                                                <Label fx:id="heroFeatureBadge" styleClass="hero-badge hero-badge-success"/>
+                                                            </children>
+                                                        </HBox>
+                                                        <Label fx:id="heroTitleLabel" styleClass="hero-title" wrapText="true"/>
+                                                        <Label fx:id="heroCopyLabel" styleClass="hero-copy" wrapText="true"/>
+                                                        <HBox spacing="12.0" styleClass="hero-stats-row">
+                                                            <children>
+                                                                <VBox spacing="6.0" styleClass="hero-stat">
+                                                                    <children>
+                                                                        <Label text="ВЕРСИЯ" styleClass="stat-title"/>
+                                                                        <Label fx:id="heroPlayerLabel" styleClass="stat-value"/>
+                                                                    </children>
+                                                                </VBox>
+                                                                <VBox spacing="6.0" styleClass="hero-stat">
+                                                                    <children>
+                                                                        <Label text="СЕРВЕР" styleClass="stat-title"/>
+                                                                        <Label fx:id="heroInstallLabel" styleClass="stat-value" wrapText="true"/>
+                                                                    </children>
+                                                                </VBox>
+                                                                <VBox spacing="6.0" styleClass="hero-stat">
+                                                                    <children>
+                                                                        <Label text="РЕЖИМ" styleClass="stat-title"/>
+                                                                        <Label fx:id="heroModeLabel" styleClass="stat-value" wrapText="true"/>
+                                                                    </children>
+                                                                </VBox>
+                                                            </children>
+                                                        </HBox>
+                                                        <Region VBox.vgrow="ALWAYS"/>
+                                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                            <children>
+                                                                <Label fx:id="heroStateBadge" text="Готово" styleClass="status-chip"/>
+                                                                <Label fx:id="heroFootnoteLabel" styleClass="hero-footnote" wrapText="true"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </StackPane>
+
+                                        <FlowPane fx:id="spotlightFlow" hgap="16.0" vgap="16.0" styleClass="spotlight-flow"/>
+
+                                        <FlowPane fx:id="metaDeckFlow" hgap="16.0" vgap="16.0" styleClass="meta-deck">
+                                            <children>
+                                                <VBox minWidth="320.0" prefWidth="380.0" spacing="14.0" styleClass="surface-card support-card">
+                                                    <children>
+                                                        <Label text="PLAYER ACCESS" styleClass="card-eyebrow"/>
+                                                        <Label text="Вход без лишних экранов" styleClass="card-title"/>
+                                                        <Label text="Основной экран теперь построен как отдельная FXML-разметка: макет и визуальный слой можно менять без переписывания backend-логики запуска." styleClass="card-description" wrapText="true"/>
+                                                        <VBox spacing="8.0" styleClass="note-box">
+                                                            <children>
+                                                                <Label text="Авторизация на сервере" styleClass="note-title"/>
+                                                                <Label fx:id="supportNoteLabel" styleClass="note-copy" wrapText="true"/>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </VBox>
+                                                <VBox minWidth="320.0" prefWidth="380.0" spacing="14.0" styleClass="surface-card news-card">
+                                                    <children>
+                                                        <Label text="HOME FEED" styleClass="card-eyebrow"/>
+                                                        <Label text="Контентный блок" styleClass="card-title"/>
+                                                        <Label text="Новости и промо-карточки по-прежнему тянутся из launcher-home.json, но раскладываются уже новым UI-слоем." styleClass="card-description" wrapText="true"/>
+                                                        <VBox fx:id="newsFeed" spacing="10.0"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </FlowPane>
+                                    </children>
+                                </VBox>
+
+                                <VBox minWidth="330.0" prefWidth="360.0" spacing="20.0" styleClass="control-column">
+                                    <children>
+                                        <VBox spacing="14.0" styleClass="surface-card play-panel-card">
+                                            <children>
+                                                <Label text="PLAY DECK" styleClass="card-eyebrow"/>
+                                                <Label text="Быстрый запуск" styleClass="card-title"/>
+                                                <Label text="Профиль, папка клиента и действия вынесены в отдельную компактную колонку, чтобы дизайн можно было менять независимо от внутренних сервисов." styleClass="card-description" wrapText="true"/>
+                                                <VBox spacing="6.0" styleClass="play-route-box">
+                                                    <children>
+                                                        <Label text="МАРШРУТ" styleClass="play-route-title"/>
+                                                        <Label fx:id="playRouteLabel" styleClass="play-route-value" wrapText="true"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="8.0" styleClass="field-group">
+                                                    <children>
+                                                        <Label text="Ник в игре" styleClass="field-label"/>
+                                                        <Label text="Имя профиля, с которым клиент зайдёт на сервер." styleClass="field-hint" wrapText="true"/>
+                                                        <TextField fx:id="usernameField"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="8.0" styleClass="field-group">
+                                                    <children>
+                                                        <Label text="Каталог сборки" styleClass="field-label"/>
+                                                        <Label text="Здесь живут runtime, моды, конфиги и bootstrap Minecraft." styleClass="field-hint" wrapText="true"/>
+                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                            <children>
+                                                                <TextField fx:id="gameDirectoryField" HBox.hgrow="ALWAYS"/>
+                                                                <Button fx:id="browseGameDirectoryButton" text="Обзор" styleClass="action-button ghost-action"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                                <CheckBox fx:id="updateFilesBeforeLaunchCheckBox" text="Автоматически обновлять сборку перед запуском"/>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label fx:id="playStateLabel" text="Готово" styleClass="status-chip"/>
+                                                        <Region HBox.hgrow="ALWAYS"/>
+                                                    </children>
+                                                </HBox>
+                                                <VBox spacing="10.0">
+                                                    <children>
+                                                        <Button fx:id="launchButton" maxWidth="1.7976931348623157E308" text="Играть" styleClass="action-button primary-action"/>
+                                                        <Button fx:id="syncButton" maxWidth="1.7976931348623157E308" text="Синхронизировать" styleClass="action-button accent-action"/>
+                                                        <Button fx:id="toggleLogButton" maxWidth="1.7976931348623157E308" text="Открыть лог" styleClass="action-button ghost-action"/>
+                                                        <Button fx:id="settingsButton" maxWidth="1.7976931348623157E308" text="Технические настройки" styleClass="action-button ghost-action"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="14.0" styleClass="surface-card session-card">
+                                            <children>
+                                                <Label text="SESSION" styleClass="card-eyebrow"/>
+                                                <Label text="Сводка профиля" styleClass="card-title"/>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label text="РЕЖИМ" styleClass="session-title"/>
+                                                        <Region HBox.hgrow="ALWAYS"/>
+                                                        <Label fx:id="sessionModeLabel" styleClass="session-value"/>
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label text="СЕРВЕР" styleClass="session-title"/>
+                                                        <Region HBox.hgrow="ALWAYS"/>
+                                                        <Label fx:id="sessionRouteLabel" styleClass="session-value" wrapText="true"/>
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label text="СТАТУС" styleClass="session-title"/>
+                                                        <Region HBox.hgrow="ALWAYS"/>
+                                                        <Label fx:id="sessionStateLabel" text="Готово" styleClass="session-value"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+
+                                        <VBox fx:id="logDrawerBox" managed="false" spacing="14.0" styleClass="surface-card log-card" visible="false" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <Label text="LIVE LOG" styleClass="card-eyebrow"/>
+                                                <Label text="Живой журнал" styleClass="card-title"/>
+                                                <Label text="Здесь остаются синхронизация, stdout клиента и любые ошибки запуска." styleClass="card-description" wrapText="true"/>
+                                                <TextArea fx:id="logArea" prefRowCount="16" VBox.vgrow="ALWAYS"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </FlowPane>
+
+                        <HBox fx:id="footerBar" alignment="CENTER_LEFT" spacing="16.0" styleClass="footer-bar">
+                            <children>
+                                <VBox spacing="5.0" styleClass="dock-item">
+                                    <children>
+                                        <Label text="ИГРОК" styleClass="dock-title"/>
+                                        <Label fx:id="dockPlayerLabel" styleClass="dock-value"/>
+                                    </children>
+                                </VBox>
+                                <VBox spacing="5.0" styleClass="dock-item">
+                                    <children>
+                                        <Label text="ПАПКА" styleClass="dock-title"/>
+                                        <Label fx:id="dockFolderLabel" styleClass="dock-value"/>
+                                    </children>
+                                </VBox>
+                                <VBox spacing="5.0" styleClass="dock-item">
+                                    <children>
+                                        <Label text="РЕЖИМ" styleClass="dock-title"/>
+                                        <Label fx:id="dockModeLabel" styleClass="dock-value"/>
+                                    </children>
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label text="CONFIG" styleClass="dock-title"/>
+                                        <Label fx:id="configPathLabel" styleClass="config-path"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</StackPane>
