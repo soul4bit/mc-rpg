@@ -10,7 +10,7 @@ class LauncherHomeContentLoaderTest {
     void loadsBundledHomeContent() {
         LauncherHomeContent content = new LauncherHomeContentLoader().loadDefault();
 
-        assertEquals("Redstone Realm", content.getHeroTitle());
+        assertEquals("MC RPG", content.getHeroTitle());
         assertFalse(content.getCommunity().isEmpty());
         assertFalse(content.getSpotlight().isEmpty());
         assertFalse(content.getNews().isEmpty());

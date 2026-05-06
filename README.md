@@ -1,18 +1,18 @@
 # mc-rpg
 
-Простой desktop-лаунчер для подключения к серверу `MC RPG`.
+Простой JavaFX-лаунчер для подключения к серверу `MC RPG`.
 
 Текущий инкремент:
 
-- Java 17 backend + React + Electron shell.
+- Java 17 + JavaFX 21.
 - Сохраняет настройки в `~/.mc-rpg-launcher/launcher.properties`.
 - Поддерживает `manifest.json` с описанием модпака.
 - Скачивает и обновляет клиентские файлы в `game directory`.
 - Проверяет файлы по `SHA-256`.
 - Может автоматически синхронизировать файлы перед запуском клиента.
-- Desktop UI теперь работает как `React + Electron` shell, а Java остаётся backend-ядром для `config`, `sync` и `launch`.
-- Electron общается с Java через CLI bridge `ru.mcrpg.launcher.LauncherBackendCli`.
-- Контентные блоки главного экрана по-прежнему наполняются через `src/main/resources/ru/mcrpg/launcher/launcher-home.json`.
+- Главный экран работает через `LauncherShellApplication` + `launcher-shell.fxml/css`.
+- Контентные блоки главного экрана наполняются через `src/main/resources/ru/mcrpg/launcher/launcher-home.json`.
+- Визуальные ассеты JavaFX лежат в `src/main/resources/ru/mcrpg/launcher/redstone/`.
 
 ## Сборка
 
@@ -20,45 +20,27 @@
 mvn package
 ```
 
-## Electron shell
+## Запуск
 
-Для запуска нового desktop shell:
-
-```bash
-npm install
-npm run dev
-```
-
-Для production-сборки frontend + backend jar:
+Для запуска JavaFX-окна из исходников:
 
 ```bash
-npm run build
+mvn javafx:run
 ```
 
-Для сборки готового portable-пакета лаунчера:
+Для сборки jar:
 
 ```bash
-npm run dist
+mvn package
 ```
 
-Артефакты появятся в `release/`:
-
-- папка `release/redstone-launcher-0.1.0-win-x64/`
-- архив `release/redstone-launcher-0.1.0-win-x64.zip`
-
-Для запуска собранного Electron shell из исходников:
-
-```bash
-npm run start
-```
-
-Backend jar, который использует Electron bridge и который всё ещё можно запускать отдельно для legacy Java-entrypoint:
+Для запуска собранного jar:
 
 ```bash
 java -jar target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar
 ```
 
-Сборка теперь делает fat jar, поэтому дополнительные библиотеки рядом не нужны.
+Сборка делает fat jar, поэтому дополнительные библиотеки рядом не нужны.
 
 ## Как это работает
 

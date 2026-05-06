@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public final class LauncherShellApplication extends Application {
 
@@ -15,6 +16,8 @@ public final class LauncherShellApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        stage.initStyle(StageStyle.UNDECORATED);
+
         FXMLLoader loader = new FXMLLoader(
             LauncherShellApplication.class.getResource("/ru/mcrpg/launcher/launcher-shell.fxml")
         );
@@ -27,8 +30,8 @@ public final class LauncherShellApplication extends Application {
         );
 
         stage.setTitle(LauncherBrand.APP_NAME);
-        stage.setMinWidth(960);
-        stage.setMinHeight(720);
+        stage.setMinWidth(1200);
+        stage.setMinHeight(760);
         stage.setScene(scene);
         controller.attach(stage, getHostServices());
         stage.setOnCloseRequest(event -> controller.onCloseRequest());
