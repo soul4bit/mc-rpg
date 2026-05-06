@@ -2,9 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Priority?>
@@ -15,190 +21,749 @@
 <StackPane fx:id="appRoot" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="ru.mcrpg.launcher.LauncherShellController" styleClass="shell-root">
     <children>
-        <HBox fx:id="shell" maxHeight="980.0" maxWidth="1680.0" minHeight="760.0" minWidth="1200.0" styleClass="app-shell">
+        <HBox fx:id="shell" styleClass="shell-layout">
             <children>
                 <VBox prefWidth="304.0" styleClass="sidebar-shell">
                     <padding>
-                        <Insets bottom="24.0" left="24.0" right="24.0" top="28.0"/>
+                        <Insets bottom="30.0" left="24.0" right="24.0" top="30.0"/>
                     </padding>
                     <children>
-                        <VBox alignment="CENTER" spacing="10.0" styleClass="brand-block">
+                        <VBox alignment="CENTER" spacing="12.0" styleClass="brand-block">
                             <children>
-                                <StackPane minHeight="90.0" minWidth="90.0" prefHeight="90.0" prefWidth="90.0" styleClass="brand-crystal"/>
-                                <Label fx:id="brandTitleLabel" styleClass="brand-title"/>
+                                <Label fx:id="brandLogoLabel" styleClass="brand-logo"/>
                                 <Label fx:id="brandSubtitleLabel" styleClass="brand-subtitle"/>
                             </children>
                         </VBox>
 
-                        <VBox spacing="8.0" styleClass="nav-list">
+                        <VBox spacing="10.0" styleClass="nav-list">
                             <children>
                                 <Button fx:id="homeNavButton" mnemonicParsing="false" text="Home" styleClass="nav-button nav-active"/>
                                 <Button fx:id="playNavButton" mnemonicParsing="false" text="Play" styleClass="nav-button"/>
                                 <Button fx:id="modsNavButton" mnemonicParsing="false" text="Mods" styleClass="nav-button"/>
-                                <Button fx:id="settingsButton" mnemonicParsing="false" text="Settings" styleClass="nav-button"/>
+                                <Button fx:id="settingsNavButton" mnemonicParsing="false" text="Settings" styleClass="nav-button"/>
+                                <Button fx:id="sessionNavButton" managed="false" mnemonicParsing="false" text="Account" styleClass="nav-button" visible="false"/>
                             </children>
                         </VBox>
 
                         <Region VBox.vgrow="ALWAYS"/>
 
-                        <VBox spacing="8.0" styleClass="sidebar-profile-card">
+                        <HBox alignment="CENTER" spacing="26.0" styleClass="sidebar-utility-bar">
                             <children>
-                                <Label text="PROFILE" styleClass="sidebar-caption"/>
-                                <Label fx:id="headerProfileLabel" styleClass="sidebar-profile"/>
-                                <Label fx:id="headerModeLabel" styleClass="sidebar-mode"/>
+                                <Button fx:id="discordUtilityButton" mnemonicParsing="false" styleClass="utility-button"/>
+                                <Button fx:id="globeUtilityButton" mnemonicParsing="false" styleClass="utility-button"/>
+                                <Button fx:id="logUtilityButton" mnemonicParsing="false" styleClass="utility-button"/>
                             </children>
-                        </VBox>
-
-                        <HBox fx:id="communityBar" alignment="CENTER_LEFT" spacing="12.0" styleClass="sidebar-community"/>
+                        </HBox>
                     </children>
                 </VBox>
 
-                <VBox fx:id="contentShell" spacing="22.0" styleClass="content-shell" HBox.hgrow="ALWAYS">
-                    <padding>
-                        <Insets bottom="18.0" left="0.0" right="18.0" top="18.0"/>
-                    </padding>
+                <StackPane fx:id="mainShell" styleClass="main-shell" HBox.hgrow="ALWAYS">
                     <children>
-                        <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag" spacing="12.0" styleClass="window-bar">
+                        <StackPane fx:id="contentStack" styleClass="content-stack">
                             <children>
-                                <Region HBox.hgrow="ALWAYS"/>
-                                <Button fx:id="minimizeWindowButton" mnemonicParsing="false" onAction="#minimizeWindow" text="-" styleClass="window-control"/>
-                                <Button fx:id="closeWindowButton" mnemonicParsing="false" onAction="#closeWindow" text="X" styleClass="window-control window-control-close"/>
-                            </children>
-                        </HBox>
-
-                        <StackPane minHeight="480.0" styleClass="hero-stage" VBox.vgrow="ALWAYS">
-                            <children>
-                                <Pane mouseTransparent="true" styleClass="hero-backdrop"/>
-                                <Pane mouseTransparent="true" styleClass="hero-vignette"/>
-                                <HBox alignment="CENTER" spacing="28.0" styleClass="hero-layout">
+                                <VBox fx:id="homeView" spacing="36.0" styleClass="screen">
+                                    <padding>
+                                        <Insets bottom="42.0" left="44.0" right="44.0" top="48.0"/>
+                                    </padding>
                                     <children>
-                                        <VBox alignment="CENTER" spacing="20.0" HBox.hgrow="ALWAYS">
+                                        <HBox alignment="TOP_CENTER" spacing="32.0" styleClass="hero-row">
                                             <children>
-                                                <Label fx:id="heroTitleLabel" styleClass="hero-wordmark"/>
-                                                <HBox alignment="CENTER" spacing="18.0" styleClass="hero-subtitle-row">
+                                                <Region prefWidth="312.0"/>
+                                                <VBox alignment="CENTER" spacing="28.0" styleClass="hero-center-block" HBox.hgrow="ALWAYS">
                                                     <children>
-                                                        <Region prefWidth="74.0" styleClass="hero-subtitle-line"/>
-                                                        <Label fx:id="heroSubtitleLabel" styleClass="hero-subtitle"/>
-                                                        <Region prefWidth="74.0" styleClass="hero-subtitle-line"/>
+                                                        <Label fx:id="homeHeroLogoLabel" styleClass="hero-logo"/>
+                                                        <Button fx:id="homeLaunchButton" mnemonicParsing="false" text="PLAY" styleClass="primary-launch-button"/>
                                                     </children>
-                                                </HBox>
-                                                <Button fx:id="launchButton" mnemonicParsing="false" text="PLAY" styleClass="play-button"/>
+                                                </VBox>
+                                                <VBox prefWidth="320.0" spacing="22.0" styleClass="glass-card status-card">
+                                                    <children>
+                                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                            <children>
+                                                                <Region fx:id="homePresenceIndicator" styleClass="presence-indicator presence-checking"/>
+                                                                <Label fx:id="homePresenceLabel" styleClass="status-online-label"/>
+                                                            </children>
+                                                        </HBox>
+                                                        <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                        <VBox spacing="20.0">
+                                                            <children>
+                                                                <VBox spacing="4.0" styleClass="metric-block">
+                                                                    <Label text="ROUTE" styleClass="metric-caption"/>
+                                                                    <Label fx:id="homeRouteLabel" styleClass="metric-value"/>
+                                                                </VBox>
+                                                                <VBox spacing="4.0" styleClass="metric-block">
+                                                                    <Label fx:id="homeVersionLabel" styleClass="metric-value"/>
+                                                                    <Label text="VERSION" styleClass="metric-caption"/>
+                                                                </VBox>
+                                                                <VBox spacing="4.0" styleClass="metric-block">
+                                                                    <Label fx:id="homePlayersLabel" styleClass="metric-value"/>
+                                                                    <Label text="PLAYERS ONLINE" styleClass="metric-caption"/>
+                                                                </VBox>
+                                                            </children>
+                                                        </VBox>
+                                                        <Label fx:id="homePresenceHintLabel" styleClass="card-note" wrapText="true"/>
+                                                    </children>
+                                                </VBox>
                                             </children>
-                                        </VBox>
+                                        </HBox>
 
-                                        <VBox prefWidth="292.0" spacing="16.0" styleClass="realm-card">
+                                        <HBox spacing="24.0" styleClass="bottom-card-row">
                                             <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                <VBox spacing="18.0" styleClass="glass-card content-card" HBox.hgrow="ALWAYS">
                                                     <children>
-                                                        <Region fx:id="realmPresenceIndicator" styleClass="presence-indicator presence-checking"/>
-                                                        <Label fx:id="realmPresenceLabel" styleClass="realm-presence-title"/>
+                                                        <Label text="Latest News" styleClass="card-title"/>
+                                                        <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                        <HBox spacing="20.0">
+                                                            <children>
+                                                                <StackPane minHeight="108.0" minWidth="112.0" prefHeight="108.0" prefWidth="112.0" styleClass="news-thumb"/>
+                                                                <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                                                                    <children>
+                                                                        <Label fx:id="homeNewsTitleLabel" styleClass="news-title" wrapText="true"/>
+                                                                        <Label fx:id="homeNewsCopyLabel" styleClass="news-copy" wrapText="true"/>
+                                                                        <Label fx:id="homeNewsDateLabel" styleClass="news-date"/>
+                                                                    </children>
+                                                                </VBox>
+                                                            </children>
+                                                        </HBox>
+                                                        <Button fx:id="homeNewsActionButton" mnemonicParsing="false" text="View all news" styleClass="text-link-button"/>
                                                     </children>
-                                                </HBox>
-                                                <Pane prefHeight="1.0" styleClass="card-separator"/>
-                                                <VBox spacing="14.0">
+                                                </VBox>
+
+                                                <VBox prefWidth="670.0" spacing="18.0" styleClass="glass-card content-card update-card">
                                                     <children>
-                                                        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="realm-metric">
+                                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
                                                             <children>
-                                                                <Label text="Route" styleClass="realm-metric-label"/>
+                                                                <Label text="Updating Files" styleClass="card-title"/>
                                                                 <Region HBox.hgrow="ALWAYS"/>
-                                                                <Label fx:id="serverRouteLabel" styleClass="realm-metric-value"/>
+                                                                <Button fx:id="homeUpdateButton" mnemonicParsing="false" text="Update" styleClass="small-action-button"/>
                                                             </children>
                                                         </HBox>
-                                                        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="realm-metric">
+                                                        <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                        <Label fx:id="syncFileLabel" styleClass="news-copy" wrapText="true"/>
+                                                        <HBox alignment="CENTER_LEFT" spacing="18.0">
                                                             <children>
-                                                                <Label text="Version" styleClass="realm-metric-label"/>
-                                                                <Region HBox.hgrow="ALWAYS"/>
-                                                                <Label fx:id="serverVersionLabel" styleClass="realm-metric-value"/>
+                                                                <ProgressBar fx:id="syncProgressBar" maxWidth="1.7976931348623157E308" progress="0.0" styleClass="launcher-progress" HBox.hgrow="ALWAYS"/>
+                                                                <Label fx:id="syncPercentLabel" styleClass="progress-percent-label"/>
                                                             </children>
                                                         </HBox>
-                                                        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="realm-metric">
+                                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
                                                             <children>
-                                                                <Label text="Profile" styleClass="realm-metric-label"/>
+                                                                <Label fx:id="syncStatusLabel" styleClass="news-date"/>
                                                                 <Region HBox.hgrow="ALWAYS"/>
-                                                                <Label fx:id="serverProfileLabel" styleClass="realm-metric-value"/>
-                                                            </children>
-                                                        </HBox>
-                                                        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="realm-metric">
-                                                            <children>
-                                                                <Label text="Install" styleClass="realm-metric-label"/>
-                                                                <Region HBox.hgrow="ALWAYS"/>
-                                                                <Label fx:id="serverFolderLabel" styleClass="realm-metric-value" wrapText="true"/>
+                                                                <Label fx:id="syncBytesLabel" styleClass="news-date"/>
                                                             </children>
                                                         </HBox>
                                                     </children>
                                                 </VBox>
-                                                <Label fx:id="realmPresenceHintLabel" styleClass="realm-presence-copy" wrapText="true"/>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+
+                                <VBox fx:id="playView" managed="false" spacing="22.0" styleClass="screen" visible="false">
+                                    <padding>
+                                        <Insets bottom="42.0" left="44.0" right="44.0" top="48.0"/>
+                                    </padding>
+                                    <children>
+                                        <HBox alignment="TOP_CENTER" spacing="32.0" styleClass="hero-row">
+                                            <children>
+                                                <Region prefWidth="290.0"/>
+                                                <VBox alignment="CENTER" spacing="26.0" styleClass="hero-center-block" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label fx:id="playHeroLogoLabel" styleClass="hero-logo"/>
+                                                        <Button fx:id="playLaunchButton" mnemonicParsing="false" text="PLAY" styleClass="primary-launch-button"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox prefWidth="320.0" spacing="18.0" styleClass="glass-card compact-account-card">
+                                                    <children>
+                                                        <Label text="ACCOUNT" styleClass="metric-caption"/>
+                                                        <HBox alignment="CENTER_LEFT" spacing="18.0">
+                                                            <children>
+                                                                <StackPane minHeight="92.0" minWidth="92.0" prefHeight="92.0" prefWidth="92.0" styleClass="avatar-thumb avatar-thumb-small"/>
+                                                                <VBox alignment="CENTER_LEFT" spacing="8.0" HBox.hgrow="ALWAYS">
+                                                                    <children>
+                                                                        <Label fx:id="playAccountNameLabel" styleClass="account-name-label"/>
+                                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                                            <children>
+                                                                                <Region styleClass="presence-indicator presence-online"/>
+                                                                                <Label fx:id="playAccountStatusLabel" styleClass="account-status-label"/>
+                                                                            </children>
+                                                                        </HBox>
+                                                                    </children>
+                                                                </VBox>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+
+                                        <HBox spacing="24.0">
+                                            <children>
+                                                <VBox spacing="18.0" styleClass="glass-card content-card server-card" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="SELECTED SERVER" styleClass="metric-caption"/>
+                                                        <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                        <HBox spacing="24.0">
+                                                            <children>
+                                                                <StackPane minHeight="190.0" minWidth="164.0" prefHeight="190.0" prefWidth="164.0" styleClass="server-thumb"/>
+                                                                <VBox spacing="14.0" HBox.hgrow="ALWAYS">
+                                                                    <children>
+                                                                        <Label fx:id="playServerTitleLabel" styleClass="server-title-label"/>
+                                                                        <Label fx:id="playServerRouteLabel" styleClass="metric-value"/>
+                                                                        <HBox spacing="42.0">
+                                                                            <children>
+                                                                                <VBox spacing="4.0">
+                                                                                    <children>
+                                                                                        <Label fx:id="playServerVersionLabel" styleClass="metric-value"/>
+                                                                                        <Label text="VERSION" styleClass="metric-caption"/>
+                                                                                    </children>
+                                                                                </VBox>
+                                                                                <VBox spacing="4.0">
+                                                                                    <children>
+                                                                                        <Label fx:id="playServerPlayersLabel" styleClass="metric-value"/>
+                                                                                        <Label text="PLAYERS ONLINE" styleClass="metric-caption"/>
+                                                                                    </children>
+                                                                                </VBox>
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <Label fx:id="playServerPingLabel" styleClass="ping-label"/>
+                                                                    </children>
+                                                                </VBox>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
+
+                                                <VBox prefWidth="500.0" spacing="18.0" styleClass="glass-card content-card">
+                                                    <children>
+                                                        <VBox spacing="12.0">
+                                                            <children>
+                                                                <Label text="GAME VERSION" styleClass="metric-caption"/>
+                                                                <ComboBox fx:id="playVersionComboBox" styleClass="launcher-select"/>
+                                                            </children>
+                                                        </VBox>
+                                                        <VBox spacing="12.0">
+                                                            <children>
+                                                                <Label text="GAME DIRECTORY" styleClass="metric-caption"/>
+                                                                <HBox spacing="12.0">
+                                                                    <children>
+                                                                        <TextField fx:id="playGameDirectoryField" editable="false" styleClass="launcher-input" HBox.hgrow="ALWAYS"/>
+                                                                        <Button fx:id="openGameDirectoryButton" mnemonicParsing="false" text="Open" styleClass="small-action-button"/>
+                                                                    </children>
+                                                                </HBox>
+                                                            </children>
+                                                        </VBox>
+                                                        <Button fx:id="repairClientButton" mnemonicParsing="false" text="Repair Client" styleClass="outline-danger-button"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+
+                                        <VBox spacing="18.0" styleClass="glass-card content-card">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                    <children>
+                                                        <Label text="RECENT UPDATES" styleClass="metric-caption"/>
+                                                        <Region HBox.hgrow="ALWAYS"/>
+                                                        <Label fx:id="playUpdateDateLabel" styleClass="news-date"/>
+                                                    </children>
+                                                </HBox>
+                                                <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                <HBox spacing="24.0">
+                                                    <children>
+                                                        <StackPane minHeight="108.0" minWidth="168.0" prefHeight="108.0" prefWidth="168.0" styleClass="update-thumb"/>
+                                                        <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label fx:id="playUpdateTitleLabel" styleClass="news-title" wrapText="true"/>
+                                                                <Label fx:id="playUpdateCopyLabel" styleClass="news-copy" wrapText="true"/>
+                                                                <Button fx:id="playChangelogButton" mnemonicParsing="false" text="View full changelog" styleClass="text-link-button"/>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
                                             </children>
                                         </VBox>
                                     </children>
-                                </HBox>
+                                </VBox>
+
+                                <ScrollPane fx:id="modsView" fitToWidth="true" hbarPolicy="NEVER" managed="false" styleClass="screen-scroll" visible="false">
+                                    <content>
+                                        <VBox spacing="26.0" styleClass="screen">
+                                            <padding>
+                                                <Insets bottom="42.0" left="44.0" right="44.0" top="48.0"/>
+                                            </padding>
+                                            <children>
+                                                <VBox spacing="8.0">
+                                                    <children>
+                                                        <Label text="Mods" styleClass="screen-title"/>
+                                                        <Label text="Manage your modpack" styleClass="screen-subtitle"/>
+                                                    </children>
+                                                </VBox>
+
+                                                <HBox spacing="22.0">
+                                                    <children>
+                                                        <TextField fx:id="modsSearchField" promptText="Search mods..." styleClass="launcher-input search-input" HBox.hgrow="ALWAYS"/>
+                                                        <HBox spacing="0.0" styleClass="segmented-control">
+                                                            <children>
+                                                                <Button fx:id="installedFilterButton" mnemonicParsing="false" text="Installed" styleClass="segment-button segment-button-active"/>
+                                                                <Button fx:id="optionalFilterButton" mnemonicParsing="false" text="Optional" styleClass="segment-button"/>
+                                                                <Button fx:id="updatesFilterButton" mnemonicParsing="false" text="Updates" styleClass="segment-button"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </HBox>
+
+                                                <HBox spacing="24.0">
+                                                    <children>
+                                                        <VBox spacing="0.0" styleClass="glass-card mods-list-card" HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <VBox fx:id="modsListBox"/>
+                                                            </children>
+                                                        </VBox>
+
+                                                        <VBox prefWidth="360.0" spacing="30.0" styleClass="glass-card content-card mods-summary-card">
+                                                            <children>
+                                                                <VBox spacing="14.0">
+                                                                    <children>
+                                                                        <Label text="MODPACK VERSION" styleClass="metric-caption"/>
+                                                                        <Label fx:id="modsVersionLabel" styleClass="summary-big-label"/>
+                                                                    </children>
+                                                                </VBox>
+                                                                <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                                <VBox spacing="14.0">
+                                                                    <children>
+                                                                        <Label text="TOTAL MODS" styleClass="metric-caption"/>
+                                                                        <Label fx:id="modsTotalLabel" styleClass="summary-big-label"/>
+                                                                        <Label fx:id="modsEnabledLabel" styleClass="positive-copy"/>
+                                                                        <Label fx:id="modsDisabledLabel" styleClass="news-date"/>
+                                                                    </children>
+                                                                </VBox>
+                                                                <Region VBox.vgrow="ALWAYS"/>
+                                                                <Button fx:id="updatePackButton" mnemonicParsing="false" text="Update Pack" styleClass="primary-rect-button"/>
+                                                                <Button fx:id="openModsFolderButton" mnemonicParsing="false" text="Open Mods Folder" styleClass="secondary-rect-button"/>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+
+                                <ScrollPane fx:id="settingsView" fitToWidth="true" hbarPolicy="NEVER" managed="false" styleClass="screen-scroll" visible="false">
+                                    <content>
+                                        <VBox spacing="26.0" styleClass="screen">
+                                            <padding>
+                                                <Insets bottom="42.0" left="44.0" right="44.0" top="48.0"/>
+                                            </padding>
+                                            <children>
+                                                <Label text="Settings" styleClass="screen-title"/>
+                                                <HBox alignment="TOP_LEFT" spacing="26.0">
+                                                    <children>
+                                                        <VBox prefWidth="610.0" spacing="24.0" styleClass="glass-card content-card settings-large-card">
+                                                            <children>
+                                                                <Label text="Game" styleClass="card-title"/>
+                                                                <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                                <VBox spacing="12.0">
+                                                                    <children>
+                                                                        <Label text="Minecraft Version" styleClass="field-label"/>
+                                                                        <ComboBox fx:id="settingsVersionComboBox" styleClass="launcher-select"/>
+                                                                    </children>
+                                                                </VBox>
+                                                                <VBox spacing="14.0">
+                                                                    <children>
+                                                                        <HBox alignment="CENTER_LEFT">
+                                                                            <children>
+                                                                                <Label text="RAM Allocation" styleClass="field-label"/>
+                                                                                <Region HBox.hgrow="ALWAYS"/>
+                                                                                <Label fx:id="settingsRamLabel" styleClass="news-date"/>
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <Slider fx:id="settingsRamSlider" max="8.0" min="2.0" showTickLabels="false" showTickMarks="false" value="6.0" styleClass="launcher-slider"/>
+                                                                    </children>
+                                                                </VBox>
+                                                                <VBox spacing="12.0">
+                                                                    <children>
+                                                                        <Label text="Java Path" styleClass="field-label"/>
+                                                                        <HBox spacing="12.0">
+                                                                            <children>
+                                                                                <TextField fx:id="settingsJavaPathField" styleClass="launcher-input" HBox.hgrow="ALWAYS"/>
+                                                                                <Button fx:id="browseJavaPathButton" mnemonicParsing="false" text="Browse" styleClass="small-action-button"/>
+                                                                            </children>
+                                                                        </HBox>
+                                                                    </children>
+                                                                </VBox>
+                                                                <VBox spacing="12.0">
+                                                                    <children>
+                                                                        <Label text="Screen Resolution" styleClass="field-label"/>
+                                                                        <ComboBox fx:id="settingsResolutionComboBox" styleClass="launcher-select"/>
+                                                                    </children>
+                                                                </VBox>
+                                                                <HBox alignment="CENTER_LEFT">
+                                                                    <children>
+                                                                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                                            <children>
+                                                                                <Label text="Fullscreen" styleClass="field-label"/>
+                                                                                <Label text="Launch the game in fullscreen mode" styleClass="field-hint"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <CheckBox fx:id="settingsFullscreenToggle" mnemonicParsing="false" styleClass="switch-toggle"/>
+                                                                    </children>
+                                                                </HBox>
+                                                            </children>
+                                                        </VBox>
+
+                                                        <VBox prefWidth="620.0" spacing="24.0">
+                                                            <children>
+                                                                <VBox spacing="20.0" styleClass="glass-card content-card">
+                                                                    <children>
+                                                                        <Label text="Launcher" styleClass="card-title"/>
+                                                                        <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                                        <HBox alignment="CENTER_LEFT">
+                                                                            <children>
+                                                                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                                                    <children>
+                                                                                        <Label text="Auto-Update" styleClass="field-label"/>
+                                                                                        <Label text="Automatically update the launcher" styleClass="field-hint"/>
+                                                                                    </children>
+                                                                                </VBox>
+                                                                                <CheckBox fx:id="settingsAutoUpdateToggle" mnemonicParsing="false" styleClass="switch-toggle"/>
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <VBox spacing="12.0">
+                                                                            <children>
+                                                                                <Label text="Download Path" styleClass="field-label"/>
+                                                                                <HBox spacing="12.0">
+                                                                                    <children>
+                                                                                        <TextField fx:id="settingsDownloadPathField" styleClass="launcher-input" HBox.hgrow="ALWAYS"/>
+                                                                                        <Button fx:id="browseDownloadPathButton" mnemonicParsing="false" text="Browse" styleClass="small-action-button"/>
+                                                                                    </children>
+                                                                                </HBox>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox spacing="12.0">
+                                                                            <children>
+                                                                                <Label text="Language" styleClass="field-label"/>
+                                                                                <ComboBox fx:id="settingsLanguageComboBox" styleClass="launcher-select"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <HBox alignment="CENTER_LEFT">
+                                                                            <children>
+                                                                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                                                    <children>
+                                                                                        <Label text="Start on Boot" styleClass="field-label"/>
+                                                                                        <Label text="Launch the launcher when your system starts" styleClass="field-hint"/>
+                                                                                    </children>
+                                                                                </VBox>
+                                                                                <CheckBox fx:id="settingsStartOnBootToggle" mnemonicParsing="false" styleClass="switch-toggle"/>
+                                                                            </children>
+                                                                        </HBox>
+                                                                    </children>
+                                                                </VBox>
+
+                                                                <VBox spacing="20.0" styleClass="glass-card content-card">
+                                                                    <children>
+                                                                        <Label text="Account" styleClass="card-title"/>
+                                                                        <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                                        <HBox alignment="CENTER_LEFT">
+                                                                            <children>
+                                                                                <Label text="Nickname" styleClass="field-label"/>
+                                                                                <Region HBox.hgrow="ALWAYS"/>
+                                                                                <Label fx:id="settingsAccountNameLabel" styleClass="metric-value"/>
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <HBox alignment="CENTER_LEFT">
+                                                                            <children>
+                                                                                <Label text="Status" styleClass="field-label"/>
+                                                                                <Region HBox.hgrow="ALWAYS"/>
+                                                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                                                    <children>
+                                                                                        <Region styleClass="presence-indicator presence-online"/>
+                                                                                        <Label fx:id="settingsAccountStatusLabel" styleClass="account-status-label"/>
+                                                                                    </children>
+                                                                                </HBox>
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                                        <HBox spacing="18.0">
+                                                                            <children>
+                                                                                <Button fx:id="settingsLogoutButton" mnemonicParsing="false" text="Log Out" styleClass="secondary-rect-button" HBox.hgrow="ALWAYS"/>
+                                                                                <Button fx:id="settingsManageAccountButton" mnemonicParsing="false" text="Manage Account" styleClass="outline-danger-button" HBox.hgrow="ALWAYS"/>
+                                                                            </children>
+                                                                        </HBox>
+                                                                    </children>
+                                                                </VBox>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
+
+                                <StackPane fx:id="loginView" managed="false" styleClass="screen auth-screen" visible="false">
+                                    <children>
+                                        <VBox maxWidth="760.0" prefWidth="760.0" spacing="22.0" styleClass="glass-card auth-card">
+                                            <children>
+                                                <VBox spacing="8.0">
+                                                    <children>
+                                                        <Label text="Sign In" styleClass="auth-title"/>
+                                                        <Label text="Enter your account to continue" styleClass="screen-subtitle"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="12.0">
+                                                    <children>
+                                                        <Label text="Email or Username" styleClass="field-label"/>
+                                                        <TextField fx:id="loginUsernameField" promptText="Enter your email or username" styleClass="launcher-input"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="12.0">
+                                                    <children>
+                                                        <Label text="Password" styleClass="field-label"/>
+                                                        <PasswordField fx:id="loginPasswordField" promptText="Enter your password" styleClass="launcher-input"/>
+                                                    </children>
+                                                </VBox>
+                                                <HBox alignment="CENTER_LEFT">
+                                                    <children>
+                                                        <CheckBox fx:id="loginRememberCheckBox" mnemonicParsing="false" text="Remember me" styleClass="inline-check"/>
+                                                        <Region HBox.hgrow="ALWAYS"/>
+                                                        <Button mnemonicParsing="false" text="Forgot password?" styleClass="text-link-button"/>
+                                                    </children>
+                                                </HBox>
+                                                <Button fx:id="loginSignInButton" mnemonicParsing="false" text="Sign In" styleClass="primary-launch-button auth-primary-button"/>
+                                                <Button fx:id="loginCreateAccountButton" mnemonicParsing="false" text="Create Account" styleClass="secondary-outline-button auth-outline-button"/>
+                                                <VBox alignment="CENTER" spacing="14.0" styleClass="guest-panel">
+                                                    <children>
+                                                        <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                        <Button fx:id="loginGuestButton" mnemonicParsing="false" text="Continue as Guest" styleClass="ghost-center-button"/>
+                                                        <Label text="Play offline without an account" styleClass="field-hint"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </StackPane>
+
+                                <StackPane fx:id="registerView" managed="false" styleClass="screen auth-screen" visible="false">
+                                    <children>
+                                        <VBox maxWidth="760.0" prefWidth="760.0" spacing="20.0" styleClass="glass-card auth-card">
+                                            <children>
+                                                <VBox alignment="CENTER" spacing="8.0">
+                                                    <children>
+                                                        <Label text="Create Account" styleClass="auth-title"/>
+                                                        <Label text="Join Redstone RPG Server" styleClass="screen-subtitle"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="12.0">
+                                                    <children>
+                                                        <Label text="Username" styleClass="field-label"/>
+                                                        <TextField fx:id="registerUsernameField" promptText="Choose a username" styleClass="launcher-input"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="12.0">
+                                                    <children>
+                                                        <Label text="Email" styleClass="field-label"/>
+                                                        <TextField fx:id="registerEmailField" promptText="Enter your email address" styleClass="launcher-input"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="12.0">
+                                                    <children>
+                                                        <Label text="Password" styleClass="field-label"/>
+                                                        <PasswordField fx:id="registerPasswordField" promptText="Create a strong password" styleClass="launcher-input"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="12.0">
+                                                    <children>
+                                                        <Label text="Confirm Password" styleClass="field-label"/>
+                                                        <PasswordField fx:id="registerConfirmPasswordField" promptText="Confirm your password" styleClass="launcher-input"/>
+                                                    </children>
+                                                </VBox>
+                                                <CheckBox fx:id="registerAgreementCheckBox" mnemonicParsing="false" text="I agree to the server rules and privacy policy" styleClass="inline-check"/>
+                                                <Button fx:id="registerCreateButton" mnemonicParsing="false" text="Create Account" styleClass="primary-launch-button auth-primary-button"/>
+                                                <Button fx:id="registerBackButton" mnemonicParsing="false" text="Back to Sign In" styleClass="secondary-outline-button auth-outline-button"/>
+                                                <Label text="Use 8+ characters with a mix of letters, numbers, and symbols to keep your account secure." styleClass="field-hint" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </StackPane>
+
+                                <ScrollPane fx:id="accountView" fitToWidth="true" hbarPolicy="NEVER" managed="false" styleClass="screen-scroll" visible="false">
+                                    <content>
+                                        <VBox spacing="20.0" styleClass="screen">
+                                            <padding>
+                                                <Insets bottom="34.0" left="44.0" right="44.0" top="48.0"/>
+                                            </padding>
+                                            <children>
+                                                <VBox spacing="8.0">
+                                                    <children>
+                                                        <Label text="Account" styleClass="screen-title"/>
+                                                        <Label text="Manage your profile, security and view your server stats." styleClass="screen-subtitle"/>
+                                                    </children>
+                                                </VBox>
+
+                                                <HBox spacing="18.0" styleClass="glass-card content-card account-hero-card">
+                                                    <children>
+                                                        <StackPane minHeight="164.0" minWidth="164.0" prefHeight="164.0" prefWidth="164.0" styleClass="avatar-thumb avatar-thumb-large"/>
+                                                        <VBox spacing="16.0" HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label fx:id="accountNameLabel" styleClass="account-hero-title"/>
+                                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                                    <children>
+                                                                        <Region styleClass="presence-indicator presence-online"/>
+                                                                        <Label fx:id="accountStatusLabel" styleClass="account-status-label"/>
+                                                                    </children>
+                                                                </HBox>
+                                                                <HBox spacing="34.0">
+                                                                    <children>
+                                                                        <VBox spacing="14.0">
+                                                                            <children>
+                                                                                <HBox spacing="12.0">
+                                                                                    <children>
+                                                                                        <Label text="EMAIL" styleClass="metric-caption"/>
+                                                                                        <Label fx:id="accountEmailLabel" styleClass="metric-value"/>
+                                                                                    </children>
+                                                                                </HBox>
+                                                                                <HBox spacing="12.0">
+                                                                                    <children>
+                                                                                        <Label text="RANK" styleClass="metric-caption"/>
+                                                                                        <Label fx:id="accountRankLabel" styleClass="danger-copy"/>
+                                                                                    </children>
+                                                                                </HBox>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <Region HBox.hgrow="ALWAYS"/>
+                                                                        <VBox spacing="14.0">
+                                                                            <children>
+                                                                                <HBox spacing="12.0">
+                                                                                    <children>
+                                                                                        <Label text="UUID" styleClass="metric-caption"/>
+                                                                                        <Label text="9f3e7b2c-4a06-4d77-9b3d-8e5f1a2c9d71" styleClass="news-date"/>
+                                                                                    </children>
+                                                                                </HBox>
+                                                                                <HBox spacing="12.0">
+                                                                                    <children>
+                                                                                        <Label text="JOINED" styleClass="metric-caption"/>
+                                                                                        <Label text="Mar 12, 2024" styleClass="news-date"/>
+                                                                                    </children>
+                                                                                </HBox>
+                                                                                <HBox spacing="12.0">
+                                                                                    <children>
+                                                                                        <Label text="LAST LOGIN" styleClass="metric-caption"/>
+                                                                                        <Label text="May 18, 2025 • 2:41 PM" styleClass="news-date"/>
+                                                                                    </children>
+                                                                                </HBox>
+                                                                                <HBox spacing="12.0">
+                                                                                    <children>
+                                                                                        <Label text="LINKED DISCORD" styleClass="metric-caption"/>
+                                                                                        <Label text="DragonSlayer42#1337" styleClass="news-date"/>
+                                                                                    </children>
+                                                                                </HBox>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                </HBox>
+                                                                <HBox spacing="18.0">
+                                                                    <children>
+                                                                        <Button fx:id="accountEditProfileButton" mnemonicParsing="false" text="Edit Profile" styleClass="secondary-rect-button" HBox.hgrow="ALWAYS"/>
+                                                                        <Button fx:id="accountChangeSkinButton" mnemonicParsing="false" text="Change Skin" styleClass="outline-danger-button" HBox.hgrow="ALWAYS"/>
+                                                                    </children>
+                                                                </HBox>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+
+                                                <HBox spacing="18.0">
+                                                    <children>
+                                                        <VBox spacing="18.0" styleClass="glass-card content-card" HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label text="Profile" styleClass="card-title"/>
+                                                                <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                                <HBox><children><Label text="Nickname" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountProfileNicknameLabel" styleClass="metric-value"/></children></HBox>
+                                                                <HBox><children><Label text="Rank" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountProfileRankLabel" styleClass="danger-copy"/></children></HBox>
+                                                                <HBox><children><Label text="Level" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountProfileLevelLabel" styleClass="metric-value"/></children></HBox>
+                                                                <HBox><children><Label text="Experience" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountProfileExperienceLabel" styleClass="metric-value"/></children></HBox>
+                                                                <HBox><children><Label text="Country" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountProfileCountryLabel" styleClass="metric-value"/></children></HBox>
+                                                                <HBox><children><Label text="Preferred Language" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountProfileLanguageLabel" styleClass="metric-value"/></children></HBox>
+                                                                <Button mnemonicParsing="false" text="Edit Profile" styleClass="secondary-rect-button"/>
+                                                            </children>
+                                                        </VBox>
+
+                                                        <VBox spacing="18.0" styleClass="glass-card content-card" HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label text="Security" styleClass="card-title"/>
+                                                                <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                                <HBox><children><Label text="Password" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountSecurityPasswordLabel" styleClass="metric-value"/></children></HBox>
+                                                                <HBox><children><Label text="Email" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountSecurityEmailLabel" styleClass="metric-value"/></children></HBox>
+                                                                <HBox><children><Label text="Two-Factor Auth" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountSecurityTwoFactorLabel" styleClass="positive-copy"/></children></HBox>
+                                                                <HBox><children><Label text="Backup Codes" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountSecurityBackupLabel" styleClass="metric-value"/></children></HBox>
+                                                                <HBox><children><Label text="Recovery Email" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountSecurityRecoveryLabel" styleClass="metric-value"/></children></HBox>
+                                                                <Button fx:id="accountSecurityButton" mnemonicParsing="false" text="Security Settings" styleClass="secondary-rect-button"/>
+                                                            </children>
+                                                        </VBox>
+
+                                                        <VBox spacing="18.0" styleClass="glass-card content-card" HBox.hgrow="ALWAYS">
+                                                            <children>
+                                                                <Label text="Server Stats" styleClass="card-title"/>
+                                                                <Pane prefHeight="1.0" styleClass="card-divider"/>
+                                                                <HBox spacing="12.0">
+                                                                    <children>
+                                                                        <VBox spacing="8.0" styleClass="stat-tile" HBox.hgrow="ALWAYS">
+                                                                            <children>
+                                                                                <Label text="LEVEL" styleClass="metric-caption"/>
+                                                                                <Label fx:id="accountStatsLevelLabel" styleClass="stat-value"/>
+                                                                                <Label text="24,850 / 28,000 XP" styleClass="news-date"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox spacing="8.0" styleClass="stat-tile" HBox.hgrow="ALWAYS">
+                                                                            <children>
+                                                                                <Label text="PLAYTIME" styleClass="metric-caption"/>
+                                                                                <Label fx:id="accountStatsPlaytimeLabel" styleClass="stat-value"/>
+                                                                                <Label text="Total Playtime" styleClass="news-date"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox spacing="8.0" styleClass="stat-tile" HBox.hgrow="ALWAYS">
+                                                                            <children>
+                                                                                <Label text="BALANCE" styleClass="metric-caption"/>
+                                                                                <Label fx:id="accountStatsBalanceLabel" styleClass="stat-value"/>
+                                                                                <Label text="Redstone Coins" styleClass="news-date"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                </HBox>
+                                                                <HBox><children><Label text="Quests Completed" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label text="128" styleClass="metric-value"/></children></HBox>
+                                                                <HBox><children><Label text="Bosses Defeated" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label text="47" styleClass="metric-value"/></children></HBox>
+                                                                <HBox><children><Label text="Vote Points" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="accountStatsVotePointsLabel" styleClass="danger-copy"/></children></HBox>
+                                                                <Button fx:id="accountMoreStatsButton" mnemonicParsing="false" text="View More Stats" styleClass="secondary-rect-button"/>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+
+                                                <Button fx:id="accountLogoutButton" mnemonicParsing="false" text="Log Out" styleClass="glass-card secondary-rect-button large-logout-button"/>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
                             </children>
                         </StackPane>
 
-                        <HBox spacing="24.0" styleClass="bottom-row">
+                        <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag" spacing="18.0" styleClass="window-bar" StackPane.alignment="TOP_RIGHT">
                             <children>
-                                <VBox spacing="18.0" styleClass="content-card news-card" HBox.hgrow="ALWAYS">
-                                    <children>
-                                        <Label text="Latest News" styleClass="card-title"/>
-                                        <Pane prefHeight="1.0" styleClass="card-separator"/>
-                                        <HBox alignment="TOP_LEFT" spacing="18.0">
-                                            <children>
-                                                <StackPane minHeight="112.0" minWidth="112.0" prefHeight="112.0" prefWidth="112.0" styleClass="news-thumbnail">
-                                                    <children>
-                                                        <Label text="NEWS" styleClass="news-thumbnail-label"/>
-                                                    </children>
-                                                </StackPane>
-                                                <VBox spacing="10.0" HBox.hgrow="ALWAYS">
-                                                    <children>
-                                                        <Label fx:id="latestNewsTitleLabel" styleClass="news-title" wrapText="true"/>
-                                                        <Label fx:id="latestNewsCopyLabel" styleClass="news-copy" wrapText="true"/>
-                                                        <Label fx:id="latestNewsDateLabel" styleClass="news-date"/>
-                                                    </children>
-                                                </VBox>
-                                            </children>
-                                        </HBox>
-                                        <Button fx:id="newsActionButton" mnemonicParsing="false" text="View all news" styleClass="link-button"/>
-                                    </children>
-                                </VBox>
-
-                                <VBox prefWidth="640.0" spacing="18.0" styleClass="content-card update-card">
-                                    <children>
-                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                            <children>
-                                                <Label text="Updating Files" styleClass="card-title"/>
-                                                <Region HBox.hgrow="ALWAYS"/>
-                                                <Button fx:id="syncButton" mnemonicParsing="false" text="Update" styleClass="small-outline-button"/>
-                                            </children>
-                                        </HBox>
-                                        <Pane prefHeight="1.0" styleClass="card-separator"/>
-                                        <Label fx:id="syncFileLabel" styleClass="sync-file-label" wrapText="true"/>
-                                        <HBox alignment="CENTER_LEFT" spacing="14.0">
-                                            <children>
-                                                <ProgressBar fx:id="syncProgressBar" maxWidth="1.7976931348623157E308" progress="0.0" styleClass="sync-progress" HBox.hgrow="ALWAYS"/>
-                                                <Label fx:id="syncPercentLabel" styleClass="sync-percent-label"/>
-                                            </children>
-                                        </HBox>
-                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
-                                            <children>
-                                                <Label fx:id="syncStatusLabel" styleClass="sync-status-label"/>
-                                                <Region HBox.hgrow="ALWAYS"/>
-                                                <Label fx:id="syncBytesLabel" styleClass="sync-bytes-label"/>
-                                            </children>
-                                        </HBox>
-                                        <Button fx:id="toggleLogButton" mnemonicParsing="false" text="Show log" styleClass="link-button"/>
-                                    </children>
-                                </VBox>
+                                <Button fx:id="minimizeWindowButton" mnemonicParsing="false" onAction="#minimizeWindow" text="-" styleClass="window-control"/>
+                                <Button fx:id="closeWindowButton" mnemonicParsing="false" onAction="#closeWindow" text="X" styleClass="window-control"/>
                             </children>
                         </HBox>
 
-                        <VBox fx:id="logDrawerBox" managed="false" spacing="12.0" styleClass="content-card log-card" visible="false">
+                        <VBox fx:id="logDrawerBox" managed="false" prefWidth="920.0" spacing="14.0" styleClass="glass-card content-card log-overlay" visible="false" StackPane.alignment="BOTTOM_CENTER">
                             <children>
                                 <Label text="Launcher Log" styleClass="card-title"/>
-                                <TextArea fx:id="logArea" prefRowCount="10" VBox.vgrow="ALWAYS"/>
+                                <TextArea fx:id="logArea" prefRowCount="9" VBox.vgrow="ALWAYS"/>
                             </children>
                         </VBox>
                     </children>
-                </VBox>
+                </StackPane>
             </children>
         </HBox>
     </children>

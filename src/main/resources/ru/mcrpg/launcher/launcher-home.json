@@ -1,57 +1,57 @@
 {
-  "heroEyebrow": "SERVER RPG",
-  "heroTitle": "MC RPG",
-  "heroDescription": "Один вход в ваш основной RPG-мир: лаунчер синхронизирует модпак, подтягивает runtime и запускает клиент без ручной возни с файлами.",
-  "heroFootnote": "Shell заточен под один сервер и одну сборку, поэтому главный экран остается быстрым: маршрут, статус, обновление и запуск без лишней навигации.",
+  "heroEyebrow": "RPG SERVER",
+  "heroTitle": "REDSTONE",
+  "heroDescription": "Dark fantasy Minecraft launcher shell for a single server realm.",
+  "heroFootnote": "The launcher focuses on one world: quick launch, clear status, updates and account flows.",
   "community": [
-    {
-      "label": "VK",
-      "url": ""
-    },
     {
       "label": "Discord",
       "url": ""
     },
     {
-      "label": "Telegram",
+      "label": "Website",
+      "url": ""
+    },
+    {
+      "label": "News",
       "url": ""
     }
   ],
   "spotlight": [
     {
-      "eyebrow": "ROUTE",
-      "title": "Один сервер, один маршрут",
-      "copy": "Игроку не нужно выбирать инстансы или сервера: лаунчер ведет сразу в ваш RPG-мир.",
+      "eyebrow": "REALM",
+      "title": "One server, one route",
+      "copy": "Jump directly into the realm without picking between multiple installs or launch profiles.",
       "accent": "fire"
     },
     {
       "eyebrow": "SYNC",
-      "title": "Сборка обновляется перед игрой",
-      "copy": "Manifest, runtime, Forge и клиентские файлы проверяются из одного потока перед запуском.",
+      "title": "Update before launch",
+      "copy": "The launcher can validate manifests, runtime and client files before the game starts.",
       "accent": "copper"
     },
     {
-      "eyebrow": "RUNTIME",
-      "title": "Portable Java внутри клиента",
-      "copy": "Если нужно, лаунчер может держать Java рядом со сборкой и не требовать ручной установки.",
-      "accent": "emerald"
+      "eyebrow": "ACCOUNT",
+      "title": "Built around player identity",
+      "copy": "Login, register, account and stats screens all share the same visual system and shell.",
+      "accent": "ember"
     }
   ],
   "news": [
     {
-      "tag": "NOW",
-      "title": "Главный экран собран как single-server launcher",
-      "copy": "Основной экран теперь показывает один RPG-сервер, актуальный статус клиента и прямые действия Играть/Обновить."
+      "tag": "May 18, 2025",
+      "title": "v2.5.0 - Realm Awakening",
+      "copy": "New level cap, custom dungeons, skills overhaul, and the exciting new Gauntlet system!"
     },
     {
-      "tag": "SYNC",
-      "title": "Автообновление перед запуском",
-      "copy": "Если режим включен, лаунчер сначала сверит manifest и скачает недостающие файлы, а уже потом отдаст клиент в запуск."
+      "tag": "May 18, 2025",
+      "title": "v2.5.0 - Realm Awakening",
+      "copy": "View full changelog for balance passes, new areas, rewards and combat tuning across the server."
     },
     {
-      "tag": "TECH",
-      "title": "Технические поля убраны из главного потока",
-      "copy": "Manifest URL, Java и launch template вынесены в отдельное окно настроек, чтобы не мешать игроку."
+      "tag": "Launcher",
+      "title": "Redstone shell updated for JavaFX",
+      "copy": "Home, Play, Mods, Settings, Login, Register and Account now share the same launcher shell."
     }
   ]
 }

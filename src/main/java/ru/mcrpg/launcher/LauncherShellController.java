@@ -13,23 +13,24 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicLong;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -41,30 +42,72 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public final class LauncherShellController {
 
     private static final DateTimeFormatter LOG_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
-    private static final String BUILD_LABEL = "1.12.2 // Forge 14.23.5.2864";
+
+    private static final String BUILD_LABEL = "1.20.4";
+    private static final String SERVER_TITLE = "Survival RPG";
+    private static final String SERVER_ROUTE = "play.redstone.net";
+    private static final String SERVER_PLAYERS = "1,258 / 2,000";
+    private static final String MODPACK_VERSION = "2.5.0";
+    private static final String TOTAL_MODS_LABEL = "87";
+    private static final String ENABLED_MODS_LABEL = "55 enabled";
+    private static final String DISABLED_MODS_LABEL = "32 disabled";
+    private static final String ACCOUNT_RANK = "Legendary";
+    private static final String ACCOUNT_LEVEL = "56";
+    private static final String ACCOUNT_XP = "24,850 / 28,000 XP";
+    private static final String ACCOUNT_PLAYTIME = "184h";
+    private static final String ACCOUNT_BALANCE = "12,450";
+    private static final String ACCOUNT_VOTE_POINTS = "3,215";
+    private static final String DEFAULT_NEWS_TITLE = "v2.5.0 - Realm Awakening";
+    private static final String DEFAULT_NEWS_COPY =
+        "New level cap, custom dungeons, skills overhaul, and the exciting new Gauntlet system!";
+    private static final String DEFAULT_NEWS_DATE = "May 18, 2025";
+
     private static final String ASSET_ROOT = "/ru/mcrpg/launcher/redstone/";
     private static final String LOGO_ASSET = ASSET_ROOT + "logo/redstone_logo_full_transparent.png";
     private static final String HOME_ICON_ASSET = ASSET_ROOT + "ui_icons/home_red.png";
-    private static final String PLAY_ICON_ASSET = ASSET_ROOT + "ui_icons/play_red.png";
-    private static final String MODS_ICON_ASSET = ASSET_ROOT + "ui_icons/mods_gray.png";
-    private static final String SETTINGS_ICON_ASSET = ASSET_ROOT + "ui_icons/settings_red.png";
+    private static final String PLAY_ICON_ACTIVE_ASSET = ASSET_ROOT + "ui_icons/play_red.png";
+    private static final String PLAY_ICON_INACTIVE_ASSET = ASSET_ROOT + "ui_icons/play_gray.png";
+    private static final String MODS_ICON_ACTIVE_ASSET = ASSET_ROOT + "ui_icons/mods_red.png";
+    private static final String MODS_ICON_INACTIVE_ASSET = ASSET_ROOT + "ui_icons/mods_gray.png";
+    private static final String SETTINGS_ICON_ACTIVE_ASSET = ASSET_ROOT + "ui_icons/settings_red.png";
+    private static final String SETTINGS_ICON_INACTIVE_ASSET = ASSET_ROOT + "ui_icons/settings_gray.png";
+    private static final String LOGIN_ICON_ASSET = ASSET_ROOT + "ui_icons/login_red.png";
+    private static final String REGISTER_ICON_ASSET = ASSET_ROOT + "ui_icons/register_red.png";
+    private static final String ACCOUNT_ICON_ASSET = ASSET_ROOT + "ui_icons/account_red.png";
+    private static final String DISCORD_ICON_ASSET = ASSET_ROOT + "ui_icons/social_discord_gray.png";
     private static final String GLOBE_ICON_ASSET = ASSET_ROOT + "ui_icons/utility_globe_gray.png";
+    private static final String LIST_ICON_ASSET = ASSET_ROOT + "ui_icons/utility_list_gray.png";
+    private static final String BUTTON_PLAY_ICON_ASSET = ASSET_ROOT + "ui_icons/play_gray.png";
+    private static final String MOD_ICON_JOURNEYMAP = ASSET_ROOT + "mod_icons/journeymap.png";
+    private static final String MOD_ICON_JEI = ASSET_ROOT + "mod_icons/jei.png";
+    private static final String MOD_ICON_SODIUM = ASSET_ROOT + "mod_icons/sodium.png";
+    private static final String MOD_ICON_XAERO = ASSET_ROOT + "mod_icons/xaero_minimap.png";
+    private static final String MOD_ICON_VOICE = ASSET_ROOT + "mod_icons/voice_chat.png";
 
     private final LauncherConfigStore configStore = LauncherConfigStore.defaultStore();
     private final LaunchCommandBuilder commandBuilder = new LaunchCommandBuilder();
     private final ModpackSyncService modpackSyncService = new ModpackSyncService(new ModpackManifestClient());
     private final LauncherHomeContent homeContent = new LauncherHomeContentLoader().loadDefault();
     private final AtomicLong serverPresenceSequence = new AtomicLong();
+    private final List<ModEntry> modEntries = List.of(
+        new ModEntry("JourneyMap", "Real-time mapping in-game or your browser as you explore.", "5.10.3", MOD_ICON_JOURNEYMAP, true, ModFilter.INSTALLED, false),
+        new ModEntry("JEI", "View recipes and item usages.", "15.20.0.105", MOD_ICON_JEI, true, ModFilter.INSTALLED, false),
+        new ModEntry("Sodium", "A modern rendering engine improvement mod for Minecraft.", "0.5.8", MOD_ICON_SODIUM, true, ModFilter.UPDATES, true),
+        new ModEntry("Xaero Minimap", "Displays a map of the nearby area.", "24.3.3", MOD_ICON_XAERO, false, ModFilter.OPTIONAL, false),
+        new ModEntry("Voice Chat", "Simple and universal voice chat.", "2.5.22", MOD_ICON_VOICE, false, ModFilter.UPDATES, true)
+    );
 
     private Stage primaryStage;
     private HostServices hostServices;
     private LauncherConfig currentConfig = LauncherConfig.defaults();
+    private ViewState activeView = ViewState.HOME;
+    private ModFilter activeModFilter = ModFilter.INSTALLED;
+    private boolean loggedIn = true;
     private String lastPresenceRoute = "";
     private double dragOffsetX;
     private double dragOffsetY;
@@ -76,10 +119,10 @@ public final class LauncherShellController {
     private HBox shell;
 
     @FXML
-    private HBox communityBar;
+    private Label brandLogoLabel;
 
     @FXML
-    private VBox logDrawerBox;
+    private Label brandSubtitleLabel;
 
     @FXML
     private Button homeNavButton;
@@ -91,7 +134,40 @@ public final class LauncherShellController {
     private Button modsNavButton;
 
     @FXML
-    private Button settingsButton;
+    private Button settingsNavButton;
+
+    @FXML
+    private Button sessionNavButton;
+
+    @FXML
+    private Button discordUtilityButton;
+
+    @FXML
+    private Button globeUtilityButton;
+
+    @FXML
+    private Button logUtilityButton;
+
+    @FXML
+    private VBox homeView;
+
+    @FXML
+    private VBox playView;
+
+    @FXML
+    private javafx.scene.control.ScrollPane modsView;
+
+    @FXML
+    private javafx.scene.control.ScrollPane settingsView;
+
+    @FXML
+    private StackPane loginView;
+
+    @FXML
+    private StackPane registerView;
+
+    @FXML
+    private javafx.scene.control.ScrollPane accountView;
 
     @FXML
     private Button minimizeWindowButton;
@@ -100,64 +176,43 @@ public final class LauncherShellController {
     private Button closeWindowButton;
 
     @FXML
-    private Button launchButton;
+    private Label homeHeroLogoLabel;
 
     @FXML
-    private Button syncButton;
+    private Button homeLaunchButton;
 
     @FXML
-    private Button toggleLogButton;
+    private Region homePresenceIndicator;
 
     @FXML
-    private Button newsActionButton;
+    private Label homePresenceLabel;
 
     @FXML
-    private Label brandTitleLabel;
+    private Label homeRouteLabel;
 
     @FXML
-    private Label brandSubtitleLabel;
+    private Label homeVersionLabel;
 
     @FXML
-    private Label headerProfileLabel;
+    private Label homePlayersLabel;
 
     @FXML
-    private Label headerModeLabel;
+    private Label homePresenceHintLabel;
 
     @FXML
-    private Label heroTitleLabel;
+    private Label homeNewsTitleLabel;
 
     @FXML
-    private Label heroSubtitleLabel;
+    private Label homeNewsCopyLabel;
 
     @FXML
-    private Region realmPresenceIndicator;
+    private Label homeNewsDateLabel;
 
     @FXML
-    private Label realmPresenceLabel;
+    private Button homeNewsActionButton;
 
     @FXML
-    private Label realmPresenceHintLabel;
-
-    @FXML
-    private Label serverRouteLabel;
-
-    @FXML
-    private Label serverVersionLabel;
-
-    @FXML
-    private Label serverProfileLabel;
-
-    @FXML
-    private Label serverFolderLabel;
-
-    @FXML
-    private Label latestNewsTitleLabel;
-
-    @FXML
-    private Label latestNewsCopyLabel;
-
-    @FXML
-    private Label latestNewsDateLabel;
+    private Button homeUpdateButton;
 
     @FXML
     private Label syncFileLabel;
@@ -175,18 +230,269 @@ public final class LauncherShellController {
     private Label syncBytesLabel;
 
     @FXML
+    private Label playHeroLogoLabel;
+
+    @FXML
+    private Button playLaunchButton;
+
+    @FXML
+    private Label playAccountNameLabel;
+
+    @FXML
+    private Label playAccountStatusLabel;
+
+    @FXML
+    private Label playServerTitleLabel;
+
+    @FXML
+    private Label playServerRouteLabel;
+
+    @FXML
+    private Label playServerVersionLabel;
+
+    @FXML
+    private Label playServerPlayersLabel;
+
+    @FXML
+    private Label playServerPingLabel;
+
+    @FXML
+    private ComboBox<String> playVersionComboBox;
+
+    @FXML
+    private TextField playGameDirectoryField;
+
+    @FXML
+    private Button openGameDirectoryButton;
+
+    @FXML
+    private Button repairClientButton;
+
+    @FXML
+    private Label playUpdateDateLabel;
+
+    @FXML
+    private Label playUpdateTitleLabel;
+
+    @FXML
+    private Label playUpdateCopyLabel;
+
+    @FXML
+    private Button playChangelogButton;
+
+    @FXML
+    private TextField modsSearchField;
+
+    @FXML
+    private Button installedFilterButton;
+
+    @FXML
+    private Button optionalFilterButton;
+
+    @FXML
+    private Button updatesFilterButton;
+
+    @FXML
+    private VBox modsListBox;
+
+    @FXML
+    private Label modsVersionLabel;
+
+    @FXML
+    private Label modsTotalLabel;
+
+    @FXML
+    private Label modsEnabledLabel;
+
+    @FXML
+    private Label modsDisabledLabel;
+
+    @FXML
+    private Button updatePackButton;
+
+    @FXML
+    private Button openModsFolderButton;
+
+    @FXML
+    private ComboBox<String> settingsVersionComboBox;
+
+    @FXML
+    private Slider settingsRamSlider;
+
+    @FXML
+    private Label settingsRamLabel;
+
+    @FXML
+    private TextField settingsJavaPathField;
+
+    @FXML
+    private Button browseJavaPathButton;
+
+    @FXML
+    private ComboBox<String> settingsResolutionComboBox;
+
+    @FXML
+    private CheckBox settingsFullscreenToggle;
+
+    @FXML
+    private CheckBox settingsAutoUpdateToggle;
+
+    @FXML
+    private TextField settingsDownloadPathField;
+
+    @FXML
+    private Button browseDownloadPathButton;
+
+    @FXML
+    private ComboBox<String> settingsLanguageComboBox;
+
+    @FXML
+    private CheckBox settingsStartOnBootToggle;
+
+    @FXML
+    private Label settingsAccountNameLabel;
+
+    @FXML
+    private Label settingsAccountStatusLabel;
+
+    @FXML
+    private Button settingsLogoutButton;
+
+    @FXML
+    private Button settingsManageAccountButton;
+
+    @FXML
+    private TextField loginUsernameField;
+
+    @FXML
+    private PasswordField loginPasswordField;
+
+    @FXML
+    private CheckBox loginRememberCheckBox;
+
+    @FXML
+    private Button loginSignInButton;
+
+    @FXML
+    private Button loginCreateAccountButton;
+
+    @FXML
+    private Button loginGuestButton;
+
+    @FXML
+    private TextField registerUsernameField;
+
+    @FXML
+    private TextField registerEmailField;
+
+    @FXML
+    private PasswordField registerPasswordField;
+
+    @FXML
+    private PasswordField registerConfirmPasswordField;
+
+    @FXML
+    private CheckBox registerAgreementCheckBox;
+
+    @FXML
+    private Button registerCreateButton;
+
+    @FXML
+    private Button registerBackButton;
+
+    @FXML
+    private Label accountNameLabel;
+
+    @FXML
+    private Label accountStatusLabel;
+
+    @FXML
+    private Label accountEmailLabel;
+
+    @FXML
+    private Label accountRankLabel;
+
+    @FXML
+    private Label accountProfileNicknameLabel;
+
+    @FXML
+    private Label accountProfileRankLabel;
+
+    @FXML
+    private Label accountProfileLevelLabel;
+
+    @FXML
+    private Label accountProfileExperienceLabel;
+
+    @FXML
+    private Label accountProfileCountryLabel;
+
+    @FXML
+    private Label accountProfileLanguageLabel;
+
+    @FXML
+    private Label accountSecurityPasswordLabel;
+
+    @FXML
+    private Label accountSecurityEmailLabel;
+
+    @FXML
+    private Label accountSecurityTwoFactorLabel;
+
+    @FXML
+    private Label accountSecurityBackupLabel;
+
+    @FXML
+    private Label accountSecurityRecoveryLabel;
+
+    @FXML
+    private Label accountStatsLevelLabel;
+
+    @FXML
+    private Label accountStatsPlaytimeLabel;
+
+    @FXML
+    private Label accountStatsBalanceLabel;
+
+    @FXML
+    private Label accountStatsVotePointsLabel;
+
+    @FXML
+    private Button accountEditProfileButton;
+
+    @FXML
+    private Button accountChangeSkinButton;
+
+    @FXML
+    private Button accountSecurityButton;
+
+    @FXML
+    private Button accountMoreStatsButton;
+
+    @FXML
+    private Button accountLogoutButton;
+
+    @FXML
+    private VBox logDrawerBox;
+
+    @FXML
     private TextArea logArea;
 
     @FXML
     private void initialize() {
-        styleControls();
+        configureControls();
         populateStaticContent();
+        populateChoiceBoxes();
+        populateNewsContent();
+        populateAccountCards();
+        populateModSummary();
+        renderModsList();
         bindActions();
-        setActiveNav(homeNavButton);
-        setLogDrawerVisible(false);
-        updateProgressState(false, "Waiting for sync", "0%", 0.0d);
-        syncFileLabel.setText("Press Update or Play to verify client files.");
+        updateProgressState(false, "Ready to verify launcher files.", "0%", 0.0d);
         syncBytesLabel.setText("Client state is idle.");
+        syncFileLabel.setText("Press Update to sync the pack or Play to launch.");
+        setLogDrawerVisible(false);
+        showView(ViewState.HOME);
         updateServerPresence("CHECKING", "Preparing server route probe.", "checking");
     }
 
@@ -202,87 +508,311 @@ public final class LauncherShellController {
         persistCurrentConfigQuietly();
     }
 
-    private void styleControls() {
+    private void configureControls() {
         logArea.getStyleClass().add("log-area");
         logArea.setEditable(false);
         logArea.setWrapText(true);
+        playGameDirectoryField.setEditable(false);
+        settingsRamSlider.valueProperty().addListener((observable, oldValue, newValue) -> updateRamLabel());
+        modsSearchField.textProperty().addListener((observable, oldValue, newValue) -> renderModsList());
     }
 
     private void populateStaticContent() {
-        homeNavButton.setText("Home");
-        playNavButton.setText("Play");
-        modsNavButton.setText("Mods");
-        settingsButton.setText("Settings");
-        brandTitleLabel.setText(LauncherBrand.APP_TITLE.toUpperCase());
-        brandSubtitleLabel.setText("SURVIVAL RPG");
-        heroTitleLabel.setText(LauncherBrand.APP_TITLE.toUpperCase());
-        heroSubtitleLabel.setText("SURVIVAL RPG REALM");
+        brandSubtitleLabel.setText("RPG SERVER");
 
-        applyLabelGraphic(brandTitleLabel, LOGO_ASSET, 180, 72);
-        applyLabelGraphic(heroTitleLabel, LOGO_ASSET, 320, 122);
+        applyLabelGraphic(brandLogoLabel, LOGO_ASSET, 236, 168);
+        applyLabelGraphic(homeHeroLogoLabel, LOGO_ASSET, 590, 228);
+        applyLabelGraphic(playHeroLogoLabel, LOGO_ASSET, 590, 228);
 
-        applyButtonGraphic(homeNavButton, HOME_ICON_ASSET, 18);
-        applyButtonGraphic(playNavButton, PLAY_ICON_ASSET, 18);
-        applyButtonGraphic(modsNavButton, MODS_ICON_ASSET, 18);
-        applyButtonGraphic(settingsButton, SETTINGS_ICON_ASSET, 18);
+        applyGraphicButton(homeLaunchButton, BUTTON_PLAY_ICON_ASSET, 26);
+        applyGraphicButton(playLaunchButton, BUTTON_PLAY_ICON_ASSET, 26);
+        applyIconOnlyButton(discordUtilityButton, DISCORD_ICON_ASSET, 26);
+        applyIconOnlyButton(globeUtilityButton, GLOBE_ICON_ASSET, 26);
+        applyIconOnlyButton(logUtilityButton, LIST_ICON_ASSET, 22);
 
-        populateCommunityButtons();
-        populateLatestNews();
+        playServerTitleLabel.setText(SERVER_TITLE);
+        playServerVersionLabel.setText(BUILD_LABEL);
+        playServerPlayersLabel.setText(SERVER_PLAYERS);
+
+        modsVersionLabel.setText(MODPACK_VERSION);
+        modsTotalLabel.setText(TOTAL_MODS_LABEL);
+        modsEnabledLabel.setText(ENABLED_MODS_LABEL);
+        modsDisabledLabel.setText(DISABLED_MODS_LABEL);
     }
 
-    private void populateCommunityButtons() {
-        communityBar.getChildren().clear();
-        for (LauncherHomeContent.CommunityLink link : homeContent.getCommunity()) {
-            Button button = new Button(compactCommunityLabel(link.getLabel()));
-            button.getStyleClass().add("sidebar-icon-button");
-            applyButtonGraphic(button, GLOBE_ICON_ASSET, 14);
-            button.setOnAction(event -> openCommunityLink(link));
-            communityBar.getChildren().add(button);
-        }
-    }
+    private void populateChoiceBoxes() {
+        playVersionComboBox.getItems().setAll(BUILD_LABEL);
+        playVersionComboBox.setValue(BUILD_LABEL);
 
-    private void populateLatestNews() {
-        LauncherHomeContent.NewsEntry entry = homeContent.getNews().isEmpty()
-            ? null
-            : homeContent.getNews().get(0);
+        settingsVersionComboBox.getItems().setAll(BUILD_LABEL, "1.12.2");
+        settingsVersionComboBox.setValue(BUILD_LABEL);
 
-        latestNewsTitleLabel.setText(valueOrFallback(entry == null ? "" : entry.getTitle(), "Realm update"));
-        latestNewsCopyLabel.setText(
-            valueOrFallback(
-                entry == null ? "" : entry.getCopy(),
-                "Launcher shell is ready. Connect your news feed when external URLs are available."
-            )
+        settingsResolutionComboBox.getItems().setAll(
+            "1920 x 1080 (16:9)",
+            "1600 x 900 (16:9)",
+            "1280 x 720 (16:9)"
         );
-        latestNewsDateLabel.setText(valueOrFallback(entry == null ? "" : entry.getTag(), "REALM FEED"));
+        settingsResolutionComboBox.setValue("1920 x 1080 (16:9)");
+
+        settingsLanguageComboBox.getItems().setAll("English", "Russian");
+        settingsLanguageComboBox.setValue("English");
+
+        settingsFullscreenToggle.setSelected(true);
+        settingsStartOnBootToggle.setSelected(false);
+        settingsRamSlider.setValue(6.0d);
+        updateRamLabel();
+    }
+
+    private void populateNewsContent() {
+        LauncherHomeContent.NewsEntry homeNews = homeContent.getNews().isEmpty() ? null : homeContent.getNews().get(0);
+        LauncherHomeContent.NewsEntry updateNews = homeContent.getNews().size() > 1 ? homeContent.getNews().get(1) : homeNews;
+
+        homeNewsTitleLabel.setText(valueOrFallback(homeNews == null ? "" : homeNews.getTitle(), DEFAULT_NEWS_TITLE));
+        homeNewsCopyLabel.setText(valueOrFallback(homeNews == null ? "" : homeNews.getCopy(), DEFAULT_NEWS_COPY));
+        homeNewsDateLabel.setText(DEFAULT_NEWS_DATE);
+
+        playUpdateTitleLabel.setText(valueOrFallback(updateNews == null ? "" : updateNews.getTitle(), DEFAULT_NEWS_TITLE));
+        playUpdateCopyLabel.setText(valueOrFallback(updateNews == null ? "" : updateNews.getCopy(), DEFAULT_NEWS_COPY));
+        playUpdateDateLabel.setText(DEFAULT_NEWS_DATE);
+    }
+
+    private void populateAccountCards() {
+        accountProfileRankLabel.setText(ACCOUNT_RANK);
+        accountRankLabel.setText(ACCOUNT_RANK);
+        accountProfileLevelLabel.setText(ACCOUNT_LEVEL);
+        accountProfileExperienceLabel.setText(ACCOUNT_XP);
+        accountProfileCountryLabel.setText("United States");
+        accountProfileLanguageLabel.setText("English");
+        accountSecurityPasswordLabel.setText("********");
+        accountSecurityTwoFactorLabel.setText("Enabled");
+        accountSecurityBackupLabel.setText("5 codes remaining");
+        accountSecurityRecoveryLabel.setText("dragon.recovery@redstone.net");
+        accountStatsLevelLabel.setText(ACCOUNT_LEVEL);
+        accountStatsPlaytimeLabel.setText(ACCOUNT_PLAYTIME);
+        accountStatsBalanceLabel.setText(ACCOUNT_BALANCE);
+        accountStatsVotePointsLabel.setText(ACCOUNT_VOTE_POINTS);
+    }
+
+    private void populateModSummary() {
+        installedFilterButton.getStyleClass().add("segment-button-active");
     }
 
     private void bindActions() {
-        homeNavButton.setOnAction(event -> {
-            setActiveNav(homeNavButton);
-            setLogDrawerVisible(false);
+        homeNavButton.setOnAction(event -> navigateTo(ViewState.HOME));
+        playNavButton.setOnAction(event -> navigateTo(ViewState.PLAY));
+        modsNavButton.setOnAction(event -> navigateTo(ViewState.MODS));
+        settingsNavButton.setOnAction(event -> navigateTo(ViewState.SETTINGS));
+        sessionNavButton.setOnAction(event -> navigateTo(activeView));
+
+        discordUtilityButton.setOnAction(event -> openCommunityLinkByKeyword("discord"));
+        globeUtilityButton.setOnAction(event -> openPrimaryCommunityLink());
+        logUtilityButton.setOnAction(event -> toggleLogDrawer());
+
+        homeLaunchButton.setOnAction(event -> launchClient());
+        playLaunchButton.setOnAction(event -> launchClient());
+        homeUpdateButton.setOnAction(event -> syncFiles());
+        repairClientButton.setOnAction(event -> syncFiles());
+        updatePackButton.setOnAction(event -> syncFiles());
+
+        homeNewsActionButton.setOnAction(event -> openPrimaryCommunityLink());
+        playChangelogButton.setOnAction(event -> openPrimaryCommunityLink());
+
+        openGameDirectoryButton.setOnAction(event -> openDirectory(currentConfig.getGameDirectory()));
+        openModsFolderButton.setOnAction(event -> openDirectory(Paths.get(currentConfig.getGameDirectory(), "mods").toString()));
+
+        browseDownloadPathButton.setOnAction(event -> chooseDirectory(settingsDownloadPathField, "Choose game directory"));
+        browseJavaPathButton.setOnAction(event -> chooseDirectory(settingsJavaPathField, "Choose Java directory"));
+
+        installedFilterButton.setOnAction(event -> selectModFilter(ModFilter.INSTALLED));
+        optionalFilterButton.setOnAction(event -> selectModFilter(ModFilter.OPTIONAL));
+        updatesFilterButton.setOnAction(event -> selectModFilter(ModFilter.UPDATES));
+
+        settingsManageAccountButton.setOnAction(event -> {
+            loggedIn = true;
+            navigateTo(ViewState.ACCOUNT);
         });
-        playNavButton.setOnAction(event -> {
-            setActiveNav(playNavButton);
-            launchClient();
-        });
-        modsNavButton.setOnAction(event -> {
-            setActiveNav(modsNavButton);
-            syncFiles();
-        });
-        settingsButton.setOnAction(event -> {
-            openSettingsDialog();
-            setActiveNav(homeNavButton);
-        });
-        launchButton.setOnAction(event -> {
-            setActiveNav(playNavButton);
-            launchClient();
-        });
-        syncButton.setOnAction(event -> {
-            setActiveNav(modsNavButton);
-            syncFiles();
-        });
-        toggleLogButton.setOnAction(event -> toggleLogDrawer());
-        newsActionButton.setOnAction(event -> openPrimaryCommunityLink());
+        settingsLogoutButton.setOnAction(event -> logoutToLogin());
+
+        loginSignInButton.setOnAction(event -> handleLogin());
+        loginCreateAccountButton.setOnAction(event -> showView(ViewState.REGISTER));
+        loginGuestButton.setOnAction(event -> handleGuestMode());
+
+        registerCreateButton.setOnAction(event -> handleRegister());
+        registerBackButton.setOnAction(event -> showView(ViewState.LOGIN));
+
+        accountEditProfileButton.setOnAction(event -> appendLog("Profile editor is not connected yet."));
+        accountChangeSkinButton.setOnAction(event -> appendLog("Skin management is not connected yet."));
+        accountSecurityButton.setOnAction(event -> appendLog("Security settings are not connected yet."));
+        accountMoreStatsButton.setOnAction(event -> openPrimaryCommunityLink());
+        accountLogoutButton.setOnAction(event -> logoutToLogin());
+    }
+
+    private void navigateTo(ViewState view) {
+        syncDraftConfigToState();
+        showView(view);
+    }
+
+    private void showView(ViewState view) {
+        activeView = view;
+        setNodeVisible(homeView, view == ViewState.HOME);
+        setNodeVisible(playView, view == ViewState.PLAY);
+        setNodeVisible(modsView, view == ViewState.MODS);
+        setNodeVisible(settingsView, view == ViewState.SETTINGS);
+        setNodeVisible(loginView, view == ViewState.LOGIN);
+        setNodeVisible(registerView, view == ViewState.REGISTER);
+        setNodeVisible(accountView, view == ViewState.ACCOUNT);
+        updateNavVisuals();
+    }
+
+    private void updateNavVisuals() {
+        updateNavButton(homeNavButton, activeView == ViewState.HOME, HOME_ICON_ASSET, HOME_ICON_ASSET);
+        updateNavButton(playNavButton, activeView == ViewState.PLAY, PLAY_ICON_ACTIVE_ASSET, PLAY_ICON_INACTIVE_ASSET);
+        updateNavButton(modsNavButton, activeView == ViewState.MODS, MODS_ICON_ACTIVE_ASSET, MODS_ICON_INACTIVE_ASSET);
+        updateNavButton(
+            settingsNavButton,
+            activeView == ViewState.SETTINGS,
+            SETTINGS_ICON_ACTIVE_ASSET,
+            SETTINGS_ICON_INACTIVE_ASSET
+        );
+
+        if (activeView == ViewState.LOGIN) {
+            sessionNavButton.setText("Login");
+            updateNavButton(sessionNavButton, true, LOGIN_ICON_ASSET, LOGIN_ICON_ASSET);
+            setNodeVisible(sessionNavButton, true);
+        } else if (activeView == ViewState.REGISTER) {
+            sessionNavButton.setText("Register");
+            updateNavButton(sessionNavButton, true, REGISTER_ICON_ASSET, REGISTER_ICON_ASSET);
+            setNodeVisible(sessionNavButton, true);
+        } else if (activeView == ViewState.ACCOUNT) {
+            sessionNavButton.setText("Account");
+            updateNavButton(sessionNavButton, true, ACCOUNT_ICON_ASSET, ACCOUNT_ICON_ASSET);
+            setNodeVisible(sessionNavButton, true);
+        } else {
+            setNodeVisible(sessionNavButton, false);
+        }
+    }
+
+    private void updateNavButton(Button button, boolean active, String activeAsset, String inactiveAsset) {
+        toggleStyleClass(button, "nav-active", active);
+        ImageView imageView = createImageView(active ? activeAsset : inactiveAsset, 19, 19);
+        if (imageView != null && !active && activeAsset.equals(inactiveAsset)) {
+            imageView.setOpacity(0.48d);
+        }
+        button.setGraphic(imageView);
+        button.setGraphicTextGap(14);
+        button.setContentDisplay(ContentDisplay.LEFT);
+    }
+
+    private void selectModFilter(ModFilter filter) {
+        activeModFilter = filter;
+        toggleStyleClass(installedFilterButton, "segment-button-active", filter == ModFilter.INSTALLED);
+        toggleStyleClass(optionalFilterButton, "segment-button-active", filter == ModFilter.OPTIONAL);
+        toggleStyleClass(updatesFilterButton, "segment-button-active", filter == ModFilter.UPDATES);
+        renderModsList();
+    }
+
+    private void renderModsList() {
+        if (modsListBox == null) {
+            return;
+        }
+
+        String query = modsSearchField == null ? "" : modsSearchField.getText().trim().toLowerCase(Locale.ROOT);
+        modsListBox.getChildren().clear();
+
+        boolean matched = false;
+        for (ModEntry entry : modEntries) {
+            if (!matchesFilter(entry)) {
+                continue;
+            }
+            if (hasText(query) && !entry.matches(query)) {
+                continue;
+            }
+            modsListBox.getChildren().add(createModRow(entry));
+            matched = true;
+        }
+
+        if (!matched) {
+            Label emptyLabel = new Label("No mods match the current filter.");
+            emptyLabel.getStyleClass().add("empty-list-copy");
+            VBox box = new VBox(emptyLabel);
+            box.getStyleClass().add("mods-empty-state");
+            modsListBox.getChildren().add(box);
+        }
+    }
+
+    private boolean matchesFilter(ModEntry entry) {
+        if (activeModFilter == ModFilter.INSTALLED) {
+            return entry.filter == ModFilter.INSTALLED || entry.enabled;
+        }
+        if (activeModFilter == ModFilter.OPTIONAL) {
+            return entry.filter == ModFilter.OPTIONAL || !entry.enabled;
+        }
+        return entry.updatable;
+    }
+
+    private HBox createModRow(ModEntry entry) {
+        HBox row = new HBox(22);
+        row.getStyleClass().add("mod-row");
+
+        ImageView icon = createImageView(entry.iconPath, 82, 82);
+        VBox details = new VBox(8);
+        HBox.setHgrow(details, Priority.ALWAYS);
+
+        Label nameLabel = new Label(entry.name);
+        nameLabel.getStyleClass().add("mod-name-label");
+
+        Label copyLabel = new Label(entry.description);
+        copyLabel.getStyleClass().add("mod-copy-label");
+        copyLabel.setWrapText(true);
+
+        details.getChildren().addAll(nameLabel, copyLabel);
+
+        Label versionLabel = new Label(entry.version);
+        versionLabel.getStyleClass().add("mod-version-label");
+        versionLabel.setMinWidth(92);
+
+        CheckBox toggle = new CheckBox();
+        toggle.getStyleClass().add("switch-toggle");
+        toggle.setSelected(entry.enabled);
+        toggle.selectedProperty().addListener((observable, oldValue, newValue) -> entry.enabled = newValue.booleanValue());
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        row.getChildren().addAll(icon, details, spacer, versionLabel, toggle);
+        return row;
+    }
+
+    private void handleLogin() {
+        String username = valueOrFallback(loginUsernameField.getText(), LauncherDefaults.defaultUsername());
+        currentConfig.setUsername(username);
+        loggedIn = true;
+        applyConfigToView(currentConfig);
+        appendLog("Signed in as " + username + ".");
+        showView(ViewState.HOME);
+    }
+
+    private void handleGuestMode() {
+        currentConfig.setUsername("Guest");
+        loggedIn = false;
+        applyConfigToView(currentConfig);
+        appendLog("Continuing in guest mode.");
+        showView(ViewState.HOME);
+    }
+
+    private void handleRegister() {
+        String username = valueOrFallback(registerUsernameField.getText(), LauncherDefaults.defaultUsername());
+        currentConfig.setUsername(username);
+        loggedIn = true;
+        applyConfigToView(currentConfig);
+        appendLog("Account created for " + username + ".");
+        showView(ViewState.ACCOUNT);
+    }
+
+    private void logoutToLogin() {
+        loggedIn = false;
+        appendLog("Signed out from launcher account state.");
+        showView(ViewState.LOGIN);
     }
 
     private void installResponsiveBehavior(Scene scene) {
@@ -294,8 +824,8 @@ public final class LauncherShellController {
     }
 
     private void applyResponsiveLayout(double width) {
-        toggleStyleClass(appRoot, "compact-mode", width < 1380);
-        toggleStyleClass(appRoot, "condensed-mode", width < 1220);
+        toggleStyleClass(appRoot, "compact-mode", width < 1600);
+        toggleStyleClass(appRoot, "narrow-mode", width < 1450);
     }
 
     private LauncherConfig loadConfig() {
@@ -311,24 +841,49 @@ public final class LauncherShellController {
     }
 
     private void applyConfigToView(LauncherConfig config) {
-        refreshSummary(config);
-    }
-
-    private void refreshSummary(LauncherConfig config) {
         String username = valueOrFallback(config.getUsername(), LauncherDefaults.defaultUsername());
         String gameDirectory = valueOrFallback(config.getGameDirectory(), LauncherDefaults.defaultGameDirectory());
-        String folderName = displayFolderName(gameDirectory);
-        String mode = config.isUpdateFilesBeforeLaunch() ? "Auto update before launch" : "Manual update mode";
-        String host = valueOrFallback(config.getServerHost(), LauncherConfig.DEFAULT_SERVER_HOST);
+        String host = valueOrFallback(config.getServerHost(), SERVER_ROUTE);
         String route = host + ":" + config.getServerPort();
+        String email = username.toLowerCase(Locale.ROOT) + "@redstone.net";
+        String accountStatus = loggedIn ? "Online" : "Guest";
 
-        headerProfileLabel.setText(username);
-        headerModeLabel.setText(mode);
+        homeRouteLabel.setText(host);
+        homeVersionLabel.setText(BUILD_LABEL);
+        homePlayersLabel.setText(SERVER_PLAYERS);
 
-        serverRouteLabel.setText(route);
-        serverVersionLabel.setText(BUILD_LABEL);
-        serverProfileLabel.setText(username);
-        serverFolderLabel.setText(folderName);
+        playServerRouteLabel.setText(host);
+        playServerVersionLabel.setText(BUILD_LABEL);
+        playServerPlayersLabel.setText(SERVER_PLAYERS);
+
+        playAccountNameLabel.setText(username);
+        playAccountStatusLabel.setText(accountStatus);
+
+        settingsAccountNameLabel.setText(username);
+        settingsAccountStatusLabel.setText(accountStatus);
+
+        accountNameLabel.setText(username);
+        accountStatusLabel.setText(accountStatus);
+        accountEmailLabel.setText(email);
+        accountProfileNicknameLabel.setText(username);
+        accountSecurityEmailLabel.setText(email);
+
+        playGameDirectoryField.setText(displayFolderName(gameDirectory));
+        settingsDownloadPathField.setText(gameDirectory);
+        settingsJavaPathField.setText(valueOrFallback(config.getJavaCommand(), "java"));
+        settingsAutoUpdateToggle.setSelected(config.isUpdateFilesBeforeLaunch());
+        playVersionComboBox.setValue(BUILD_LABEL);
+        settingsVersionComboBox.setValue(BUILD_LABEL);
+
+        if (!hasText(loginUsernameField.getText())) {
+            loginUsernameField.setText(username);
+        }
+        if (!hasText(registerUsernameField.getText())) {
+            registerUsernameField.setText(username);
+        }
+        if (!hasText(registerEmailField.getText())) {
+            registerEmailField.setText(email);
+        }
 
         if (!route.equals(lastPresenceRoute)) {
             lastPresenceRoute = route;
@@ -336,15 +891,25 @@ public final class LauncherShellController {
         }
     }
 
+    private void syncDraftConfigToState() {
+        currentConfig = buildCurrentConfig();
+        applyConfigToView(currentConfig);
+    }
+
     private LauncherConfig buildCurrentConfig() {
-        return LauncherDefaults.applyMissingValues(currentConfig.copy());
+        LauncherConfig draft = LauncherDefaults.applyMissingValues(currentConfig.copy());
+        draft.setGameDirectory(valueOrFallback(settingsDownloadPathField.getText(), draft.getGameDirectory()));
+        draft.setJavaCommand(valueOrFallback(settingsJavaPathField.getText(), draft.getJavaCommand()));
+        draft.setUpdateFilesBeforeLaunch(settingsAutoUpdateToggle.isSelected());
+        return LauncherDefaults.applyMissingValues(draft);
     }
 
     private void syncFiles() {
         LauncherConfig config;
         try {
+            syncDraftConfigToState();
             config = buildCurrentConfig();
-            requireText(config.getManifestUrl(), "Укажи URL manifest.json в Settings.");
+            requireText(config.getManifestUrl(), "Set manifest URL in the launcher config before syncing.");
             persistConfig(config, false);
         } catch (Exception exception) {
             showError(exception.getMessage());
@@ -359,6 +924,7 @@ public final class LauncherShellController {
     private void launchClient() {
         LauncherConfig config;
         try {
+            syncDraftConfigToState();
             config = buildCurrentConfig();
             persistConfig(config, false);
         } catch (Exception exception) {
@@ -378,7 +944,7 @@ public final class LauncherShellController {
         setBusy(true);
         updateProgressState(
             true,
-            action == LauncherAction.SYNC_ONLY ? "Checking manifest and files" : "Preparing launcher runtime",
+            action == LauncherAction.SYNC_ONLY ? "Checking manifest and pack files" : "Preparing launcher runtime",
             "...",
             ProgressBar.INDETERMINATE_PROGRESS
         );
@@ -415,23 +981,23 @@ public final class LauncherShellController {
             setBusy(false);
             LauncherTaskResult result = task.getValue();
             try {
-                persistConfig(result.getResolvedConfig(), false);
-                applyConfigToView(result.getResolvedConfig());
+                persistConfig(result.resolvedConfig, false);
+                applyConfigToView(result.resolvedConfig);
 
-                if (result.getSyncResult() != null) {
-                    applySyncResult(result.getSyncResult());
-                } else if (result.getExitCode() != null) {
+                if (result.syncResult != null) {
+                    applySyncResult(result.syncResult);
+                } else if (result.exitCode != null) {
                     updateProgressState(false, "Game session finished", "READY", 0.0d);
-                    syncBytesLabel.setText("Exit code " + result.getExitCode());
+                    syncBytesLabel.setText("Exit code " + result.exitCode);
                 } else {
                     updateProgressState(false, "Ready", "READY", 0.0d);
                 }
 
-                if (result.getExitCode() != null) {
-                    appendLog("Client process exited with code " + result.getExitCode() + ".");
+                if (result.exitCode != null) {
+                    appendLog("Client process exited with code " + result.exitCode + ".");
                 }
             } catch (IOException exception) {
-                showError("Не удалось сохранить обновленный конфиг: " + exception.getMessage());
+                showError("Failed to save refreshed launcher config: " + exception.getMessage());
             }
         });
 
@@ -440,7 +1006,7 @@ public final class LauncherShellController {
             Throwable exception = task.getException();
             updateProgressState(false, "Operation failed", "ERR", 0.0d);
             syncBytesLabel.setText("Review launcher log for details.");
-            showError(exception == null ? "Неизвестная ошибка." : exception.getMessage());
+            showError(exception == null ? "Unknown launcher error." : exception.getMessage());
         });
 
         task.setOnCancelled(event -> {
@@ -449,7 +1015,7 @@ public final class LauncherShellController {
             syncBytesLabel.setText("No files changed.");
         });
 
-        Thread thread = new Thread(task, "launcher-shell-" + action.name().toLowerCase());
+        Thread thread = new Thread(task, "launcher-shell-" + action.name().toLowerCase(Locale.ROOT));
         thread.setDaemon(true);
         thread.start();
     }
@@ -491,245 +1057,177 @@ public final class LauncherShellController {
         return process.waitFor();
     }
 
-    private void openSettingsDialog() {
-        LauncherConfig snapshot = buildCurrentConfig();
+    private void setBusy(boolean busy) {
+        homeLaunchButton.setDisable(busy);
+        playLaunchButton.setDisable(busy);
+        homeUpdateButton.setDisable(busy);
+        repairClientButton.setDisable(busy);
+        updatePackButton.setDisable(busy);
+        homeNavButton.setDisable(busy);
+        playNavButton.setDisable(busy);
+        modsNavButton.setDisable(busy);
+        settingsNavButton.setDisable(busy);
+        sessionNavButton.setDisable(busy);
+    }
 
-        Stage dialog = new Stage();
-        if (primaryStage != null) {
-            dialog.initOwner(primaryStage);
+    private void updateProgressState(boolean busy, String statusText, String percentText, double progress) {
+        syncProgressBar.setProgress(progress);
+        syncStatusLabel.setText(statusText);
+        syncPercentLabel.setText(percentText);
+        if (busy) {
+            syncBytesLabel.setText("Launcher is working...");
         }
-        dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.setTitle("Настройки лаунчера");
+    }
 
-        TextField usernameField = new TextField(snapshot.getUsername());
-        TextField gameDirectoryField = new TextField(snapshot.getGameDirectory());
-        CheckBox autoUpdateCheckBox = new CheckBox("Автоматически обновлять сборку перед запуском");
-        autoUpdateCheckBox.setSelected(snapshot.isUpdateFilesBeforeLaunch());
-        TextField javaCommandField = new TextField(snapshot.getJavaCommand());
-        TextField manifestUrlField = new TextField(snapshot.getManifestUrl());
-        TextField workingDirectoryField = new TextField(snapshot.getWorkingDirectory());
-        TextField serverHostField = new TextField(snapshot.getServerHost());
-        TextField serverPortField = new TextField(Integer.toString(snapshot.getServerPort()));
-        TextArea launchTemplateArea = new TextArea(snapshot.getLaunchTemplate());
+    private void updateServerPresence(String title, String hint, String tone) {
+        homePresenceLabel.setText(title);
+        homePresenceHintLabel.setText(hint);
+        toggleStyleClass(homePresenceIndicator, "presence-checking", "checking".equals(tone));
+        toggleStyleClass(homePresenceIndicator, "presence-online", "online".equals(tone));
+        toggleStyleClass(homePresenceIndicator, "presence-offline", "offline".equals(tone));
+    }
 
-        usernameField.getStyleClass().add("launcher-input");
-        gameDirectoryField.getStyleClass().add("launcher-input");
-        autoUpdateCheckBox.getStyleClass().add("launcher-check");
-        javaCommandField.getStyleClass().add("launcher-input");
-        manifestUrlField.getStyleClass().add("launcher-input");
-        workingDirectoryField.getStyleClass().add("launcher-input");
-        serverHostField.getStyleClass().add("launcher-input");
-        serverPortField.getStyleClass().add("launcher-input");
-        launchTemplateArea.getStyleClass().add("launcher-textarea");
-        launchTemplateArea.setWrapText(true);
-        launchTemplateArea.setPrefRowCount(8);
+    private void refreshServerPresenceAsync(String host, int port, String route) {
+        updateServerPresence("CHECKING", "Probing " + route + ".", "checking");
+        long requestId = serverPresenceSequence.incrementAndGet();
 
-        Button browseGameDirectoryButton = new Button("Папка");
-        browseGameDirectoryButton.getStyleClass().addAll("action-button", "ghost-action");
-        browseGameDirectoryButton.setOnAction(event -> chooseDirectory(gameDirectoryField, "Выбери каталог клиента"));
+        Thread thread = new Thread(() -> {
+            boolean online = false;
+            long pingMs = -1L;
+            String hint;
 
-        Button browseWorkingDirectoryButton = new Button("Обзор");
-        browseWorkingDirectoryButton.getStyleClass().addAll("action-button", "ghost-action");
-        browseWorkingDirectoryButton.setOnAction(event -> chooseDirectory(workingDirectoryField, "Выбери рабочую папку"));
-
-        Button previewButton = new Button("Проверить команду");
-        Button cancelButton = new Button("Отмена");
-        Button applyButton = new Button("Применить");
-        previewButton.getStyleClass().addAll("action-button", "ghost-action");
-        cancelButton.getStyleClass().addAll("action-button", "ghost-action");
-        applyButton.getStyleClass().addAll("action-button", "primary-action");
-
-        previewButton.setOnAction(event -> {
-            try {
-                LauncherConfig config = buildSettingsConfig(
-                    snapshot,
-                    usernameField,
-                    gameDirectoryField,
-                    autoUpdateCheckBox,
-                    javaCommandField,
-                    manifestUrlField,
-                    workingDirectoryField,
-                    serverHostField,
-                    serverPortField,
-                    launchTemplateArea
-                );
-                appendLog("Command preview: " + commandBuilder.preview(commandBuilder.build(config)));
-            } catch (Exception exception) {
-                showError(exception.getMessage());
+            try (Socket socket = new Socket()) {
+                long started = System.nanoTime();
+                socket.connect(new InetSocketAddress(host, port), 1500);
+                pingMs = Math.max(1L, (System.nanoTime() - started) / 1_000_000L);
+                online = true;
+                hint = "Route " + route + " is responding.";
+            } catch (IOException exception) {
+                hint = "No response from " + route + ": " + compact(exception.getMessage(), 64);
             }
-        });
 
-        cancelButton.setOnAction(event -> dialog.close());
-        applyButton.setOnAction(event -> {
-            try {
-                LauncherConfig updatedConfig = buildSettingsConfig(
-                    snapshot,
-                    usernameField,
-                    gameDirectoryField,
-                    autoUpdateCheckBox,
-                    javaCommandField,
-                    manifestUrlField,
-                    workingDirectoryField,
-                    serverHostField,
-                    serverPortField,
-                    launchTemplateArea
+            boolean resolvedOnline = online;
+            long resolvedPing = pingMs;
+            String resolvedHint = hint;
+            Platform.runLater(() -> {
+                if (requestId != serverPresenceSequence.get()) {
+                    return;
+                }
+                updateServerPresence(
+                    resolvedOnline ? "ONLINE" : "OFFLINE",
+                    resolvedHint,
+                    resolvedOnline ? "online" : "offline"
                 );
-                persistConfig(updatedConfig, true);
-                applyConfigToView(updatedConfig);
-                dialog.close();
-            } catch (Exception exception) {
-                showError(exception.getMessage());
+                playServerPingLabel.setText(resolvedOnline ? resolvedPing + " ms" : "--");
+            });
+        }, "launcher-shell-presence");
+
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private void persistConfig(LauncherConfig config, boolean logPath) throws IOException {
+        currentConfig = LauncherDefaults.applyMissingValues(config.copy());
+        configStore.save(currentConfig);
+        applyConfigToView(currentConfig);
+        if (logPath) {
+            appendLog("Config saved: " + configStore.getConfigFile());
+        }
+    }
+
+    private void persistCurrentConfigQuietly() {
+        try {
+            persistConfig(buildCurrentConfig(), false);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void appendLog(String message) {
+        String resolvedMessage = message == null ? "" : message;
+        logArea.appendText("[" + LocalTime.now().format(LOG_TIME_FORMAT) + "] " + resolvedMessage + System.lineSeparator());
+        logArea.positionCaret(logArea.getLength());
+        if (syncFileLabel != null) {
+            syncFileLabel.setText(compact(resolvedMessage, 96));
+        }
+    }
+
+    private void appendLogAsync(String message) {
+        Platform.runLater(() -> appendLog(message));
+    }
+
+    private void showError(String message) {
+        String resolvedMessage = hasText(message) ? message : "Unknown launcher error.";
+        appendLog("Error: " + resolvedMessage);
+        setLogDrawerVisible(true);
+
+        Alert alert = new Alert(Alert.AlertType.ERROR, resolvedMessage, ButtonType.OK);
+        if (primaryStage != null) {
+            alert.initOwner(primaryStage);
+        }
+        alert.setTitle(LauncherBrand.APP_NAME);
+        alert.setHeaderText("Launcher Error");
+        alert.showAndWait();
+    }
+
+    private void toggleLogDrawer() {
+        setLogDrawerVisible(logDrawerBox == null || !logDrawerBox.isVisible());
+    }
+
+    private void setLogDrawerVisible(boolean visible) {
+        setNodeVisible(logDrawerBox, visible);
+    }
+
+    private void openPrimaryCommunityLink() {
+        for (LauncherHomeContent.CommunityLink link : homeContent.getCommunity()) {
+            if (hasText(link.getUrl())) {
+                openCommunityLink(link);
+                return;
             }
-        });
-
-        VBox root = new VBox(16);
-        root.getStyleClass().add("dialog-root");
-        root.setPadding(new Insets(18));
-
-        VBox header = new VBox(6);
-        header.getStyleClass().addAll("dialog-header", "settings-card");
-        Label title = new Label("Настройки лаунчера");
-        title.getStyleClass().add("card-title");
-        Label copy = new Label(
-            "Главный экран теперь ведет себя как launcher home. Все редактируемые поля профиля и клиента вынесены сюда."
-        );
-        copy.getStyleClass().add("field-hint");
-        copy.setWrapText(true);
-        header.getChildren().addAll(title, copy);
-
-        VBox content = new VBox(14);
-        content.getChildren().addAll(
-            createSettingsCard(
-                "PROFILE",
-                "Игрок и клиент",
-                createFieldGroup("Ник игрока", "Имя профиля, с которым клиент пойдет на сервер.", usernameField),
-                createFieldGroup("Каталог клиента", "Папка со сборкой, runtime и локальными файлами.", buildInlineField(gameDirectoryField, browseGameDirectoryButton)),
-                autoUpdateCheckBox
-            ),
-            createSettingsCard(
-                "ENVIRONMENT",
-                "Runtime и manifest",
-                createFieldGroup("Java", "Команда запуска Java или путь к java.exe.", javaCommandField),
-                createFieldGroup("Manifest URL", "HTTP(S)-адрес manifest.json.", manifestUrlField),
-                createFieldGroup("Рабочая папка", "Каталог, из которого запускается клиент.", buildInlineField(workingDirectoryField, browseWorkingDirectoryButton))
-            ),
-            createSettingsCard(
-                "SERVER",
-                "Сетевой маршрут",
-                createFieldGroup("IP сервера", "Хост Minecraft-сервера.", serverHostField),
-                createFieldGroup("Порт", "Порт игрового сервера.", serverPortField)
-            ),
-            createSettingsCard(
-                "LAUNCH",
-                "Launch template",
-                createInfoNote(
-                    "Плейсхолдеры",
-                    "{java}, {username}, {gameDir}, {workingDir}, {serverHost}, {serverPort}, {uuid}, {accessToken}, {userType}"
-                ),
-                createFieldGroup("Команда запуска", "Итоговая строка будет собрана из launch template и текущего config.", launchTemplateArea)
-            )
-        );
-
-        ScrollPane scrollPane = new ScrollPane(content);
-        scrollPane.setFitToWidth(true);
-        scrollPane.getStyleClass().add("settings-scroll");
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-
-        Label dialogConfigPath = new Label("Профиль: " + configStore.getConfigFile());
-        dialogConfigPath.getStyleClass().add("dialog-path");
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        HBox buttonBar = new HBox(10, dialogConfigPath, spacer, cancelButton, previewButton, applyButton);
-        buttonBar.getStyleClass().add("settings-actions");
-        buttonBar.setAlignment(Pos.CENTER_LEFT);
-
-        root.getChildren().addAll(header, scrollPane, buttonBar);
-
-        Scene scene = new Scene(root, 980, 780);
-        scene.getStylesheets().add(
-            LauncherShellApplication.class.getResource("/ru/mcrpg/launcher/launcher-shell.css").toExternalForm()
-        );
-        dialog.setScene(scene);
-        dialog.showAndWait();
+        }
+        appendLog("No community URL is configured in launcher-home.json.");
     }
 
-    private LauncherConfig buildSettingsConfig(
-        LauncherConfig baseConfig,
-        TextField usernameField,
-        TextField gameDirectoryField,
-        CheckBox autoUpdateCheckBox,
-        TextField javaCommandField,
-        TextField manifestUrlField,
-        TextField workingDirectoryField,
-        TextField serverHostField,
-        TextField serverPortField,
-        TextArea launchTemplateArea
-    ) {
-        LauncherConfig config = baseConfig.copy();
-        config.setUsername(usernameField.getText().trim());
-        config.setGameDirectory(gameDirectoryField.getText().trim());
-        config.setUpdateFilesBeforeLaunch(autoUpdateCheckBox.isSelected());
-        config.setJavaCommand(javaCommandField.getText().trim());
-        config.setManifestUrl(manifestUrlField.getText().trim());
-        config.setWorkingDirectory(workingDirectoryField.getText().trim());
-        config.setServerHost(serverHostField.getText().trim());
-        config.setServerPort(parsePortOrDefault(serverPortField.getText()));
-        config.setLaunchTemplate(launchTemplateArea.getText().trim());
-        return LauncherDefaults.applyMissingValues(config);
+    private void openCommunityLinkByKeyword(String keyword) {
+        for (LauncherHomeContent.CommunityLink link : homeContent.getCommunity()) {
+            if (hasText(link.getLabel()) && link.getLabel().toLowerCase(Locale.ROOT).contains(keyword)) {
+                openCommunityLink(link);
+                return;
+            }
+        }
+        openPrimaryCommunityLink();
     }
 
-    private Node buildInlineField(TextField field, Button button) {
-        HBox row = new HBox(10, field, button);
-        HBox.setHgrow(field, Priority.ALWAYS);
-        return row;
+    private void openCommunityLink(LauncherHomeContent.CommunityLink link) {
+        if (link == null || !hasText(link.getUrl())) {
+            appendLog("Community link is not configured yet.");
+            return;
+        }
+        if (hostServices != null) {
+            hostServices.showDocument(link.getUrl().trim());
+        }
     }
 
-    private VBox createFieldGroup(String title, String hint, Node field) {
-        VBox group = new VBox(8);
-        group.getStyleClass().add("field-group");
+    private void openDirectory(String rawPath) {
+        if (!hasText(rawPath)) {
+            appendLog("Directory is not configured.");
+            return;
+        }
 
-        Label titleLabel = new Label(title);
-        titleLabel.getStyleClass().add("field-label");
-
-        Label hintLabel = new Label(hint);
-        hintLabel.getStyleClass().add("field-hint");
-        hintLabel.setWrapText(true);
-
-        group.getChildren().addAll(titleLabel, hintLabel, field);
-        return group;
+        try {
+            Path path = Paths.get(rawPath).toAbsolutePath().normalize();
+            if (!Files.exists(path)) {
+                appendLog("Directory does not exist yet: " + path);
+                return;
+            }
+            new ProcessBuilder("explorer.exe", path.toString()).start();
+        } catch (Exception exception) {
+            showError("Failed to open directory: " + exception.getMessage());
+        }
     }
 
-    private VBox createInfoNote(String title, String copy) {
-        VBox note = new VBox(6);
-        note.getStyleClass().add("note-box");
-
-        Label titleLabel = new Label(title);
-        titleLabel.getStyleClass().add("note-title");
-
-        Label bodyLabel = new Label(copy);
-        bodyLabel.getStyleClass().add("note-copy");
-        bodyLabel.setWrapText(true);
-
-        note.getChildren().addAll(titleLabel, bodyLabel);
-        return note;
-    }
-
-    private VBox createSettingsCard(String eyebrow, String title, Node... content) {
-        VBox card = new VBox(14);
-        card.getStyleClass().add("settings-card");
-
-        Label eyebrowLabel = new Label(eyebrow);
-        eyebrowLabel.getStyleClass().add("sidebar-caption");
-
-        Label titleLabel = new Label(title);
-        titleLabel.getStyleClass().add("card-title");
-
-        VBox body = new VBox(12);
-        body.getChildren().addAll(content);
-
-        card.getChildren().addAll(eyebrowLabel, titleLabel, body);
-        return card;
+    private void updateRamLabel() {
+        long gigabytes = Math.round(settingsRamSlider.getValue());
+        settingsRamLabel.setText(gigabytes + " GB / 8 GB");
     }
 
     private void chooseDirectory(TextField targetField, String title) {
@@ -738,9 +1236,13 @@ public final class LauncherShellController {
 
         String currentValue = targetField.getText().trim();
         if (!currentValue.isEmpty()) {
-            Path currentPath = Paths.get(currentValue);
-            if (Files.exists(currentPath) && Files.isDirectory(currentPath)) {
-                chooser.setInitialDirectory(currentPath.toFile());
+            try {
+                Path currentPath = Paths.get(currentValue);
+                Path initial = Files.isDirectory(currentPath) ? currentPath : currentPath.getParent();
+                if (initial != null && Files.exists(initial) && Files.isDirectory(initial)) {
+                    chooser.setInitialDirectory(initial.toFile());
+                }
+            } catch (Exception ignored) {
             }
         }
 
@@ -784,149 +1286,6 @@ public final class LauncherShellController {
         }
     }
 
-    private void setBusy(boolean busy) {
-        launchButton.setDisable(busy);
-        syncButton.setDisable(busy);
-        settingsButton.setDisable(busy);
-        playNavButton.setDisable(busy);
-        modsNavButton.setDisable(busy);
-        newsActionButton.setDisable(busy);
-    }
-
-    private void updateProgressState(boolean busy, String statusText, String percentText, double progress) {
-        syncProgressBar.setProgress(progress);
-        syncStatusLabel.setText(statusText);
-        syncPercentLabel.setText(percentText);
-        if (busy) {
-            syncBytesLabel.setText("Launcher is working...");
-        }
-    }
-
-    private void updateServerPresence(String title, String hint, String tone) {
-        realmPresenceLabel.setText(title);
-        realmPresenceHintLabel.setText(hint);
-        toggleStyleClass(realmPresenceIndicator, "presence-checking", "checking".equals(tone));
-        toggleStyleClass(realmPresenceIndicator, "presence-online", "online".equals(tone));
-        toggleStyleClass(realmPresenceIndicator, "presence-offline", "offline".equals(tone));
-    }
-
-    private void refreshServerPresenceAsync(String host, int port, String route) {
-        updateServerPresence("CHECKING", "Probing " + route + ".", "checking");
-        long requestId = serverPresenceSequence.incrementAndGet();
-
-        Thread thread = new Thread(() -> {
-            boolean online = false;
-            String hint;
-
-            try (Socket socket = new Socket()) {
-                socket.connect(new InetSocketAddress(host, port), 1500);
-                online = true;
-                hint = "Route " + route + " is responding.";
-            } catch (IOException exception) {
-                hint = "No response from " + route + ": " + compact(exception.getMessage(), 64);
-            }
-
-            boolean resolvedOnline = online;
-            String resolvedHint = hint;
-            Platform.runLater(() -> {
-                if (requestId != serverPresenceSequence.get()) {
-                    return;
-                }
-                updateServerPresence(
-                    resolvedOnline ? "ONLINE" : "OFFLINE",
-                    resolvedHint,
-                    resolvedOnline ? "online" : "offline"
-                );
-            });
-        }, "launcher-shell-presence");
-
-        thread.setDaemon(true);
-        thread.start();
-    }
-
-    private void persistConfig(LauncherConfig config, boolean logPath) throws IOException {
-        currentConfig = LauncherDefaults.applyMissingValues(config.copy());
-        configStore.save(currentConfig);
-        refreshSummary(currentConfig);
-        if (logPath) {
-            appendLog("Config saved: " + configStore.getConfigFile());
-        }
-    }
-
-    private void persistCurrentConfigQuietly() {
-        try {
-            persistConfig(buildCurrentConfig(), false);
-        } catch (Exception ignored) {
-        }
-    }
-
-    private void appendLog(String message) {
-        String resolvedMessage = message == null ? "" : message;
-        logArea.appendText("[" + LocalTime.now().format(LOG_TIME_FORMAT) + "] " + resolvedMessage + System.lineSeparator());
-        logArea.positionCaret(logArea.getLength());
-        syncFileLabel.setText(compact(resolvedMessage, 96));
-    }
-
-    private void appendLogAsync(String message) {
-        Platform.runLater(() -> appendLog(message));
-    }
-
-    private void showError(String message) {
-        String resolvedMessage = hasText(message) ? message : "Неизвестная ошибка.";
-        appendLog("Error: " + resolvedMessage);
-        setLogDrawerVisible(true);
-
-        Alert alert = new Alert(Alert.AlertType.ERROR, resolvedMessage, ButtonType.OK);
-        if (primaryStage != null) {
-            alert.initOwner(primaryStage);
-        }
-        alert.setTitle(LauncherBrand.APP_NAME);
-        alert.setHeaderText("Ошибка");
-        alert.showAndWait();
-    }
-
-    private void toggleLogDrawer() {
-        setLogDrawerVisible(logDrawerBox == null || !logDrawerBox.isVisible());
-    }
-
-    private void setLogDrawerVisible(boolean visible) {
-        setNodeVisible(logDrawerBox, visible);
-        toggleLogButton.setText(visible ? "Hide log" : "Show log");
-    }
-
-    private void setActiveNav(Button activeButton) {
-        updateNavState(homeNavButton, activeButton == homeNavButton);
-        updateNavState(playNavButton, activeButton == playNavButton);
-        updateNavState(modsNavButton, activeButton == modsNavButton);
-        updateNavState(settingsButton, activeButton == settingsButton);
-    }
-
-    private void updateNavState(Button button, boolean active) {
-        toggleStyleClass(button, "nav-active", active);
-    }
-
-    private void openPrimaryCommunityLink() {
-        for (LauncherHomeContent.CommunityLink link : homeContent.getCommunity()) {
-            if (hasText(link.getUrl())) {
-                openCommunityLink(link);
-                return;
-            }
-        }
-        appendLog("News archive is not linked yet. Connect a community URL in launcher-home.json.");
-    }
-
-    private void openCommunityLink(LauncherHomeContent.CommunityLink link) {
-        if (link == null || !hasText(link.getUrl())) {
-            appendLog(
-                "Community link is not configured: " + (link == null ? "community" : valueOrFallback(link.getLabel(), "community"))
-            );
-            return;
-        }
-        if (hostServices != null) {
-            hostServices.showDocument(link.getUrl().trim());
-        }
-    }
-
     private void applyLabelGraphic(Label label, String resourcePath, double fitWidth, double fitHeight) {
         ImageView imageView = createImageView(resourcePath, fitWidth, fitHeight);
         if (imageView == null) {
@@ -936,14 +1295,23 @@ public final class LauncherShellController {
         label.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
     }
 
-    private void applyButtonGraphic(Button button, String resourcePath, double size) {
+    private void applyGraphicButton(Button button, String resourcePath, double size) {
         ImageView imageView = createImageView(resourcePath, size, size);
         if (imageView == null) {
             return;
         }
         button.setGraphic(imageView);
-        button.setGraphicTextGap(12);
+        button.setGraphicTextGap(18);
         button.setContentDisplay(ContentDisplay.LEFT);
+    }
+
+    private void applyIconOnlyButton(Button button, String resourcePath, double size) {
+        ImageView imageView = createImageView(resourcePath, size, size);
+        if (imageView == null) {
+            return;
+        }
+        button.setGraphic(imageView);
+        button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
     }
 
     private ImageView createImageView(String resourcePath, double fitWidth, double fitHeight) {
@@ -971,7 +1339,7 @@ public final class LauncherShellController {
                 return null;
             }
             if (!Files.isDirectory(gameDirectory)) {
-                throw new IllegalArgumentException("Папка игры не найдена: " + gameDirectory);
+                throw new IllegalArgumentException("Game directory was not found: " + gameDirectory);
             }
             return gameDirectory;
         }
@@ -985,7 +1353,7 @@ public final class LauncherShellController {
         }
 
         if (!Files.isDirectory(workingDirectory)) {
-            throw new IllegalArgumentException("Рабочая папка не найдена: " + workingDirectory);
+            throw new IllegalArgumentException("Working directory was not found: " + workingDirectory);
         }
         return workingDirectory;
     }
@@ -1000,7 +1368,7 @@ public final class LauncherShellController {
 
     private static String formatMegabytes(long bytes) {
         double megabytes = bytes / 1024.0d / 1024.0d;
-        return String.format(java.util.Locale.US, "%.1f MB", Double.valueOf(megabytes));
+        return String.format(Locale.US, "%.1f MB", Double.valueOf(megabytes));
     }
 
     private static boolean shouldSyncBeforeLaunch(LauncherConfig config) {
@@ -1018,23 +1386,6 @@ public final class LauncherShellController {
         return value.trim();
     }
 
-    private static int parsePortOrDefault(String value) {
-        String normalized = value == null ? "" : value.trim();
-        if (normalized.isEmpty()) {
-            return LauncherConfig.DEFAULT_SERVER_PORT;
-        }
-
-        try {
-            int port = Integer.parseInt(normalized);
-            if (port < 1 || port > 65535) {
-                throw new IllegalArgumentException("Порт должен быть в диапазоне 1-65535.");
-            }
-            return port;
-        } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("Порт должен быть числом.");
-        }
-    }
-
     private static String valueOrFallback(String value, String fallback) {
         return hasText(value) ? value.trim() : fallback;
     }
@@ -1043,24 +1394,10 @@ public final class LauncherShellController {
         try {
             Path path = Paths.get(value).normalize();
             Path fileName = path.getFileName();
-            return fileName == null ? compact(value, 28) : compact(fileName.toString(), 28);
+            return fileName == null ? compact(value, 32) : compact(fileName.toString(), 32);
         } catch (Exception exception) {
-            return compact(value, 28);
+            return compact(value, 32);
         }
-    }
-
-    private static String compactCommunityLabel(String label) {
-        String resolved = valueOrFallback(label, "LINK").toUpperCase();
-        if (resolved.length() <= 2) {
-            return resolved;
-        }
-        if ("DISCORD".equals(resolved)) {
-            return "DS";
-        }
-        if ("TELEGRAM".equals(resolved)) {
-            return "TG";
-        }
-        return resolved.substring(0, Math.min(2, resolved.length()));
     }
 
     private static String compact(String value, int maxLength) {
@@ -1092,13 +1429,61 @@ public final class LauncherShellController {
         }
     }
 
+    private enum ViewState {
+        HOME,
+        PLAY,
+        MODS,
+        SETTINGS,
+        LOGIN,
+        REGISTER,
+        ACCOUNT
+    }
+
+    private enum ModFilter {
+        INSTALLED,
+        OPTIONAL,
+        UPDATES
+    }
+
     private enum LauncherAction {
         SYNC_ONLY,
         SYNC_AND_LAUNCH
     }
 
-    private static final class LauncherTaskResult {
+    private static final class ModEntry {
+        private final String name;
+        private final String description;
+        private final String version;
+        private final String iconPath;
+        private final ModFilter filter;
+        private final boolean updatable;
+        private boolean enabled;
 
+        private ModEntry(
+            String name,
+            String description,
+            String version,
+            String iconPath,
+            boolean enabled,
+            ModFilter filter,
+            boolean updatable
+        ) {
+            this.name = name;
+            this.description = description;
+            this.version = version;
+            this.iconPath = iconPath;
+            this.enabled = enabled;
+            this.filter = filter;
+            this.updatable = updatable;
+        }
+
+        private boolean matches(String query) {
+            String haystack = (name + " " + description + " " + version).toLowerCase(Locale.ROOT);
+            return haystack.contains(query);
+        }
+    }
+
+    private static final class LauncherTaskResult {
         private final LauncherConfig resolvedConfig;
         private final ModpackSyncResult syncResult;
         private final Integer exitCode;
@@ -1107,18 +1492,6 @@ public final class LauncherShellController {
             this.resolvedConfig = resolvedConfig;
             this.syncResult = syncResult;
             this.exitCode = exitCode;
-        }
-
-        private LauncherConfig getResolvedConfig() {
-            return resolvedConfig;
-        }
-
-        private ModpackSyncResult getSyncResult() {
-            return syncResult;
-        }
-
-        private Integer getExitCode() {
-            return exitCode;
         }
     }
 }

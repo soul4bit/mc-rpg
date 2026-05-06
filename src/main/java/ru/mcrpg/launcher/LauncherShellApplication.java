@@ -24,14 +24,14 @@ public final class LauncherShellApplication extends Application {
         Parent root = loader.load();
         LauncherShellController controller = loader.getController();
 
-        Scene scene = new Scene(root, 1400, 920);
+        Scene scene = new Scene(root, 1680, 940);
         scene.getStylesheets().add(
             LauncherShellApplication.class.getResource("/ru/mcrpg/launcher/launcher-shell.css").toExternalForm()
         );
 
         stage.setTitle(LauncherBrand.APP_NAME);
-        stage.setMinWidth(1200);
-        stage.setMinHeight(760);
+        stage.setMinWidth(1460);
+        stage.setMinHeight(860);
         stage.setScene(scene);
         controller.attach(stage, getHostServices());
         stage.setOnCloseRequest(event -> controller.onCloseRequest());
