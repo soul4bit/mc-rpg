@@ -18,30 +18,22 @@ const emptyBrand = {
 };
 
 const statusLabels = {
-  idle: "Ready",
-  saving: "Saving",
-  syncing: "Syncing",
-  launching: "Launching",
-  warning: "Warning"
-};
-
-const statusRunes = {
-  idle: "GO",
-  saving: "INK",
-  syncing: "SYNC",
-  launching: "PLAY",
-  warning: "WARN"
+  idle: "Готово",
+  saving: "Сохранение",
+  syncing: "Синхронизация",
+  launching: "Запуск",
+  warning: "Ошибка"
 };
 
 const statusNarratives = {
-  idle: "Manifest, runtime, and profile are staged. Enter the realm when the guild is ready.",
-  saving: "Profile changes are being written to disk and mirrored into the launcher config.",
-  syncing: "The launcher is reconciling the manifest, patching assets, and staging the realm build.",
-  launching: "Backend bridge is spawning the client process and routing logs back into the shell.",
-  warning: "The last task returned an error. Inspect the war log before relaunching."
+  idle: "Клиент готов к запуску.",
+  saving: "Сохраняю изменения профиля.",
+  syncing: "Проверяю и обновляю файлы клиента.",
+  launching: "Запускаю Minecraft через ядро лаунчера.",
+  warning: "Нужно проверить журнал лаунчера."
 };
 
-const emberColumns = ["11%", "22%", "36%", "48%", "63%", "77%", "86%"];
+const cardPositions = ["center center", "24% center", "76% center", "center 18%"];
 
 function compact(value, maxLength) {
   if (!value) {
@@ -53,60 +45,145 @@ function compact(value, maxLength) {
   return `${value.slice(0, Math.max(0, maxLength - 3))}...`;
 }
 
-function displayFolder(value) {
-  if (!value) {
-    return "";
-  }
-  const normalized = value.replace(/\\/g, "/").split("/");
-  return compact(normalized[normalized.length - 1] || value, 28);
-}
-
 function safeItems(value) {
   return Array.isArray(value) ? value : [];
 }
 
-function modeLabel(config) {
-  return config?.updateFilesBeforeLaunch ? "Auto-sync before launch" : "Manual launch";
-}
-
 function routeLabel(config) {
   if (!config?.serverHost) {
-    return "Route unavailable";
+    return "Маршрут не настроен";
   }
   return `${config.serverHost}:${config.serverPort}`;
+}
+
+function modeLabel(config) {
+  return config?.updateFilesBeforeLaunch ? "Автообновление" : "Ручной запуск";
 }
 
 function summaryVersion() {
   return "Forge 1.12.2";
 }
 
-function SpotlightCard({ item, index }) {
+function displayFolder(value) {
+  if (!value) {
+    return "Не выбрано";
+  }
+  const normalized = value.replace(/\\/g, "/").split("/");
+  return compact(normalized[normalized.length - 1] || value, 28);
+}
+
+function avatarMark(name) {
+  const trimmed = String(name || "").trim();
+  return trimmed ? trimmed[0].toUpperCase() : "R";
+}
+
+function communityMark(label) {
+  const normalized = String(label || "").trim().toLowerCase();
+  if (normalized.includes("discord")) {
+    return "DS";
+  }
+  if (normalized.includes("telegram")) {
+    return "TG";
+  }
+  if (normalized.includes("vk")) {
+    return "VK";
+  }
+  return (label || "LK").slice(0, 2).toUpperCase();
+}
+
+function buildShowcaseCards(homeContent, config) {
+  const spotlight = safeItems(homeContent.spotlight);
+  const news = safeItems(homeContent.news);
+  const route = routeLabel(config);
+  const firstNews = news[0];
+
+  return [
+    {
+      id: "server",
+      eyebrow: summaryVersion(),
+      title: homeContent.heroTitle || "Основной сервер",
+      subtitle: route,
+      description: compact(
+        homeContent.heroDescription || "Основной сервер проекта. Нажми играть и заходи без лишних экранов.",
+        120
+      ),
+      tone: "ember",
+      featured: true
+    },
+    {
+      id: "world",
+      eyebrow: "МИР",
+      title: spotlight[0]?.title || "Игровой мир",
+      subtitle: "Основной режим",
+      description: compact(
+        spotlight[0]?.copy || "Главный мир сервера с прогрессией, квестами и общим стартом для игроков.",
+        110
+      ),
+      tone: "night"
+    },
+    {
+      id: "build",
+      eyebrow: "СБОРКА",
+      title: "Синхронизация",
+      subtitle: modeLabel(config),
+      description: config.updateFilesBeforeLaunch
+        ? "Перед запуском лаунчер сам проверит manifest, моды и runtime."
+        : "Сборку можно обновить вручную перед входом на сервер.",
+      tone: "gold"
+    },
+    {
+      id: "profile",
+      eyebrow: "ПРОФИЛЬ",
+      title: config.username || "Игрок",
+      subtitle: displayFolder(config.gameDirectory),
+      description: compact(
+        firstNews?.copy || "Ник, папка клиента и технические параметры открываются отдельно, чтобы главный экран был чище.",
+        110
+      ),
+      tone: "emerald"
+    }
+  ];
+}
+
+function ShowcaseCard({ card, index, active, onSelect }) {
   return (
-    <article className={`realm-card realm-${item.accent || "fire"}`}>
-      <div className="realm-card-topline">
-        <span className="eyebrow">{item.eyebrow || `Realm 0${index + 1}`}</span>
-        <strong>{`0${index + 1}`}</strong>
+    <button
+      type="button"
+      className={`showcase-card showcase-${card.tone}${card.featured ? " is-featured" : ""}${active ? " is-active" : ""}`}
+      onClick={() => onSelect(card.id)}
+      style={{
+        backgroundImage: [
+          "linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.62))",
+          "linear-gradient(120deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0))",
+          `url(${heroArt})`
+        ].join(", "),
+        backgroundPosition: cardPositions[index] || "center center"
+      }}
+    >
+      <div className="showcase-overlay" />
+      <div className="showcase-content">
+        <div className="showcase-meta">
+          <span>{card.eyebrow}</span>
+          {card.featured && <strong>Рекомендуем</strong>}
+        </div>
+        <h3>{card.title}</h3>
+        <p className="showcase-subtitle">{card.subtitle}</p>
+        <p className="showcase-copy">{card.description}</p>
       </div>
-      <h3>{item.title || "Untitled realm event"}</h3>
-      <p>{item.copy || "No realm briefing available yet."}</p>
-    </article>
+    </button>
   );
 }
 
-function NewsEntry({ item, index }) {
-  return (
-    <article className="chronicle-entry">
-      <div className="chronicle-tagline">
-        <span className="eyebrow">{item.tag || `Log ${index + 1}`}</span>
-        <div className="chronicle-dot" />
-      </div>
-      <h4>{item.title || "Realm note"}</h4>
-      <p>{item.copy || "No further details yet."}</p>
-    </article>
-  );
-}
-
-function SettingsModal({ config, onClose, onChange, onPreview, previewText, previewError, onBrowse }) {
+function SettingsModal({
+  config,
+  onClose,
+  onChange,
+  onPreview,
+  previewText,
+  previewError,
+  onBrowseGame,
+  onBrowseWorking
+}) {
   if (!config) {
     return null;
   }
@@ -114,88 +191,121 @@ function SettingsModal({ config, onClose, onChange, onPreview, previewText, prev
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <section className="settings-modal" onClick={(event) => event.stopPropagation()}>
-        <header className="modal-heading">
-          <p className="eyebrow">Operator Console</p>
-          <h2>Launcher technical settings</h2>
-          <p className="body-copy">
-            Java, manifest routing, launch template, and working directories stay here so the main shell
-            can remain focused on the realm itself.
-          </p>
+        <header className="modal-header">
+          <div>
+            <p className="modal-label">Настройки</p>
+            <h2>Профиль и технические параметры</h2>
+          </div>
+          <button className="icon-button close-button" type="button" onClick={onClose}>
+            ✕
+          </button>
         </header>
 
-        <div className="settings-grid">
-          <label className="field-card">
-            <span>Java command</span>
-            <input
-              value={config.javaCommand}
-              onChange={(event) => onChange("javaCommand", event.target.value)}
-            />
-          </label>
+        <div className="settings-section">
+          <h3>Профиль игрока</h3>
+          <div className="settings-grid">
+            <label className="field-card">
+              <span>Имя игрока</span>
+              <input value={config.username} onChange={(event) => onChange("username", event.target.value)} />
+            </label>
 
-          <label className="field-card field-card-wide">
-            <span>Manifest URL</span>
-            <input
-              value={config.manifestUrl}
-              onChange={(event) => onChange("manifestUrl", event.target.value)}
-            />
-          </label>
-
-          <div className="field-card field-card-wide">
-            <span>Working directory</span>
-            <div className="field-inline">
-              <input
-                value={config.workingDirectory}
-                onChange={(event) => onChange("workingDirectory", event.target.value)}
-              />
-              <button className="ghost-button" type="button" onClick={onBrowse}>
-                Browse
-              </button>
+            <div className="field-card field-card-wide">
+              <span>Папка клиента</span>
+              <div className="field-inline">
+                <input
+                  value={config.gameDirectory}
+                  onChange={(event) => onChange("gameDirectory", event.target.value)}
+                />
+                <button className="secondary-button" type="button" onClick={onBrowseGame}>
+                  Обзор
+                </button>
+              </div>
             </div>
+
+            <label className="field-card field-card-wide checkbox-card">
+              <input
+                type="checkbox"
+                checked={Boolean(config.updateFilesBeforeLaunch)}
+                onChange={(event) => onChange("updateFilesBeforeLaunch", event.target.checked)}
+              />
+              <div>
+                <strong>Автообновление перед запуском</strong>
+                <p>Лаунчер сначала проверит manifest и только потом запустит клиент.</p>
+              </div>
+            </label>
           </div>
+        </div>
 
-          <label className="field-card">
-            <span>Server host</span>
-            <input
-              value={config.serverHost}
-              onChange={(event) => onChange("serverHost", event.target.value)}
-            />
-          </label>
+        <div className="settings-section">
+          <h3>Технические параметры</h3>
+          <div className="settings-grid">
+            <label className="field-card">
+              <span>Java</span>
+              <input
+                value={config.javaCommand}
+                onChange={(event) => onChange("javaCommand", event.target.value)}
+              />
+            </label>
 
-          <label className="field-card">
-            <span>Server port</span>
-            <input
-              value={config.serverPort}
-              onChange={(event) => onChange("serverPort", event.target.value)}
-            />
-          </label>
+            <label className="field-card">
+              <span>Порт</span>
+              <input
+                value={config.serverPort}
+                onChange={(event) => onChange("serverPort", event.target.value)}
+              />
+            </label>
 
-          <label className="field-card field-card-wide">
-            <span>Launch template</span>
-            <textarea
-              rows="8"
-              value={config.launchTemplate}
-              onChange={(event) => onChange("launchTemplate", event.target.value)}
-            />
-          </label>
+            <label className="field-card field-card-wide">
+              <span>Manifest URL</span>
+              <input
+                value={config.manifestUrl}
+                onChange={(event) => onChange("manifestUrl", event.target.value)}
+              />
+            </label>
+
+            <label className="field-card">
+              <span>IP сервера</span>
+              <input
+                value={config.serverHost}
+                onChange={(event) => onChange("serverHost", event.target.value)}
+              />
+            </label>
+
+            <div className="field-card">
+              <span>Рабочая папка</span>
+              <div className="field-inline">
+                <input
+                  value={config.workingDirectory}
+                  onChange={(event) => onChange("workingDirectory", event.target.value)}
+                />
+                <button className="secondary-button" type="button" onClick={onBrowseWorking}>
+                  Обзор
+                </button>
+              </div>
+            </div>
+
+            <label className="field-card field-card-wide">
+              <span>Шаблон запуска</span>
+              <textarea
+                rows="7"
+                value={config.launchTemplate}
+                onChange={(event) => onChange("launchTemplate", event.target.value)}
+              />
+            </label>
+          </div>
         </div>
 
         <div className="preview-box">
           <div>
-            <p className="eyebrow">Launch Preview</p>
+            <p className="modal-label">Команда запуска</p>
             <p className={`preview-text${previewError ? " is-error" : ""}`}>
-              {previewError || previewText || "Launch command has not been requested yet."}
+              {previewError || previewText || "Предпросмотр ещё не запрошен."}
             </p>
           </div>
-          <button className="ghost-button" type="button" onClick={onPreview}>
-            Preview command
+          <button className="secondary-button" type="button" onClick={onPreview}>
+            Показать команду
           </button>
         </div>
-
-        <footer className="settings-actions">
-          <button className="ghost-button" type="button" onClick={onClose}>
-            Close
-          </button>
-        </footer>
       </section>
     </div>
   );
@@ -214,6 +324,7 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [previewText, setPreviewText] = useState("");
   const [previewError, setPreviewError] = useState("");
+  const [selectedCardId, setSelectedCardId] = useState("server");
 
   const deferredLogs = useDeferredValue(logs);
 
@@ -251,7 +362,7 @@ function App() {
       }
       setStatus("idle");
     } catch (error) {
-      appendLog(`Save error: ${error.message}`);
+      appendLog(`Ошибка сохранения: ${error.message}`);
       setStatus("warning");
     }
   });
@@ -276,12 +387,12 @@ function App() {
       .then((payload) => {
         if (!disposed) {
           applyBootstrap(payload);
-          appendLog(`Profile loaded from ${payload.configFile}`);
+          appendLog(`Профиль загружен: ${payload.configFile}`);
         }
       })
       .catch((error) => {
         if (!disposed) {
-          appendLog(`Bootstrap error: ${error.message}`);
+          appendLog(`Ошибка инициализации: ${error.message}`);
           setStatus("warning");
         }
       });
@@ -297,7 +408,7 @@ function App() {
       }
 
       if (event.type === "error") {
-        appendLog(`Backend error: ${event.message}`);
+        appendLog(`Ошибка ядра лаунчера: ${event.message}`);
         setIsBusy(false);
         setStatus("warning");
         return;
@@ -353,21 +464,21 @@ function App() {
         updateConfig(field, response.path);
       }
     } catch (error) {
-      appendLog(`Directory picker error: ${error.message}`);
+      appendLog(`Ошибка выбора папки: ${error.message}`);
       setStatus("warning");
     }
   };
 
   const openCommunityLink = async (item) => {
     if (!item?.url) {
-      appendLog(`Community link is not configured for ${item?.label || "this destination"}.`);
+      appendLog(`Ссылка ${item?.label || "сообщества"} пока не настроена.`);
       return;
     }
 
     try {
       await window.launcherApi.openExternal(item.url);
     } catch (error) {
-      appendLog(`External link error: ${error.message}`);
+      appendLog(`Не удалось открыть ссылку: ${error.message}`);
       setStatus("warning");
     }
   };
@@ -381,12 +492,12 @@ function App() {
     setShowLog(true);
     setIsBusy(true);
     setStatus(nextStatus);
-    appendLog(action === "launch" ? "Launch request sent to backend bridge." : "Sync request sent to backend bridge.");
+    appendLog(action === "launch" ? "Отправлен запрос на запуск." : "Отправлен запрос на синхронизацию.");
 
     try {
       await window.launcherApi.startAction(action, normalizeConfig(config));
     } catch (error) {
-      appendLog(`Backend bridge error: ${error.message}`);
+      appendLog(`Ошибка ядра лаунчера: ${error.message}`);
       setIsBusy(false);
       setStatus("warning");
     }
@@ -410,371 +521,133 @@ function App() {
   if (!config) {
     return (
       <main className="launcher-shell loading-shell">
-        <div className="ambient ambient-one" />
-        <div className="ambient ambient-two" />
         <section className="loading-card">
-          <p className="eyebrow">Bootstrap</p>
-          <h1>Forging the launcher shell</h1>
-          <p className="body-copy">
-            Reading profile data, staging launcher content, and connecting the Electron shell to the Java backend.
-          </p>
+          <p className="modal-label">Загрузка</p>
+          <h1>Поднимаю лаунчер</h1>
+          <p>Читаю профиль, контент витрины и подключаю интерфейс к ядру лаунчера.</p>
         </section>
       </main>
     );
   }
 
   const communityLinks = safeItems(homeContent.community);
-  const spotlightCards = safeItems(homeContent.spotlight).slice(0, 3);
-  const newsEntries = safeItems(homeContent.news);
-  const heroEyebrow = homeContent.heroEyebrow || "Featured Realm";
-  const heroTitle = homeContent.heroTitle || brand.appName;
-  const heroDescription =
-    homeContent.heroDescription || "A single route into the realm: sync the build, stage the runtime, and launch.";
-  const heroFootnote = homeContent.heroFootnote || statusNarratives[status];
-  const controlNarrative = statusNarratives[status] || statusNarratives.idle;
+  const cards = buildShowcaseCards(homeContent, config);
+  const selectedCard = cards.find((item) => item.id === selectedCardId) || cards[0];
+  const selectedIndex = Math.max(
+    0,
+    cards.findIndex((item) => item.id === selectedCard.id)
+  );
   const route = routeLabel(config);
-  const packFolder = displayFolder(config.gameDirectory);
-  const workFolder = displayFolder(config.workingDirectory) || packFolder || "Unset";
-  const configFileLabel = compact(configFile, 74);
-
-  const deckMetrics = [
-    { label: "Version", value: summaryVersion() },
-    { label: "Server route", value: route },
-    { label: "Deploy mode", value: modeLabel(config) }
-  ];
-
-  const questSteps = [
-    {
-      label: "Manifest route",
-      value: route,
-      detail: config.manifestUrl ? compact(config.manifestUrl, 34) : "Manifest URL is unset"
-    },
-    {
-      label: "Pack staging",
-      value: packFolder || "Unset",
-      detail: config.updateFilesBeforeLaunch ? "Auto-sync enabled" : "Manual sync mode"
-    },
-    {
-      label: "Runtime path",
-      value: workFolder,
-      detail: config.javaCommand ? compact(config.javaCommand, 30) : "Java command not configured"
-    }
-  ];
+  const folder = displayFolder(config.gameDirectory);
+  const summaryText = statusNarratives[status] || statusNarratives.idle;
 
   return (
     <main className="launcher-shell">
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
-      <div className="ambient ambient-three" />
+      <div className="launcher-frame">
+        <header className="topbar">
+          <div className="topbar-left">
+            <button className="back-button" type="button" onClick={() => setSelectedCardId(cards[0].id)}>
+              ←
+            </button>
+            <div className="brand-block">
+              <p className="brand-title">{brand.appTitle || "Redstone"}</p>
+              <span>лаунчер сервера</span>
+            </div>
+          </div>
 
-      <header className="topbar surface-frame">
-        <div className="brand-lockup">
-          <p className="eyebrow">Redstone Network</p>
-          <h1>{brand.appName}</h1>
-          <p className="body-copy">{brand.appSubtitle}</p>
-        </div>
-
-        <div className="guild-runes" aria-hidden="true">
-          <span>Guild Hub</span>
-          <span>Realm Sync</span>
-          <span>War Table</span>
-        </div>
-
-        <div className="topbar-actions">
-          <div className="community-strip">
+          <div className="social-strip">
             {communityLinks.map((item) => (
               <button
                 key={`${item.label}-${item.url}`}
-                className="ghost-button"
+                className="icon-button"
                 type="button"
                 onClick={() => openCommunityLink(item)}
+                title={item.label || "Сообщество"}
               >
-                {item.label || "Community"}
+                {communityMark(item.label)}
               </button>
             ))}
           </div>
 
-          <div className="profile-chip">
-            <span className="eyebrow">Profile</span>
-            <strong>{config.username}</strong>
+          <div className="topbar-right">
+            <button className="settings-link" type="button" onClick={() => setShowSettings(true)}>
+              Настройки
+            </button>
+            <div className="profile-block">
+              <span>{config.username}</span>
+              <div className="avatar-badge">{avatarMark(config.username)}</div>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <section className="dashboard-grid">
-        <div className="dashboard-main">
-          <section className="hero-stage surface-frame">
-            <div
-              className="hero-scene"
-              style={{
-                backgroundImage: [
-                  "linear-gradient(90deg, rgba(5, 11, 18, 0.92) 0%, rgba(5, 11, 18, 0.78) 38%, rgba(5, 11, 18, 0.35) 68%, rgba(5, 11, 18, 0.18) 100%)",
-                  "linear-gradient(180deg, rgba(18, 33, 43, 0.22) 0%, rgba(3, 8, 13, 0.7) 100%)",
-                  `url(${heroArt})`
-                ].join(", ")
-              }}
-            />
-            <div className="hero-vignette" />
-            <div className="hero-particles" aria-hidden="true">
-              {emberColumns.map((left, index) => (
-                <span
-                  key={left}
-                  style={{
-                    "--particle-left": left,
-                    "--particle-delay": `${index * 1.25}s`,
-                    "--particle-duration": `${10 + index * 0.85}s`
-                  }}
-                />
-              ))}
+        <section className="content-shell">
+          <div className="section-head">
+            <div>
+              <p className="section-label">Главный экран</p>
+              <h2>ВЫБЕРИТЕ СЕРВЕР</h2>
             </div>
+            <div className={`status-chip status-${status}`}>{statusLabels[status]}</div>
+          </div>
 
-            <div className="hero-grid">
-              <div className="hero-copy">
-                <div className="hero-badges">
-                  <span className="hero-badge is-hot">{heroEyebrow}</span>
-                  <span className="hero-badge is-gold">{summaryVersion()}</span>
-                  <span className={`hero-badge status-${status}`}>{statusLabels[status]}</span>
-                </div>
-
-                <h2>{heroTitle}</h2>
-                <p>{heroDescription}</p>
-
-                <div className="hero-command-row">
-                  <button className="primary-button primary-launch" type="button" onClick={() => runAction("launch")} disabled={isBusy}>
-                    Enter Realm
-                  </button>
-                  <button className="ghost-button action-ghost" type="button" onClick={() => runAction("sync")} disabled={isBusy}>
-                    Sync Build
-                  </button>
-                </div>
-
-                <div className="hero-metrics">
-                  {deckMetrics.map((item) => (
-                    <article key={item.label}>
-                      <span>{item.label}</span>
-                      <strong>{item.value}</strong>
-                    </article>
-                  ))}
-                </div>
-
-                <footer className="hero-footer">
-                  <span className={`status-pill status-${status}`}>{statusLabels[status]}</span>
-                  <p>{heroFootnote}</p>
-                </footer>
-              </div>
-
-              <div className="hero-side">
-                <article className="sigil-card">
-                  <p className="eyebrow">Realm Gate</p>
-                  <div className={`sigil-ring status-${status}`}>
-                    <span>{statusRunes[status]}</span>
-                  </div>
-                  <div className="sigil-meta">
-                    <strong>{route}</strong>
-                    <p>{controlNarrative}</p>
-                  </div>
-                </article>
-
-                <article className="quest-card">
-                  <p className="eyebrow">Deployment Track</p>
-                  <h3>Launcher route map</h3>
-                  <div className="quest-list">
-                    {questSteps.map((item, index) => (
-                      <div key={item.label} className="quest-row">
-                        <span className="quest-index">{index + 1}</span>
-                        <div>
-                          <strong>{item.label}</strong>
-                          <p>{item.value}</p>
-                          <small>{item.detail}</small>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </article>
-              </div>
-            </div>
-          </section>
-
-          <section className="realm-grid">
-            {spotlightCards.map((item, index) => (
-              <SpotlightCard key={`${item.eyebrow}-${item.title}-${index}`} item={item} index={index} />
+          <section className="showcase-grid">
+            {cards.map((card, index) => (
+              <ShowcaseCard
+                key={card.id}
+                card={card}
+                index={index}
+                active={selectedCard.id === card.id}
+                onSelect={setSelectedCardId}
+              />
             ))}
-          </section>
-
-          <section className="lower-grid">
-            <article className="surface-frame lore-card">
-              <div className="section-heading">
-                <p className="eyebrow">Guild Notes</p>
-                <span className="section-flare">RPG Shell</span>
-              </div>
-              <h3>Built to feel like a real launcher, not a settings form</h3>
-              <p className="body-copy">
-                The Java backend still owns sync, config, and launch orchestration. This React shell is now free
-                to push stronger art direction, motion, and layout without touching the core launcher flow.
-              </p>
-
-              <div className="note-stack">
-                <div className="note-panel">
-                  <strong>First realm entry</strong>
-                  <p>
-                    If the server requires auth, register in-game once with the command your server policy expects,
-                    then use the same credentials on later joins.
-                  </p>
-                </div>
-                <div className="note-panel">
-                  <strong>Pack layout</strong>
-                  <p>
-                    Mods, runtime, configs, and the Minecraft bootstrap remain inside the selected game directory.
-                  </p>
-                </div>
-              </div>
-            </article>
-
-            <article className="surface-frame chronicle-card">
-              <div className="section-heading">
-                <p className="eyebrow">Chronicle Feed</p>
-                <span className={`status-pill status-${status}`}>{statusLabels[status]}</span>
-              </div>
-              <h3>Realm updates and operator notes</h3>
-              <div className="chronicle-feed">
-                {newsEntries.map((item, index) => (
-                  <NewsEntry key={`${item.tag}-${item.title}-${index}`} item={item} index={index} />
-                ))}
-              </div>
-            </article>
-          </section>
-        </div>
-
-        <aside className="dashboard-side">
-          <section className="surface-frame play-panel">
-            <div className="play-heading">
-              <div>
-                <p className="eyebrow">Launch Deck</p>
-                <h3>Deploy to {heroTitle}</h3>
-              </div>
-              <span className="version-chip">{summaryVersion()}</span>
-            </div>
-
-            <p className="body-copy">{controlNarrative}</p>
-
-            <div className="route-banner">
-              <span>Server route</span>
-              <strong>{route}</strong>
-            </div>
-
-            <label className="field-group">
-              <span>Player name</span>
-              <small>Used as the in-game profile name for this launcher session.</small>
-              <input
-                value={config.username}
-                onChange={(event) => updateConfig("username", event.target.value)}
-                disabled={isBusy}
-              />
-            </label>
-
-            <div className="field-group">
-              <span>Game directory</span>
-              <small>Contains the modpack, runtime, configs, and bootstrap files.</small>
-              <div className="field-inline">
-                <input
-                  value={config.gameDirectory}
-                  onChange={(event) => updateConfig("gameDirectory", event.target.value)}
-                  disabled={isBusy}
-                />
-                <button className="ghost-button" type="button" onClick={() => chooseDirectory("gameDirectory")} disabled={isBusy}>
-                  Browse
-                </button>
-              </div>
-            </div>
-
-            <label className="toggle-row">
-              <input
-                type="checkbox"
-                checked={Boolean(config.updateFilesBeforeLaunch)}
-                onChange={(event) => updateConfig("updateFilesBeforeLaunch", event.target.checked)}
-                disabled={isBusy}
-              />
-              <span>Automatically sync the build before launch</span>
-            </label>
-
-            <div className="status-line">
-              <span className={`status-pill status-${status}`}>{statusLabels[status]}</span>
-              <strong>{isBusy ? "Backend task active" : "Deck ready"}</strong>
-            </div>
-
-            <div className="action-stack">
-              <button className="primary-button primary-launch" type="button" onClick={() => runAction("launch")} disabled={isBusy}>
-                Enter Realm
-              </button>
-              <button className="accent-button" type="button" onClick={() => runAction("sync")} disabled={isBusy}>
-                Reforge Files
-              </button>
-              <button className="ghost-button" type="button" onClick={() => setShowLog((value) => !value)}>
-                {showLog ? "Hide War Log" : "Open War Log"}
-              </button>
-              <button className="ghost-button" type="button" onClick={() => setShowSettings(true)}>
-                Operator Settings
-              </button>
-            </div>
-          </section>
-
-          <section className="surface-frame session-panel">
-            <p className="eyebrow">Session Intel</p>
-            <h3>Current profile snapshot</h3>
-            <div className="session-grid">
-              <div className="session-row">
-                <span>Mode</span>
-                <strong>{modeLabel(config)}</strong>
-              </div>
-              <div className="session-row">
-                <span>Pack folder</span>
-                <strong>{packFolder || "Unset"}</strong>
-              </div>
-              <div className="session-row">
-                <span>Working folder</span>
-                <strong>{workFolder}</strong>
-              </div>
-              <div className="session-row">
-                <span>Config file</span>
-                <strong>{configFileLabel}</strong>
-              </div>
-            </div>
           </section>
 
           {showLog && (
-            <section className="surface-frame log-panel">
-              <div className="section-heading">
-                <p className="eyebrow">War Log</p>
-                <span className="section-flare">Live</span>
+            <section className="log-card">
+              <div className="log-head">
+                <div>
+                  <p className="section-label">Журнал</p>
+                  <h3>События запуска и синхронизации</h3>
+                </div>
+                <button className="settings-link" type="button" onClick={() => setShowLog(false)}>
+                  Скрыть
+                </button>
               </div>
-              <h3>Backend events and client stdout</h3>
-              <p className="body-copy">
-                Sync progress, launcher bridge output, and client logs stream into this panel in real time.
-              </p>
-              <pre>{deferredLogs.join("\n") || "The log is still quiet."}</pre>
+              <pre>{deferredLogs.join("\n") || "Журнал пока пуст."}</pre>
             </section>
           )}
-        </aside>
-      </section>
+        </section>
 
-      <footer className="status-dock surface-frame">
-        <div className="dock-chip">
-          <span>Player</span>
-          <strong>{config.username}</strong>
-        </div>
-        <div className="dock-chip">
-          <span>Pack</span>
-          <strong>{packFolder || "Unset"}</strong>
-        </div>
-        <div className="dock-chip">
-          <span>Mode</span>
-          <strong>{modeLabel(config)}</strong>
-        </div>
-        <div className="dock-chip">
-          <span>Status</span>
-          <strong>{statusLabels[status]}</strong>
-        </div>
-      </footer>
+        <footer className="action-bar">
+          <div className="action-lead">
+            <div className="selection-badge">{selectedIndex + 1}</div>
+            <div className="selection-copy">
+              <span>{selectedCard.eyebrow}</span>
+              <strong>{selectedCard.title}</strong>
+              <p>{selectedCard.subtitle}</p>
+            </div>
+          </div>
+
+          <div className="action-summary">
+            <span>{statusLabels[status]}</span>
+            <p>{summaryText}</p>
+            <small>
+              {config.username} • {route} • {folder}
+            </small>
+          </div>
+
+          <div className="action-buttons">
+            <button className="play-button" type="button" onClick={() => runAction("launch")} disabled={isBusy}>
+              Играть
+            </button>
+            <button className="secondary-button" type="button" onClick={() => runAction("sync")} disabled={isBusy}>
+              Синхронизировать
+            </button>
+            <button className="secondary-button" type="button" onClick={() => setShowLog((value) => !value)}>
+              {showLog ? "Скрыть лог" : "Открыть лог"}
+            </button>
+          </div>
+        </footer>
+      </div>
 
       <SettingsModal
         config={showSettings ? config : null}
@@ -783,7 +656,8 @@ function App() {
         onPreview={previewCommand}
         previewText={previewText}
         previewError={previewError}
-        onBrowse={() => chooseDirectory("workingDirectory")}
+        onBrowseGame={() => chooseDirectory("gameDirectory")}
+        onBrowseWorking={() => chooseDirectory("workingDirectory")}
       />
     </main>
   );
