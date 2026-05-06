@@ -4,13 +4,14 @@
 
 Текущий инкремент:
 
-- Java 17 + JavaFX + FXML.
+- Java 17 backend + React + Electron shell.
 - Сохраняет настройки в `~/.mc-rpg-launcher/launcher.properties`.
 - Поддерживает `manifest.json` с описанием модпака.
 - Скачивает и обновляет клиентские файлы в `game directory`.
 - Проверяет файлы по `SHA-256`.
 - Может автоматически синхронизировать файлы перед запуском клиента.
-- Главный экран лаунчера теперь собран как `FXML + controller + CSS` shell через `src/main/resources/ru/mcrpg/launcher/launcher-shell.fxml`.
+- Desktop UI теперь работает как `React + Electron` shell, а Java остаётся backend-ядром для `config`, `sync` и `launch`.
+- Electron общается с Java через CLI bridge `ru.mcrpg.launcher.LauncherBackendCli`.
 - Контентные блоки главного экрана по-прежнему наполняются через `src/main/resources/ru/mcrpg/launcher/launcher-home.json`.
 
 ## Сборка
@@ -19,7 +20,39 @@
 mvn package
 ```
 
-Готовый jar:
+## Electron shell
+
+Для запуска нового desktop shell:
+
+```bash
+npm install
+npm run dev
+```
+
+Для production-сборки frontend + backend jar:
+
+```bash
+npm run build
+```
+
+Для сборки готового portable-пакета лаунчера:
+
+```bash
+npm run dist
+```
+
+Артефакты появятся в `release/`:
+
+- папка `release/redstone-launcher-0.1.0-win-x64/`
+- архив `release/redstone-launcher-0.1.0-win-x64.zip`
+
+Для запуска собранного Electron shell из исходников:
+
+```bash
+npm run start
+```
+
+Backend jar, который использует Electron bridge и который всё ещё можно запускать отдельно для legacy Java-entrypoint:
 
 ```bash
 java -jar target/mc-rpg-launcher-0.1.0-SNAPSHOT.jar
