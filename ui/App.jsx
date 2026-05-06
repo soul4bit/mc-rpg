@@ -1,4 +1,5 @@
 import { startTransition, useDeferredValue, useEffect, useEffectEvent, useState } from "react";
+import heroArt from "./assets/launcher-rpg-hero.png";
 
 const emptyHomeContent = {
   heroEyebrow: "",
@@ -16,13 +17,31 @@ const emptyBrand = {
   appSubtitle: "MC RPG launcher"
 };
 
-const stateLabels = {
-  idle: "Готово",
-  saving: "Сохранение",
-  syncing: "Синхронизация",
-  launching: "Запуск",
-  warning: "Внимание"
+const statusLabels = {
+  idle: "Ready",
+  saving: "Saving",
+  syncing: "Syncing",
+  launching: "Launching",
+  warning: "Warning"
 };
+
+const statusRunes = {
+  idle: "GO",
+  saving: "INK",
+  syncing: "SYNC",
+  launching: "PLAY",
+  warning: "WARN"
+};
+
+const statusNarratives = {
+  idle: "Manifest, runtime, and profile are staged. Enter the realm when the guild is ready.",
+  saving: "Profile changes are being written to disk and mirrored into the launcher config.",
+  syncing: "The launcher is reconciling the manifest, patching assets, and staging the realm build.",
+  launching: "Backend bridge is spawning the client process and routing logs back into the shell.",
+  warning: "The last task returned an error. Inspect the war log before relaunching."
+};
+
+const emberColumns = ["11%", "22%", "36%", "48%", "63%", "77%", "86%"];
 
 function compact(value, maxLength) {
   if (!value) {
@@ -42,19 +61,49 @@ function displayFolder(value) {
   return compact(normalized[normalized.length - 1] || value, 28);
 }
 
+function safeItems(value) {
+  return Array.isArray(value) ? value : [];
+}
+
 function modeLabel(config) {
-  return config?.updateFilesBeforeLaunch ? "Автообновление" : "Ручной запуск";
+  return config?.updateFilesBeforeLaunch ? "Auto-sync before launch" : "Manual launch";
 }
 
 function routeLabel(config) {
-  if (!config) {
-    return "";
+  if (!config?.serverHost) {
+    return "Route unavailable";
   }
   return `${config.serverHost}:${config.serverPort}`;
 }
 
 function summaryVersion() {
   return "Forge 1.12.2";
+}
+
+function SpotlightCard({ item, index }) {
+  return (
+    <article className={`realm-card realm-${item.accent || "fire"}`}>
+      <div className="realm-card-topline">
+        <span className="eyebrow">{item.eyebrow || `Realm 0${index + 1}`}</span>
+        <strong>{`0${index + 1}`}</strong>
+      </div>
+      <h3>{item.title || "Untitled realm event"}</h3>
+      <p>{item.copy || "No realm briefing available yet."}</p>
+    </article>
+  );
+}
+
+function NewsEntry({ item, index }) {
+  return (
+    <article className="chronicle-entry">
+      <div className="chronicle-tagline">
+        <span className="eyebrow">{item.tag || `Log ${index + 1}`}</span>
+        <div className="chronicle-dot" />
+      </div>
+      <h4>{item.title || "Realm note"}</h4>
+      <p>{item.copy || "No further details yet."}</p>
+    </article>
+  );
 }
 
 function SettingsModal({ config, onClose, onChange, onPreview, previewText, previewError, onBrowse }) {
@@ -65,18 +114,18 @@ function SettingsModal({ config, onClose, onChange, onPreview, previewText, prev
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <section className="settings-modal" onClick={(event) => event.stopPropagation()}>
-        <header className="settings-header">
-          <p className="eyebrow">TECHNICAL</p>
-          <h2>Технические настройки</h2>
-          <p>
-            Здесь остаются manifest URL, Java, launch template и сетевой маршрут. Главный экран не
-            должен быть формой из девяностых.
+        <header className="modal-heading">
+          <p className="eyebrow">Operator Console</p>
+          <h2>Launcher technical settings</h2>
+          <p className="body-copy">
+            Java, manifest routing, launch template, and working directories stay here so the main shell
+            can remain focused on the realm itself.
           </p>
         </header>
 
         <div className="settings-grid">
           <label className="field-card">
-            <span>Java</span>
+            <span>Java command</span>
             <input
               value={config.javaCommand}
               onChange={(event) => onChange("javaCommand", event.target.value)}
@@ -92,20 +141,20 @@ function SettingsModal({ config, onClose, onChange, onPreview, previewText, prev
           </label>
 
           <div className="field-card field-card-wide">
-            <span>Рабочая папка</span>
+            <span>Working directory</span>
             <div className="field-inline">
               <input
                 value={config.workingDirectory}
                 onChange={(event) => onChange("workingDirectory", event.target.value)}
               />
               <button className="ghost-button" type="button" onClick={onBrowse}>
-                Обзор
+                Browse
               </button>
             </div>
           </div>
 
           <label className="field-card">
-            <span>IP сервера</span>
+            <span>Server host</span>
             <input
               value={config.serverHost}
               onChange={(event) => onChange("serverHost", event.target.value)}
@@ -113,7 +162,7 @@ function SettingsModal({ config, onClose, onChange, onPreview, previewText, prev
           </label>
 
           <label className="field-card">
-            <span>Порт</span>
+            <span>Server port</span>
             <input
               value={config.serverPort}
               onChange={(event) => onChange("serverPort", event.target.value)}
@@ -123,7 +172,7 @@ function SettingsModal({ config, onClose, onChange, onPreview, previewText, prev
           <label className="field-card field-card-wide">
             <span>Launch template</span>
             <textarea
-              rows="7"
+              rows="8"
               value={config.launchTemplate}
               onChange={(event) => onChange("launchTemplate", event.target.value)}
             />
@@ -132,19 +181,19 @@ function SettingsModal({ config, onClose, onChange, onPreview, previewText, prev
 
         <div className="preview-box">
           <div>
-            <p className="preview-label">Preview command</p>
+            <p className="eyebrow">Launch Preview</p>
             <p className={`preview-text${previewError ? " is-error" : ""}`}>
-              {previewError || previewText || "Команда пока не запрошена."}
+              {previewError || previewText || "Launch command has not been requested yet."}
             </p>
           </div>
           <button className="ghost-button" type="button" onClick={onPreview}>
-            Проверить команду
+            Preview command
           </button>
         </div>
 
         <footer className="settings-actions">
           <button className="ghost-button" type="button" onClick={onClose}>
-            Закрыть
+            Close
           </button>
         </footer>
       </section>
@@ -174,6 +223,7 @@ function App() {
       minute: "2-digit",
       second: "2-digit"
     });
+
     startTransition(() => {
       setLogs((current) => [...current, `[${timestamp}] ${message}`]);
     });
@@ -192,13 +242,16 @@ function App() {
     if (!nextConfig) {
       return;
     }
+
     try {
+      setStatus("saving");
       const response = await window.launcherApi.saveConfig(nextConfig);
       if (response.configFile) {
         setConfigFile(response.configFile);
       }
+      setStatus("idle");
     } catch (error) {
-      appendLog(`Ошибка сохранения: ${error.message}`);
+      appendLog(`Save error: ${error.message}`);
       setStatus("warning");
     }
   });
@@ -223,12 +276,12 @@ function App() {
       .then((payload) => {
         if (!disposed) {
           applyBootstrap(payload);
-          appendLog(`Профиль загружен из ${payload.configFile}`);
+          appendLog(`Profile loaded from ${payload.configFile}`);
         }
       })
       .catch((error) => {
         if (!disposed) {
-          appendLog(`Ошибка инициализации: ${error.message}`);
+          appendLog(`Bootstrap error: ${error.message}`);
           setStatus("warning");
         }
       });
@@ -244,7 +297,7 @@ function App() {
       }
 
       if (event.type === "error") {
-        appendLog(`Ошибка: ${event.message}`);
+        appendLog(`Backend error: ${event.message}`);
         setIsBusy(false);
         setStatus("warning");
         return;
@@ -285,6 +338,7 @@ function App() {
       if (!current) {
         return current;
       }
+
       return {
         ...current,
         [field]: value
@@ -293,9 +347,28 @@ function App() {
   };
 
   const chooseDirectory = async (field) => {
-    const response = await window.launcherApi.pickDirectory(config?.[field] || "");
-    if (!response.canceled && response.path) {
-      updateConfig(field, response.path);
+    try {
+      const response = await window.launcherApi.pickDirectory(config?.[field] || "");
+      if (!response.canceled && response.path) {
+        updateConfig(field, response.path);
+      }
+    } catch (error) {
+      appendLog(`Directory picker error: ${error.message}`);
+      setStatus("warning");
+    }
+  };
+
+  const openCommunityLink = async (item) => {
+    if (!item?.url) {
+      appendLog(`Community link is not configured for ${item?.label || "this destination"}.`);
+      return;
+    }
+
+    try {
+      await window.launcherApi.openExternal(item.url);
+    } catch (error) {
+      appendLog(`External link error: ${error.message}`);
+      setStatus("warning");
     }
   };
 
@@ -308,12 +381,12 @@ function App() {
     setShowLog(true);
     setIsBusy(true);
     setStatus(nextStatus);
-      appendLog(action === "launch" ? "Запрос на запуск отправлен." : "Запрос на синхронизацию отправлен.");
+    appendLog(action === "launch" ? "Launch request sent to backend bridge." : "Sync request sent to backend bridge.");
 
     try {
       await window.launcherApi.startAction(action, normalizeConfig(config));
     } catch (error) {
-      appendLog(`Ошибка backend bridge: ${error.message}`);
+      appendLog(`Backend bridge error: ${error.message}`);
       setIsBusy(false);
       setStatus("warning");
     }
@@ -323,7 +396,9 @@ function App() {
     if (!config) {
       return;
     }
+
     setPreviewError("");
+
     try {
       const response = await window.launcherApi.previewCommand(normalizeConfig(config));
       setPreviewText(response.preview || "");
@@ -334,152 +409,262 @@ function App() {
 
   if (!config) {
     return (
-      <main className="app-shell loading-shell">
+      <main className="launcher-shell loading-shell">
+        <div className="ambient ambient-one" />
+        <div className="ambient ambient-two" />
         <section className="loading-card">
-          <p className="eyebrow">BOOTSTRAP</p>
-          <h1>Поднимаю React + Electron shell</h1>
-          <p>Читаю конфиг, контентную витрину и backend bridge.</p>
+          <p className="eyebrow">Bootstrap</p>
+          <h1>Forging the launcher shell</h1>
+          <p className="body-copy">
+            Reading profile data, staging launcher content, and connecting the Electron shell to the Java backend.
+          </p>
         </section>
       </main>
     );
   }
 
+  const communityLinks = safeItems(homeContent.community);
+  const spotlightCards = safeItems(homeContent.spotlight).slice(0, 3);
+  const newsEntries = safeItems(homeContent.news);
+  const heroEyebrow = homeContent.heroEyebrow || "Featured Realm";
+  const heroTitle = homeContent.heroTitle || brand.appName;
+  const heroDescription =
+    homeContent.heroDescription || "A single route into the realm: sync the build, stage the runtime, and launch.";
+  const heroFootnote = homeContent.heroFootnote || statusNarratives[status];
+  const controlNarrative = statusNarratives[status] || statusNarratives.idle;
+  const route = routeLabel(config);
+  const packFolder = displayFolder(config.gameDirectory);
+  const workFolder = displayFolder(config.workingDirectory) || packFolder || "Unset";
+  const configFileLabel = compact(configFile, 74);
+
+  const deckMetrics = [
+    { label: "Version", value: summaryVersion() },
+    { label: "Server route", value: route },
+    { label: "Deploy mode", value: modeLabel(config) }
+  ];
+
+  const questSteps = [
+    {
+      label: "Manifest route",
+      value: route,
+      detail: config.manifestUrl ? compact(config.manifestUrl, 34) : "Manifest URL is unset"
+    },
+    {
+      label: "Pack staging",
+      value: packFolder || "Unset",
+      detail: config.updateFilesBeforeLaunch ? "Auto-sync enabled" : "Manual sync mode"
+    },
+    {
+      label: "Runtime path",
+      value: workFolder,
+      detail: config.javaCommand ? compact(config.javaCommand, 30) : "Java command not configured"
+    }
+  ];
+
   return (
-    <main className="app-shell">
-      <section className="masthead">
-        <div>
-          <p className="eyebrow">REDSTONE NETWORK</p>
+    <main className="launcher-shell">
+      <div className="ambient ambient-one" />
+      <div className="ambient ambient-two" />
+      <div className="ambient ambient-three" />
+
+      <header className="topbar surface-frame">
+        <div className="brand-lockup">
+          <p className="eyebrow">Redstone Network</p>
           <h1>{brand.appName}</h1>
-          <p className="masthead-copy">
-            Основной сервер {routeLabel(config)}. Профиль {config.username}.
-          </p>
+          <p className="body-copy">{brand.appSubtitle}</p>
         </div>
 
-        <div className="community-strip">
-          {homeContent.community.map((item) => (
-            <button
-              key={`${item.label}-${item.url}`}
-              className="chip-button"
-              type="button"
-              onClick={() => window.launcherApi.openExternal(item.url)}
-            >
-              {item.label || "Link"}
-            </button>
-          ))}
+        <div className="guild-runes" aria-hidden="true">
+          <span>Guild Hub</span>
+          <span>Realm Sync</span>
+          <span>War Table</span>
         </div>
 
-        <div className="top-metrics">
-          <article className="metric-chip">
-            <span>ПРОФИЛЬ</span>
+        <div className="topbar-actions">
+          <div className="community-strip">
+            {communityLinks.map((item) => (
+              <button
+                key={`${item.label}-${item.url}`}
+                className="ghost-button"
+                type="button"
+                onClick={() => openCommunityLink(item)}
+              >
+                {item.label || "Community"}
+              </button>
+            ))}
+          </div>
+
+          <div className="profile-chip">
+            <span className="eyebrow">Profile</span>
             <strong>{config.username}</strong>
-          </article>
-          <article className="metric-chip">
-            <span>РЕЖИМ</span>
-            <strong>{modeLabel(config)}</strong>
-          </article>
+          </div>
         </div>
-      </section>
+      </header>
 
-      <section className="content-grid">
-        <div className="main-column">
-          <section className="hero-panel">
-            <div className="hero-orbit" />
-            <div className="hero-copy">
-              <div className="hero-badges">
-                <span className="hero-badge is-hot">MAIN SERVER</span>
-                <span className="hero-badge is-gold">{summaryVersion()}</span>
-                <span className="hero-badge is-green">{homeContent.heroEyebrow}</span>
+      <section className="dashboard-grid">
+        <div className="dashboard-main">
+          <section className="hero-stage surface-frame">
+            <div
+              className="hero-scene"
+              style={{
+                backgroundImage: [
+                  "linear-gradient(90deg, rgba(5, 11, 18, 0.92) 0%, rgba(5, 11, 18, 0.78) 38%, rgba(5, 11, 18, 0.35) 68%, rgba(5, 11, 18, 0.18) 100%)",
+                  "linear-gradient(180deg, rgba(18, 33, 43, 0.22) 0%, rgba(3, 8, 13, 0.7) 100%)",
+                  `url(${heroArt})`
+                ].join(", ")
+              }}
+            />
+            <div className="hero-vignette" />
+            <div className="hero-particles" aria-hidden="true">
+              {emberColumns.map((left, index) => (
+                <span
+                  key={left}
+                  style={{
+                    "--particle-left": left,
+                    "--particle-delay": `${index * 1.25}s`,
+                    "--particle-duration": `${10 + index * 0.85}s`
+                  }}
+                />
+              ))}
+            </div>
+
+            <div className="hero-grid">
+              <div className="hero-copy">
+                <div className="hero-badges">
+                  <span className="hero-badge is-hot">{heroEyebrow}</span>
+                  <span className="hero-badge is-gold">{summaryVersion()}</span>
+                  <span className={`hero-badge status-${status}`}>{statusLabels[status]}</span>
+                </div>
+
+                <h2>{heroTitle}</h2>
+                <p>{heroDescription}</p>
+
+                <div className="hero-command-row">
+                  <button className="primary-button primary-launch" type="button" onClick={() => runAction("launch")} disabled={isBusy}>
+                    Enter Realm
+                  </button>
+                  <button className="ghost-button action-ghost" type="button" onClick={() => runAction("sync")} disabled={isBusy}>
+                    Sync Build
+                  </button>
+                </div>
+
+                <div className="hero-metrics">
+                  {deckMetrics.map((item) => (
+                    <article key={item.label}>
+                      <span>{item.label}</span>
+                      <strong>{item.value}</strong>
+                    </article>
+                  ))}
+                </div>
+
+                <footer className="hero-footer">
+                  <span className={`status-pill status-${status}`}>{statusLabels[status]}</span>
+                  <p>{heroFootnote}</p>
+                </footer>
               </div>
-              <h2>{homeContent.heroTitle}</h2>
-              <p>{homeContent.heroDescription}</p>
-              <div className="hero-stats">
-                <article>
-                  <span>ВЕРСИЯ</span>
-                  <strong>{summaryVersion()}</strong>
+
+              <div className="hero-side">
+                <article className="sigil-card">
+                  <p className="eyebrow">Realm Gate</p>
+                  <div className={`sigil-ring status-${status}`}>
+                    <span>{statusRunes[status]}</span>
+                  </div>
+                  <div className="sigil-meta">
+                    <strong>{route}</strong>
+                    <p>{controlNarrative}</p>
+                  </div>
                 </article>
-                <article>
-                  <span>СЕРВЕР</span>
-                  <strong>{routeLabel(config)}</strong>
-                </article>
-                <article>
-                  <span>РЕЖИМ</span>
-                  <strong>{modeLabel(config)}</strong>
+
+                <article className="quest-card">
+                  <p className="eyebrow">Deployment Track</p>
+                  <h3>Launcher route map</h3>
+                  <div className="quest-list">
+                    {questSteps.map((item, index) => (
+                      <div key={item.label} className="quest-row">
+                        <span className="quest-index">{index + 1}</span>
+                        <div>
+                          <strong>{item.label}</strong>
+                          <p>{item.value}</p>
+                          <small>{item.detail}</small>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </article>
               </div>
-              <footer className="hero-footer">
-                <span className={`status-pill status-${status}`}>{stateLabels[status]}</span>
-                <p>{homeContent.heroFootnote}</p>
-              </footer>
             </div>
           </section>
 
-          <section className="spotlight-grid">
-            {homeContent.spotlight.map((item) => (
-              <article
-                key={`${item.eyebrow}-${item.title}`}
-                className={`spotlight-card spotlight-${item.accent || "fire"}`}
-              >
-                <span>{item.eyebrow}</span>
-                <h3>{item.title}</h3>
-                <p>{item.copy}</p>
-              </article>
+          <section className="realm-grid">
+            {spotlightCards.map((item, index) => (
+              <SpotlightCard key={`${item.eyebrow}-${item.title}-${index}`} item={item} index={index} />
             ))}
           </section>
 
-          <section className="deck-grid">
-            <article className="surface-card">
-              <p className="eyebrow">PLAYER ACCESS</p>
-              <h3>Дизайн больше не сидит в JavaFX-классе</h3>
-              <p className="card-copy">
-                UI теперь живёт в React и Electron, а Java осталась ядром для sync, config и launch.
-                Менять внешний вид можно отдельно от backend-логики.
+          <section className="lower-grid">
+            <article className="surface-frame lore-card">
+              <div className="section-heading">
+                <p className="eyebrow">Guild Notes</p>
+                <span className="section-flare">RPG Shell</span>
+              </div>
+              <h3>Built to feel like a real launcher, not a settings form</h3>
+              <p className="body-copy">
+                The Java backend still owns sync, config, and launch orchestration. This React shell is now free
+                to push stronger art direction, motion, and layout without touching the core launcher flow.
               </p>
-              <div className="note-card">
-                <strong>Первый вход</strong>
-                <p>
-                  Если сервер попросил авторизацию, используй /register &lt;пароль&gt;
-                  &lt;пароль&gt; для первого входа и /login &lt;пароль&gt; для повторного.
-                </p>
+
+              <div className="note-stack">
+                <div className="note-panel">
+                  <strong>First realm entry</strong>
+                  <p>
+                    If the server requires auth, register in-game once with the command your server policy expects,
+                    then use the same credentials on later joins.
+                  </p>
+                </div>
+                <div className="note-panel">
+                  <strong>Pack layout</strong>
+                  <p>
+                    Mods, runtime, configs, and the Minecraft bootstrap remain inside the selected game directory.
+                  </p>
+                </div>
               </div>
             </article>
 
-            <article className="surface-card">
-              <p className="eyebrow">HOME FEED</p>
-              <h3>Контентная витрина</h3>
-              <p className="card-copy">
-                Hero, spotlight и новости по-прежнему приходят из backend bridge, так что тебе не
-                придётся дублировать контент между Java и UI.
-              </p>
-              <div className="news-feed">
-                {homeContent.news.map((item) => (
-                  <div key={`${item.tag}-${item.title}`} className="news-entry">
-                    <span>{item.tag}</span>
-                    <strong>{item.title}</strong>
-                    <p>{item.copy}</p>
-                  </div>
+            <article className="surface-frame chronicle-card">
+              <div className="section-heading">
+                <p className="eyebrow">Chronicle Feed</p>
+                <span className={`status-pill status-${status}`}>{statusLabels[status]}</span>
+              </div>
+              <h3>Realm updates and operator notes</h3>
+              <div className="chronicle-feed">
+                {newsEntries.map((item, index) => (
+                  <NewsEntry key={`${item.tag}-${item.title}-${index}`} item={item} index={index} />
                 ))}
               </div>
             </article>
           </section>
         </div>
 
-        <aside className="side-column">
-          <section className="surface-card play-card">
-            <p className="eyebrow">PLAY DECK</p>
-            <h3>Быстрый запуск</h3>
-            <p className="card-copy">
-              Профиль, папка клиента и действия собраны в отдельной панели. Так менять дизайн
-              реально быстро, а не через пересборку пол-окна.
-            </p>
+        <aside className="dashboard-side">
+          <section className="surface-frame play-panel">
+            <div className="play-heading">
+              <div>
+                <p className="eyebrow">Launch Deck</p>
+                <h3>Deploy to {heroTitle}</h3>
+              </div>
+              <span className="version-chip">{summaryVersion()}</span>
+            </div>
 
-            <div className="route-box">
-              <span>МАРШРУТ</span>
-              <strong>{routeLabel(config)}</strong>
+            <p className="body-copy">{controlNarrative}</p>
+
+            <div className="route-banner">
+              <span>Server route</span>
+              <strong>{route}</strong>
             </div>
 
             <label className="field-group">
-              <span>Ник в игре</span>
-              <small>Имя профиля, под которым клиент зайдёт на сервер.</small>
+              <span>Player name</span>
+              <small>Used as the in-game profile name for this launcher session.</small>
               <input
                 value={config.username}
                 onChange={(event) => updateConfig("username", event.target.value)}
@@ -488,21 +673,16 @@ function App() {
             </label>
 
             <div className="field-group">
-              <span>Каталог сборки</span>
-              <small>Здесь лежат runtime, моды, конфиги и bootstrap Minecraft.</small>
+              <span>Game directory</span>
+              <small>Contains the modpack, runtime, configs, and bootstrap files.</small>
               <div className="field-inline">
                 <input
                   value={config.gameDirectory}
                   onChange={(event) => updateConfig("gameDirectory", event.target.value)}
                   disabled={isBusy}
                 />
-                <button
-                  className="ghost-button"
-                  type="button"
-                  onClick={() => chooseDirectory("gameDirectory")}
-                  disabled={isBusy}
-                >
-                  Обзор
+                <button className="ghost-button" type="button" onClick={() => chooseDirectory("gameDirectory")} disabled={isBusy}>
+                  Browse
                 </button>
               </div>
             </div>
@@ -514,75 +694,85 @@ function App() {
                 onChange={(event) => updateConfig("updateFilesBeforeLaunch", event.target.checked)}
                 disabled={isBusy}
               />
-              <span>Автоматически обновлять сборку перед запуском</span>
+              <span>Automatically sync the build before launch</span>
             </label>
 
-            <div className="state-row">
-              <span className={`status-pill status-${status}`}>{stateLabels[status]}</span>
+            <div className="status-line">
+              <span className={`status-pill status-${status}`}>{statusLabels[status]}</span>
+              <strong>{isBusy ? "Backend task active" : "Deck ready"}</strong>
             </div>
 
             <div className="action-stack">
-              <button className="primary-button" type="button" onClick={() => runAction("launch")} disabled={isBusy}>
-                Играть
+              <button className="primary-button primary-launch" type="button" onClick={() => runAction("launch")} disabled={isBusy}>
+                Enter Realm
               </button>
               <button className="accent-button" type="button" onClick={() => runAction("sync")} disabled={isBusy}>
-                Синхронизировать
+                Reforge Files
               </button>
               <button className="ghost-button" type="button" onClick={() => setShowLog((value) => !value)}>
-                {showLog ? "Скрыть лог" : "Открыть лог"}
+                {showLog ? "Hide War Log" : "Open War Log"}
               </button>
               <button className="ghost-button" type="button" onClick={() => setShowSettings(true)}>
-                Технические настройки
+                Operator Settings
               </button>
             </div>
           </section>
 
-          <section className="surface-card session-card">
-            <p className="eyebrow">SESSION</p>
-            <h3>Сводка профиля</h3>
-            <div className="session-row">
-              <span>РЕЖИМ</span>
-              <strong>{modeLabel(config)}</strong>
-            </div>
-            <div className="session-row">
-              <span>СЕРВЕР</span>
-              <strong>{routeLabel(config)}</strong>
-            </div>
-            <div className="session-row">
-              <span>ПАПКА</span>
-              <strong>{displayFolder(config.gameDirectory)}</strong>
+          <section className="surface-frame session-panel">
+            <p className="eyebrow">Session Intel</p>
+            <h3>Current profile snapshot</h3>
+            <div className="session-grid">
+              <div className="session-row">
+                <span>Mode</span>
+                <strong>{modeLabel(config)}</strong>
+              </div>
+              <div className="session-row">
+                <span>Pack folder</span>
+                <strong>{packFolder || "Unset"}</strong>
+              </div>
+              <div className="session-row">
+                <span>Working folder</span>
+                <strong>{workFolder}</strong>
+              </div>
+              <div className="session-row">
+                <span>Config file</span>
+                <strong>{configFileLabel}</strong>
+              </div>
             </div>
           </section>
 
           {showLog && (
-            <section className="surface-card log-card">
-              <p className="eyebrow">LIVE LOG</p>
-              <h3>Живой журнал</h3>
-              <p className="card-copy">
-                Здесь остаются синхронизация, stdout клиента и все ошибки backend bridge.
+            <section className="surface-frame log-panel">
+              <div className="section-heading">
+                <p className="eyebrow">War Log</p>
+                <span className="section-flare">Live</span>
+              </div>
+              <h3>Backend events and client stdout</h3>
+              <p className="body-copy">
+                Sync progress, launcher bridge output, and client logs stream into this panel in real time.
               </p>
-              <pre>{deferredLogs.join("\n") || "Лог пока пуст."}</pre>
+              <pre>{deferredLogs.join("\n") || "The log is still quiet."}</pre>
             </section>
           )}
         </aside>
       </section>
 
-      <footer className="footer-bar">
-        <div className="footer-chip">
-          <span>ИГРОК</span>
+      <footer className="status-dock surface-frame">
+        <div className="dock-chip">
+          <span>Player</span>
           <strong>{config.username}</strong>
         </div>
-        <div className="footer-chip">
-          <span>ПАПКА</span>
-          <strong>{displayFolder(config.gameDirectory)}</strong>
+        <div className="dock-chip">
+          <span>Pack</span>
+          <strong>{packFolder || "Unset"}</strong>
         </div>
-        <div className="footer-chip">
-          <span>РЕЖИМ</span>
+        <div className="dock-chip">
+          <span>Mode</span>
           <strong>{modeLabel(config)}</strong>
         </div>
-        <div className="footer-chip footer-path">
-          <span>CONFIG</span>
-          <strong>{compact(configFile, 76)}</strong>
+        <div className="dock-chip">
+          <span>Status</span>
+          <strong>{statusLabels[status]}</strong>
         </div>
       </footer>
 
