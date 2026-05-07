@@ -104,8 +104,9 @@ public final class LauncherShellController {
         configureControls();
         currentConfig = loadConfig();
         applyConfigToView(currentConfig);
-        updateProgressState(false, "Ready", "READY", 0.0d);
-        syncFileLabel.setText("Launcher is ready.");
+        updateProgressState(false, "Готово к запуску", "ГОТОВО", 0.0d);
+        syncFileLabel.setText("Лаунчер готов к работе.");
+        syncBytesLabel.setText("Файловая активность пока отсутствует.");
         appendLog("Minimal launcher view loaded.");
     }
 
@@ -123,8 +124,6 @@ public final class LauncherShellController {
 
         brandLogoLabel.setText(LauncherBrand.APP_TITLE);
         brandSubtitleLabel.setText(LauncherBrand.APP_SUBTITLE);
-        applySvgGraphicButton(syncButton, "download", 18, "#FFFFFF");
-        applySvgGraphicButton(launchButton, "play", 18, "#FFFFFF");
         applyWindowControlIcons();
 
         syncButton.setOnAction(event -> syncFiles());
@@ -154,7 +153,7 @@ public final class LauncherShellController {
         serverRouteValueLabel.setText(formatRoute(resolvedConfig));
         manifestUrlValueLabel.setText(manifestUrl);
         downloadBaseValueLabel.setText(deriveManifestDirectory(manifestUrl));
-        updateServerPresence("CHECKING", "checking");
+        updateServerPresence("ПРОВЕРКА", "checking");
         refreshEndpointPreviewAsync(resolvedConfig);
     }
 
@@ -198,7 +197,7 @@ public final class LauncherShellController {
         setBusy(true);
         updateProgressState(
             true,
-            action == LauncherAction.SYNC_ONLY ? "Checking manifest and files" : "Preparing runtime",
+            action == LauncherAction.SYNC_ONLY ? "Проверка манифеста и файлов" : "Подготовка клиента",
             "...",
             ProgressBar.INDETERMINATE_PROGRESS
         );
@@ -239,10 +238,10 @@ public final class LauncherShellController {
                 if (result.syncResult != null) {
                     applySyncResult(result.syncResult, result.resolvedConfig);
                 } else if (result.exitCode != null) {
-                    updateProgressState(false, "Game session finished", "READY", 0.0d);
-                    syncBytesLabel.setText("Exit code " + result.exitCode);
+                    updateProgressState(false, "Игровая сессия завершена", "ГОТОВО", 0.0d);
+                    syncBytesLabel.setText("Код выхода " + result.exitCode);
                 } else {
-                    updateProgressState(false, "Ready", "READY", 0.0d);
+                    updateProgressState(false, "Готово к запуску", "ГОТОВО", 0.0d);
                 }
 
                 if (result.exitCode != null) {
@@ -256,15 +255,15 @@ public final class LauncherShellController {
         task.setOnFailed(event -> {
             setBusy(false);
             Throwable exception = task.getException();
-            updateProgressState(false, "Operation failed", "ERR", 0.0d);
-            syncBytesLabel.setText("Review launcher log for details.");
+            updateProgressState(false, "Операция завершилась ошибкой", "ОШИБКА", 0.0d);
+            syncBytesLabel.setText("Подробности смотрите в журнале лаунчера.");
             showError(exception == null ? "Unknown launcher error." : exception.getMessage());
         });
 
         task.setOnCancelled(event -> {
             setBusy(false);
-            updateProgressState(false, "Operation cancelled", "STOP", 0.0d);
-            syncBytesLabel.setText("No files changed.");
+            updateProgressState(false, "Операция отменена", "СТОП", 0.0d);
+            syncBytesLabel.setText("Файлы не изменялись.");
         });
 
         Thread thread = new Thread(task, "launcher-shell-" + action.name().toLowerCase(Locale.ROOT));
@@ -273,10 +272,11 @@ public final class LauncherShellController {
     }
 
     private void applySyncResult(ModpackSyncResult syncResult, LauncherConfig resolvedConfig) {
-        updateProgressState(false, "Sync complete", "100%", 1.0d);
+        updateProgressState(false, "Синхронизация завершена", "100%", 1.0d);
         syncBytesLabel.setText(formatSyncSummary(syncResult));
         syncFileLabel.setText(
-            "Downloaded " + syncResult.getDownloadedFiles() + " files, reused " + syncResult.getReusedFiles() + "."
+            "Загружено " + syncResult.getDownloadedFiles() + " файлов, переиспользовано "
+                + syncResult.getReusedFiles() + "."
         );
         serverRouteValueLabel.setText(formatRoute(resolvedConfig));
         downloadBaseValueLabel.setText(resolveDisplayDownloadBase(resolvedConfig.getManifestUrl(), syncResult.getManifest()));
@@ -331,7 +331,7 @@ public final class LauncherShellController {
     }
 
     private void refreshServerPresenceAsync(String host, int port, String route) {
-        updateServerPresence("CHECKING", "checking");
+        updateServerPresence("ПРОВЕРКА", "checking");
         long requestId = serverPresenceSequence.incrementAndGet();
 
         Thread thread = new Thread(() -> {
@@ -347,7 +347,7 @@ public final class LauncherShellController {
                 if (requestId != serverPresenceSequence.get()) {
                     return;
                 }
-                updateServerPresence(resolvedOnline ? "ONLINE" : "OFFLINE", resolvedOnline ? "online" : "offline");
+                updateServerPresence(resolvedOnline ? "Онлайн" : "Офлайн", resolvedOnline ? "online" : "offline");
                 if (!resolvedOnline) {
                     appendLog("No response from " + route + ".");
                 }
@@ -400,7 +400,7 @@ public final class LauncherShellController {
         syncStatusLabel.setText(statusText);
         syncPercentLabel.setText(percentText);
         if (busy) {
-            syncBytesLabel.setText("Launcher is working...");
+            syncBytesLabel.setText("Лаунчер выполняет операцию...");
         }
     }
 
@@ -439,7 +439,7 @@ public final class LauncherShellController {
             alert.initOwner(primaryStage);
         }
         alert.setTitle(LauncherBrand.APP_NAME);
-        alert.setHeaderText("Launcher Error");
+        alert.setHeaderText("Ошибка лаунчера");
         alert.showAndWait();
     }
 
@@ -561,9 +561,9 @@ public final class LauncherShellController {
 
     private static String formatSyncSummary(ModpackSyncResult syncResult) {
         return syncResult.getDownloadedFiles()
-            + " downloaded / "
+            + " загружено / "
             + syncResult.getReusedFiles()
-            + " reused / "
+            + " повторно использовано / "
             + formatMegabytes(syncResult.getDownloadedBytes());
     }
 
