@@ -54,6 +54,8 @@ class ModpackSyncServiceTest {
             "{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}",
             result.getResolvedConfig().getLaunchTemplate()
         );
+        assertEquals("http://192.168.1.103:8081", result.getResolvedConfig().getAuthBaseUrl());
+        assertEquals("obsidiangate-main", result.getResolvedConfig().getServerId());
         assertTrue(result.getResolvedConfig().getWorkingDirectory().endsWith("client"));
         assertEquals(3, result.getDownloadedFiles());
         assertEquals(0, result.getReusedFiles());
@@ -252,6 +254,8 @@ class ModpackSyncServiceTest {
             + "  \"launcher\": {\n"
             + "    \"serverHost\": \"192.168.1.103\",\n"
             + "    \"serverPort\": 25565,\n"
+            + "    \"authBaseUrl\": \"http://192.168.1.103:8081\",\n"
+            + "    \"serverId\": \"obsidiangate-main\",\n"
             + "    \"workingDirectory\": \".\",\n"
             + "    \"launchTemplate\": \"{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}\"\n"
             + "  },\n"

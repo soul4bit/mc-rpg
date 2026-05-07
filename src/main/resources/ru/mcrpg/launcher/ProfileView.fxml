@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.mcrpg.launcher.ProfileController"
+            prefWidth="1600.0" prefHeight="900.0" styleClass="account-root, app-window">
+    <left>
+        <VBox prefWidth="310.0" spacing="28.0" styleClass="sidebar">
+            <padding>
+                <Insets top="42.0" right="24.0" bottom="28.0" left="24.0"/>
+            </padding>
+            <children>
+                <ImageView fitWidth="230.0" preserveRatio="true">
+                    <image>
+                        <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
+                    </image>
+                </ImageView>
+                <VBox spacing="14.0">
+                    <children>
+                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenHome"
+                                styleClass="nav-button" text="Главная"/>
+                        <Label styleClass="nav-button, nav-button-active" text="Личный кабинет"/>
+                    </children>
+                </VBox>
+                <Region VBox.vgrow="ALWAYS"/>
+                <VBox spacing="10.0" styleClass="glass-panel">
+                    <padding>
+                        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                    </padding>
+                    <children>
+                        <Label text="Аккаунт защищён" styleClass="label-value"/>
+                        <Label text="Игровая сессия привязана к лаунчеру и backend API."
+                               wrapText="true" styleClass="label-muted"/>
+                    </children>
+                </VBox>
+                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onLogout"
+                        styleClass="secondary-button" text="ВЫЙТИ"/>
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane>
+            <children>
+                <ImageView fitWidth="1290.0" fitHeight="900.0" preserveRatio="false" opacity="0.42">
+                    <image>
+                        <Image url="@obsidiangate/images/backgrounds/hero_portal_background.png"/>
+                    </image>
+                </ImageView>
+                <Pane styleClass="profile-overlay"/>
+
+                <VBox spacing="22.0">
+                    <padding>
+                        <Insets top="26.0" right="42.0" bottom="42.0" left="42.0"/>
+                    </padding>
+                    <children>
+                        <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag"
+                              spacing="16.0">
+                            <children>
+                                <VBox spacing="4.0">
+                                    <children>
+                                        <Label text="Личный кабинет" styleClass="auth-title"/>
+                                        <Label text="Профиль, безопасность и игровая статистика"
+                                               styleClass="label-muted"/>
+                                    </children>
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="minimizeWindowButton" mnemonicParsing="false"
+                                        onAction="#minimizeWindow" styleClass="window-control"/>
+                                <Button fx:id="closeWindowButton" mnemonicParsing="false"
+                                        onAction="#closeWindow" styleClass="window-control, window-control-close"/>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="22.0" styleClass="profile-hero-card">
+                            <children>
+                                <StackPane styleClass="avatar-frame">
+                                    <children>
+                                        <ImageView fitWidth="112.0" fitHeight="112.0">
+                                            <image>
+                                                <Image url="@obsidiangate/images/avatar/player_avatar.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </children>
+                                </StackPane>
+                                <VBox spacing="10.0">
+                                    <children>
+                                        <Label fx:id="profileNameLabel" styleClass="profile-main-name"/>
+                                        <Label fx:id="profileRoleLabel" styleClass="label-purple"/>
+                                        <Label fx:id="profileEmailLabel" styleClass="label-body"/>
+                                        <Label fx:id="statusLabel" styleClass="label-muted" wrapText="true"/>
+                                    </children>
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <VBox alignment="CENTER_RIGHT" spacing="12.0">
+                                    <children>
+                                        <Button mnemonicParsing="false" onAction="#onChangeSkin"
+                                                styleClass="primary-button" text="СМЕНИТЬ СКИН"/>
+                                        <Button mnemonicParsing="false" onAction="#onEditProfile"
+                                                styleClass="secondary-button" text="ИЗМЕНИТЬ ПРОФИЛЬ"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox spacing="18.0">
+                            <children>
+                                <VBox prefWidth="220.0" spacing="6.0" styleClass="metric-card">
+                                    <children>
+                                        <Label text="ACCOUNT ID" styleClass="label-muted"/>
+                                        <Label fx:id="accountIdLabel" styleClass="metric-value-small" wrapText="true"/>
+                                    </children>
+                                </VBox>
+                                <VBox prefWidth="220.0" spacing="6.0" styleClass="metric-card">
+                                    <children>
+                                        <Label text="AUTH" styleClass="label-muted"/>
+                                        <Label text="launcher-auth" styleClass="metric-value"/>
+                                        <Label text="через backend API" styleClass="label-purple"/>
+                                    </children>
+                                </VBox>
+                                <VBox prefWidth="220.0" spacing="6.0" styleClass="metric-card">
+                                    <children>
+                                        <Label text="SERVER ID" styleClass="label-muted"/>
+                                        <Label fx:id="launcherServerIdLabel" styleClass="metric-value-small" wrapText="true"/>
+                                    </children>
+                                </VBox>
+                                <VBox prefWidth="220.0" spacing="6.0" styleClass="metric-card">
+                                    <children>
+                                        <Label text="GAME DIR" styleClass="label-muted"/>
+                                        <Label fx:id="launcherPathLabel" styleClass="metric-value-small" wrapText="true"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <VBox prefWidth="410.0" spacing="16.0" styleClass="profile-card">
+                                    <children>
+                                        <Label text="Безопасность" styleClass="label-value"/>
+                                        <Label text="Email привязан к аккаунту backend API." styleClass="label-body"/>
+                                        <Label text="Следующий этап: смена пароля и 2FA." styleClass="label-muted"/>
+                                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onEnableTwoFactor"
+                                                styleClass="secondary-button" text="ВКЛЮЧИТЬ 2FA"/>
+                                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onChangePassword"
+                                                styleClass="secondary-button" text="СМЕНИТЬ ПАРОЛЬ"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox prefWidth="410.0" spacing="16.0" styleClass="profile-card">
+                                    <children>
+                                        <Label text="Персонаж" styleClass="label-value"/>
+                                        <Label text="Метрики персонажа будут поступать после подключения серверного мода."
+                                               wrapText="true" styleClass="label-body"/>
+                                        <Label text="Сейчас здесь оставлен профильный каркас под статистику." wrapText="true"
+                                               styleClass="label-muted"/>
+                                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenStats"
+                                                styleClass="secondary-button" text="ОТКРЫТЬ СТАТИСТИКУ"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox prefWidth="410.0" spacing="16.0" styleClass="profile-card">
+                                    <children>
+                                        <Label text="Лаунчер" styleClass="label-value"/>
+                                        <Label text="Перед запуском клиент получает одноразовый game ticket."
+                                               wrapText="true" styleClass="label-body"/>
+                                        <Label text="Следующий шаг: client/server Forge auth mods." wrapText="true"
+                                               styleClass="label-muted"/>
+                                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onLauncherSettings"
+                                                styleClass="secondary-button" text="НА ГЛАВНЫЙ ЭКРАН"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>

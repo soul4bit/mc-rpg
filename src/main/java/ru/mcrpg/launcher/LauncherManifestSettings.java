@@ -6,6 +6,8 @@ public final class LauncherManifestSettings {
     private Integer serverPort;
     private String launchTemplate;
     private String workingDirectory;
+    private String authBaseUrl;
+    private String serverId;
 
     public String getServerHost() {
         return serverHost;
@@ -38,5 +40,20 @@ public final class LauncherManifestSettings {
     public void setWorkingDirectory(String workingDirectory) {
         this.workingDirectory = workingDirectory;
     }
-}
 
+    public String getAuthBaseUrl() {
+        return authBaseUrl;
+    }
+
+    public void setAuthBaseUrl(String authBaseUrl) {
+        this.authBaseUrl = authBaseUrl;
+    }
+
+    public String getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
+    }
+}

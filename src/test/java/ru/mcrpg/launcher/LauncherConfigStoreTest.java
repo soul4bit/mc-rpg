@@ -26,6 +26,8 @@ class LauncherConfigStoreTest {
         config.setServerPort(25565);
         config.setLaunchTemplate("{java} -jar forge.jar --username {username}");
         config.setManifestUrl("https://example.com/manifest.json");
+        config.setAuthBaseUrl("https://example.com/api");
+        config.setServerId("obsidiangate-main");
         config.setUpdateFilesBeforeLaunch(false);
 
         store.save(config);
@@ -39,6 +41,23 @@ class LauncherConfigStoreTest {
         assertEquals(25565, restored.getServerPort());
         assertEquals("{java} -jar forge.jar --username {username}", restored.getLaunchTemplate());
         assertEquals("https://example.com/manifest.json", restored.getManifestUrl());
+        assertEquals("https://example.com/api", restored.getAuthBaseUrl());
+        assertEquals("obsidiangate-main", restored.getServerId());
         assertEquals(false, restored.isUpdateFilesBeforeLaunch());
+    }
+
+    @Test
+    void loadMigratesLegacyManifestUrlWithoutPort() throws IOException {
+        Path configFile = tempDirectory.resolve("launcher.properties");
+        LauncherConfigStore store = new LauncherConfigStore(configFile);
+
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setServerHost("192.168.1.103");
+        config.setManifestUrl("http://192.168.1.103/manifest.json");
+
+        store.save(config);
+        LauncherConfig restored = store.load();
+
+        assertEquals("http://192.168.1.103:8080/manifest.json", restored.getManifestUrl());
     }
 }

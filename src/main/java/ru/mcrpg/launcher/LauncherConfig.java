@@ -15,6 +15,8 @@ public final class LauncherConfig {
     private int serverPort;
     private String launchTemplate;
     private String manifestUrl;
+    private String authBaseUrl;
+    private String serverId;
     private boolean updateFilesBeforeLaunch;
 
     public static LauncherConfig defaults() {
@@ -27,6 +29,8 @@ public final class LauncherConfig {
         config.setServerPort(DEFAULT_SERVER_PORT);
         config.setLaunchTemplate(DEFAULT_LAUNCH_TEMPLATE);
         config.setManifestUrl(LauncherDefaults.defaultManifestUrl(DEFAULT_SERVER_HOST));
+        config.setAuthBaseUrl(LauncherDefaults.defaultAuthBaseUrl(DEFAULT_SERVER_HOST));
+        config.setServerId(LauncherDefaults.defaultServerId());
         config.setUpdateFilesBeforeLaunch(true);
         return config;
     }
@@ -41,6 +45,8 @@ public final class LauncherConfig {
         copy.setServerPort(serverPort);
         copy.setLaunchTemplate(launchTemplate);
         copy.setManifestUrl(manifestUrl);
+        copy.setAuthBaseUrl(authBaseUrl);
+        copy.setServerId(serverId);
         copy.setUpdateFilesBeforeLaunch(updateFilesBeforeLaunch);
         return copy;
     }
@@ -107,6 +113,22 @@ public final class LauncherConfig {
 
     public void setManifestUrl(String manifestUrl) {
         this.manifestUrl = sanitize(manifestUrl);
+    }
+
+    public String getAuthBaseUrl() {
+        return authBaseUrl;
+    }
+
+    public void setAuthBaseUrl(String authBaseUrl) {
+        this.authBaseUrl = sanitize(authBaseUrl);
+    }
+
+    public String getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(String serverId) {
+        this.serverId = sanitize(serverId);
     }
 
     public boolean isUpdateFilesBeforeLaunch() {

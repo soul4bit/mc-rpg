@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicLong;
@@ -20,33 +19,25 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
-import javafx.stage.Stage;
 import ru.mcrpg.launcher.ui.SvgIcons;
 
-public final class LauncherShellController {
+public final class LauncherShellController extends AbstractScreenController {
 
     private static final DateTimeFormatter LOG_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private final LauncherConfigStore configStore = LauncherConfigStore.defaultStore();
     private final LaunchCommandBuilder commandBuilder = new LaunchCommandBuilder();
     private final ModpackManifestClient manifestClient = new ModpackManifestClient();
     private final ModpackSyncService modpackSyncService = new ModpackSyncService(manifestClient);
     private final AtomicLong endpointPreviewSequence = new AtomicLong();
     private final AtomicLong serverPresenceSequence = new AtomicLong();
 
-    private Stage primaryStage;
     private LauncherConfig currentConfig = LauncherConfig.defaults();
-    private double dragOffsetX;
-    private double dragOffsetY;
 
     @FXML
     private Label brandLogoLabel;
@@ -100,22 +91,33 @@ public final class LauncherShellController {
     private TextArea logArea;
 
     @FXML
+    private Label profileNameLabel;
+
+    @FXML
+    private Label profileRankLabel;
+
+    @FXML
+    private Label profileChevronLabel;
+
+    @FXML
     private void initialize() {
         configureControls();
-        currentConfig = loadConfig();
-        applyConfigToView(currentConfig);
         updateProgressState(false, "Готово к запуску", "ГОТОВО", 0.0d);
         syncFileLabel.setText("Лаунчер готов к работе.");
         syncBytesLabel.setText("Файловая активность пока отсутствует.");
-        appendLog("Minimal launcher view loaded.");
     }
 
-    public void attach(Stage stage) {
-        primaryStage = stage;
+    @Override
+    protected void onContextBound(LauncherContext context) {
+        currentConfig = LauncherDefaults.applyMissingValues(state().getConfig().copy());
+        applyConfigToView(currentConfig);
+        applyProfileState();
+        appendLog("Launcher view loaded.");
     }
 
-    public void onCloseRequest() {
-        persistCurrentConfigQuietly();
+    @FXML
+    private void openProfileScreen() {
+        router().open(state().isAuthenticated() ? ScreenRouter.Screen.PROFILE : ScreenRouter.Screen.AUTH);
     }
 
     private void configureControls() {
@@ -124,22 +126,25 @@ public final class LauncherShellController {
 
         brandLogoLabel.setText(LauncherBrand.APP_TITLE);
         brandSubtitleLabel.setText(LauncherBrand.APP_SUBTITLE);
+        profileChevronLabel.setText("⌄");
         applyWindowControlIcons();
 
         syncButton.setOnAction(event -> syncFiles());
         launchButton.setOnAction(event -> launchClient());
     }
 
-    private LauncherConfig loadConfig() {
-        try {
-            LauncherConfig loadedConfig = configStore.load();
-            LauncherDefaults.applyMissingValues(loadedConfig);
-            appendLog("Config loaded from " + configStore.getConfigFile());
-            return loadedConfig;
-        } catch (IOException exception) {
-            appendLog("Failed to load config: " + exception.getMessage());
-            return LauncherDefaults.applyMissingValues(LauncherConfig.defaults());
+    private void applyProfileState() {
+        if (state().isAuthenticated()) {
+            AuthAccount account = state().getSession().getAccount();
+            profileNameLabel.setText(account.getUsername());
+            profileRankLabel.setText(resolveRoleLabel(account.getRole()));
+            syncFileLabel.setText("Сессия активна. Перед запуском будет получен игровой ticket.");
+            return;
         }
+
+        profileNameLabel.setText("Гость");
+        profileRankLabel.setText("Оффлайн режим");
+        syncFileLabel.setText("Авторизуйтесь для запуска через серверный аккаунт или продолжайте оффлайн.");
     }
 
     private void applyConfigToView(LauncherConfig config) {
@@ -158,7 +163,11 @@ public final class LauncherShellController {
     }
 
     private LauncherConfig buildCurrentConfig() {
-        return LauncherDefaults.applyMissingValues(currentConfig.copy());
+        LauncherConfig config = LauncherDefaults.applyMissingValues(currentConfig.copy());
+        if (state().isAuthenticated()) {
+            config.setUsername(state().getSession().getAccount().getUsername());
+        }
+        return config;
     }
 
     private void syncFiles() {
@@ -168,7 +177,7 @@ public final class LauncherShellController {
             requireText(config.getManifestUrl(), "Set manifest URL in the launcher config before syncing.");
             persistConfig(config, false);
         } catch (Exception exception) {
-            showError(exception.getMessage());
+            showLauncherError(exception.getMessage());
             return;
         }
 
@@ -182,7 +191,7 @@ public final class LauncherShellController {
             config = buildCurrentConfig();
             persistConfig(config, false);
         } catch (Exception exception) {
-            showError(exception.getMessage());
+            showLauncherError(exception.getMessage());
             return;
         }
 
@@ -207,6 +216,7 @@ public final class LauncherShellController {
             protected LauncherTaskResult call() throws Exception {
                 LauncherConfig effectiveConfig = requestedConfig.copy();
                 ModpackSyncResult syncResult = null;
+                AuthSession effectiveSession = state().getSession();
 
                 if (action == LauncherAction.SYNC_ONLY || shouldSyncBeforeLaunch(effectiveConfig)) {
                     syncResult = modpackSyncService.sync(effectiveConfig, LauncherShellController.this::appendLogAsync);
@@ -215,9 +225,27 @@ public final class LauncherShellController {
 
                 Integer exitCode = null;
                 if (action == LauncherAction.SYNC_AND_LAUNCH) {
-                    List<String> command = commandBuilder.build(effectiveConfig);
-                    Path workingDirectory = resolveWorkingDirectory(effectiveConfig);
+                    List<String> command;
+                    if (effectiveSession != null && effectiveSession.getAccount() != null) {
+                        effectiveSession = context().getAuthService().refreshIfNeeded(effectiveConfig, effectiveSession);
+                        GameTicket gameTicket = context().getAuthService().createGameTicket(effectiveConfig, effectiveSession);
+                        Path sessionFile = context().getSessionFileWriter().write(effectiveConfig, gameTicket);
+                        effectiveConfig.setUsername(effectiveSession.getAccount().getUsername());
+                        appendLogAsync("Created game ticket for " + gameTicket.getUsername() + ".");
+                        command = commandBuilder.build(
+                            effectiveConfig,
+                            LaunchIdentity.authenticated(
+                                effectiveSession.getAccount().getUsername(),
+                                gameTicket.getUuid(),
+                                effectiveSession.getAccessToken(),
+                                sessionFile
+                            )
+                        );
+                    } else {
+                        command = commandBuilder.build(effectiveConfig);
+                    }
 
+                    Path workingDirectory = resolveWorkingDirectory(effectiveConfig);
                     appendLogAsync("Launch command: " + commandBuilder.preview(command));
                     if (workingDirectory != null) {
                         appendLogAsync("Working directory: " + workingDirectory.toAbsolutePath());
@@ -226,7 +254,7 @@ public final class LauncherShellController {
                     exitCode = Integer.valueOf(runProcess(command, workingDirectory));
                 }
 
-                return new LauncherTaskResult(effectiveConfig, syncResult, exitCode);
+                return new LauncherTaskResult(effectiveConfig, syncResult, exitCode, effectiveSession);
             }
         };
 
@@ -234,7 +262,13 @@ public final class LauncherShellController {
             setBusy(false);
             LauncherTaskResult result = task.getValue();
             try {
+                if (result.session != null) {
+                    state().setSession(result.session);
+                    context().getAuthService().persist(result.session);
+                }
                 persistConfig(result.resolvedConfig, false);
+                applyProfileState();
+
                 if (result.syncResult != null) {
                     applySyncResult(result.syncResult, result.resolvedConfig);
                 } else if (result.exitCode != null) {
@@ -248,7 +282,7 @@ public final class LauncherShellController {
                     appendLog("Client process exited with code " + result.exitCode + ".");
                 }
             } catch (IOException exception) {
-                showError("Failed to save refreshed launcher config: " + exception.getMessage());
+                showLauncherError("Failed to save launcher state: " + exception.getMessage());
             }
         });
 
@@ -257,7 +291,7 @@ public final class LauncherShellController {
             Throwable exception = task.getException();
             updateProgressState(false, "Операция завершилась ошибкой", "ОШИБКА", 0.0d);
             syncBytesLabel.setText("Подробности смотрите в журнале лаунчера.");
-            showError(exception == null ? "Unknown launcher error." : exception.getMessage());
+            showLauncherError(exception == null ? "Unknown launcher error." : exception.getMessage());
         });
 
         task.setOnCancelled(event -> {
@@ -328,6 +362,18 @@ public final class LauncherShellController {
         if (settings.getServerPort() != null) {
             config.setServerPort(settings.getServerPort().intValue());
         }
+        if (hasText(settings.getLaunchTemplate())) {
+            config.setLaunchTemplate(settings.getLaunchTemplate().trim());
+        }
+        if (hasText(settings.getWorkingDirectory())) {
+            config.setWorkingDirectory(settings.getWorkingDirectory().trim());
+        }
+        if (hasText(settings.getAuthBaseUrl())) {
+            config.setAuthBaseUrl(settings.getAuthBaseUrl().trim());
+        }
+        if (hasText(settings.getServerId())) {
+            config.setServerId(settings.getServerId().trim());
+        }
     }
 
     private void refreshServerPresenceAsync(String host, int port, String route) {
@@ -347,7 +393,7 @@ public final class LauncherShellController {
                 if (requestId != serverPresenceSequence.get()) {
                     return;
                 }
-                updateServerPresence(resolvedOnline ? "Онлайн" : "Офлайн", resolvedOnline ? "online" : "offline");
+                updateServerPresence(resolvedOnline ? "Онлайн" : "Оффлайн", resolvedOnline ? "online" : "offline");
                 if (!resolvedOnline) {
                     appendLog("No response from " + route + ".");
                 }
@@ -372,7 +418,6 @@ public final class LauncherShellController {
         }
         processBuilder.redirectErrorStream(true);
 
-        LinkedHashSet<String> emittedHints = new LinkedHashSet<String>();
         Process process = processBuilder.start();
         try (BufferedReader reader = new BufferedReader(
             new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8)
@@ -380,11 +425,6 @@ public final class LauncherShellController {
             String line;
             while ((line = reader.readLine()) != null) {
                 appendLogAsync(line);
-                for (String hint : ServerAuthHints.detect(line)) {
-                    if (emittedHints.add(hint)) {
-                        appendLogAsync(hint);
-                    }
-                }
             }
         }
         return process.waitFor();
@@ -406,17 +446,10 @@ public final class LauncherShellController {
 
     private void persistConfig(LauncherConfig config, boolean logPath) throws IOException {
         currentConfig = LauncherDefaults.applyMissingValues(config.copy());
-        configStore.save(currentConfig);
+        context().saveConfig(currentConfig);
         applyConfigToView(currentConfig);
         if (logPath) {
-            appendLog("Config saved: " + configStore.getConfigFile());
-        }
-    }
-
-    private void persistCurrentConfigQuietly() {
-        try {
-            persistConfig(buildCurrentConfig(), false);
-        } catch (Exception ignored) {
+            appendLog("Config saved: " + context().getConfigStore().getConfigFile());
         }
     }
 
@@ -430,55 +463,9 @@ public final class LauncherShellController {
         Platform.runLater(() -> appendLog(message));
     }
 
-    private void showError(String message) {
-        String resolvedMessage = hasText(message) ? message : "Unknown launcher error.";
-        appendLog("Error: " + resolvedMessage);
-
-        Alert alert = new Alert(Alert.AlertType.ERROR, resolvedMessage, ButtonType.OK);
-        if (primaryStage != null) {
-            alert.initOwner(primaryStage);
-        }
-        alert.setTitle(LauncherBrand.APP_NAME);
-        alert.setHeaderText("Ошибка лаунчера");
-        alert.showAndWait();
-    }
-
-    @FXML
-    private void captureWindowDrag(MouseEvent event) {
-        if (primaryStage == null) {
-            return;
-        }
-        dragOffsetX = event.getScreenX() - primaryStage.getX();
-        dragOffsetY = event.getScreenY() - primaryStage.getY();
-    }
-
-    @FXML
-    private void dragWindow(MouseEvent event) {
-        if (primaryStage == null) {
-            return;
-        }
-        primaryStage.setX(event.getScreenX() - dragOffsetX);
-        primaryStage.setY(event.getScreenY() - dragOffsetY);
-    }
-
-    @FXML
-    private void minimizeWindow() {
-        if (primaryStage != null) {
-            primaryStage.setIconified(true);
-        }
-    }
-
-    @FXML
-    private void closeWindow() {
-        if (primaryStage != null) {
-            primaryStage.close();
-        }
-    }
-
-    private void applySvgGraphicButton(Button button, String iconName, double size, String color) {
-        button.setGraphic(SvgIcons.icon(iconName, size, color));
-        button.setGraphicTextGap(12);
-        button.setContentDisplay(ContentDisplay.LEFT);
+    private void showLauncherError(String message) {
+        appendLog("Error: " + message);
+        showError(message);
     }
 
     private void applySvgIconOnlyButton(Button button, String iconName, double size, String color) {
@@ -591,6 +578,23 @@ public final class LauncherShellController {
         return hasText(value) ? value.trim() : fallback;
     }
 
+    private static String resolveRoleLabel(String role) {
+        if (!hasText(role)) {
+            return "Игрок";
+        }
+        String normalized = role.trim().toLowerCase(Locale.ROOT);
+        if ("admin".equals(normalized)) {
+            return "Администратор";
+        }
+        if ("moderator".equals(normalized)) {
+            return "Модератор";
+        }
+        if ("vip".equals(normalized)) {
+            return "VIP";
+        }
+        return Character.toUpperCase(normalized.charAt(0)) + normalized.substring(1);
+    }
+
     private static void toggleStyleClass(Node node, String styleClass, boolean enabled) {
         if (node == null) {
             return;
@@ -613,11 +617,18 @@ public final class LauncherShellController {
         private final LauncherConfig resolvedConfig;
         private final ModpackSyncResult syncResult;
         private final Integer exitCode;
+        private final AuthSession session;
 
-        private LauncherTaskResult(LauncherConfig resolvedConfig, ModpackSyncResult syncResult, Integer exitCode) {
+        private LauncherTaskResult(
+            LauncherConfig resolvedConfig,
+            ModpackSyncResult syncResult,
+            Integer exitCode,
+            AuthSession session
+        ) {
             this.resolvedConfig = resolvedConfig;
             this.syncResult = syncResult;
             this.exitCode = exitCode;
+            this.session = session;
         }
     }
 }

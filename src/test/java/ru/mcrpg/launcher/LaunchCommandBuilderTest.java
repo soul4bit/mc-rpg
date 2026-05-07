@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -61,7 +62,7 @@ class LaunchCommandBuilderTest {
         );
 
         assertEquals(
-            "Неизвестный плейсхолдер {server}. Доступны: [java, username, gameDir, workingDir, serverHost, serverPort, uuid, accessToken, userType]",
+            "Неизвестный плейсхолдер {server}. Доступны: [java, username, gameDir, workingDir, serverHost, serverPort, uuid, accessToken, userType, gameSessionFile]",
             exception.getMessage()
         );
     }
@@ -99,6 +100,30 @@ class LaunchCommandBuilderTest {
                 "0",
                 "--userType",
                 "legacy"
+            ),
+            command
+        );
+    }
+
+    @Test
+    void buildInjectsSessionFileJvmArgWhenAuthenticated() {
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setJavaCommand("java");
+        config.setLaunchTemplate("{java} -jar forge.jar --username {username}");
+
+        List<String> command = builder.build(
+            config,
+            LaunchIdentity.authenticated("Knight", "uuid-1", "token-1", Path.of("C:/Games/.obsidiangate/session.json"))
+        );
+
+        assertEquals(
+            Arrays.asList(
+                "java",
+                "-Dobsidiangate.sessionFile=" + Path.of("C:/Games/.obsidiangate/session.json"),
+                "-jar",
+                "forge.jar",
+                "--username",
+                "Knight"
             ),
             command
         );

@@ -18,6 +18,8 @@ public final class LauncherConfigStore {
     private static final String KEY_SERVER_PORT = "server.port";
     private static final String KEY_LAUNCH_TEMPLATE = "launch.template";
     private static final String KEY_MANIFEST_URL = "manifest.url";
+    private static final String KEY_AUTH_BASE_URL = "auth.base.url";
+    private static final String KEY_SERVER_ID = "server.id";
     private static final String KEY_UPDATE_FILES_BEFORE_LAUNCH = "update.files.before.launch";
 
     private final Path configFile;
@@ -57,11 +59,13 @@ public final class LauncherConfigStore {
         ));
         defaults.setLaunchTemplate(properties.getProperty(KEY_LAUNCH_TEMPLATE, defaults.getLaunchTemplate()));
         defaults.setManifestUrl(properties.getProperty(KEY_MANIFEST_URL, defaults.getManifestUrl()));
+        defaults.setAuthBaseUrl(properties.getProperty(KEY_AUTH_BASE_URL, defaults.getAuthBaseUrl()));
+        defaults.setServerId(properties.getProperty(KEY_SERVER_ID, defaults.getServerId()));
         defaults.setUpdateFilesBeforeLaunch(parseBoolean(
             properties.getProperty(KEY_UPDATE_FILES_BEFORE_LAUNCH),
             defaults.isUpdateFilesBeforeLaunch()
         ));
-        return defaults;
+        return LauncherDefaults.applyMissingValues(defaults);
     }
 
     public void save(LauncherConfig config) throws IOException {
@@ -74,6 +78,8 @@ public final class LauncherConfigStore {
         properties.setProperty(KEY_SERVER_PORT, Integer.toString(config.getServerPort()));
         properties.setProperty(KEY_LAUNCH_TEMPLATE, config.getLaunchTemplate());
         properties.setProperty(KEY_MANIFEST_URL, config.getManifestUrl());
+        properties.setProperty(KEY_AUTH_BASE_URL, config.getAuthBaseUrl());
+        properties.setProperty(KEY_SERVER_ID, config.getServerId());
         properties.setProperty(KEY_UPDATE_FILES_BEFORE_LAUNCH, Boolean.toString(config.isUpdateFilesBeforeLaunch()));
 
         Path parent = configFile.getParent();

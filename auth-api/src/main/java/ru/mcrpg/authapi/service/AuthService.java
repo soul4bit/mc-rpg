@@ -1,0 +1,195 @@
+package ru.mcrpg.authapi.service;
+
+import java.time.Instant;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.mcrpg.authapi.config.AuthApiProperties;
+import ru.mcrpg.authapi.domain.entity.AccountEntity;
+import ru.mcrpg.authapi.domain.entity.LauncherSessionEntity;
+import ru.mcrpg.authapi.domain.repository.AccountRepository;
+import ru.mcrpg.authapi.domain.repository.LauncherSessionRepository;
+import ru.mcrpg.authapi.web.error.ApiException;
+
+@Service
+public class AuthService {
+
+    private static final String DEFAULT_ROLE = "player";
+    private static final String DEFAULT_STATUS = "active";
+
+    private final AccountRepository accountRepository;
+    private final LauncherSessionRepository launcherSessionRepository;
+    private final AuthApiProperties properties;
+    private final JwtService jwtService;
+    private final RandomTokenService randomTokenService;
+    private final HashingService hashingService;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+
+    public AuthService(
+        AccountRepository accountRepository,
+        LauncherSessionRepository launcherSessionRepository,
+        AuthApiProperties properties,
+        JwtService jwtService,
+        RandomTokenService randomTokenService,
+        HashingService hashingService
+    ) {
+        this.accountRepository = accountRepository;
+        this.launcherSessionRepository = launcherSessionRepository;
+        this.properties = properties;
+        this.jwtService = jwtService;
+        this.randomTokenService = randomTokenService;
+        this.hashingService = hashingService;
+    }
+
+    @Transactional
+    public AuthSessionResult register(String username, String email, String password, String deviceName, String userAgent) {
+        String normalizedUsername = normalizeUsername(username);
+        String normalizedEmail = normalizeEmail(email);
+
+        if (accountRepository.existsByUsernameIgnoreCase(normalizedUsername)) {
+            throw ApiException.conflict("username_taken", "Username is already taken.");
+        }
+        if (accountRepository.existsByEmailIgnoreCase(normalizedEmail)) {
+            throw ApiException.conflict("email_taken", "Email is already in use.");
+        }
+
+        AccountEntity account = new AccountEntity();
+        account.setUsername(normalizedUsername);
+        account.setEmail(normalizedEmail);
+        account.setPasswordHash(passwordEncoder.encode(password));
+        account.setRole(DEFAULT_ROLE);
+        account.setStatus(DEFAULT_STATUS);
+        AccountEntity saved = accountRepository.save(account);
+
+        return createSession(saved, deviceName, userAgent);
+    }
+
+    @Transactional
+    public AuthSessionResult login(String login, String password, String deviceName, String userAgent) {
+        String normalizedLogin = normalizeLogin(login);
+        AccountEntity account = accountRepository.findByUsernameIgnoreCaseOrEmailIgnoreCase(normalizedLogin, normalizedLogin)
+            .orElseThrow(() -> ApiException.unauthorized("invalid_credentials", "Invalid username, email, or password."));
+
+        if (!passwordEncoder.matches(password, account.getPasswordHash())) {
+            throw ApiException.unauthorized("invalid_credentials", "Invalid username, email, or password.");
+        }
+        if (!DEFAULT_STATUS.equalsIgnoreCase(account.getStatus())) {
+            throw ApiException.forbidden("account_inactive", "Account is not active.");
+        }
+
+        return createSession(account, deviceName, userAgent);
+    }
+
+    @Transactional
+    public AuthSessionResult refresh(String refreshToken) {
+        LauncherSessionEntity session = launcherSessionRepository.findFirstByRefreshTokenHash(hashingService.sha256(requireText(refreshToken, "Refresh token is required.")))
+            .orElseThrow(() -> ApiException.unauthorized("invalid_refresh_token", "Refresh token is invalid."));
+
+        if (session.getRevokedAt() != null) {
+            throw ApiException.unauthorized("invalid_refresh_token", "Refresh token has already been revoked.");
+        }
+        if (session.getExpiresAt().isBefore(Instant.now())) {
+            throw ApiException.unauthorized("invalid_refresh_token", "Refresh token has expired.");
+        }
+
+        AccountEntity account = session.getAccount();
+        if (!DEFAULT_STATUS.equalsIgnoreCase(account.getStatus())) {
+            throw ApiException.forbidden("account_inactive", "Account is not active.");
+        }
+
+        String newRefreshToken = randomTokenService.nextToken(48);
+        session.setRefreshTokenHash(hashingService.sha256(newRefreshToken));
+        session.setExpiresAt(refreshExpiry());
+        LauncherSessionEntity savedSession = launcherSessionRepository.save(session);
+        JwtService.IssuedAccessToken accessToken = jwtService.issueAccessToken(account);
+
+        return new AuthSessionResult(account, accessToken.token(), newRefreshToken, accessToken.expiresAt());
+    }
+
+    @Transactional
+    public void logout(String refreshToken) {
+        String normalized = requireText(refreshToken, "Refresh token is required.");
+        launcherSessionRepository.findFirstByRefreshTokenHash(hashingService.sha256(normalized))
+            .ifPresent(session -> {
+                if (session.getRevokedAt() == null) {
+                    session.setRevokedAt(Instant.now());
+                    launcherSessionRepository.save(session);
+                }
+            });
+    }
+
+    @Transactional
+    public AccountEntity updateEmail(AccountEntity account, String newEmail) {
+        String normalizedEmail = normalizeEmail(newEmail);
+        if (!account.getEmail().equalsIgnoreCase(normalizedEmail) && accountRepository.existsByEmailIgnoreCase(normalizedEmail)) {
+            throw ApiException.conflict("email_taken", "Email is already in use.");
+        }
+        account.setEmail(normalizedEmail);
+        return accountRepository.save(account);
+    }
+
+    private AuthSessionResult createSession(AccountEntity account, String deviceName, String userAgent) {
+        String refreshToken = randomTokenService.nextToken(48);
+
+        LauncherSessionEntity session = new LauncherSessionEntity();
+        session.setAccount(account);
+        session.setRefreshTokenHash(hashingService.sha256(refreshToken));
+        session.setDeviceName(normalizeOptional(deviceName, 128));
+        session.setUserAgent(normalizeOptional(userAgent, 255));
+        session.setExpiresAt(refreshExpiry());
+        launcherSessionRepository.save(session);
+
+        JwtService.IssuedAccessToken accessToken = jwtService.issueAccessToken(account);
+        return new AuthSessionResult(account, accessToken.token(), refreshToken, accessToken.expiresAt());
+    }
+
+    private Instant refreshExpiry() {
+        return Instant.now().plusSeconds(properties.getRefreshTokenTtlDays() * 24L * 60L * 60L);
+    }
+
+    private static String normalizeUsername(String raw) {
+        String normalized = requireText(raw, "Username is required.");
+        if (!normalized.matches("^[A-Za-z0-9_]{3,16}$")) {
+            throw ApiException.badRequest("invalid_username", "Username must match [A-Za-z0-9_]{3,16}.");
+        }
+        return normalized;
+    }
+
+    private static String normalizeEmail(String raw) {
+        String normalized = requireText(raw, "Email is required.").toLowerCase(java.util.Locale.ROOT);
+        if (normalized.length() > 255) {
+            throw ApiException.badRequest("invalid_email", "Email is too long.");
+        }
+        return normalized;
+    }
+
+    private static String normalizeLogin(String raw) {
+        return requireText(raw, "Login is required.");
+    }
+
+    private static String normalizeOptional(String raw, int maxLength) {
+        if (raw == null) {
+            return null;
+        }
+        String normalized = raw.trim();
+        if (normalized.isEmpty()) {
+            return null;
+        }
+        return normalized.length() > maxLength ? normalized.substring(0, maxLength) : normalized;
+    }
+
+    private static String requireText(String raw, String message) {
+        if (raw == null || raw.trim().isEmpty()) {
+            throw ApiException.badRequest("invalid_request", message);
+        }
+        return raw.trim();
+    }
+
+    public record AuthSessionResult(
+        AccountEntity account,
+        String accessToken,
+        String refreshToken,
+        Instant accessTokenExpiresAt
+    ) {
+    }
+}

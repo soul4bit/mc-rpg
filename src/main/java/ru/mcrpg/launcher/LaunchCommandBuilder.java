@@ -1,5 +1,6 @@
 package ru.mcrpg.launcher;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -8,25 +9,30 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.nio.charset.StandardCharsets;
 
 public final class LaunchCommandBuilder {
 
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{([a-zA-Z][a-zA-Z0-9]*)}");
 
     public List<String> build(LauncherConfig config) {
+        String username = trim(config.getUsername());
+        return build(config, LaunchIdentity.offline(username, offlineUuid(username)));
+    }
+
+    public List<String> build(LauncherConfig config, LaunchIdentity identity) {
         String template = requireText(config.getLaunchTemplate(), "Укажи шаблон команды запуска.");
 
         Map<String, String> placeholders = new LinkedHashMap<String, String>();
         placeholders.put("java", trim(config.getJavaCommand()));
-        placeholders.put("username", trim(config.getUsername()));
+        placeholders.put("username", trim(identity.getUsername()));
         placeholders.put("gameDir", trim(config.getGameDirectory()));
         placeholders.put("workingDir", trim(config.getWorkingDirectory()));
         placeholders.put("serverHost", trim(config.getServerHost()));
         placeholders.put("serverPort", Integer.toString(config.getServerPort()));
-        placeholders.put("uuid", offlineUuid(trim(config.getUsername())));
-        placeholders.put("accessToken", "0");
-        placeholders.put("userType", "legacy");
+        placeholders.put("uuid", trim(identity.getUuid()));
+        placeholders.put("accessToken", trim(identity.getAccessToken()));
+        placeholders.put("userType", trim(identity.getUserType()));
+        placeholders.put("gameSessionFile", identity.hasSessionFile() ? identity.getSessionFile().toString() : "");
 
         List<String> tokens = tokenize(template);
         if (tokens.isEmpty()) {
@@ -40,6 +46,7 @@ public final class LaunchCommandBuilder {
                 resolved.add(value);
             }
         }
+        maybeInjectSessionFileProperty(config, identity, template, resolved);
         return resolved;
     }
 
@@ -127,10 +134,7 @@ public final class LaunchCommandBuilder {
                     "Плейсхолдер {" + name + "} используется в шаблоне, но значение для него не задано."
                 );
             }
-            matcher.appendReplacement(
-                resolved,
-                Matcher.quoteReplacement(value)
-            );
+            matcher.appendReplacement(resolved, Matcher.quoteReplacement(value));
         }
 
         matcher.appendTail(resolved);
@@ -153,6 +157,27 @@ public final class LaunchCommandBuilder {
             return value;
         }
         return '"' + value.replace("\"", "\\\"") + '"';
+    }
+
+    private static void maybeInjectSessionFileProperty(
+        LauncherConfig config,
+        LaunchIdentity identity,
+        String template,
+        List<String> resolved
+    ) {
+        if (!identity.hasSessionFile() || template.contains("{gameSessionFile}") || resolved.isEmpty()) {
+            return;
+        }
+
+        String javaCommand = trim(config.getJavaCommand());
+        if (javaCommand.isEmpty() || !javaCommand.equals(resolved.get(0))) {
+            return;
+        }
+
+        String sessionArg = "-Dobsidiangate.sessionFile=" + identity.getSessionFile();
+        if (!resolved.contains(sessionArg)) {
+            resolved.add(1, sessionArg);
+        }
     }
 
     private static String offlineUuid(String username) {

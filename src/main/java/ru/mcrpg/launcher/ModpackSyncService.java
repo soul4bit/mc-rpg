@@ -208,6 +208,12 @@ public final class ModpackSyncService {
             Path resolvedWorkingDirectory = resolveManifestWorkingDirectory(gameDirectory, settings.getWorkingDirectory());
             config.setWorkingDirectory(resolvedWorkingDirectory.toString());
         }
+        if (hasText(settings.getAuthBaseUrl())) {
+            config.setAuthBaseUrl(settings.getAuthBaseUrl().trim());
+        }
+        if (hasText(settings.getServerId())) {
+            config.setServerId(settings.getServerId().trim());
+        }
     }
 
     private static Path resolveGameDirectory(String rawGameDirectory) throws IOException {

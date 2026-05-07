@@ -1,0 +1,140 @@
+package ru.mcrpg.launcher;
+
+import java.io.IOException;
+import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import ru.mcrpg.launcher.ui.SvgIcons;
+
+public final class AuthController extends AbstractScreenController {
+
+    @FXML
+    private TextField loginField;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private CheckBox rememberCheck;
+
+    @FXML
+    private Hyperlink openRegisterLink;
+
+    @FXML
+    private Hyperlink forgotPasswordLink;
+
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private Button offlineButton;
+
+    @FXML
+    private Button minimizeWindowButton;
+
+    @FXML
+    private Button closeWindowButton;
+
+    @FXML
+    private Label statusLabel;
+
+    @FXML
+    private void initialize() {
+        rememberCheck.setSelected(true);
+        forgotPasswordLink.setOnAction(event -> showInfo("Восстановление пароля", "Экран восстановления пароля пока не подключен."));
+        applyWindowControls();
+    }
+
+    @Override
+    protected void onContextBound(LauncherContext context) {
+        String username = context.getState().getConfig().getUsername();
+        if (username != null && !username.trim().isEmpty() && !"Player".equalsIgnoreCase(username.trim())) {
+            loginField.setText(username.trim());
+        }
+        statusLabel.setText("");
+    }
+
+    @FXML
+    private void onLogin() {
+        String login = loginField.getText() == null ? "" : loginField.getText().trim();
+        String password = passwordField.getText() == null ? "" : passwordField.getText();
+
+        if (login.isBlank() || password.isBlank()) {
+            setStatus("Заполните логин и пароль.");
+            return;
+        }
+
+        setBusy(true);
+        setStatus("Выполняется вход...");
+
+        Task<AuthSession> task = new Task<AuthSession>() {
+            @Override
+            protected AuthSession call() throws Exception {
+                return context().getAuthService().login(state().getConfig(), login, password, rememberCheck.isSelected());
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            setBusy(false);
+            AuthSession session = task.getValue();
+            state().setSession(session);
+            LauncherConfig config = state().getConfig().copy();
+            config.setUsername(session.getAccount().getUsername());
+            try {
+                context().saveConfig(config);
+                setStatus("");
+                router().open(ScreenRouter.Screen.HOME);
+            } catch (IOException exception) {
+                setStatus(exception.getMessage());
+            }
+        });
+
+        task.setOnFailed(event -> {
+            setBusy(false);
+            Throwable error = task.getException();
+            setStatus(error == null ? "Не удалось выполнить вход." : error.getMessage());
+        });
+
+        Thread thread = new Thread(task, "auth-login");
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    @FXML
+    private void openRegister() {
+        router().open(ScreenRouter.Screen.REGISTER);
+    }
+
+    @FXML
+    private void onOffline() {
+        state().setSession(null);
+        setStatus("");
+        router().open(ScreenRouter.Screen.HOME);
+    }
+
+    private void setBusy(boolean value) {
+        loginButton.setDisable(value);
+        offlineButton.setDisable(value);
+        loginField.setDisable(value);
+        passwordField.setDisable(value);
+        rememberCheck.setDisable(value);
+        openRegisterLink.setDisable(value);
+        forgotPasswordLink.setDisable(value);
+    }
+
+    private void setStatus(String message) {
+        statusLabel.setText(message == null ? "" : message.trim());
+    }
+
+    private void applyWindowControls() {
+        minimizeWindowButton.setText("");
+        minimizeWindowButton.setGraphic(SvgIcons.icon("minimize", 18, "#D9D9D9"));
+        closeWindowButton.setText("");
+        closeWindowButton.setGraphic(SvgIcons.icon("close", 18, "#D9D9D9"));
+    }
+}

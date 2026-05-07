@@ -1,0 +1,25 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/${DB_NAME:obsidiangate}
+    username: ${DB_USER:obsidian}
+    password: ${DB_PASSWORD:change-me}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  jackson:
+    default-property-inclusion: non_null
+
+auth:
+  jwt-secret: ${JWT_SECRET:change-me}
+  access-token-ttl-seconds: ${ACCESS_TOKEN_TTL_SECONDS:900}
+  refresh-token-ttl-days: ${REFRESH_TOKEN_TTL_DAYS:30}
+  game-ticket-ttl-seconds: ${GAME_TICKET_TTL_SECONDS:45}
+  server-id: ${SERVER_ID:obsidiangate-main}

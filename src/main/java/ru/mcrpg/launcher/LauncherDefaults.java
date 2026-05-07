@@ -5,7 +5,10 @@ import java.nio.file.Paths;
 public final class LauncherDefaults {
 
     private static final String DEFAULT_GAME_DIRECTORY_NAME = "rpg-client";
+    private static final String DEFAULT_MANIFEST_PORT = "8080";
     private static final String DEFAULT_MANIFEST_PATH = "/manifest.json";
+    private static final String DEFAULT_AUTH_PORT = "8081";
+    private static final String DEFAULT_SERVER_ID = "obsidiangate-main";
 
     private LauncherDefaults() {
     }
@@ -26,8 +29,16 @@ public final class LauncherDefaults {
         if (config.getServerPort() < 1 || config.getServerPort() > 65535) {
             config.setServerPort(LauncherConfig.DEFAULT_SERVER_PORT);
         }
-        if (!hasText(config.getManifestUrl())) {
+        if (isLegacyManifestUrl(config.getManifestUrl(), config.getServerHost())) {
             config.setManifestUrl(defaultManifestUrl(config.getServerHost()));
+        } else if (!hasText(config.getManifestUrl())) {
+            config.setManifestUrl(defaultManifestUrl(config.getServerHost()));
+        }
+        if (!hasText(config.getAuthBaseUrl())) {
+            config.setAuthBaseUrl(defaultAuthBaseUrl(config.getServerHost()));
+        }
+        if (!hasText(config.getServerId())) {
+            config.setServerId(defaultServerId());
         }
         if (!hasText(config.getLaunchTemplate())) {
             config.setLaunchTemplate(LauncherConfig.DEFAULT_LAUNCH_TEMPLATE);
@@ -41,7 +52,16 @@ public final class LauncherDefaults {
 
     public static String defaultManifestUrl(String serverHost) {
         String host = hasText(serverHost) ? serverHost.trim() : LauncherConfig.DEFAULT_SERVER_HOST;
-        return "http://" + host + DEFAULT_MANIFEST_PATH;
+        return "http://" + host + ":" + DEFAULT_MANIFEST_PORT + DEFAULT_MANIFEST_PATH;
+    }
+
+    public static String defaultAuthBaseUrl(String serverHost) {
+        String host = hasText(serverHost) ? serverHost.trim() : LauncherConfig.DEFAULT_SERVER_HOST;
+        return "http://" + host + ":" + DEFAULT_AUTH_PORT;
+    }
+
+    public static String defaultServerId() {
+        return DEFAULT_SERVER_ID;
     }
 
     public static String defaultUsername() {
@@ -55,5 +75,13 @@ public final class LauncherDefaults {
 
     private static boolean hasText(String value) {
         return value != null && !value.trim().isEmpty();
+    }
+
+    private static boolean isLegacyManifestUrl(String manifestUrl, String serverHost) {
+        if (!hasText(manifestUrl)) {
+            return false;
+        }
+        String host = hasText(serverHost) ? serverHost.trim() : LauncherConfig.DEFAULT_SERVER_HOST;
+        return ("http://" + host + DEFAULT_MANIFEST_PATH).equalsIgnoreCase(manifestUrl.trim());
     }
 }

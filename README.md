@@ -68,7 +68,7 @@ game.directory=C:\\Users\\<user>\\rpg-client
 working.directory=
 server.host=192.168.1.103
 server.port=25565
-manifest.url=http://192.168.1.103/manifest.json
+manifest.url=http://192.168.1.103:8080/manifest.json
 launch.template={java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}
 update.files.before.launch=true
 ```
@@ -77,7 +77,7 @@ update.files.before.launch=true
 
 - `server.host`: `192.168.1.103`
 - `server.port`: `25565`
-- `manifest.url`: `http://192.168.1.103/manifest.json`
+- `manifest.url`: `http://192.168.1.103:8080/manifest.json`
 - `game.directory`: `~/rpg-client`
 
 ## Как работает launcher
@@ -131,7 +131,7 @@ update.files.before.launch=true
   "schemaVersion": 1,
   "id": "rpg",
   "version": "2026.05.05",
-  "baseUrl": "http://192.168.1.103/client/",
+  "baseUrl": "http://192.168.1.103:8080/client/",
   "launcher": {
     "serverHost": "192.168.1.103",
     "serverPort": 25565,
@@ -163,8 +163,8 @@ update.files.before.launch=true
 
 Тогда:
 
-- `manifest.url` можно сделать `http://192.168.1.103/manifest.json`
-- `baseUrl` можно сделать `http://192.168.1.103/client/`
+- `manifest.url` можно сделать `http://192.168.1.103:8080/manifest.json`
+- `baseUrl` можно сделать `http://192.168.1.103:8080/client/`
 
 Важно: launcher ждёт именно HTTP(S)-раздачу `manifest.json` и файлов модпака. Это не Minecraft-порт `25565`.
 

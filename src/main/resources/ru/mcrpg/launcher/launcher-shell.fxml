@@ -146,7 +146,8 @@
                                               onMousePressed="#captureWindowDrag" spacing="12.0" styleClass="top-strip">
                                             <children>
                                                 <Region HBox.hgrow="ALWAYS"/>
-                                                <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="profile-chip">
+                                                <HBox alignment="CENTER_LEFT" onMouseClicked="#openProfileScreen"
+                                                      spacing="14.0" styleClass="profile-chip">
                                                     <children>
                                                         <StackPane styleClass="avatar-shell">
                                                             <children>
@@ -160,16 +161,16 @@
                                                         </StackPane>
                                                         <VBox spacing="4.0">
                                                             <children>
-                                                                <Label text="Arcanist_42" styleClass="profile-name"/>
+                                                                <Label fx:id="profileNameLabel" text="Arcanist_42" styleClass="profile-name"/>
                                                                 <HBox alignment="CENTER_LEFT" spacing="8.0">
                                                                     <children>
                                                                         <Region styleClass="gem-mark"/>
-                                                                        <Label text="Ветеран" styleClass="profile-rank"/>
+                                                                        <Label fx:id="profileRankLabel" text="Ветеран" styleClass="profile-rank"/>
                                                                     </children>
                                                                 </HBox>
                                                             </children>
                                                         </VBox>
-                                                        <Label text="⌄" styleClass="profile-chevron"/>
+                                                        <Label fx:id="profileChevronLabel" text="⌄" styleClass="profile-chevron"/>
                                                     </children>
                                                 </HBox>
                                                 <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="window-bar">
