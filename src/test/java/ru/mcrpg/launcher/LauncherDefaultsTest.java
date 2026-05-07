@@ -41,6 +41,6 @@ class LauncherDefaultsTest {
             "http://example.local/manifest.json",
             LauncherDefaults.defaultManifestUrl("example.local")
         );
-        assertTrue(LauncherDefaults.defaultGameDirectory().contains("mc-rpg-client"));
+        assertTrue(LauncherDefaults.defaultGameDirectory().contains("rpg-client"));
     }
 }

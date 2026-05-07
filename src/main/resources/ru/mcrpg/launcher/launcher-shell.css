@@ -1,265 +1,148 @@
 .root {
+    -bg-0: #05070d;
+    -bg-1: #070b12;
+    -panel: rgba(10, 15, 24, 0.86);
+    -panel-strong: rgba(12, 18, 28, 0.92);
+    -line: rgba(255, 255, 255, 0.08);
+    -line-soft: rgba(255, 255, 255, 0.05);
+    -text: #f3f5f7;
+    -text-soft: #d2d7dd;
+    -text-muted: #97a0aa;
+    -text-subtle: #6c7682;
+    -red: #d92e2e;
+    -red-hot: #f03a3a;
+    -green: #65e26b;
+    -warn: #f5c15d;
     -fx-font-family: "Segoe UI";
-    -bg-0: #05080d;
-    -bg-1: #0b0f15;
-    -bg-2: #11161e;
-    -panel: rgba(14, 18, 24, 0.92);
-    -panel-soft: rgba(16, 20, 28, 0.88);
-    -line: rgba(255, 255, 255, 0.10);
-    -line-soft: rgba(255, 255, 255, 0.06);
-    -text: #f2f2f3;
-    -text-soft: rgba(242, 242, 243, 0.70);
-    -text-dim: rgba(242, 242, 243, 0.48);
-    -red: #f1322b;
-    -red-hot: #ff4d43;
-    -red-deep: #b41714;
-    -green: #83ea69;
-    -shadow: rgba(0, 0, 0, 0.48);
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
 
 .shell-root {
-    -fx-background-image: url("redstone/background/bg_launcher_dark_blur_1920x1080.png");
+    -fx-background-color: -bg-1;
+}
+
+.background-image {
+    -fx-background-image: url("redstone/background/bg_launcher_soft_1920x1080.png");
     -fx-background-repeat: no-repeat;
     -fx-background-position: center center;
     -fx-background-size: cover;
+}
+
+.background-overlay {
     -fx-background-color:
-        radial-gradient(center 58% 10%, radius 34%, rgba(241, 50, 43, 0.12), transparent),
-        linear-gradient(to bottom, rgba(4, 6, 10, 0.48), rgba(4, 6, 10, 0.62));
+        radial-gradient(center 50% 35%, radius 78%, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.72)),
+        linear-gradient(to bottom, rgba(5, 8, 12, 0.22), rgba(5, 8, 12, 0.82));
 }
 
-.shell-layout {
-    -fx-background-color: transparent;
+.shell-column {
+    -fx-fill-width: true;
 }
 
-.sidebar-shell {
-    -fx-background-color:
-        linear-gradient(to bottom, rgba(7, 10, 15, 0.94) 0%, rgba(6, 9, 14, 0.90) 100%);
-    -fx-border-color: transparent rgba(255, 255, 255, 0.08) transparent transparent;
-    -fx-border-width: 0 1 0 0;
-    -fx-spacing: 18px;
-}
-
-.brand-block {
-    -fx-padding: 16px 0 22px 0;
+.top-bar {
+    -fx-padding: 0 0 4px 0;
 }
 
 .brand-logo {
-    -fx-padding: 0 0 2px 0;
+    -fx-padding: 0;
+    -fx-text-fill: -text;
+    -fx-font-size: 32px;
+    -fx-font-weight: 800;
 }
 
-.brand-subtitle {
-    -fx-text-fill: -red;
-    -fx-font-size: 18px;
-    -fx-font-weight: 700;
-    -fx-letter-spacing: 4.8px;
-}
-
-.nav-list {
-    -fx-padding: 18px 0 0 0;
-}
-
-.nav-button {
-    -fx-alignment: center-left;
-    -fx-background-color: transparent;
-    -fx-background-radius: 20px;
-    -fx-border-color: transparent;
-    -fx-border-radius: 20px;
-    -fx-text-fill: rgba(255, 255, 255, 0.90);
-    -fx-font-size: 20px;
+.hero-subtitle {
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 15px;
     -fx-font-weight: 500;
-    -fx-padding: 23px 24px 23px 24px;
-    -fx-graphic-text-gap: 18px;
-    -fx-cursor: hand;
-}
-
-.nav-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.04);
-}
-
-.nav-active {
-    -fx-background-color:
-        linear-gradient(to right, rgba(121, 17, 14, 0.84) 0%, rgba(46, 18, 18, 0.44) 100%);
-    -fx-border-color: -red;
-    -fx-border-width: 0 0 0 4px;
-    -fx-border-radius: 20px;
-}
-
-.sidebar-utility-bar {
-    -fx-padding: 4px 0 2px 0;
-}
-
-.utility-button {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-padding: 8px;
-    -fx-opacity: 0.86;
-    -fx-cursor: hand;
-}
-
-.utility-button:hover {
-    -fx-opacity: 1.0;
-}
-
-.main-shell,
-.content-stack {
-    -fx-background-color: transparent;
 }
 
 .window-bar {
-    -fx-padding: 18px 26px 0 0;
+    -fx-spacing: 8px;
 }
 
 .window-control {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-text-fill: rgba(255, 255, 255, 0.70);
-    -fx-font-size: 28px;
-    -fx-font-weight: 300;
-    -fx-padding: 4px 8px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-min-width: 32px;
+    -fx-pref-width: 32px;
+    -fx-max-width: 32px;
+    -fx-min-height: 32px;
+    -fx-pref-height: 32px;
+    -fx-max-height: 32px;
+    -fx-padding: 0;
     -fx-cursor: hand;
+    -fx-alignment: center;
 }
 
 .window-control:hover {
-    -fx-text-fill: #ffffff;
+    -fx-background-color: rgba(255, 255, 255, 0.05);
 }
 
-.screen-scroll,
-.screen-scroll > .viewport {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
+.window-control-close:hover {
+    -fx-background-color: rgba(239, 43, 45, 0.26);
 }
 
-.screen-scroll > .corner {
-    -fx-background-color: transparent;
+.summary-row {
+    -fx-fill-height: true;
 }
 
-.screen-scroll .thumb {
-    -fx-background-color: rgba(255, 255, 255, 0.14);
-    -fx-background-radius: 999px;
-}
-
-.screen {
-    -fx-background-color: transparent;
-}
-
-.screen-title {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 58px;
-    -fx-font-weight: 700;
-}
-
-.screen-subtitle {
-    -fx-text-fill: -text-soft;
-    -fx-font-size: 18px;
-}
-
-.hero-row {
-    -fx-min-height: 458px;
-}
-
-.hero-center-block {
-    -fx-padding: 40px 0 0 0;
-}
-
-.hero-logo {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.40), 18, 0.16, 0, 6);
-}
-
-.primary-launch-button {
-    -fx-background-color: linear-gradient(to bottom, -red-hot 0%, -red-deep 100%);
-    -fx-background-radius: 20px;
-    -fx-border-color: rgba(255, 122, 113, 0.36);
-    -fx-border-radius: 20px;
-    -fx-border-width: 1px;
-    -fx-text-fill: #fffdfc;
-    -fx-font-size: 34px;
-    -fx-font-weight: 700;
-    -fx-letter-spacing: 4px;
-    -fx-padding: 26px 108px;
-    -fx-effect: dropshadow(gaussian, rgba(241, 50, 43, 0.28), 28, 0.20, 0, 10);
-    -fx-cursor: hand;
-}
-
-.primary-launch-button:hover,
-.primary-rect-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #ff5d52 0%, #c51a17 100%);
-}
-
-.primary-launch-button:pressed,
-.primary-rect-button:pressed {
-    -fx-translate-y: 1px;
-}
-
-.primary-launch-button:disabled,
-.primary-rect-button:disabled {
-    -fx-opacity: 0.62;
-}
-
-.auth-primary-button {
-    -fx-font-size: 22px;
-    -fx-padding: 22px 32px;
-}
-
-.glass-card,
-.content-card,
-.large-logout-button {
+.info-card {
     -fx-background-color:
-        linear-gradient(to bottom, rgba(16, 20, 27, 0.94) 0%, rgba(11, 15, 21, 0.94) 100%);
+        linear-gradient(to bottom right, rgba(12, 18, 28, 0.94), rgba(8, 12, 20, 0.84));
     -fx-background-radius: 24px;
     -fx-border-color: -line;
     -fx-border-radius: 24px;
     -fx-border-width: 1px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 26, 0.18, 0, 10);
+    -fx-padding: 28px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.42), 30, 0.22, 0, 10);
 }
 
-.content-card {
-    -fx-padding: 28px 30px;
-}
-
-.status-card {
-    -fx-padding: 30px 30px 26px 30px;
-}
-
-.compact-account-card {
-    -fx-padding: 30px;
-}
-
-.update-card {
-    -fx-background-image: url("redstone/thumbnails/server_survival_rpg.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: right 26px bottom 24px;
-    -fx-background-size: 172px 170px;
+.log-card {
+    -fx-padding: 24px;
 }
 
 .card-title {
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: -text;
     -fx-font-size: 22px;
+    -fx-font-weight: 750;
+}
+
+.field-caption {
+    -fx-text-fill: -text-subtle;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+
+.endpoint-value {
+    -fx-text-fill: -text;
+    -fx-font-size: 18px;
     -fx-font-weight: 600;
 }
 
-.card-divider {
-    -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-background-radius: 999px;
+.endpoint-secondary {
+    -fx-text-fill: -text-soft;
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
 }
 
-.status-online-label {
-    -fx-text-fill: -green;
-    -fx-font-size: 20px;
-    -fx-font-weight: 600;
+.presence-row {
+    -fx-padding: 2px 0 0 0;
 }
 
 .presence-indicator {
-    -fx-min-width: 14px;
-    -fx-max-width: 14px;
-    -fx-min-height: 14px;
-    -fx-max-height: 14px;
+    -fx-min-width: 12px;
+    -fx-pref-width: 12px;
+    -fx-max-width: 12px;
+    -fx-min-height: 12px;
+    -fx-pref-height: 12px;
+    -fx-max-height: 12px;
     -fx-background-radius: 999px;
 }
 
 .presence-checking {
-    -fx-background-color: #f5c15d;
+    -fx-background-color: -warn;
 }
 
 .presence-online {
@@ -267,538 +150,107 @@
 }
 
 .presence-offline {
-    -fx-background-color: #ff6b62;
+    -fx-background-color: -red-hot;
 }
 
-.metric-block {
-    -fx-padding: 0;
-}
-
-.metric-caption {
-    -fx-text-fill: -text-dim;
-    -fx-font-size: 13px;
-    -fx-font-weight: 700;
-    -fx-letter-spacing: 1.8px;
-}
-
-.metric-value {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 18px;
-    -fx-font-weight: 500;
-}
-
-.card-note,
-.field-hint,
-.news-copy {
+.presence-label {
     -fx-text-fill: -text-soft;
-    -fx-font-size: 14px;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
 }
 
-.bottom-card-row {
-    -fx-padding: 0;
-}
-
-.news-thumb {
-    -fx-background-image: url("redstone/thumbnails/news_realm_awakening.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center center;
-    -fx-background-size: cover;
+.secondary-action-button,
+.primary-action-button {
     -fx-background-radius: 16px;
-    -fx-border-color: rgba(255, 255, 255, 0.06);
     -fx-border-radius: 16px;
-}
-
-.update-thumb {
-    -fx-background-image: url("redstone/thumbnails/changelog_realm_awakening.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center center;
-    -fx-background-size: cover;
-    -fx-background-radius: 16px;
-    -fx-border-color: rgba(255, 255, 255, 0.06);
-    -fx-border-radius: 16px;
-}
-
-.server-thumb {
-    -fx-background-image: url("redstone/thumbnails/server_survival_rpg.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center center;
-    -fx-background-size: cover;
-    -fx-background-radius: 18px;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-radius: 18px;
-}
-
-.avatar-thumb {
-    -fx-background-image: url("redstone/avatars/dragon_slayer_avatar.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center center;
-    -fx-background-size: cover;
-    -fx-background-radius: 18px;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-radius: 18px;
-}
-
-.avatar-thumb-large {
-    -fx-background-radius: 20px;
-    -fx-border-radius: 20px;
-}
-
-.news-title,
-.server-title-label {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 20px;
-    -fx-font-weight: 600;
-}
-
-.server-title-label {
-    -fx-font-size: 24px;
-}
-
-.news-date {
-    -fx-text-fill: -text-dim;
-    -fx-font-size: 13px;
-}
-
-.text-link-button {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-text-fill: -red-hot;
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
-    -fx-padding: 0;
+    -fx-padding: 14px 22px;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-graphic-text-gap: 12px;
     -fx-cursor: hand;
 }
 
-.text-link-button:hover {
-    -fx-text-fill: #ff7367;
-}
-
-.small-action-button {
+.secondary-action-button {
     -fx-background-color: rgba(255, 255, 255, 0.04);
-    -fx-background-radius: 14px;
-    -fx-border-color: rgba(255, 255, 255, 0.12);
-    -fx-border-radius: 14px;
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 14px;
-    -fx-font-weight: 500;
-    -fx-padding: 11px 20px;
-    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.14);
+    -fx-text-fill: -text;
 }
 
-.small-action-button:hover,
-.secondary-rect-button:hover,
-.ghost-center-button:hover {
-    -fx-border-color: rgba(241, 50, 43, 0.34);
+.secondary-action-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+}
+
+.primary-action-button {
+    -fx-background-color: linear-gradient(to bottom, #e73636, #a91418);
+    -fx-border-color: rgba(255, 90, 90, 0.80);
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(239, 43, 45, 0.24), 20, 0.24, 0, 0);
+}
+
+.primary-action-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #ff4545, #b8181d);
+}
+
+.secondary-action-button:disabled,
+.primary-action-button:disabled {
+    -fx-opacity: 0.62;
 }
 
 .launcher-progress {
-    -fx-pref-height: 12px;
+    -fx-pref-height: 20px;
 }
 
 .launcher-progress > .track {
-    -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-background-radius: 999px;
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+    -fx-background-radius: 12px;
+    -fx-background-insets: 0;
 }
 
 .launcher-progress > .bar {
-    -fx-background-color: linear-gradient(to right, -red 0%, -red-hot 100%);
-    -fx-background-radius: 999px;
+    -fx-background-color: linear-gradient(to right, #e22929, #ff373a);
+    -fx-background-radius: 12px;
+    -fx-background-insets: 0;
 }
 
 .progress-percent-label {
     -fx-text-fill: -red-hot;
     -fx-font-size: 18px;
-    -fx-font-weight: 700;
-    -fx-min-width: 64px;
-    -fx-alignment: center-right;
+    -fx-font-weight: 800;
 }
 
-.account-name-label,
-.account-status-label,
-.positive-copy,
-.ping-label {
-    -fx-text-fill: -green;
-    -fx-font-size: 18px;
-}
-
-.account-name-label {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 24px;
-    -fx-font-weight: 500;
-}
-
-.ping-label {
-    -fx-font-size: 17px;
-    -fx-font-weight: 500;
-}
-
-.launcher-input,
-.launcher-select,
-.launcher-select .list-cell,
-.launcher-select .text-field,
-.log-area,
-.auth-card .text-input {
-    -fx-background-color: linear-gradient(to bottom, rgba(9, 12, 18, 0.94), rgba(12, 16, 22, 0.94));
-    -fx-background-radius: 14px;
-    -fx-border-color: rgba(255, 255, 255, 0.10);
-    -fx-border-radius: 14px;
-    -fx-border-width: 1px;
-    -fx-text-fill: #ffffff;
-    -fx-prompt-text-fill: -text-dim;
-}
-
-.launcher-input,
-.auth-card .text-input {
-    -fx-padding: 15px 16px;
-    -fx-font-size: 15px;
-}
-
-.launcher-input:focused,
-.auth-card .text-input:focused,
-.launcher-select:focused,
-.log-area:focused {
-    -fx-border-color: rgba(241, 50, 43, 0.38);
-}
-
-.search-input {
-    -fx-font-size: 16px;
-    -fx-padding: 18px 20px;
-}
-
-.launcher-select {
-    -fx-padding: 10px 14px;
-}
-
-.launcher-select > .arrow-button {
-    -fx-background-color: transparent;
-}
-
-.launcher-select > .arrow-button > .arrow {
-    -fx-background-color: rgba(255, 255, 255, 0.66);
-}
-
-.launcher-select .list-cell {
-    -fx-padding: 12px 14px;
-}
-
-.launcher-select .combo-box-popup .list-view {
-    -fx-background-color: rgba(9, 12, 18, 0.98);
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-}
-
-.outline-danger-button,
-.secondary-outline-button {
-    -fx-background-color: rgba(8, 11, 16, 0.62);
-    -fx-background-radius: 16px;
-    -fx-border-color: rgba(241, 50, 43, 0.62);
-    -fx-border-radius: 16px;
-    -fx-border-width: 1px;
-    -fx-text-fill: -red-hot;
-    -fx-font-size: 15px;
-    -fx-font-weight: 500;
-    -fx-padding: 16px 20px;
-    -fx-cursor: hand;
-}
-
-.secondary-outline-button {
-    -fx-font-size: 16px;
-    -fx-padding: 18px 20px;
-}
-
-.outline-danger-button:hover,
-.secondary-outline-button:hover {
-    -fx-border-color: rgba(255, 104, 95, 0.82);
-}
-
-.primary-rect-button,
-.secondary-rect-button,
-.ghost-center-button {
-    -fx-background-radius: 16px;
-    -fx-border-radius: 16px;
-    -fx-border-width: 1px;
-    -fx-font-size: 18px;
-    -fx-font-weight: 500;
-    -fx-padding: 20px 24px;
-    -fx-cursor: hand;
-}
-
-.primary-rect-button {
-    -fx-background-color: linear-gradient(to bottom, -red-hot 0%, -red-deep 100%);
-    -fx-border-color: rgba(255, 122, 113, 0.38);
-    -fx-text-fill: #fffdfc;
-}
-
-.secondary-rect-button,
-.ghost-center-button {
-    -fx-background-color: rgba(255, 255, 255, 0.03);
-    -fx-border-color: rgba(255, 255, 255, 0.10);
-    -fx-text-fill: #ffffff;
-}
-
-.secondary-rect-button {
-    -fx-font-size: 16px;
-    -fx-padding: 16px 20px;
-}
-
-.segmented-control {
-    -fx-background-color: rgba(15, 19, 25, 0.92);
-    -fx-background-radius: 18px;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-radius: 18px;
-}
-
-.segment-button {
-    -fx-background-color: transparent;
-    -fx-background-radius: 0;
-    -fx-border-color: transparent rgba(255, 255, 255, 0.06) transparent transparent;
-    -fx-border-width: 0 1 0 0;
-    -fx-text-fill: rgba(255, 255, 255, 0.72);
-    -fx-font-size: 15px;
-    -fx-font-weight: 500;
-    -fx-padding: 16px 26px;
-    -fx-cursor: hand;
-}
-
-.segment-button-active {
-    -fx-text-fill: -red-hot;
-}
-
-.mods-list-card {
-    -fx-padding: 0;
-}
-
-.mod-row {
-    -fx-alignment: center-left;
-    -fx-padding: 18px 28px;
-    -fx-border-color: transparent transparent rgba(255, 255, 255, 0.08) transparent;
-    -fx-border-width: 0 0 1 0;
-}
-
-.mod-name-label {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 22px;
-    -fx-font-weight: 500;
-}
-
-.mod-copy-label {
+.status-copy {
     -fx-text-fill: -text-soft;
+    -fx-font-size: 15px;
+}
+
+.bytes-copy {
+    -fx-text-fill: -text-muted;
     -fx-font-size: 14px;
 }
 
-.mod-version-label {
-    -fx-text-fill: rgba(255, 255, 255, 0.76);
-    -fx-font-size: 16px;
-}
-
-.mods-summary-card {
-    -fx-padding: 30px;
-}
-
-.summary-big-label,
-.stat-value {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 42px;
-    -fx-font-weight: 700;
-}
-
-.positive-copy {
-    -fx-font-size: 16px;
-}
-
-.danger-copy {
-    -fx-text-fill: -red-hot;
-    -fx-font-size: 18px;
-    -fx-font-weight: 500;
-}
-
-.mods-empty-state {
-    -fx-alignment: center;
-    -fx-padding: 42px 16px;
-}
-
-.empty-list-copy {
-    -fx-text-fill: -text-soft;
-    -fx-font-size: 15px;
-}
-
-.field-label {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 16px;
-    -fx-font-weight: 500;
-}
-
-.settings-large-card {
-    -fx-padding: 28px 30px 32px 30px;
-}
-
-.launcher-slider > .track {
-    -fx-background-color: rgba(255, 255, 255, 0.10);
-    -fx-background-radius: 999px;
-    -fx-pref-height: 8px;
-}
-
-.launcher-slider > .colored-track {
-    -fx-background-color: linear-gradient(to right, -red 0%, -red-hot 100%);
-}
-
-.launcher-slider > .thumb {
-    -fx-background-color: -red-hot;
-    -fx-background-radius: 999px;
-    -fx-pref-width: 24px;
-    -fx-pref-height: 24px;
-    -fx-effect: dropshadow(gaussian, rgba(241, 50, 43, 0.32), 16, 0.18, 0, 2);
-}
-
-.switch-toggle {
-    -fx-padding: 0;
-}
-
-.switch-toggle > .box {
-    -fx-background-color: rgba(255, 255, 255, 0.12);
-    -fx-background-radius: 999px;
-    -fx-border-color: rgba(255, 255, 255, 0.10);
-    -fx-border-radius: 999px;
-    -fx-border-width: 1px;
-    -fx-padding: 4px 24px 4px 4px;
-}
-
-.switch-toggle:selected > .box {
-    -fx-background-color: linear-gradient(to right, -red 0%, -red-hot 100%);
-    -fx-padding: 4px 4px 4px 24px;
-    -fx-border-color: rgba(255, 104, 95, 0.30);
-}
-
-.switch-toggle > .box > .mark {
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 999px;
-    -fx-shape: "M 0 0 h 14 v 14 h -14 z";
-    -fx-padding: 7px;
-}
-
-.inline-check {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 15px;
-}
-
-.inline-check .box {
-    -fx-background-color: rgba(255, 255, 255, 0.06);
-    -fx-background-radius: 8px;
-    -fx-border-color: rgba(255, 255, 255, 0.12);
-    -fx-border-radius: 8px;
-}
-
-.inline-check:selected .box {
-    -fx-background-color: rgba(241, 50, 43, 0.18);
-    -fx-border-color: rgba(241, 50, 43, 0.44);
-}
-
-.inline-check:selected .mark {
-    -fx-background-color: #ffffff;
-}
-
-.auth-screen {
-    -fx-padding: 50px 0 40px 0;
-}
-
-.auth-card {
-    -fx-padding: 34px 46px 38px 46px;
-    -fx-background-radius: 28px;
-    -fx-border-radius: 28px;
-}
-
-.auth-title {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 48px;
-    -fx-font-weight: 700;
-}
-
-.auth-outline-button {
-    -fx-alignment: center;
-}
-
-.guest-panel {
-    -fx-padding: 8px 0 0 0;
-}
-
-.ghost-center-button {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 22px;
-    -fx-padding: 12px 18px 4px 18px;
-}
-
-.account-hero-card {
-    -fx-padding: 30px;
-}
-
-.account-hero-title {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 52px;
-    -fx-font-weight: 700;
-}
-
-.stat-tile {
-    -fx-background-color: rgba(255, 255, 255, 0.03);
-    -fx-background-radius: 18px;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
-    -fx-border-radius: 18px;
-    -fx-padding: 18px;
-}
-
-.stat-value {
-    -fx-font-size: 28px;
-}
-
-.large-logout-button {
-    -fx-padding: 20px 28px;
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 18px;
-    -fx-font-weight: 500;
-}
-
-.log-overlay {
-    -fx-padding: 18px 20px 20px 20px;
-    -fx-background-color:
-        linear-gradient(to bottom, rgba(14, 18, 24, 0.98) 0%, rgba(10, 13, 19, 0.98) 100%);
-    -fx-translate-y: -18px;
-}
-
 .log-area {
-    -fx-font-family: "Cascadia Mono";
-    -fx-font-size: 12px;
-    -fx-padding: 14px;
-    -fx-highlight-fill: rgba(241, 50, 43, 0.34);
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-border-color: -line-soft;
+    -fx-border-radius: 18px;
+    -fx-background-radius: 18px;
+    -fx-text-fill: -text-soft;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 13px;
+    -fx-highlight-fill: rgba(239, 43, 45, 0.35);
     -fx-highlight-text-fill: #ffffff;
 }
 
 .log-area .content {
-    -fx-background-color: rgba(9, 12, 18, 0.98);
-    -fx-background-radius: 14px;
+    -fx-background-color: rgba(7, 11, 18, 0.94);
+    -fx-background-radius: 18px;
 }
 
-.compact-mode .primary-launch-button {
-    -fx-font-size: 30px;
-    -fx-padding: 24px 88px;
+.log-area .viewport {
+    -fx-background-color: transparent;
 }
 
-.compact-mode .screen-title {
-    -fx-font-size: 50px;
-}
-
-.compact-mode .account-hero-title {
-    -fx-font-size: 46px;
-}
-
-.narrow-mode .hero-row {
-    -fx-spacing: 22px;
-}
-
-.narrow-mode .primary-launch-button {
-    -fx-font-size: 26px;
-    -fx-padding: 22px 72px;
-}
-
-.narrow-mode .nav-button {
-    -fx-font-size: 18px;
+.log-area .scroll-pane,
+.log-area .scroll-pane .viewport,
+.log-area .scroll-pane .content {
+    -fx-background-color: transparent;
 }

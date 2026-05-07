@@ -4,7 +4,7 @@ import java.nio.file.Paths;
 
 public final class LauncherDefaults {
 
-    private static final String DEFAULT_GAME_DIRECTORY_NAME = "mc-rpg-client";
+    private static final String DEFAULT_GAME_DIRECTORY_NAME = "rpg-client";
     private static final String DEFAULT_MANIFEST_PATH = "/manifest.json";
 
     private LauncherDefaults() {

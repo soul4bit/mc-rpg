@@ -2,9 +2,9 @@ package ru.mcrpg.launcher;
 
 public final class LauncherBrand {
 
-    public static final String APP_NAME = "Redstone Launcher";
-    public static final String APP_TITLE = "Redstone";
-    public static final String APP_SUBTITLE = "RPG Server";
+    public static final String APP_NAME = "ObsidianGate Launcher";
+    public static final String APP_TITLE = "ObsidianGate";
+    public static final String APP_SUBTITLE = "Launcher for RPG";
 
     private LauncherBrand() {
     }

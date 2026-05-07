@@ -29,7 +29,7 @@ public final class LauncherConfigStore {
     public static LauncherConfigStore defaultStore() {
         Path configFile = Paths.get(
             System.getProperty("user.home"),
-            ".mc-rpg-launcher",
+            ".obsidian-gate-launcher",
             "launcher.properties"
         );
         return new LauncherConfigStore(configFile);
@@ -82,7 +82,7 @@ public final class LauncherConfigStore {
         }
 
         try (OutputStream outputStream = Files.newOutputStream(configFile)) {
-            properties.store(outputStream, "MC RPG launcher settings");
+            properties.store(outputStream, "ObsidianGate launcher settings");
         }
     }
 

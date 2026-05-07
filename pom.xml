@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.mcrpg</groupId>
-    <artifactId>mc-rpg-launcher</artifactId>
+    <artifactId>obsidian-gate-launcher</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>mc-rpg-launcher</name>
+    <name>ObsidianGate Launcher</name>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
