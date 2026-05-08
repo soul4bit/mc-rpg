@@ -1,43 +1,55 @@
 {
-  "schemaVersion": 1,
-  "id": "mc-rpg",
-  "version": "2026.05.05",
-  "baseUrl": "http://192.168.1.103:8080/client/",
-  "launcher": {
-    "serverHost": "192.168.1.103",
-    "serverPort": 25565,
-    "authBaseUrl": "http://192.168.1.103:8081",
-    "serverId": "obsidiangate-main",
-    "workingDirectory": ".",
-    "launchTemplate": ""
-  },
-  "minecraft": {
-    "version": "1.12.2",
-    "forgeVersion": "14.23.5.2864"
-  },
-  "runtime": {
-    "packages": [
-      {
-        "os": "windows",
-        "arch": "x86_64",
-        "url": "runtime/windows-x64/jre8.zip",
-        "sha256": "PUT_RUNTIME_ZIP_SHA256_HERE",
-        "size": 123456789,
-        "extractDir": "runtime/jre8",
-        "javaPath": "bin/java.exe"
-      }
-    ]
-  },
-  "files": [
-    {
-      "path": "mods/examplemod.jar",
-      "sha256": "PUT_REAL_SHA256_HERE",
-      "size": 54321
-    },
-    {
-      "path": "config/rpg.cfg",
-      "sha256": "PUT_REAL_SHA256_HERE",
-      "size": 321
-    }
-  ]
+    "schemaVersion":  1,
+    "id":  "mc-rpg",
+    "version":  "2026.05.08",
+    "baseUrl":  "http://192.168.1.103:8080/client/",
+    "launcher":  {
+                     "serverHost":  "192.168.1.103",
+                     "serverPort":  25565,
+                     "authBaseUrl":  "http://192.168.1.103:8081",
+                     "serverId":  "obsidiangate-main",
+                     "workingDirectory":  ".",
+                     "launchTemplate":  ""
+                 },
+    "runtime":  {
+                    "packages":  [
+                                     {
+                                         "os":  "windows",
+                                         "arch":  "x86_64",
+                                         "url":  "runtime/windows-x64/jre8.zip",
+                                         "sha256":  "61c4fe5c2d3c06cf6fa79de8e62da52444c95be1616b8dc8ad1e6d8db72f37bf",
+                                         "size":  40105457,
+                                         "extractDir":  "runtime/jre8",
+                                         "javaPath":  "jdk8u482-b08-jre/bin/java.exe"
+                                     }
+                                 ]
+                },
+    "minecraft":  {
+                      "version":  "1.12.2",
+                      "forgeVersion":  "14.23.5.2864",
+                      "versionManifestUrl":  "",
+                      "forgeInstallerUrl":  "",
+                      "assetBaseUrl":  "",
+                      "enabled":  true
+                  },
+    "files":  [
+                  {
+                      "path":  "config/forge.cfg",
+                      "sha256":  "cccdea48d5b1029363ba61b162217653a11b54bf9be160134653b54fc24379aa",
+                      "size":  3865,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/forgeChunkLoading.cfg",
+                      "sha256":  "45db4110ebc8c6b614d368981c24392e904fafa985350193cedf59c0809c5a53",
+                      "size":  2155,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
+                      "sha256":  "52772c6c67d826b23e6ed8a84950f3c5ff717788f216ffe04e8f4121a035b2a4",
+                      "size":  25726,
+                      "executable":  false
+                  }
+              ]
 }

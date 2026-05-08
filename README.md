@@ -76,6 +76,36 @@ mvn -f forge-auth-server/pom.xml clean package
 
 Сборка лаунчера делает fat jar, отдельные зависимости рядом не нужны.
 
+## Автоматизация auth-релиза
+
+Подготовка релиза auth-модулей:
+
+```powershell
+.\scripts\release-auth.ps1 -ManifestVersion 2026.05.08
+```
+
+Скрипт:
+
+- собирает `game-auth-common`, `forge-auth-client`, `forge-auth-server`
+- пересчитывает `sha256` и `size`
+- обновляет запись клиентского auth-мода в `examples/manifest.json`
+- складывает готовые артефакты и итоговый `manifest.json` в `dist/`
+- пишет метаданные релиза в `dist/auth-release.json`
+
+Деплой на сервер:
+
+```powershell
+.\scripts\deploy-auth.ps1 -Target minecraft@192.168.1.103
+```
+
+По умолчанию `deploy-auth.ps1`:
+
+- загружает серверный и клиентский auth jar в домашнюю директорию `minecraft`
+- устанавливает серверный jar в `~/mc-rpg/mods/`
+- устанавливает клиентский jar в `/var/www/mc-rpg/client/mods/`
+- обновляет `/var/www/mc-rpg/manifest.json`
+- перезапускает `mc-rpg.service`
+
 ## Настройки launcher
 
 Файл настроек:
