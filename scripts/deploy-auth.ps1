@@ -39,6 +39,7 @@ foreach ($path in @($serverJarPath, $clientJarPath, $manifestPath)) {
 }
 
 $remoteClientModsDir = "$RemoteWebRoot/client/mods"
+$sshTtyArgs = @("-tt")
 
 function Invoke-External {
     param(
@@ -71,48 +72,32 @@ Invoke-External -Command "scp" -Arguments @(
 ) -Action "Upload dist artifacts"
 
 Write-Host "==> Installing auth artifacts on remote host" -ForegroundColor Cyan
-Invoke-External -Command "ssh" -Arguments @(
-    $Target,
-    "mkdir -p '$RemoteServerModsDir'"
-) -Action "Create remote server mods directory"
-
-Invoke-External -Command "ssh" -Arguments @(
-    $Target,
-    "install -m 644 '$RemoteHome/$serverFileName' '$RemoteServerModsDir/$serverFileName'"
-) -Action "Install server auth mod"
-
-Invoke-External -Command "ssh" -Arguments @(
-    $Target,
-    "sudo mkdir -p '$remoteClientModsDir'"
-) -Action "Create remote client mods directory"
-
-Invoke-External -Command "ssh" -Arguments @(
-    $Target,
-    "sudo install -m 644 '$RemoteHome/$clientFileName' '$remoteClientModsDir/$clientFileName'"
-) -Action "Install client auth mod"
-
-Invoke-External -Command "ssh" -Arguments @(
-    $Target,
-    "sudo install -m 644 '$RemoteHome/manifest.json' '$RemoteWebRoot/manifest.json'"
-) -Action "Install manifest"
-
-Invoke-External -Command "ssh" -Arguments @(
-    $Target,
-    "sha256sum '$RemoteServerModsDir/$serverFileName' && sha256sum '$remoteClientModsDir/$clientFileName'"
-) -Action "Verify remote hashes"
+$remoteCommands = [System.Collections.Generic.List[string]]::new()
+$remoteCommands.Add("set -e")
+$remoteCommands.Add("mkdir -p '$RemoteServerModsDir'")
+$remoteCommands.Add("install -m 644 '$RemoteHome/$serverFileName' '$RemoteServerModsDir/$serverFileName'")
+$remoteCommands.Add("sudo -v")
+$remoteCommands.Add("sudo mkdir -p '$remoteClientModsDir'")
+$remoteCommands.Add("sudo install -m 644 '$RemoteHome/$clientFileName' '$remoteClientModsDir/$clientFileName'")
+$remoteCommands.Add("sudo install -m 644 '$RemoteHome/manifest.json' '$RemoteWebRoot/manifest.json'")
+$remoteCommands.Add("sha256sum '$RemoteServerModsDir/$serverFileName'")
+$remoteCommands.Add("sha256sum '$remoteClientModsDir/$clientFileName'")
 
 if (-not $SkipRestart) {
     Write-Host "==> Restarting $ServiceName" -ForegroundColor Cyan
-    Invoke-External -Command "ssh" -Arguments @(
-        $Target,
-        "sudo systemctl restart '$ServiceName'"
-    ) -Action "Restart service"
-
-    Invoke-External -Command "ssh" -Arguments @(
-        $Target,
-        "sudo systemctl status '$ServiceName' --no-pager -l"
-    ) -Action "Show service status"
+    $remoteCommands.Add("sudo systemctl restart '$ServiceName'")
+    $remoteCommands.Add("sudo systemctl status '$ServiceName' --no-pager -l")
 }
+
+$remoteScript = $remoteCommands -join "`n"
+
+Invoke-External -Command "ssh" -Arguments @(
+    $sshTtyArgs +
+    @(
+        $Target,
+        $remoteScript
+    )
+) -Action "Install artifacts, verify hashes, and optionally restart service"
 
 Write-Host ""
 Write-Host "Deploy complete for $Target" -ForegroundColor Green
