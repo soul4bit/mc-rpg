@@ -1,37 +1,54 @@
 # ObsidianGate Auth API
 
-Standalone Spring Boot backend for launcher registration, login, JWT access tokens, refresh tokens, profile access, and one-time game tickets.
+Отдельный Spring Boot backend для:
 
-## Build
+- регистрации
+- логина
+- выдачи JWT access token
+- обновления refresh token
+- чтения и обновления профиля
+- выдачи одноразовых game ticket
+- проверки game ticket для Minecraft-сервера
+
+## Сборка
 
 ```bash
 mvn -f auth-api/pom.xml clean package
 ```
 
-Resulting jar:
+Готовый jar:
 
 ```text
 auth-api/target/obsidiangate-auth-api-0.1.0-SNAPSHOT.jar
 ```
 
-## Configuration
+## Конфигурация
 
-Copy `.env.example` and fill in the secrets:
+Скопируй `.env.example` и заполни секреты:
 
 ```bash
 cp auth-api/.env.example auth-api/.env
 ```
 
-Important variables:
+Важные переменные:
 
-- `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
+- `DB_HOST`
+- `DB_PORT`
+- `DB_NAME`
+- `DB_USER`
+- `DB_PASSWORD`
 - `JWT_SECRET`
 - `ACCESS_TOKEN_TTL_SECONDS`
 - `REFRESH_TOKEN_TTL_DAYS`
 - `GAME_TICKET_TTL_SECONDS`
 - `SERVER_ID`
 
-## Run locally
+`SERVER_ID` должен совпадать с:
+
+- `launcher.serverId` в `manifest.json`
+- `-Dobsidiangate.serverId=...` у серверного Forge-мода
+
+## Локальный запуск
 
 ```bash
 set DB_HOST=127.0.0.1
@@ -43,13 +60,13 @@ set JWT_SECRET=CHANGE_ME
 mvn -f auth-api/pom.xml spring-boot:run
 ```
 
-## Server deploy
+## Деплой на сервер
 
-1. Copy the jar to `/home/minecraft/obsidiangate-auth/api/`.
-2. Copy the filled `.env` to `/home/minecraft/obsidiangate-auth/api/.env`.
-3. Create the `systemd` service shown in the final deployment instructions.
+1. Скопировать jar в `/home/minecraft/obsidiangate-auth/api/`.
+2. Скопировать заполненный `.env` в `/home/minecraft/obsidiangate-auth/api/.env`.
+3. Создать `systemd`-сервис по своей схеме деплоя.
 
-## Endpoints
+## Основные endpoint
 
 - `POST /auth/register`
 - `POST /auth/login`

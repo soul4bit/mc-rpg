@@ -1,21 +1,30 @@
 # ObsidianGate Game Auth Common
 
-Java 8-compatible shared module for the future Forge 1.12.2 auth mods.
+Общий Java 8-совместимый модуль для клиентского и серверного Forge auth.
 
-It contains:
+## Что лежит внутри
 
-- session file model for `.obsidiangate/session.json`
-- parser/writer that understands both ISO-8601 and legacy numeric `expiresAt`
-- HTTP client for `POST /game/tickets/verify`
-- small DTOs for ticket verification results
+- модель `LauncherSession` для `.obsidiangate/session.json`
+- `LauncherSessionFiles` для чтения и записи session-файла
+- поддержка форматов `expiresAt` в виде ISO-8601 и старого числового значения
+- `TicketVerificationClient` для `POST /game/tickets/verify`
+- DTO для результата проверки ticket
+- небольшой встроенный JSON-парсер без внешней runtime-зависимости на Jackson
 
-Build:
+## Сборка
 
 ```bash
 mvn -f game-auth-common/pom.xml test
 ```
 
-Planned usage:
+Если модуль нужен как зависимость для других Maven-модулей проекта:
 
-- client mod: read `-Dobsidiangate.sessionFile=...` and load `LauncherSession`
-- server mod: verify the received ticket through `TicketVerificationClient`
+```bash
+mvn -f game-auth-common/pom.xml install
+```
+
+## Где используется
+
+- клиентский Forge-мод читает `-Dobsidiangate.sessionFile=...` и загружает `LauncherSession`
+- серверный Forge-мод проверяет ticket через `TicketVerificationClient`
+- launcher пишет `session.json` в совместимом формате

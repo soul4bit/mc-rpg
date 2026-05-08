@@ -1,19 +1,44 @@
 # ObsidianGate Forge Auth Client
 
-Forge 1.12.2 client-side bridge for the launcher auth flow.
+Клиентский Forge 1.12.2-мод для передачи launcher-auth ticket из игры на сервер.
 
-Current stage:
+## Что делает мод
 
-- loads `.obsidiangate/session.json` from `-Dobsidiangate.sessionFile=...`
-- validates that the ticket exists and is not expired
-- prepares a custom Forge network message with the one-time ticket
-- logs readiness to send the proof once the matching server mod exists
+- читает `.obsidiangate/session.json` по пути из `-Dobsidiangate.sessionFile=...`
+- проверяет, что ticket не пустой и не истёк
+- ждёт завершения сетевого handshake
+- отправляет одноразовый ticket на сервер по каналу `ogauth`
 
-Build order:
+## Сборка
+
+Сначала нужно установить общий модуль:
 
 ```bash
 mvn -f game-auth-common/pom.xml install
-mvn -f forge-auth-client/pom.xml test
 ```
 
-This module is intentionally client-side only for now. The actual server-side verification handshake will be added in the next stage.
+Потом собрать клиентский мод:
+
+```bash
+mvn -f forge-auth-client/pom.xml clean package
+```
+
+Готовый jar:
+
+```text
+forge-auth-client/target/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar
+```
+
+## Установка
+
+Обычно jar кладётся в modpack и скачивается лаунчером в:
+
+```text
+<game directory>/mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar
+```
+
+## Важные замечания
+
+- мод ничего не делает без `-Dobsidiangate.sessionFile=...`
+- `session.json` создаётся самим лаунчером перед запуском игры
+- ticket одноразовый, поэтому повторное подключение из уже запущенного клиента может получить отказ `used`
