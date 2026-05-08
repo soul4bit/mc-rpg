@@ -1,0 +1,27 @@
+package ru.mcrpg.forgeauth.server;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
+class AuthServerConfigTest {
+
+    @Test
+    void detectsMissingConfiguration() {
+        AuthServerConfig config = new AuthServerConfig("", "", 0);
+
+        assertFalse(config.isReady());
+        assertEquals(1, config.getGraceSeconds());
+    }
+
+    @Test
+    void acceptsConfiguredServerId() {
+        AuthServerConfig config = new AuthServerConfig("http://127.0.0.1:8081", "obsidiangate-main", 15);
+
+        assertTrue(config.isReady());
+        assertTrue(config.acceptsServerId("obsidiangate-main"));
+        assertFalse(config.acceptsServerId("wrong-server"));
+    }
+}

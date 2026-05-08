@@ -1,6 +1,7 @@
 package ru.mcrpg.launcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,6 +17,7 @@ public final class SessionFileWriter {
     public SessionFileWriter() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     public Path write(LauncherConfig config, GameTicket ticket) throws IOException {
