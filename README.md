@@ -262,3 +262,47 @@ update.files.before.launch=true
 - `game-auth-common/` — общий модуль session/ticket логики
 - `forge-auth-client/` — Forge-клиент для отправки ticket
 - `forge-auth-server/` — Forge-сервер для проверки ticket
+
+## Full modpack deploy
+
+Используйте `modpack/client/` как локальный источник файлов, которые должны публиковаться в `/var/www/mc-rpg/client/`.
+
+Подготовка полного modpack-релиза:
+
+```powershell
+.\scripts\release-modpack.ps1 -ClientSourceDir modpack/client -ManifestVersion 2026.05.12
+```
+
+Скрипт:
+
+- запускает `scripts/release-auth.ps1`
+- копирует `modpack/client/` в `dist/client/`
+- добавляет свежий `forge-auth-client` в `dist/client/mods/`
+- пересчитывает `manifest.files[]` по фактическому содержимому `dist/client/`
+- обновляет `runtime.packages[].sha256` и `runtime.packages[].size` для относительных runtime URL
+- пишет `dist/manifest.json`
+- пишет `dist/modpack-release.json`
+
+Деплой на сервер:
+
+```powershell
+.\scripts\deploy-modpack.ps1 -Target minecraft@192.168.1.103
+```
+
+Скрипт загружает:
+
+- `dist/client/`
+- `dist/manifest.json`
+- серверный auth jar
+
+и устанавливает их в:
+
+- `~/mc-rpg/mods/`
+- `/var/www/mc-rpg/client/`
+- `/var/www/mc-rpg/manifest.json`
+
+Полный цикл одной командой:
+
+```powershell
+.\scripts\publish-modpack.ps1 -Target minecraft@192.168.1.103
+```

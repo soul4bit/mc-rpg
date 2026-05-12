@@ -9,8 +9,22 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$manifestFullPath = Join-Path $repoRoot $ManifestPath
-$distFullPath = Join-Path $repoRoot $DistDir
+
+function Resolve-InputPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Value
+    )
+
+    if ([System.IO.Path]::IsPathRooted($Value)) {
+        return $Value
+    }
+
+    return (Join-Path $repoRoot $Value)
+}
+
+$manifestFullPath = Resolve-InputPath $ManifestPath
+$distFullPath = Resolve-InputPath $DistDir
 
 if (-not (Test-Path $manifestFullPath)) {
     throw "Manifest not found: $manifestFullPath"

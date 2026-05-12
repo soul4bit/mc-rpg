@@ -13,7 +13,21 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$distFullPath = Join-Path $repoRoot $DistDir
+
+function Resolve-InputPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Value
+    )
+
+    if ([System.IO.Path]::IsPathRooted($Value)) {
+        return $Value
+    }
+
+    return (Join-Path $repoRoot $Value)
+}
+
+$distFullPath = Resolve-InputPath $DistDir
 $metadataPath = Join-Path $distFullPath "auth-release.json"
 $manifestPath = Join-Path $distFullPath "manifest.json"
 

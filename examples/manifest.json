@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.08",
+    "version":  "2026.05.12",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -47,7 +47,7 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "4d6fbed01765adf17dcf6657c0aaf04225a8f1be83f294f4748d94b9f1404b20",
+                      "sha256":  "0a343d8c46bd2f6687f8ab62fe075c59eb945ec64cbe64a1859761de428c252d",
                       "size":  25726,
                       "executable":  false
                   }
