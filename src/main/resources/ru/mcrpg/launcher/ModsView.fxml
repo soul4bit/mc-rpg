@@ -7,74 +7,170 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.mcrpg.launcher.ModsController"
-            prefWidth="1600.0" prefHeight="900.0" styleClass="account-root, app-window">
+            prefWidth="1360.0" prefHeight="820.0" styleClass="account-root, app-window">
     <left>
-        <VBox prefWidth="310.0" spacing="28.0" styleClass="sidebar">
-            <padding>
-                <Insets top="42.0" right="24.0" bottom="28.0" left="24.0"/>
-            </padding>
+        <StackPane prefWidth="264.0" styleClass="sidebar">
             <children>
-                <ImageView fitWidth="230.0" preserveRatio="true">
-                    <image>
-                        <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
-                    </image>
-                </ImageView>
-                <VBox spacing="14.0">
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll">
+                    <content>
+                        <VBox spacing="18.0" styleClass="sidebar-content">
+                            <padding>
+                                <Insets top="18.0" right="16.0" bottom="18.0" left="16.0"/>
+                            </padding>
+                            <children>
+                <VBox spacing="10.0" styleClass="sidebar-brand-card">
                     <children>
-                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenHome"
-                                styleClass="nav-button" text="Главная"/>
-                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenProfile"
-                                styleClass="nav-button" text="Профиль"/>
-                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenServer"
-                                styleClass="nav-button" text="Сервер"/>
-                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenSettings"
-                                styleClass="nav-button" text="Настройки"/>
-                        <Label styleClass="nav-button, nav-button-active" text="Моды"/>
-                    </children>
-                </VBox>
-                <Region VBox.vgrow="ALWAYS"/>
-                <VBox spacing="10.0" styleClass="glass-panel">
-                    <padding>
-                        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
-                    </padding>
-                    <children>
-                        <Label text="Manifest inventory" styleClass="label-value"/>
-                        <Label text="Экран показывает фактический список `manifest.files[]` и runtime packages, которые клиент должен скачать или переиспользовать."
+                        <ImageView fitWidth="188.0" preserveRatio="true">
+                            <image>
+                                <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
+                            </image>
+                        </ImageView>
+                        <Label text="MANIFEST INVENTORY" styleClass="screen-kicker"/>
+                        <Label text="Экран показывает фактический состав manifest.files[] и runtime-пакетов, которые видит launcher."
                                wrapText="true" styleClass="label-muted"/>
                     </children>
                 </VBox>
+
+                <Label text="НАВИГАЦИЯ" styleClass="sidebar-section-label"/>
+
+                <VBox spacing="8.0" styleClass="nav-group">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenHome" spacing="14.0"
+                              styleClass="nav-item">
+                            <children>
+                                <StackPane styleClass="nav-icon-badge">
+                                    <children>
+                                        <SVGPath content="M3 11.5 L12 4 L21 11.5 M5.5 10.5 V20 H10.7 V14.4 H13.3 V20 H18.5 V10.5"
+                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
+                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                 strokeWidth="2.2"/>
+                                    </children>
+                                </StackPane>
+                                <Label text="Главная" styleClass="nav-text"/>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenProfile" spacing="14.0"
+                              styleClass="nav-item">
+                            <children>
+                                <StackPane styleClass="nav-icon-badge">
+                                    <children>
+                                        <SVGPath content="M12 12 A4 4 0 1 1 12 4 A4 4 0 1 1 12 12 M5 20 C5.8 16.8 8.2 15 12 15 C15.8 15 18.2 16.8 19 20"
+                                                 fill="TRANSPARENT" scaleX="0.88" scaleY="0.88"
+                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                 strokeWidth="2.0"/>
+                                    </children>
+                                </StackPane>
+                                <Label text="Профиль" styleClass="nav-text"/>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenServer" spacing="14.0"
+                              styleClass="nav-item">
+                            <children>
+                                <StackPane styleClass="nav-icon-badge">
+                                    <children>
+                                        <SVGPath content="M5 5 Q5 3.5 6.5 3.5 H17.5 Q19 3.5 19 5 V19 Q19 20.5 17.5 20.5 H6.5 Q5 20.5 5 19 Z M8 8 H16 M8 12 H16 M8 16 H12"
+                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
+                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                 strokeWidth="2.0"/>
+                                    </children>
+                                </StackPane>
+                                <Label text="Сервер" styleClass="nav-text"/>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenSettings" spacing="14.0"
+                              styleClass="nav-item">
+                            <children>
+                                <StackPane styleClass="nav-icon-badge">
+                                    <children>
+                                        <Label text="⚙" styleClass="nav-glyph"/>
+                                    </children>
+                                </StackPane>
+                                <Label text="Настройки" styleClass="nav-text"/>
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="nav-item, nav-item-active">
+                            <children>
+                                <StackPane styleClass="nav-icon-badge, nav-icon-badge-active">
+                                    <children>
+                                        <SVGPath content="M12 3 L20 7.5 V16.5 L12 21 L4 16.5 V7.5 Z M4.5 7.7 L12 11.9 L19.5 7.7 M12 12 V20.5"
+                                                 fill="TRANSPARENT" scaleX="0.9" scaleY="0.9"
+                                                 stroke="#F4E6FF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                 strokeWidth="2.0"/>
+                                    </children>
+                                </StackPane>
+                                <Label styleClass="nav-text, nav-text-active" text="Моды"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox spacing="12.0" styleClass="sidebar-footer-card">
+                    <padding>
+                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
+                    </padding>
+                    <children>
+                        <Label text="Manifest inventory" styleClass="label-value"/>
+                        <Label text="Список здесь полезен перед sync: видно path, sha256, размер и runtime packages."
+                               wrapText="true" styleClass="label-muted"/>
+                        <HBox spacing="8.0">
+                            <children>
+                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="FILES" styleClass="sidebar-chip-label"/>
+                                        <Label text="live" styleClass="sidebar-chip-value"/>
+                                    </children>
+                                </VBox>
+                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="HASH" styleClass="sidebar-chip-label"/>
+                                        <Label text="sha256" styleClass="sidebar-chip-value"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
             </children>
-        </VBox>
+        </StackPane>
     </left>
 
     <center>
         <StackPane>
             <children>
-                <ImageView fitWidth="1290.0" fitHeight="900.0" preserveRatio="false" opacity="0.42">
+                <ImageView fitWidth="1080.0" fitHeight="820.0" preserveRatio="false" opacity="0.42">
                     <image>
                         <Image url="@obsidiangate/images/backgrounds/hero_portal_background.png"/>
                     </image>
                 </ImageView>
                 <Pane styleClass="profile-overlay"/>
 
-                <VBox spacing="22.0">
-                    <padding>
-                        <Insets top="26.0" right="42.0" bottom="42.0" left="42.0"/>
-                    </padding>
-                    <children>
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="settings-scroll">
+                    <content>
+                        <VBox spacing="18.0" styleClass="settings-scroll-content">
+                            <padding>
+                                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                            </padding>
+                            <children>
                         <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag"
                               spacing="16.0">
                             <children>
                                 <VBox spacing="4.0">
                                     <children>
+                                        <Label text="CLIENT INVENTORY" styleClass="screen-kicker"/>
                                         <Label text="Моды и файлы modpack" styleClass="auth-title"/>
                                         <Label text="Реальный inventory из manifest: версии, sha256, размеры и runtime packages."
                                                styleClass="label-muted" wrapText="true"/>
@@ -88,7 +184,7 @@
                             </children>
                         </HBox>
 
-                        <HBox alignment="CENTER_LEFT" spacing="22.0" styleClass="profile-hero-card">
+                        <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="profile-hero-card">
                             <children>
                                 <VBox spacing="10.0" HBox.hgrow="ALWAYS">
                                     <children>
@@ -96,71 +192,72 @@
                                         <Label fx:id="statusLabel" styleClass="label-body" wrapText="true"/>
                                     </children>
                                 </VBox>
-                                <VBox alignment="CENTER_RIGHT" spacing="12.0">
+                                <VBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="action-stack">
                                     <children>
-                                        <Button minWidth="220.0" mnemonicParsing="false" onAction="#onRefreshManifest"
-                                                styleClass="primary-button" text="ОБНОВИТЬ MANIFEST"/>
-                                        <Label text="Перечитывает manifest и rebuild списка файлов." styleClass="label-muted"/>
+                                        <Button minWidth="200.0" mnemonicParsing="false" onAction="#onRefreshManifest"
+                                                styleClass="primary-button" text="Обновить manifest"/>
+                                        <Label text="Перечитывает manifest и заново строит список клиентских файлов."
+                                               styleClass="label-muted"/>
                                     </children>
                                 </VBox>
                             </children>
                         </HBox>
 
-                        <HBox spacing="18.0">
+                        <FlowPane hgap="18.0" vgap="18.0" prefWrapLength="980.0">
                             <children>
-                                <VBox prefWidth="220.0" spacing="6.0" styleClass="metric-card">
+                                <VBox prefWidth="200.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
                                     <children>
                                         <Label text="MANIFEST VERSION" styleClass="label-muted"/>
                                         <Label fx:id="manifestVersionValueLabel" styleClass="metric-value-small" wrapText="true"/>
                                     </children>
                                 </VBox>
-                                <VBox prefWidth="180.0" spacing="6.0" styleClass="metric-card">
+                                <VBox prefWidth="180.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
                                     <children>
                                         <Label text="FILES" styleClass="label-muted"/>
                                         <Label fx:id="filesCountValueLabel" styleClass="metric-value"/>
                                     </children>
                                 </VBox>
-                                <VBox prefWidth="180.0" spacing="6.0" styleClass="metric-card">
+                                <VBox prefWidth="180.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
                                     <children>
                                         <Label text="MOD JARS" styleClass="label-muted"/>
                                         <Label fx:id="modsCountValueLabel" styleClass="metric-value"/>
                                     </children>
                                 </VBox>
-                                <VBox prefWidth="180.0" spacing="6.0" styleClass="metric-card">
+                                <VBox prefWidth="180.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
                                     <children>
                                         <Label text="RUNTIME" styleClass="label-muted"/>
                                         <Label fx:id="runtimeCountValueLabel" styleClass="metric-value"/>
                                     </children>
                                 </VBox>
-                                <VBox spacing="6.0" styleClass="metric-card" HBox.hgrow="ALWAYS">
+                                <VBox spacing="6.0" styleClass="metric-card, metric-card-compact" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label text="TOTAL SIZE" styleClass="label-muted"/>
                                         <Label fx:id="totalSizeValueLabel" styleClass="metric-value"/>
                                     </children>
                                 </VBox>
                             </children>
-                        </HBox>
+                        </FlowPane>
 
-                        <HBox spacing="18.0">
+                        <FlowPane hgap="18.0" vgap="18.0" prefWrapLength="980.0">
                             <children>
-                                <VBox prefWidth="520.0" spacing="6.0" styleClass="metric-card">
+                                <VBox prefWidth="430.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
                                     <children>
                                         <Label text="MANIFEST URL" styleClass="label-muted"/>
                                         <Label fx:id="manifestUrlValueLabel" styleClass="metric-value-small" wrapText="true"/>
                                     </children>
                                 </VBox>
-                                <VBox spacing="6.0" styleClass="metric-card" HBox.hgrow="ALWAYS">
+                                <VBox spacing="6.0" styleClass="metric-card, metric-card-compact" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label text="RESOLVED DOWNLOAD BASE" styleClass="label-muted"/>
                                         <Label fx:id="downloadBaseValueLabel" styleClass="metric-value-small" wrapText="true"/>
                                     </children>
                                 </VBox>
                             </children>
-                        </HBox>
+                        </FlowPane>
 
-                        <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+                        <FlowPane hgap="20.0" vgap="20.0" prefWrapLength="980.0" VBox.vgrow="ALWAYS">
                             <children>
-                                <VBox prefWidth="370.0" spacing="16.0" styleClass="profile-card">
+                                <VBox prefWidth="320.0" spacing="16.0" styleClass="profile-card">
                                     <children>
                                         <Label text="Runtime packages" styleClass="label-value"/>
                                         <Label text="Portable Java и другие platform-specific пакеты, объявленные в manifest.runtime.packages."
@@ -186,9 +283,11 @@
                                     </children>
                                 </VBox>
                             </children>
-                        </HBox>
-                    </children>
-                </VBox>
+                        </FlowPane>
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
             </children>
         </StackPane>
     </center>

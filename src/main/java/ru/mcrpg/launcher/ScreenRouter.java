@@ -8,6 +8,9 @@ import javafx.stage.Stage;
 
 public final class ScreenRouter {
 
+    private static final double DEFAULT_SCENE_WIDTH = 1500;
+    private static final double DEFAULT_SCENE_HEIGHT = 900;
+
     public enum Screen {
         AUTH("/ru/mcrpg/launcher/AuthView.fxml", "/ru/mcrpg/launcher/account.css"),
         REGISTER("/ru/mcrpg/launcher/RegisterView.fxml", "/ru/mcrpg/launcher/account.css"),
@@ -43,7 +46,9 @@ public final class ScreenRouter {
                 aware.bindContext(context);
             }
 
-            Scene scene = new Scene(root, Math.max(stage.getWidth(), 1600), Math.max(stage.getHeight(), 900));
+            double sceneWidth = stage.getWidth() > 0 ? stage.getWidth() : DEFAULT_SCENE_WIDTH;
+            double sceneHeight = stage.getHeight() > 0 ? stage.getHeight() : DEFAULT_SCENE_HEIGHT;
+            Scene scene = new Scene(root, sceneWidth, sceneHeight);
             scene.getStylesheets().add(ScreenRouter.class.getResource(screen.stylesheetPath).toExternalForm());
             stage.setScene(scene);
             if (!stage.isShowing()) {

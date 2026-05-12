@@ -4,10 +4,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
@@ -19,22 +21,35 @@
     <children>
         <StackPane maxWidth="Infinity" maxHeight="Infinity" styleClass="window-shell">
             <children>
-                <BorderPane prefWidth="1600.0" prefHeight="900.0" styleClass="shell-frame">
+                <BorderPane prefWidth="1360.0" prefHeight="820.0" styleClass="shell-frame">
                     <left>
-                        <VBox prefWidth="310.0" spacing="26.0" styleClass="sidebar">
-                            <padding>
-                                <Insets bottom="28.0" left="22.0" right="22.0" top="28.0"/>
-                            </padding>
+                        <StackPane prefWidth="264.0" styleClass="sidebar">
                             <children>
-                                <ImageView fitWidth="248.0" preserveRatio="true">
-                                    <image>
-                                        <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
-                                    </image>
-                                </ImageView>
-
-                                <VBox spacing="10.0" styleClass="nav-group">
+                                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                                            styleClass="sidebar-scroll">
+                                    <content>
+                                        <VBox spacing="18.0" styleClass="sidebar-content">
+                                            <padding>
+                                                <Insets bottom="18.0" left="16.0" right="16.0" top="18.0"/>
+                                            </padding>
+                                            <children>
+                                <VBox spacing="10.0" styleClass="sidebar-brand-card-shell">
                                     <children>
-                                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="nav-item, nav-item-active">
+                                        <ImageView fitWidth="188.0" preserveRatio="true">
+                                            <image>
+                                                <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
+                                            </image>
+                                        </ImageView>
+                                        <Label text="CONTROL HUB" styleClass="sidebar-section-label"/>
+                                        <Label text="Главный маршрут запуска, live status и preview sync собраны в одном месте."
+                                               styleClass="sidebar-brand-copy" wrapText="true"/>
+                                    </children>
+                                </VBox>
+
+                                <Label text="SECTIONS" styleClass="sidebar-section-label"/>
+                                <VBox spacing="8.0" styleClass="nav-group">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="nav-item, nav-item-active">
                                             <children>
                                                 <StackPane styleClass="nav-icon-badge, nav-icon-badge-active">
                                                     <children>
@@ -47,7 +62,7 @@
                                                 <Label text="Главная" styleClass="nav-text, nav-text-active"/>
                                             </children>
                                         </HBox>
-                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openServerScreen" spacing="16.0"
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openServerScreen" spacing="14.0"
                                               styleClass="nav-item">
                                             <children>
                                                 <StackPane styleClass="nav-icon-badge">
@@ -61,7 +76,7 @@
                                                 <Label text="Сервер" styleClass="nav-text"/>
                                             </children>
                                         </HBox>
-                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openModsScreen" spacing="16.0"
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openModsScreen" spacing="14.0"
                                               styleClass="nav-item">
                                             <children>
                                                 <StackPane styleClass="nav-icon-badge">
@@ -75,7 +90,7 @@
                                                 <Label text="Моды" styleClass="nav-text"/>
                                             </children>
                                         </HBox>
-                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openSettingsScreen" spacing="16.0"
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openSettingsScreen" spacing="14.0"
                                               styleClass="nav-item">
                                             <children>
                                                 <StackPane styleClass="nav-icon-badge">
@@ -89,9 +104,8 @@
                                     </children>
                                 </VBox>
 
-                                <Region VBox.vgrow="ALWAYS"/>
-
-                                <VBox spacing="12.0" styleClass="sidebar-status-card">
+                                <Label text="SERVER ROUTE" styleClass="sidebar-section-label"/>
+                                <VBox spacing="10.0" styleClass="sidebar-status-card">
                                     <children>
                                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                                             <children>
@@ -107,7 +121,8 @@
                                     </children>
                                 </VBox>
 
-                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="social-row">
+                                <Label text="COMMUNITY" styleClass="sidebar-section-label"/>
+                                <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="social-row">
                                     <children>
                                         <StackPane styleClass="social-chip">
                                             <children>
@@ -133,8 +148,12 @@
                                 </HBox>
 
                                 <Label fx:id="sidebarVersionLabel" text="Launcher" styleClass="sidebar-version"/>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
                             </children>
-                        </VBox>
+                        </StackPane>
                     </left>
                     <center>
                         <StackPane styleClass="hero-stage">
@@ -142,11 +161,14 @@
                                 <Region styleClass="hero-background"/>
                                 <Region mouseTransparent="true" styleClass="hero-overlay"/>
 
-                                <VBox spacing="22.0" styleClass="content-column">
-                                    <padding>
-                                        <Insets bottom="26.0" left="28.0" right="28.0" top="14.0"/>
-                                    </padding>
-                                    <children>
+                                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                                            styleClass="shell-scroll">
+                                    <content>
+                                        <VBox spacing="14.0" styleClass="content-column">
+                                            <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="12.0"/>
+                                            </padding>
+                                            <children>
                                         <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow"
                                               onMousePressed="#captureWindowDrag" spacing="12.0" styleClass="top-strip">
                                             <children>
@@ -191,8 +213,9 @@
                                             </children>
                                         </HBox>
 
-                                        <VBox alignment="CENTER" spacing="16.0" styleClass="hero-copy">
+                                        <VBox alignment="CENTER" spacing="12.0" styleClass="hero-copy">
                                             <children>
+                                                <Label text="LAUNCHER CONTROL PANEL" styleClass="hero-kicker"/>
                                                 <HBox alignment="CENTER" spacing="18.0">
                                                     <children>
                                                         <Region styleClass="ornament-line"/>
@@ -208,7 +231,7 @@
                                                         <Region styleClass="subtitle-line"/>
                                                     </children>
                                                 </HBox>
-                                                <Label maxWidth="620.0"
+                                                <Label maxWidth="560.0"
                                                        text="Погрузись в мир магии, древних&#10;тайн и бесконечных приключений."
                                                        textAlignment="CENTER" wrapText="true"
                                                        styleClass="hero-description"/>
@@ -222,7 +245,7 @@
                                                     </graphic>
                                                 </Button>
 
-                                                <VBox maxWidth="640.0" spacing="12.0" styleClass="sync-panel">
+                                                <VBox maxWidth="560.0" spacing="10.0" styleClass="sync-panel">
                                                     <children>
                                                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                             <children>
@@ -269,8 +292,6 @@
                                                 </VBox>
                                             </children>
                                         </VBox>
-
-                                        <Region VBox.vgrow="ALWAYS"/>
 
                                         <HBox alignment="CENTER" spacing="0.0" styleClass="status-panel">
                                             <children>
@@ -362,9 +383,10 @@
                                             </children>
                                         </HBox>
 
-                                        <HBox alignment="CENTER" spacing="18.0" styleClass="card-row">
+                                        <FlowPane alignment="CENTER" hgap="14.0" vgap="14.0" prefWrapLength="940.0"
+                                                  styleClass="card-row">
                                             <children>
-                                                <StackPane prefHeight="210.0" styleClass="info-card" HBox.hgrow="ALWAYS">
+                                                <StackPane prefWidth="300.0" prefHeight="156.0" styleClass="info-card">
                                                     <children>
                                                         <Region mouseTransparent="true" styleClass="card-art, about-art"/>
                                                         <VBox spacing="18.0" styleClass="card-content">
@@ -391,7 +413,7 @@
                                                     </children>
                                                 </StackPane>
 
-                                                <StackPane prefHeight="210.0" styleClass="info-card" HBox.hgrow="ALWAYS">
+                                                <StackPane prefWidth="300.0" prefHeight="156.0" styleClass="info-card">
                                                     <children>
                                                         <Region mouseTransparent="true" styleClass="card-art, path-art"/>
                                                         <VBox spacing="18.0" styleClass="card-content">
@@ -418,7 +440,7 @@
                                                     </children>
                                                 </StackPane>
 
-                                                <StackPane prefHeight="210.0" styleClass="info-card" HBox.hgrow="ALWAYS">
+                                                <StackPane prefWidth="300.0" prefHeight="156.0" styleClass="info-card">
                                                     <children>
                                                         <Region mouseTransparent="true" styleClass="card-art, support-art"/>
                                                         <VBox spacing="18.0" styleClass="card-content">
@@ -445,9 +467,11 @@
                                                     </children>
                                                 </StackPane>
                                             </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
+                                        </FlowPane>
+                                            </children>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
                             </children>
                         </StackPane>
                     </center>
