@@ -91,6 +91,11 @@ public final class SettingsController extends AbstractScreenController {
     }
 
     @FXML
+    private void onOpenMods() {
+        router().open(ScreenRouter.Screen.MODS);
+    }
+
+    @FXML
     private void onSaveSettings() {
         try {
             LauncherConfig config = buildConfigFromInputs();

@@ -67,6 +67,11 @@ public final class ProfileController extends AbstractScreenController {
     }
 
     @FXML
+    private void onOpenMods() {
+        router().open(ScreenRouter.Screen.MODS);
+    }
+
+    @FXML
     private void onLogout() {
         context().getAuthService().logoutQuietly(state().getConfig(), state().getSession());
         state().setSession(null);

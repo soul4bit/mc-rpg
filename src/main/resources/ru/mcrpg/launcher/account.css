@@ -360,3 +360,62 @@
 .server-presence-offline {
     -fx-background-color: #FB7185;
 }
+
+.manifest-item-card {
+    -fx-background-color: rgba(15, 23, 42, 0.58);
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(148, 163, 184, 0.16);
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-padding: 16;
+}
+
+.manifest-empty-card {
+    -fx-background-color: rgba(15, 23, 42, 0.42);
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(148, 163, 184, 0.12);
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+}
+
+.manifest-item-title {
+    -fx-text-fill: #F9FAFB;
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+}
+
+.manifest-item-detail {
+    -fx-text-fill: #D1D5DB;
+    -fx-font-size: 13px;
+}
+
+.manifest-item-badge {
+    -fx-background-color: rgba(91, 33, 182, 0.30);
+    -fx-background-radius: 999;
+    -fx-border-color: rgba(192, 132, 252, 0.30);
+    -fx-border-radius: 999;
+    -fx-padding: 4 10;
+    -fx-text-fill: #E9D5FF;
+    -fx-font-size: 11px;
+    -fx-font-weight: 800;
+}
+
+.manifest-metric-chip {
+    -fx-background-color: rgba(88, 28, 135, 0.20);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(168, 85, 247, 0.18);
+    -fx-border-radius: 12;
+    -fx-padding: 8 10;
+}
+
+.manifest-metric-label {
+    -fx-text-fill: #C084FC;
+    -fx-font-size: 10px;
+    -fx-font-weight: 800;
+}
+
+.manifest-metric-value {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}

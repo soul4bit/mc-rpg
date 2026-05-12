@@ -153,6 +153,11 @@ public final class LauncherShellController extends AbstractScreenController {
         router().open(ScreenRouter.Screen.SERVER);
     }
 
+    @FXML
+    private void openModsScreen() {
+        router().open(ScreenRouter.Screen.MODS);
+    }
+
     private void configureControls() {
         logArea.setEditable(false);
         logArea.setWrapText(true);

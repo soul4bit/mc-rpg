@@ -61,7 +61,8 @@
                                                 <Label text="Сервер" styleClass="nav-text"/>
                                             </children>
                                         </HBox>
-                                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="nav-item">
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openModsScreen" spacing="16.0"
+                                              styleClass="nav-item">
                                             <children>
                                                 <StackPane styleClass="nav-icon-badge">
                                                     <children>

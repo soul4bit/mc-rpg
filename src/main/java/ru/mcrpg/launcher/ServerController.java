@@ -90,6 +90,11 @@ public final class ServerController extends AbstractScreenController {
     }
 
     @FXML
+    private void onOpenMods() {
+        router().open(ScreenRouter.Screen.MODS);
+    }
+
+    @FXML
     private void onOpenSettings() {
         router().open(ScreenRouter.Screen.SETTINGS);
     }

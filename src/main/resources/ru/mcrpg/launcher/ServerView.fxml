@@ -32,6 +32,8 @@
                                 styleClass="nav-button" text="Главная"/>
                         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenProfile"
                                 styleClass="nav-button" text="Профиль"/>
+                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenMods"
+                                styleClass="nav-button" text="Моды"/>
                         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenSettings"
                                 styleClass="nav-button" text="Настройки"/>
                         <Label styleClass="nav-button, nav-button-active" text="Сервер"/>
