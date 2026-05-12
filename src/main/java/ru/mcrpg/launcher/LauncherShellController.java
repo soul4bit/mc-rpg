@@ -143,6 +143,11 @@ public final class LauncherShellController extends AbstractScreenController {
         router().open(state().isAuthenticated() ? ScreenRouter.Screen.PROFILE : ScreenRouter.Screen.AUTH);
     }
 
+    @FXML
+    private void openSettingsScreen() {
+        router().open(ScreenRouter.Screen.SETTINGS);
+    }
+
     private void configureControls() {
         logArea.setEditable(false);
         logArea.setWrapText(true);

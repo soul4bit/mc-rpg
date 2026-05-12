@@ -57,6 +57,11 @@ public final class ProfileController extends AbstractScreenController {
     }
 
     @FXML
+    private void onOpenSettings() {
+        router().open(ScreenRouter.Screen.SETTINGS);
+    }
+
+    @FXML
     private void onLogout() {
         context().getAuthService().logoutQuietly(state().getConfig(), state().getSession());
         state().setSession(null);
@@ -90,7 +95,7 @@ public final class ProfileController extends AbstractScreenController {
 
     @FXML
     private void onLauncherSettings() {
-        router().open(ScreenRouter.Screen.HOME);
+        router().open(ScreenRouter.Screen.SETTINGS);
     }
 
     private void refreshProfileAsync() {

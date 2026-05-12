@@ -30,6 +30,8 @@
                     <children>
                         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenHome"
                                 styleClass="nav-button" text="Главная"/>
+                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenSettings"
+                                styleClass="nav-button" text="Настройки"/>
                         <Label styleClass="nav-button, nav-button-active" text="Личный кабинет"/>
                     </children>
                 </VBox>
@@ -178,7 +180,7 @@
                                         <Label text="Следующий шаг: client/server Forge auth mods." wrapText="true"
                                                styleClass="label-muted"/>
                                         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onLauncherSettings"
-                                                styleClass="secondary-button" text="НА ГЛАВНЫЙ ЭКРАН"/>
+                                                styleClass="secondary-button" text="ОТКРЫТЬ НАСТРОЙКИ"/>
                                     </children>
                                 </VBox>
                             </children>

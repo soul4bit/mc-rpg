@@ -211,6 +211,11 @@
     -fx-font-size: 13px;
 }
 
+.settings-status-success {
+    -fx-text-fill: #93C5FD;
+    -fx-font-size: 13px;
+}
+
 .sidebar {
     -fx-background-color: linear-gradient(to bottom, #080B14, #03050B);
     -fx-border-color: transparent rgba(148, 163, 184, 0.18) transparent transparent;
@@ -297,4 +302,38 @@
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 34px;
     -fx-font-weight: 800;
+}
+
+.settings-scroll {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.settings-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.settings-scroll .corner {
+    -fx-background-color: transparent;
+}
+
+.settings-scroll-content {
+    -fx-padding: 0 4 0 0;
+}
+
+.settings-field-stack {
+    -fx-fill-width: true;
+}
+
+.settings-template-area {
+    -fx-font-family: "Consolas";
+    -fx-pref-height: 170;
+    -fx-highlight-fill: rgba(147, 51, 234, 0.40);
+    -fx-highlight-text-fill: #FFFFFF;
+}
+
+.settings-template-area .content {
+    -fx-background-color: rgba(15, 23, 42, 0.78);
+    -fx-background-radius: 14;
 }
