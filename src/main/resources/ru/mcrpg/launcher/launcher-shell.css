@@ -380,6 +380,64 @@
     -fx-font-size: 13px;
 }
 
+.sync-preview-summary {
+    -fx-text-fill: #e7def5;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 4px;
+}
+
+.sync-preview-list {
+    -fx-padding: 2 0 0 0;
+}
+
+.sync-preview-card,
+.sync-preview-empty {
+    -fx-background-color: rgba(255, 255, 255, 0.035);
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(170, 187, 215, 0.14);
+    -fx-border-radius: 16;
+}
+
+.sync-preview-title {
+    -fx-text-fill: -og-text;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.sync-preview-detail {
+    -fx-text-fill: rgba(222, 215, 238, 0.86);
+    -fx-font-size: 12px;
+}
+
+.sync-preview-badge {
+    -fx-background-color: rgba(168, 85, 247, 0.18);
+    -fx-background-radius: 999;
+    -fx-border-color: rgba(196, 108, 255, 0.24);
+    -fx-border-radius: 999;
+    -fx-padding: 4 10;
+    -fx-text-fill: #dec9ff;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+
+.sync-preview-meta-label {
+    -fx-text-fill: rgba(200, 191, 222, 0.68);
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+
+.sync-preview-meta-value {
+    -fx-text-fill: #f6f1ff;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.sync-preview-note {
+    -fx-text-fill: #d8b4fe;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
 .secondary-action-button {
     -fx-background-color: rgba(255, 255, 255, 0.04);
     -fx-border-color: rgba(170, 187, 215, 0.18);

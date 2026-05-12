@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class ModpackSyncService {
 
@@ -35,18 +37,54 @@ public final class ModpackSyncService {
         this.minecraftBootstrapService = minecraftBootstrapService;
     }
 
-    public ModpackSyncResult sync(LauncherConfig baseConfig, LogSink logSink) throws IOException {
-        LauncherConfig resolvedConfig = LauncherDefaults.applyMissingValues(baseConfig.copy());
-        String manifestUrl = requireText(resolvedConfig.getManifestUrl(), "Укажи URL manifest.json.");
-        Path gameDirectory = resolveGameDirectory(resolvedConfig.getGameDirectory());
+    public ModpackSyncPreviewResult preview(LauncherConfig baseConfig, LogSink logSink) throws IOException {
+        PreparedSyncContext prepared = prepareSync(baseConfig, logSink, "Preview manifest");
+        log(logSink, "Preview files in manifest: " + prepared.manifest.getFiles().size());
 
-        log(logSink, "Загрузка manifest: " + manifestUrl);
-        LoadedManifest loadedManifest = manifestClient.load(manifestUrl);
-        ModpackManifest manifest = loadedManifest.getManifest();
-        applyManifestSettings(resolvedConfig, manifest, gameDirectory);
+        int downloadFiles = 0;
+        int reusedFiles = 0;
+        long downloadBytes = 0L;
+        List<ModpackSyncPreviewEntry> entries = new ArrayList<ModpackSyncPreviewEntry>();
+
+        for (ModpackFile file : prepared.manifest.getFiles()) {
+            FileInspection inspection = inspectFile(prepared.gameDirectory, file);
+            entries.add(toPreviewEntry(file, inspection));
+            if (inspection.isReused()) {
+                reusedFiles++;
+            } else {
+                downloadFiles++;
+                if (file.getSize() != null && file.getSize().longValue() > 0L) {
+                    downloadBytes += file.getSize().longValue();
+                }
+            }
+        }
+
+        log(
+            logSink,
+            "Preview complete. Need sync: " + downloadFiles
+                + ", up to date: " + reusedFiles
+                + ", bytes to download: " + downloadBytes
+        );
+
+        return new ModpackSyncPreviewResult(
+            prepared.resolvedConfig,
+            prepared.manifest,
+            entries,
+            downloadFiles,
+            reusedFiles,
+            downloadBytes
+        );
+    }
+
+    public ModpackSyncResult sync(LauncherConfig baseConfig, LogSink logSink) throws IOException {
+        PreparedSyncContext prepared = prepareSync(baseConfig, logSink, "Loading manifest");
+        LauncherConfig resolvedConfig = prepared.resolvedConfig;
+        LoadedManifest loadedManifest = prepared.loadedManifest;
+        ModpackManifest manifest = prepared.manifest;
+        Path gameDirectory = prepared.gameDirectory;
 
         log(logSink, "Manifest version: " + valueOrFallback(manifest.getVersion(), "unknown"));
-        log(logSink, "Файлов в manifest: " + manifest.getFiles().size());
+        log(logSink, "Files in manifest: " + manifest.getFiles().size());
 
         int downloadedFiles = 0;
         int reusedFiles = 0;
@@ -83,12 +121,25 @@ public final class ModpackSyncService {
 
         log(
             logSink,
-            "Синхронизация завершена. Скачано: " + downloadedFiles
-                + ", без изменений: " + reusedFiles
-                + ", байт: " + downloadedBytes
+            "Sync completed. Downloaded: " + downloadedFiles
+                + ", reused: " + reusedFiles
+                + ", bytes: " + downloadedBytes
         );
 
         return new ModpackSyncResult(resolvedConfig, manifest, downloadedFiles, reusedFiles, downloadedBytes);
+    }
+
+    private PreparedSyncContext prepareSync(LauncherConfig baseConfig, LogSink logSink, String manifestLogPrefix)
+        throws IOException {
+        LauncherConfig resolvedConfig = LauncherDefaults.applyMissingValues(baseConfig.copy());
+        String manifestUrl = requireText(resolvedConfig.getManifestUrl(), "Укажи URL manifest.json.");
+        Path gameDirectory = resolveGameDirectory(resolvedConfig.getGameDirectory());
+
+        log(logSink, manifestLogPrefix + ": " + manifestUrl);
+        LoadedManifest loadedManifest = manifestClient.load(manifestUrl);
+        ModpackManifest manifest = loadedManifest.getManifest();
+        applyManifestSettings(resolvedConfig, manifest, gameDirectory);
+        return new PreparedSyncContext(resolvedConfig, loadedManifest, manifest, gameDirectory);
     }
 
     private FileSyncOutcome syncFile(
@@ -98,23 +149,16 @@ public final class ModpackSyncService {
         ModpackFile file,
         LogSink logSink
     ) throws IOException {
-        Path target = resolveTargetPath(gameDirectory, file.getPath());
-        String expectedSha256 = requireText(file.getSha256(), "Для файла " + file.getPath() + " не указан sha256.");
+        FileInspection inspection = inspectFile(gameDirectory, file);
+        Path target = inspection.getTarget();
 
-        if (Files.exists(target) && !Files.isRegularFile(target)) {
-            throw new IllegalArgumentException("Ожидался файл, но найден не файл: " + target);
-        }
-
-        if (Files.isRegularFile(target)) {
-            String existingSha256 = ChecksumUtils.sha256(target);
-            if (existingSha256.equalsIgnoreCase(expectedSha256)) {
-                log(logSink, "Без изменений: " + file.getPath());
-                return FileSyncOutcome.reused();
-            }
+        if (inspection.isReused()) {
+            log(logSink, "Up to date: " + file.getPath());
+            return FileSyncOutcome.reused();
         }
 
         URL downloadUrl = resolveDownloadUrl(loadedManifest, manifest, file);
-        log(logSink, "Скачивание: " + file.getPath() + " <- " + downloadUrl);
+        log(logSink, "Download: " + file.getPath() + " <- " + downloadUrl);
 
         Path parent = target.getParent();
         if (parent != null) {
@@ -124,7 +168,7 @@ public final class ModpackSyncService {
         Path tempFile = Files.createTempFile(parent, target.getFileName().toString(), ".part");
         try {
             long downloadedBytes = download(downloadUrl, tempFile);
-            verifyDownloadedFile(tempFile, file, expectedSha256);
+            verifyDownloadedFile(tempFile, file, inspection.getExpectedSha256());
             Files.move(tempFile, target, StandardCopyOption.REPLACE_EXISTING);
 
             if (file.isExecutable()) {
@@ -135,6 +179,37 @@ public final class ModpackSyncService {
         } finally {
             Files.deleteIfExists(tempFile);
         }
+    }
+
+    private static FileInspection inspectFile(Path gameDirectory, ModpackFile file) throws IOException {
+        Path target = resolveTargetPath(gameDirectory, file.getPath());
+        String expectedSha256 = requireText(file.getSha256(), "Для файла " + file.getPath() + " не указан sha256.");
+
+        if (Files.exists(target) && !Files.isRegularFile(target)) {
+            throw new IllegalArgumentException("Ожидался файл, но найден не файл: " + target);
+        }
+
+        if (!Files.isRegularFile(target)) {
+            return FileInspection.download(target, expectedSha256, "missing");
+        }
+
+        String existingSha256 = ChecksumUtils.sha256(target);
+        if (existingSha256.equalsIgnoreCase(expectedSha256)) {
+            return FileInspection.reused(target, expectedSha256);
+        }
+
+        return FileInspection.download(target, expectedSha256, "sha256-mismatch");
+    }
+
+    private static ModpackSyncPreviewEntry toPreviewEntry(ModpackFile file, FileInspection inspection) {
+        return new ModpackSyncPreviewEntry(
+            file.getPath(),
+            inspection.getTarget().toString(),
+            inspection.getExpectedSha256(),
+            file.getSize(),
+            inspection.isReused() ? ModpackSyncPreviewEntry.State.REUSED : ModpackSyncPreviewEntry.State.DOWNLOAD,
+            inspection.getReason()
+        );
     }
 
     private static long download(URL downloadUrl, Path target) throws IOException {
@@ -303,6 +378,65 @@ public final class ModpackSyncService {
 
         long getDownloadedBytes() {
             return downloadedBytes;
+        }
+    }
+
+    private static final class FileInspection {
+
+        private final Path target;
+        private final String expectedSha256;
+        private final boolean reused;
+        private final String reason;
+
+        private FileInspection(Path target, String expectedSha256, boolean reused, String reason) {
+            this.target = target;
+            this.expectedSha256 = expectedSha256;
+            this.reused = reused;
+            this.reason = reason;
+        }
+
+        static FileInspection reused(Path target, String expectedSha256) {
+            return new FileInspection(target, expectedSha256, true, "up-to-date");
+        }
+
+        static FileInspection download(Path target, String expectedSha256, String reason) {
+            return new FileInspection(target, expectedSha256, false, reason);
+        }
+
+        Path getTarget() {
+            return target;
+        }
+
+        String getExpectedSha256() {
+            return expectedSha256;
+        }
+
+        boolean isReused() {
+            return reused;
+        }
+
+        String getReason() {
+            return reason;
+        }
+    }
+
+    private static final class PreparedSyncContext {
+
+        private final LauncherConfig resolvedConfig;
+        private final LoadedManifest loadedManifest;
+        private final ModpackManifest manifest;
+        private final Path gameDirectory;
+
+        private PreparedSyncContext(
+            LauncherConfig resolvedConfig,
+            LoadedManifest loadedManifest,
+            ModpackManifest manifest,
+            Path gameDirectory
+        ) {
+            this.resolvedConfig = resolvedConfig;
+            this.loadedManifest = loadedManifest;
+            this.manifest = manifest;
+            this.gameDirectory = gameDirectory;
         }
     }
 }

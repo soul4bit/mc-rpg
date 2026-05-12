@@ -1,7 +1,7 @@
 package ru.mcrpg.launcher;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -98,6 +98,76 @@ class ModpackSyncServiceTest {
         );
 
         assertEquals("Путь файла выходит за пределы папки игры: ../escape.txt", exception.getMessage());
+    }
+
+    @Test
+    void previewReportsMissingAndOutdatedFilesWithoutDownloading() throws Exception {
+        Path sourceDirectory = Files.createDirectories(tempDirectory.resolve("source"));
+        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2864.jar", "forge-client");
+        Path modJar = writeFile(sourceDirectory, "mods/examplemod.jar", "example-mod");
+        Path configFile = writeFile(sourceDirectory, "config/rpg.cfg", "difficulty=hard");
+
+        Path manifest = tempDirectory.resolve("manifest.json");
+        Files.write(
+            manifest,
+            buildManifest(sourceDirectory, forgeJar, modJar, configFile).getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path clientDirectory = Files.createDirectories(tempDirectory.resolve("client"));
+        Files.copy(forgeJar, clientDirectory.resolve("forge-1.12.2-14.23.5.2864.jar"));
+        writeFile(clientDirectory, "mods/examplemod.jar", "stale-mod");
+
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setManifestUrl(manifest.toUri().toURL().toString());
+        config.setGameDirectory(clientDirectory.toString());
+
+        ModpackSyncService service = new ModpackSyncService(new ModpackManifestClient());
+        ModpackSyncPreviewResult previewResult = service.preview(config, null);
+
+        assertEquals(2, previewResult.getDownloadFiles());
+        assertEquals(1, previewResult.getReusedFiles());
+        assertEquals(Files.size(modJar) + Files.size(configFile), previewResult.getDownloadBytes());
+        assertFalse(Files.exists(clientDirectory.resolve("config/rpg.cfg")));
+
+        ModpackSyncPreviewEntry forgeEntry = findPreviewEntry(previewResult, "forge-1.12.2-14.23.5.2864.jar");
+        assertEquals(ModpackSyncPreviewEntry.State.REUSED, forgeEntry.getState());
+        assertEquals("up-to-date", forgeEntry.getReason());
+
+        ModpackSyncPreviewEntry modEntry = findPreviewEntry(previewResult, "mods/examplemod.jar");
+        assertEquals(ModpackSyncPreviewEntry.State.DOWNLOAD, modEntry.getState());
+        assertEquals("sha256-mismatch", modEntry.getReason());
+
+        ModpackSyncPreviewEntry configEntry = findPreviewEntry(previewResult, "config/rpg.cfg");
+        assertEquals(ModpackSyncPreviewEntry.State.DOWNLOAD, configEntry.getState());
+        assertEquals("missing", configEntry.getReason());
+    }
+
+    @Test
+    void previewAppliesManifestLauncherSettingsToResolvedConfig() throws Exception {
+        Path sourceDirectory = Files.createDirectories(tempDirectory.resolve("source"));
+        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2864.jar", "forge-client");
+        Path modJar = writeFile(sourceDirectory, "mods/examplemod.jar", "example-mod");
+        Path configFile = writeFile(sourceDirectory, "config/rpg.cfg", "difficulty=hard");
+
+        Path manifest = tempDirectory.resolve("manifest.json");
+        Files.write(
+            manifest,
+            buildManifest(sourceDirectory, forgeJar, modJar, configFile).getBytes(StandardCharsets.UTF_8)
+        );
+
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setManifestUrl(manifest.toUri().toURL().toString());
+        config.setGameDirectory(tempDirectory.resolve("client").toString());
+        config.setServerHost("");
+        config.setAuthBaseUrl("");
+        config.setServerId("");
+
+        ModpackSyncService service = new ModpackSyncService(new ModpackManifestClient());
+        ModpackSyncPreviewResult previewResult = service.preview(config, null);
+
+        assertEquals(LauncherConfig.DEFAULT_SERVER_HOST, previewResult.getResolvedConfig().getServerHost());
+        assertEquals("http://" + LauncherConfig.DEFAULT_SERVER_HOST + ":8081", previewResult.getResolvedConfig().getAuthBaseUrl());
+        assertEquals("obsidiangate-main", previewResult.getResolvedConfig().getServerId());
     }
 
     @Test
@@ -413,6 +483,15 @@ class ModpackSyncServiceTest {
             + "      \"sha256\": \"" + ChecksumUtils.sha256(file) + "\",\n"
             + "      \"size\": " + Files.size(file) + "\n"
             + "    }";
+    }
+
+    private static ModpackSyncPreviewEntry findPreviewEntry(ModpackSyncPreviewResult previewResult, String path) {
+        for (ModpackSyncPreviewEntry entry : previewResult.getEntries()) {
+            if (path.equals(entry.getPath())) {
+                return entry;
+            }
+        }
+        throw new AssertionError("Preview entry was not found: " + path);
     }
 
     private static Path writeFile(Path root, String relativePath, String content) throws IOException {

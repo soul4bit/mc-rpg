@@ -10,19 +10,24 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicLong;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import ru.mcrpg.launcher.ui.SvgIcons;
 
 public final class LauncherShellController extends AbstractScreenController {
@@ -30,12 +35,14 @@ public final class LauncherShellController extends AbstractScreenController {
     private static final DateTimeFormatter LOG_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final int SERVER_STATUS_TIMEOUT_MS = 1500;
     private static final String DASHBOARD_UNKNOWN = "—";
+    private static final int PREVIEW_ENTRY_LIMIT = 4;
 
     private final LaunchCommandBuilder commandBuilder = new LaunchCommandBuilder();
     private final ModpackManifestClient manifestClient = new ModpackManifestClient();
     private final ModpackSyncService modpackSyncService = new ModpackSyncService(manifestClient);
     private final AtomicLong endpointPreviewSequence = new AtomicLong();
     private final AtomicLong serverPresenceSequence = new AtomicLong();
+    private final AtomicLong syncPreviewSequence = new AtomicLong();
 
     private LauncherConfig currentConfig = LauncherConfig.defaults();
 
@@ -82,6 +89,9 @@ public final class LauncherShellController extends AbstractScreenController {
     private Button syncButton;
 
     @FXML
+    private Button previewButton;
+
+    @FXML
     private Button launchButton;
 
     @FXML
@@ -106,6 +116,12 @@ public final class LauncherShellController extends AbstractScreenController {
     private Label syncBytesLabel;
 
     @FXML
+    private Label previewSummaryLabel;
+
+    @FXML
+    private VBox previewChangesBox;
+
+    @FXML
     private TextArea logArea;
 
     @FXML
@@ -123,6 +139,7 @@ public final class LauncherShellController extends AbstractScreenController {
         updateProgressState(false, "Готово к запуску", "ГОТОВО", 0.0d);
         syncFileLabel.setText("Лаунчер готов к работе.");
         syncBytesLabel.setText("Файловая активность пока отсутствует.");
+        resetPreviewState();
         onlinePlayersValueLabel.setText(DASHBOARD_UNKNOWN);
         minecraftVersionValueLabel.setText(DASHBOARD_UNKNOWN);
         manifestVersionValueLabel.setText(DASHBOARD_UNKNOWN);
@@ -169,6 +186,7 @@ public final class LauncherShellController extends AbstractScreenController {
         applyWindowControlIcons();
 
         syncButton.setOnAction(event -> syncFiles());
+        previewButton.setOnAction(event -> previewSyncChanges());
         launchButton.setOnAction(event -> launchClient());
     }
 
@@ -194,9 +212,11 @@ public final class LauncherShellController extends AbstractScreenController {
             LauncherDefaults.defaultManifestUrl(host)
         );
 
+        syncPreviewSequence.incrementAndGet();
         serverRouteValueLabel.setText(formatRoute(resolvedConfig));
         manifestUrlValueLabel.setText(manifestUrl);
         downloadBaseValueLabel.setText(deriveManifestDirectory(manifestUrl));
+        resetPreviewState();
         applyDashboardLoadingState(hasText(manifestUrl));
         updateServerPresence("ПРОВЕРКА", "checking");
         refreshEndpointPreviewAsync(resolvedConfig);
@@ -223,6 +243,57 @@ public final class LauncherShellController extends AbstractScreenController {
 
         appendLog("Sync requested.");
         runTask(LauncherAction.SYNC_ONLY, config);
+    }
+
+    private void previewSyncChanges() {
+        LauncherConfig config;
+        try {
+            config = buildCurrentConfig();
+            requireText(config.getManifestUrl(), "Set manifest URL in the launcher config before previewing sync.");
+        } catch (Exception exception) {
+            showLauncherError(exception.getMessage());
+            return;
+        }
+
+        appendLog("Sync preview requested.");
+        long requestId = syncPreviewSequence.incrementAndGet();
+        setBusy(true);
+        applyPreviewLoadingState();
+        updateProgressState(true, "Проверяем локальные файлы", "PREVIEW", ProgressBar.INDETERMINATE_PROGRESS);
+
+        Task<ModpackSyncPreviewResult> task = new Task<ModpackSyncPreviewResult>() {
+            @Override
+            protected ModpackSyncPreviewResult call() throws Exception {
+                return modpackSyncService.preview(config, LauncherShellController.this::appendLogAsync);
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            if (requestId != syncPreviewSequence.get()) {
+                return;
+            }
+            setBusy(false);
+            applyPreviewResult(task.getValue());
+        });
+
+        task.setOnFailed(event -> {
+            if (requestId != syncPreviewSequence.get()) {
+                return;
+            }
+            setBusy(false);
+            Throwable exception = task.getException();
+            updateProgressState(false, "Предпросмотр завершился ошибкой", "ОШИБКА", 0.0d);
+            syncBytesLabel.setText("Предпросмотр не построен.");
+            previewSummaryLabel.setText("Не удалось сравнить локальные файлы с manifest.files[].");
+            previewChangesBox.getChildren().setAll(
+                createPreviewEmptyState(exception == null ? "Preview failed." : exception.getMessage())
+            );
+            showLauncherError(exception == null ? "Preview failed." : exception.getMessage());
+        });
+
+        Thread thread = new Thread(task, "launcher-shell-preview");
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void launchClient() {
@@ -355,6 +426,7 @@ public final class LauncherShellController extends AbstractScreenController {
             "Загружено " + syncResult.getDownloadedFiles() + " файлов, переиспользовано "
                 + syncResult.getReusedFiles() + "."
         );
+        applyPreviewFromSyncResult(syncResult);
         serverRouteValueLabel.setText(formatRoute(resolvedConfig));
         downloadBaseValueLabel.setText(resolveDisplayDownloadBase(resolvedConfig.getManifestUrl(), syncResult.getManifest()));
         manifestVersionValueLabel.setText(resolveManifestVersion(syncResult.getManifest()));
@@ -364,6 +436,145 @@ public final class LauncherShellController extends AbstractScreenController {
             resolvedConfig.getServerPort(),
             formatRoute(resolvedConfig)
         );
+    }
+
+    private void applyPreviewResult(ModpackSyncPreviewResult previewResult) {
+        int downloadFiles = previewResult.getDownloadFiles();
+        int reusedFiles = previewResult.getReusedFiles();
+        int totalFiles = previewResult.getEntries().size();
+        String manifestVersion = resolveManifestVersion(previewResult.getManifest());
+
+        if (downloadFiles <= 0) {
+            updateProgressState(false, "Локальные файлы актуальны", "PREVIEW", 0.0d);
+            syncFileLabel.setText("Все manifest.files[] уже совпадают с локальной сборкой.");
+            syncBytesLabel.setText("К скачиванию 0 B");
+            previewSummaryLabel.setText(
+                "Manifest " + manifestVersion + ": все " + totalFiles
+                    + " файлов актуальны. Preview сравнивает только manifest.files[]."
+            );
+            previewChangesBox.getChildren().setAll(
+                createPreviewEmptyState("Изменений не найдено. Синхронизация скачает 0 файлов.")
+            );
+            return;
+        }
+
+        updateProgressState(false, "Нужна синхронизация", "PREVIEW", 0.0d);
+        syncFileLabel.setText("Найдено " + downloadFiles + " файлов для обновления до запуска.");
+        syncBytesLabel.setText("К скачиванию " + formatBytes(previewResult.getDownloadBytes()));
+        previewSummaryLabel.setText(
+            "Manifest " + manifestVersion + ": " + downloadFiles + " из " + totalFiles
+                + " файлов требуют sync, актуальны " + reusedFiles + "."
+        );
+        renderPreviewChanges(previewResult.getEntries(), downloadFiles);
+    }
+
+    private void applyPreviewFromSyncResult(ModpackSyncResult syncResult) {
+        previewSummaryLabel.setText(
+            "Manifest " + resolveManifestVersion(syncResult.getManifest())
+                + ": sync завершен, локальная копия должна совпадать с manifest.files[]."
+        );
+        previewChangesBox.getChildren().setAll(
+            createPreviewEmptyState("Последняя синхронизация завершена. Для перепроверки запустите предпросмотр снова.")
+        );
+    }
+
+    private void applyPreviewLoadingState() {
+        previewSummaryLabel.setText("Проверяем sha256 локальных файлов и сравниваем их с manifest.files[].");
+        previewChangesBox.getChildren().setAll(
+            createPreviewEmptyState("Сканируем game directory и строим список изменений...")
+        );
+    }
+
+    private void resetPreviewState() {
+        previewSummaryLabel.setText("Предпросмотр ещё не запускался.");
+        previewChangesBox.getChildren().setAll(
+            createPreviewEmptyState("Нажмите «Предпросмотр», чтобы заранее увидеть изменения перед sync.")
+        );
+    }
+
+    private void renderPreviewChanges(List<ModpackSyncPreviewEntry> entries, int totalChanged) {
+        List<Node> nodes = new ArrayList<Node>();
+        int shown = 0;
+        for (ModpackSyncPreviewEntry entry : entries) {
+            if (entry.getState() != ModpackSyncPreviewEntry.State.DOWNLOAD) {
+                continue;
+            }
+            if (shown >= PREVIEW_ENTRY_LIMIT) {
+                break;
+            }
+            nodes.add(createPreviewEntryCard(entry));
+            shown++;
+        }
+
+        if (nodes.isEmpty()) {
+            nodes.add(createPreviewEmptyState("Изменений не найдено."));
+        } else if (totalChanged > shown) {
+            Label moreLabel = new Label("Еще " + (totalChanged - shown) + " файлов ждут синхронизации.");
+            moreLabel.getStyleClass().add("sync-preview-note");
+            nodes.add(moreLabel);
+        }
+
+        previewChangesBox.getChildren().setAll(nodes);
+    }
+
+    private Node createPreviewEntryCard(ModpackSyncPreviewEntry entry) {
+        VBox card = new VBox(8.0);
+        card.getStyleClass().add("sync-preview-card");
+        card.setPadding(new Insets(12.0, 14.0, 12.0, 14.0));
+
+        HBox titleRow = new HBox(10.0);
+        Label pathLabel = new Label(normalizeText(entry.getPath()));
+        pathLabel.getStyleClass().add("sync-preview-title");
+        pathLabel.setWrapText(true);
+        HBox.setHgrow(pathLabel, Priority.ALWAYS);
+        titleRow.getChildren().addAll(
+            pathLabel,
+            createPreviewBadge(resolvePreviewCategory(entry.getPath())),
+            createPreviewBadge(resolvePreviewReasonLabel(entry.getReason()))
+        );
+
+        Label reasonLabel = new Label(resolvePreviewReasonText(entry.getReason()));
+        reasonLabel.getStyleClass().add("sync-preview-detail");
+        reasonLabel.setWrapText(true);
+
+        Label targetLabel = new Label("Target: " + normalizeText(entry.getTargetPath()));
+        targetLabel.getStyleClass().add("sync-preview-detail");
+        targetLabel.setWrapText(true);
+
+        HBox metaRow = new HBox(14.0);
+        metaRow.getChildren().add(createPreviewMeta("SIZE", formatBytes(entry.getSize() == null ? 0L : entry.getSize().longValue())));
+        metaRow.getChildren().add(createPreviewMeta("SHA", shortenHash(entry.getSha256())));
+
+        card.getChildren().addAll(titleRow, reasonLabel, targetLabel, metaRow);
+        return card;
+    }
+
+    private Node createPreviewMeta(String labelText, String valueText) {
+        VBox meta = new VBox(2.0);
+        Label label = new Label(labelText);
+        label.getStyleClass().add("sync-preview-meta-label");
+        Label value = new Label(valueText);
+        value.getStyleClass().add("sync-preview-meta-value");
+        meta.getChildren().addAll(label, value);
+        return meta;
+    }
+
+    private Label createPreviewBadge(String text) {
+        Label badge = new Label(text.toUpperCase(Locale.ROOT));
+        badge.getStyleClass().add("sync-preview-badge");
+        return badge;
+    }
+
+    private Node createPreviewEmptyState(String text) {
+        VBox box = new VBox();
+        box.getStyleClass().add("sync-preview-empty");
+        box.setPadding(new Insets(12.0, 14.0, 12.0, 14.0));
+
+        Label label = new Label(text);
+        label.getStyleClass().add("sync-preview-detail");
+        label.setWrapText(true);
+        box.getChildren().add(label);
+        return box;
     }
 
     private void refreshEndpointPreviewAsync(LauncherConfig config) {
@@ -559,6 +770,7 @@ public final class LauncherShellController extends AbstractScreenController {
 
     private void setBusy(boolean busy) {
         syncButton.setDisable(busy);
+        previewButton.setDisable(busy);
         launchButton.setDisable(busy);
     }
 
@@ -702,6 +914,73 @@ public final class LauncherShellController extends AbstractScreenController {
     private static String formatMegabytes(long bytes) {
         double megabytes = bytes / 1024.0d / 1024.0d;
         return String.format(Locale.US, "%.1f MB", Double.valueOf(megabytes));
+    }
+
+    private static String formatBytes(long bytes) {
+        if (bytes <= 0L) {
+            return "0 B";
+        }
+        if (bytes < 1024L) {
+            return bytes + " B";
+        }
+        double kilobytes = bytes / 1024.0d;
+        if (kilobytes < 1024.0d) {
+            return String.format(Locale.US, "%.1f KB", Double.valueOf(kilobytes));
+        }
+        double megabytes = kilobytes / 1024.0d;
+        return String.format(Locale.US, "%.1f MB", Double.valueOf(megabytes));
+    }
+
+    private static String normalizeText(String value) {
+        return hasText(value) ? value.trim() : DASHBOARD_UNKNOWN;
+    }
+
+    private static String shortenHash(String value) {
+        if (!hasText(value)) {
+            return DASHBOARD_UNKNOWN;
+        }
+        String trimmed = value.trim();
+        if (trimmed.length() <= 16) {
+            return trimmed;
+        }
+        return trimmed.substring(0, 12) + "..." + trimmed.substring(trimmed.length() - 8);
+    }
+
+    private static String resolvePreviewCategory(String path) {
+        if (!hasText(path)) {
+            return "file";
+        }
+        String normalized = path.trim().replace('\\', '/').toLowerCase(Locale.ROOT);
+        if (normalized.startsWith("mods/")) {
+            return "mod";
+        }
+        if (normalized.startsWith("config/")) {
+            return "config";
+        }
+        if (normalized.startsWith("resourcepacks/")) {
+            return "assets";
+        }
+        return "file";
+    }
+
+    private static String resolvePreviewReasonLabel(String reason) {
+        if ("missing".equals(reason)) {
+            return "missing";
+        }
+        if ("sha256-mismatch".equals(reason)) {
+            return "replace";
+        }
+        return "ready";
+    }
+
+    private static String resolvePreviewReasonText(String reason) {
+        if ("missing".equals(reason)) {
+            return "Файл отсутствует локально и будет скачан заново.";
+        }
+        if ("sha256-mismatch".equals(reason)) {
+            return "SHA-256 не совпадает с manifest, поэтому файл будет заменен.";
+        }
+        return "Локальная копия уже совпадает с manifest.";
     }
 
     private static boolean shouldSyncBeforeLaunch(LauncherConfig config) {
