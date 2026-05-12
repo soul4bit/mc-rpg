@@ -56,7 +56,7 @@ public final class AuthController extends AbstractScreenController {
         if (username != null && !username.trim().isEmpty() && !"Player".equalsIgnoreCase(username.trim())) {
             loginField.setText(username.trim());
         }
-        statusLabel.setText("");
+        statusLabel.setText(resolveStatusNotice());
     }
 
     @FXML
@@ -129,6 +129,11 @@ public final class AuthController extends AbstractScreenController {
 
     private void setStatus(String message) {
         statusLabel.setText(message == null ? "" : message.trim());
+    }
+
+    private String resolveStatusNotice() {
+        String notice = state().consumeAuthNotice();
+        return notice == null ? "" : notice;
     }
 
     private void applyWindowControls() {

@@ -3,10 +3,12 @@ package ru.mcrpg.launcher;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.time.Duration;
+import java.util.Locale;
 
 public final class AuthService {
 
     private static final Duration ACCESS_TOKEN_REFRESH_WINDOW = Duration.ofSeconds(45);
+    private static final String EXPIRED_SESSION_MESSAGE = "Сессия истекла. Войдите в аккаунт снова.";
 
     private final AuthApiClient authApiClient;
     private final AuthSessionStore authSessionStore;
@@ -34,7 +36,7 @@ public final class AuthService {
             return session;
         }
 
-        AuthSession refreshed = authApiClient.refresh(config.getAuthBaseUrl(), session);
+        AuthSession refreshed = withSessionRecovery(() -> authApiClient.refresh(config.getAuthBaseUrl(), session));
         AuthSession enriched = refreshed.withAccount(session.getAccount()).withPersistence(session.isPersisted());
         persist(enriched);
         return enriched;
@@ -42,7 +44,7 @@ public final class AuthService {
 
     public AuthAccount fetchProfile(LauncherConfig config, AuthSession session) throws IOException {
         AuthSession refreshed = refreshIfNeeded(config, session);
-        AuthAccount account = authApiClient.me(config.getAuthBaseUrl(), refreshed.getAccessToken());
+        AuthAccount account = withSessionRecovery(() -> authApiClient.me(config.getAuthBaseUrl(), refreshed.getAccessToken()));
         AuthSession enriched = refreshed.withAccount(account);
         persist(enriched);
         return account;
@@ -51,11 +53,11 @@ public final class AuthService {
     public GameTicket createGameTicket(LauncherConfig config, AuthSession session) throws IOException {
         AuthSession refreshed = refreshIfNeeded(config, session);
         persist(refreshed);
-        return authApiClient.createGameTicket(
+        return withSessionRecovery(() -> authApiClient.createGameTicket(
             config.getAuthBaseUrl(),
             refreshed.getAccessToken(),
             config.getServerId()
-        );
+        ));
     }
 
     public void logoutQuietly(LauncherConfig config, AuthSession session) {
@@ -89,6 +91,59 @@ public final class AuthService {
         return persisted;
     }
 
+    private <T> T withSessionRecovery(IoSupplier<T> action) throws IOException {
+        try {
+            return action.get();
+        } catch (IOException exception) {
+            throw normalizeSessionFailure(exception);
+        }
+    }
+
+    private IOException normalizeSessionFailure(IOException exception) {
+        if (!isExpiredSession(exception)) {
+            return exception;
+        }
+        clearStoredSessionQuietly();
+        return new AuthSessionExpiredException(EXPIRED_SESSION_MESSAGE, exception);
+    }
+
+    private void clearStoredSessionQuietly() {
+        try {
+            authSessionStore.clear();
+        } catch (IOException ignored) {
+        }
+    }
+
+    private static boolean isExpiredSession(IOException exception) {
+        if (exception instanceof AuthSessionExpiredException) {
+            return true;
+        }
+        if (!(exception instanceof AuthClientException)) {
+            return false;
+        }
+
+        AuthClientException authException = (AuthClientException) exception;
+        if (authException.getStatusCode() == 401) {
+            return true;
+        }
+
+        String errorCode = normalizeLower(authException.getErrorCode());
+        String message = normalizeLower(authException.getMessage());
+        return errorCode.contains("refresh_token")
+            || errorCode.contains("access_token")
+            || errorCode.contains("invalid_token")
+            || errorCode.contains("token_expired")
+            || errorCode.contains("unauthorized")
+            || message.contains("refresh token")
+            || message.contains("access token")
+            || message.contains("token expired")
+            || message.contains("unauthorized");
+    }
+
+    private static String normalizeLower(String value) {
+        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+    }
+
     private static String deviceName() {
         String host = "unknown-host";
         try {
@@ -97,5 +152,10 @@ public final class AuthService {
         }
         PlatformInfo platform = PlatformInfo.current();
         return LauncherBrand.APP_NAME + "@" + host + " (" + platform.getOs() + "/" + platform.getArch() + ")";
+    }
+
+    @FunctionalInterface
+    private interface IoSupplier<T> {
+        T get() throws IOException;
     }
 }

@@ -111,6 +111,9 @@ public final class ProfileController extends AbstractScreenController {
 
         task.setOnFailed(event -> {
             Throwable error = task.getException();
+            if (handleExpiredSession(error)) {
+                return;
+            }
             statusLabel.setText(error == null ? "Не удалось обновить профиль." : error.getMessage());
         });
 
@@ -126,6 +129,18 @@ public final class ProfileController extends AbstractScreenController {
         accountIdLabel.setText(account.getId());
         launcherPathLabel.setText(state().getConfig().getGameDirectory());
         launcherServerIdLabel.setText(state().getConfig().getServerId());
+    }
+
+    private boolean handleExpiredSession(Throwable error) {
+        if (!(error instanceof AuthSessionExpiredException)) {
+            return false;
+        }
+
+        state().setSession(null);
+        state().setAuthNotice(error.getMessage());
+        context().persistStateQuietly();
+        router().open(ScreenRouter.Screen.AUTH);
+        return true;
     }
 
     private void applyWindowControls() {

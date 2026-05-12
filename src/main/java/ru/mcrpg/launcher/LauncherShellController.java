@@ -289,6 +289,9 @@ public final class LauncherShellController extends AbstractScreenController {
         task.setOnFailed(event -> {
             setBusy(false);
             Throwable exception = task.getException();
+            if (handleExpiredSession(exception)) {
+                return;
+            }
             updateProgressState(false, "Операция завершилась ошибкой", "ОШИБКА", 0.0d);
             syncBytesLabel.setText("Подробности смотрите в журнале лаунчера.");
             showLauncherError(exception == null ? "Unknown launcher error." : exception.getMessage());
@@ -466,6 +469,24 @@ public final class LauncherShellController extends AbstractScreenController {
     private void showLauncherError(String message) {
         appendLog("Error: " + message);
         showError(message);
+    }
+
+    private boolean handleExpiredSession(Throwable exception) {
+        if (!(exception instanceof AuthSessionExpiredException)) {
+            return false;
+        }
+
+        String message = exception.getMessage();
+        state().setSession(null);
+        state().setAuthNotice(message);
+        context().persistStateQuietly();
+        applyProfileState();
+        updateProgressState(false, "Требуется повторный вход", "СЕССИЯ", 0.0d);
+        syncFileLabel.setText(message);
+        syncBytesLabel.setText("Сохраненная сессия сброшена. Авторизуйтесь снова.");
+        appendLog("Saved session expired. Redirecting to login.");
+        router().open(ScreenRouter.Screen.AUTH);
+        return true;
     }
 
     private void applySvgIconOnlyButton(Button button, String iconName, double size, String color) {
