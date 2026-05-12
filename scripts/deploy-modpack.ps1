@@ -7,6 +7,8 @@ param(
     [string]$RemoteServerModsDir = "/home/minecraft/mc-rpg/mods",
     [string]$RemoteWebRoot = "/var/www/mc-rpg",
     [string]$ServiceName = "mc-rpg.service",
+    [string]$RemoteDeployCommand = "/usr/local/bin/obsidiangate-deploy",
+    [switch]$LegacyPromptSudo,
     [switch]$SkipRestart
 )
 
@@ -94,29 +96,36 @@ Invoke-External -Command "scp" -Arguments @(
 ) -Action "Upload modpack release"
 
 Write-Host "==> Installing modpack release on remote host" -ForegroundColor Cyan
-$remoteCommands = [System.Collections.Generic.List[string]]::new()
-$remoteCommands.Add("set -e")
-$remoteCommands.Add("sudo -v")
-$remoteCommands.Add("mkdir -p '$RemoteServerModsDir'")
-$remoteCommands.Add("install -m 644 '$RemoteStageDir/$serverFileName' '$RemoteServerModsDir/$serverFileName'")
-$remoteCommands.Add("sudo mkdir -p '$RemoteWebRoot'")
-$remoteCommands.Add("if command -v rsync >/dev/null 2>&1; then")
-$remoteCommands.Add("  sudo mkdir -p '$RemoteWebRoot/client'")
-$remoteCommands.Add("  sudo rsync -a --delete '$RemoteStageDir/client/' '$RemoteWebRoot/client/'")
-$remoteCommands.Add("else")
-$remoteCommands.Add("  sudo mkdir -p '$RemoteWebRoot/client'")
-$remoteCommands.Add("  sudo cp -a '$RemoteStageDir/client/.' '$RemoteWebRoot/client/'")
-$remoteCommands.Add("fi")
-$remoteCommands.Add("sudo install -m 644 '$RemoteStageDir/manifest.json' '$RemoteWebRoot/manifest.json'")
-$remoteCommands.Add("sha256sum '$RemoteServerModsDir/$serverFileName'")
-$remoteCommands.Add("sha256sum '$RemoteWebRoot/manifest.json'")
+$remoteScript = $null
 
-if (-not $SkipRestart) {
-    $remoteCommands.Add("sudo systemctl restart '$ServiceName'")
-    $remoteCommands.Add("sudo systemctl status '$ServiceName' --no-pager -l")
+if ($LegacyPromptSudo) {
+    $remoteCommands = [System.Collections.Generic.List[string]]::new()
+    $remoteCommands.Add("set -e")
+    $remoteCommands.Add("sudo -v")
+    $remoteCommands.Add("mkdir -p '$RemoteServerModsDir'")
+    $remoteCommands.Add("install -m 644 '$RemoteStageDir/$serverFileName' '$RemoteServerModsDir/$serverFileName'")
+    $remoteCommands.Add("sudo mkdir -p '$RemoteWebRoot'")
+    $remoteCommands.Add("if command -v rsync >/dev/null 2>&1; then")
+    $remoteCommands.Add("  sudo mkdir -p '$RemoteWebRoot/client'")
+    $remoteCommands.Add("  sudo rsync -a --delete '$RemoteStageDir/client/' '$RemoteWebRoot/client/'")
+    $remoteCommands.Add("else")
+    $remoteCommands.Add("  sudo mkdir -p '$RemoteWebRoot/client'")
+    $remoteCommands.Add("  sudo cp -a '$RemoteStageDir/client/.' '$RemoteWebRoot/client/'")
+    $remoteCommands.Add("fi")
+    $remoteCommands.Add("sudo install -m 644 '$RemoteStageDir/manifest.json' '$RemoteWebRoot/manifest.json'")
+    $remoteCommands.Add("sha256sum '$RemoteServerModsDir/$serverFileName'")
+    $remoteCommands.Add("sha256sum '$RemoteWebRoot/manifest.json'")
+
+    if (-not $SkipRestart) {
+        $remoteCommands.Add("sudo systemctl restart '$ServiceName'")
+        $remoteCommands.Add("sudo systemctl status '$ServiceName' --no-pager -l")
+    }
+
+    $remoteScript = $remoteCommands -join "`n"
+} else {
+    $skipRestartFlag = if ($SkipRestart) { "1" } else { "0" }
+    $remoteScript = "sudo -n '$RemoteDeployCommand' '$RemoteStageDir' '$serverFileName' '$RemoteServerModsDir' '$RemoteWebRoot' '$ServiceName' '$skipRestartFlag'"
 }
-
-$remoteScript = $remoteCommands -join "`n"
 
 Invoke-External -Command "ssh" -Arguments @(
     $sshTtyArgs +

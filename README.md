@@ -306,3 +306,30 @@ update.files.before.launch=true
 ```powershell
 .\scripts\publish-modpack.ps1 -Target minecraft@192.168.1.103
 ```
+
+## Passwordless deploy setup
+
+Один раз настройте SSH key и `sudo` wrapper:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\setup-deploy-access.ps1 -Target minecraft@192.168.1.103
+```
+
+Скрипт:
+
+- добавляет SSH alias `mc-rpg-deploy` в `~/.ssh/config`
+- устанавливает ваш `~/.ssh/id_ed25519.pub` в `authorized_keys` пользователя `minecraft`
+- ставит `/usr/local/bin/obsidiangate-deploy` на сервер
+- добавляет `sudoers` правило для запуска этого wrapper без пароля
+
+После этого основной сценарий:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\publish-modpack.ps1 -Target mc-rpg-deploy -ManifestVersion 2026.05.12
+```
+
+Если нужно вернуться к старому режиму с интерактивным `sudo`, используйте:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\deploy-modpack.ps1 -Target minecraft@192.168.1.103 -LegacyPromptSudo
+```

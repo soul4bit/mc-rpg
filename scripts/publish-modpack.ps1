@@ -11,6 +11,8 @@ param(
     [string]$RemoteServerModsDir = "/home/minecraft/mc-rpg/mods",
     [string]$RemoteWebRoot = "/var/www/mc-rpg",
     [string]$ServiceName = "mc-rpg.service",
+    [string]$RemoteDeployCommand = "/usr/local/bin/obsidiangate-deploy",
+    [switch]$LegacyPromptSudo,
     [switch]$SkipRestart
 )
 
@@ -39,6 +41,8 @@ if ($LASTEXITCODE -ne 0) {
     -RemoteServerModsDir $RemoteServerModsDir `
     -RemoteWebRoot $RemoteWebRoot `
     -ServiceName $ServiceName `
+    -RemoteDeployCommand $RemoteDeployCommand `
+    -LegacyPromptSudo:$LegacyPromptSudo `
     -SkipRestart:$SkipRestart `
     -WhatIf:$WhatIfPreference
 
