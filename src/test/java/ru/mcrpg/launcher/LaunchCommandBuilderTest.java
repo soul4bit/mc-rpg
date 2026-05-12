@@ -21,7 +21,7 @@ class LaunchCommandBuilderTest {
         config.setJavaCommand("java");
         config.setGameDirectory("C:/Games/MC RPG");
         config.setWorkingDirectory("C:/Games/MC RPG");
-        config.setServerHost("192.168.1.103");
+        config.setServerHost(LauncherConfig.DEFAULT_SERVER_HOST);
         config.setServerPort(25565);
         config.setLaunchTemplate("{java} -jar forge.jar --gameDir {gameDir} --username {username}");
 
@@ -40,13 +40,13 @@ class LaunchCommandBuilderTest {
         config.setJavaCommand("java");
         config.setGameDirectory("/srv/mc-rpg");
         config.setWorkingDirectory("/srv/mc-rpg");
-        config.setServerHost("192.168.1.103");
+        config.setServerHost(LauncherConfig.DEFAULT_SERVER_HOST);
         config.setServerPort(25565);
         config.setLaunchTemplate("{java} --label \"Player {username}\" --server {serverHost}");
 
         List<String> command = builder.build(config);
 
-        assertEquals(Arrays.asList("java", "--label", "Player RPG", "--server", "192.168.1.103"), command);
+        assertEquals(Arrays.asList("java", "--label", "Player RPG", "--server", LauncherConfig.DEFAULT_SERVER_HOST), command);
     }
 
     @Test

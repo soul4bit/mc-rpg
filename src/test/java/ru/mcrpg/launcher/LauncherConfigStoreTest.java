@@ -22,7 +22,7 @@ class LauncherConfigStoreTest {
         config.setJavaCommand("/usr/bin/java");
         config.setGameDirectory("/home/player/.minecraft");
         config.setWorkingDirectory("/home/player/.minecraft");
-        config.setServerHost("192.168.1.103");
+        config.setServerHost(LauncherConfig.DEFAULT_SERVER_HOST);
         config.setServerPort(25565);
         config.setLaunchTemplate("{java} -jar forge.jar --username {username}");
         config.setManifestUrl("https://example.com/manifest.json");
@@ -37,7 +37,7 @@ class LauncherConfigStoreTest {
         assertEquals("/usr/bin/java", restored.getJavaCommand());
         assertEquals("/home/player/.minecraft", restored.getGameDirectory());
         assertEquals("/home/player/.minecraft", restored.getWorkingDirectory());
-        assertEquals("192.168.1.103", restored.getServerHost());
+        assertEquals(LauncherConfig.DEFAULT_SERVER_HOST, restored.getServerHost());
         assertEquals(25565, restored.getServerPort());
         assertEquals("{java} -jar forge.jar --username {username}", restored.getLaunchTemplate());
         assertEquals("https://example.com/manifest.json", restored.getManifestUrl());
@@ -52,12 +52,12 @@ class LauncherConfigStoreTest {
         LauncherConfigStore store = new LauncherConfigStore(configFile);
 
         LauncherConfig config = LauncherConfig.defaults();
-        config.setServerHost("192.168.1.103");
-        config.setManifestUrl("http://192.168.1.103/manifest.json");
+        config.setServerHost(LauncherConfig.DEFAULT_SERVER_HOST);
+        config.setManifestUrl("http://" + LauncherConfig.DEFAULT_SERVER_HOST + "/manifest.json");
 
         store.save(config);
         LauncherConfig restored = store.load();
 
-        assertEquals("http://192.168.1.103:8080/manifest.json", restored.getManifestUrl());
+        assertEquals("http://" + LauncherConfig.DEFAULT_SERVER_HOST + ":8080/manifest.json", restored.getManifestUrl());
     }
 }

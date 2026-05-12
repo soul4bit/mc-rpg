@@ -48,13 +48,13 @@ class ModpackSyncServiceTest {
         assertTrue(Files.exists(tempDirectory.resolve("client/forge-1.12.2-14.23.5.2864.jar")));
         assertTrue(Files.exists(tempDirectory.resolve("client/mods/examplemod.jar")));
         assertTrue(Files.exists(tempDirectory.resolve("client/config/rpg.cfg")));
-        assertEquals("192.168.1.103", result.getResolvedConfig().getServerHost());
+        assertEquals(LauncherConfig.DEFAULT_SERVER_HOST, result.getResolvedConfig().getServerHost());
         assertEquals(25565, result.getResolvedConfig().getServerPort());
         assertEquals(
             "{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}",
             result.getResolvedConfig().getLaunchTemplate()
         );
-        assertEquals("http://192.168.1.103:8081", result.getResolvedConfig().getAuthBaseUrl());
+        assertEquals("http://" + LauncherConfig.DEFAULT_SERVER_HOST + ":8081", result.getResolvedConfig().getAuthBaseUrl());
         assertEquals("obsidiangate-main", result.getResolvedConfig().getServerId());
         assertTrue(result.getResolvedConfig().getWorkingDirectory().endsWith("client"));
         assertEquals(3, result.getDownloadedFiles());
@@ -240,7 +240,7 @@ class ModpackSyncServiceTest {
         assertTrue(command.contains("--tweakClass"));
         assertTrue(command.contains("net.minecraftforge.fml.common.launcher.FMLTweaker"));
         assertTrue(command.contains("--server"));
-        assertTrue(command.contains("192.168.1.103"));
+        assertTrue(command.contains(LauncherConfig.DEFAULT_SERVER_HOST));
         assertTrue(command.contains("--port"));
         assertTrue(command.contains("25565"));
     }
@@ -252,9 +252,9 @@ class ModpackSyncServiceTest {
             + "  \"version\": \"2026.05.05\",\n"
             + "  \"baseUrl\": \"" + sourceDirectory.toUri().toURL().toString() + "\",\n"
             + "  \"launcher\": {\n"
-            + "    \"serverHost\": \"192.168.1.103\",\n"
+            + "    \"serverHost\": \"" + LauncherConfig.DEFAULT_SERVER_HOST + "\",\n"
             + "    \"serverPort\": 25565,\n"
-            + "    \"authBaseUrl\": \"http://192.168.1.103:8081\",\n"
+            + "    \"authBaseUrl\": \"http://" + LauncherConfig.DEFAULT_SERVER_HOST + ":8081\",\n"
             + "    \"serverId\": \"obsidiangate-main\",\n"
             + "    \"workingDirectory\": \".\",\n"
             + "    \"launchTemplate\": \"{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}\"\n"
@@ -280,7 +280,7 @@ class ModpackSyncServiceTest {
             + "  \"version\": \"2026.05.05\",\n"
             + "  \"baseUrl\": \"" + sourceDirectory.toUri().toURL().toString() + "\",\n"
             + "  \"launcher\": {\n"
-            + "    \"serverHost\": \"192.168.1.103\",\n"
+            + "    \"serverHost\": \"" + LauncherConfig.DEFAULT_SERVER_HOST + "\",\n"
             + "    \"serverPort\": 25565,\n"
             + "    \"workingDirectory\": \".\",\n"
             + "    \"launchTemplate\": \"{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}\"\n"
@@ -317,7 +317,7 @@ class ModpackSyncServiceTest {
             + "  \"version\": \"2026.05.05\",\n"
             + "  \"baseUrl\": \"" + sourceDirectory.toUri().toURL().toString() + "\",\n"
             + "  \"launcher\": {\n"
-            + "    \"serverHost\": \"192.168.1.103\",\n"
+            + "    \"serverHost\": \"" + LauncherConfig.DEFAULT_SERVER_HOST + "\",\n"
             + "    \"serverPort\": 25565,\n"
             + "    \"workingDirectory\": \".\",\n"
             + "    \"launchTemplate\": \"\"\n"

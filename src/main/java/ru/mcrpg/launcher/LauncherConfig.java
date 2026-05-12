@@ -2,7 +2,7 @@ package ru.mcrpg.launcher;
 
 public final class LauncherConfig {
 
-    public static final String DEFAULT_SERVER_HOST = "192.168.1.103";
+    public static final String DEFAULT_SERVER_HOST = "obsidiangates.duckdns.org";
     public static final int DEFAULT_SERVER_PORT = 25565;
     public static final String DEFAULT_LAUNCH_TEMPLATE =
         "{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}";
