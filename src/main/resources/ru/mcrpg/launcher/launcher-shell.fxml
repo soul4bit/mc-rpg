@@ -47,7 +47,8 @@
                                                 <Label text="Главная" styleClass="nav-text, nav-text-active"/>
                                             </children>
                                         </HBox>
-                                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="nav-item">
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openServerScreen" spacing="16.0"
+                                              styleClass="nav-item">
                                             <children>
                                                 <StackPane styleClass="nav-icon-badge">
                                                     <children>

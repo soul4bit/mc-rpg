@@ -34,6 +34,8 @@
                     <children>
                         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenHome"
                                 styleClass="nav-button" text="Главная"/>
+                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenServer"
+                                styleClass="nav-button" text="Сервер"/>
                         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenProfile"
                                 styleClass="nav-button" text="Профиль"/>
                         <Label styleClass="nav-button, nav-button-active" text="Настройки"/>

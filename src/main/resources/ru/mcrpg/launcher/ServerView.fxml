@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.mcrpg.launcher.ServerController"
+            prefWidth="1600.0" prefHeight="900.0" styleClass="account-root, app-window">
+    <left>
+        <VBox prefWidth="310.0" spacing="28.0" styleClass="sidebar">
+            <padding>
+                <Insets top="42.0" right="24.0" bottom="28.0" left="24.0"/>
+            </padding>
+            <children>
+                <ImageView fitWidth="230.0" preserveRatio="true">
+                    <image>
+                        <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
+                    </image>
+                </ImageView>
+                <VBox spacing="14.0">
+                    <children>
+                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenHome"
+                                styleClass="nav-button" text="Главная"/>
+                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenProfile"
+                                styleClass="nav-button" text="Профиль"/>
+                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenSettings"
+                                styleClass="nav-button" text="Настройки"/>
+                        <Label styleClass="nav-button, nav-button-active" text="Сервер"/>
+                    </children>
+                </VBox>
+                <Region VBox.vgrow="ALWAYS"/>
+                <VBox spacing="10.0" styleClass="glass-panel">
+                    <padding>
+                        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                    </padding>
+                    <children>
+                        <Label text="Live status" styleClass="label-value"/>
+                        <Label text="Экран использует текущий manifest и Minecraft status probe, чтобы показать реальный маршрут и состояние сервера."
+                               wrapText="true" styleClass="label-muted"/>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane>
+            <children>
+                <ImageView fitWidth="1290.0" fitHeight="900.0" preserveRatio="false" opacity="0.42">
+                    <image>
+                        <Image url="@obsidiangate/images/backgrounds/hero_portal_background.png"/>
+                    </image>
+                </ImageView>
+                <Pane styleClass="profile-overlay"/>
+
+                <VBox spacing="22.0">
+                    <padding>
+                        <Insets top="26.0" right="42.0" bottom="42.0" left="42.0"/>
+                    </padding>
+                    <children>
+                        <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag"
+                              spacing="16.0">
+                            <children>
+                                <VBox spacing="4.0">
+                                    <children>
+                                        <Label text="Сервер и manifest" styleClass="auth-title"/>
+                                        <Label text="Живой экран маршрута подключения, версий клиента и статуса Minecraft сервера."
+                                               styleClass="label-muted" wrapText="true"/>
+                                    </children>
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="minimizeWindowButton" mnemonicParsing="false"
+                                        onAction="#minimizeWindow" styleClass="window-control"/>
+                                <Button fx:id="closeWindowButton" mnemonicParsing="false"
+                                        onAction="#closeWindow" styleClass="window-control, window-control-close"/>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="22.0" styleClass="profile-hero-card">
+                            <children>
+                                <VBox spacing="12.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Сводка подключения" styleClass="profile-main-name"/>
+                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                            <children>
+                                                <Region fx:id="serverPresenceIndicator"
+                                                        styleClass="server-presence-indicator, server-presence-checking"/>
+                                                <Label fx:id="serverPresenceValueLabel" text="Проверка"
+                                                       styleClass="metric-value"/>
+                                            </children>
+                                        </HBox>
+                                        <Label fx:id="statusLabel" styleClass="label-body" wrapText="true"/>
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER_RIGHT" spacing="12.0">
+                                    <children>
+                                        <Button minWidth="220.0" mnemonicParsing="false" onAction="#onRefreshStatus"
+                                                styleClass="primary-button" text="ОБНОВИТЬ STATUS"/>
+                                        <Label text="Обновляет manifest preview и status probe." styleClass="label-muted"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox spacing="18.0">
+                            <children>
+                                <VBox prefWidth="220.0" spacing="6.0" styleClass="metric-card">
+                                    <children>
+                                        <Label text="PLAYERS" styleClass="label-muted"/>
+                                        <Label fx:id="playersValueLabel" styleClass="metric-value"/>
+                                    </children>
+                                </VBox>
+                                <VBox prefWidth="220.0" spacing="6.0" styleClass="metric-card">
+                                    <children>
+                                        <Label text="PING" styleClass="label-muted"/>
+                                        <Label fx:id="pingValueLabel" styleClass="metric-value"/>
+                                    </children>
+                                </VBox>
+                                <VBox prefWidth="320.0" spacing="6.0" styleClass="metric-card">
+                                    <children>
+                                        <Label text="MINECRAFT / FORGE" styleClass="label-muted"/>
+                                        <Label fx:id="minecraftVersionValueLabel" styleClass="metric-value-small" wrapText="true"/>
+                                    </children>
+                                </VBox>
+                                <VBox prefWidth="260.0" spacing="6.0" styleClass="metric-card">
+                                    <children>
+                                        <Label text="MODPACK VERSION" styleClass="label-muted"/>
+                                        <Label fx:id="manifestVersionValueLabel" styleClass="metric-value-small" wrapText="true"/>
+                                    </children>
+                                </VBox>
+                                <VBox spacing="6.0" styleClass="metric-card" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="OVERRIDES" styleClass="label-muted"/>
+                                        <Label fx:id="overrideSummaryLabel" styleClass="metric-value-small" wrapText="true"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
+                        <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <VBox prefWidth="410.0" spacing="16.0" styleClass="profile-card">
+                                    <children>
+                                        <Label text="Маршрут" styleClass="label-value"/>
+                                        <Label text="Сначала применяется локальный config, потом — возможные override из manifest." wrapText="true"
+                                               styleClass="label-muted"/>
+                                        <VBox spacing="8.0" styleClass="settings-field-stack">
+                                            <children>
+                                                <Label text="Local Route" styleClass="field-label"/>
+                                                <Label fx:id="localRouteValueLabel" styleClass="label-body" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="8.0" styleClass="settings-field-stack">
+                                            <children>
+                                                <Label text="Resolved Route" styleClass="field-label"/>
+                                                <Label fx:id="resolvedRouteValueLabel" styleClass="label-body" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="8.0" styleClass="settings-field-stack">
+                                            <children>
+                                                <Label text="Server ID" styleClass="field-label"/>
+                                                <Label fx:id="serverIdValueLabel" styleClass="label-body" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <VBox prefWidth="410.0" spacing="16.0" styleClass="profile-card">
+                                    <children>
+                                        <Label text="Manifest" styleClass="label-value"/>
+                                        <Label text="Эти поля помогают понять, откуда лаунчер берёт клиентские файлы и какие версии он ожидает." wrapText="true"
+                                               styleClass="label-muted"/>
+                                        <VBox spacing="8.0" styleClass="settings-field-stack">
+                                            <children>
+                                                <Label text="Manifest URL" styleClass="field-label"/>
+                                                <Label fx:id="manifestUrlValueLabel" styleClass="label-body" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="8.0" styleClass="settings-field-stack">
+                                            <children>
+                                                <Label text="Resolved Download Base" styleClass="field-label"/>
+                                                <Label fx:id="downloadBaseValueLabel" styleClass="label-body" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+
+                                <VBox prefWidth="410.0" spacing="16.0" styleClass="profile-card">
+                                    <children>
+                                        <Label text="Backend и launch" styleClass="label-value"/>
+                                        <Label text="Auth API и working directory влияют на ticket flow и на то, из какой папки реально стартует игра." wrapText="true"
+                                               styleClass="label-muted"/>
+                                        <VBox spacing="8.0" styleClass="settings-field-stack">
+                                            <children>
+                                                <Label text="Auth Base URL" styleClass="field-label"/>
+                                                <Label fx:id="authBaseValueLabel" styleClass="label-body" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="8.0" styleClass="settings-field-stack">
+                                            <children>
+                                                <Label text="Working Directory" styleClass="field-label"/>
+                                                <Label fx:id="workingDirectoryValueLabel" styleClass="label-body" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>
