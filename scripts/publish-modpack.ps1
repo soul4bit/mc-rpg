@@ -13,6 +13,7 @@ param(
     [string]$ServiceName = "mc-rpg.service",
     [string]$RemoteDeployCommand = "/usr/local/bin/obsidiangate-deploy",
     [switch]$LegacyPromptSudo,
+    [switch]$SkipConnectivityCheck,
     [switch]$SkipRestart
 )
 
@@ -21,6 +22,31 @@ $ErrorActionPreference = "Stop"
 
 $releaseScript = Join-Path $PSScriptRoot "release-modpack.ps1"
 $deployScript = Join-Path $PSScriptRoot "deploy-modpack.ps1"
+
+function Test-DeployTargetReachability {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ResolvedTarget
+    )
+
+    foreach ($command in @("ssh")) {
+        $null = Get-Command $command -ErrorAction Stop
+    }
+
+    Write-Host "==> Preflight SSH check for $ResolvedTarget" -ForegroundColor Cyan
+    & ssh -o BatchMode=yes -o ConnectTimeout=5 $ResolvedTarget "exit 0"
+    if ($LASTEXITCODE -ne 0) {
+        throw @"
+SSH target '$ResolvedTarget' is not reachable before publish.
+Check that the host alias/IP is correct, the server is online, and you are on the right LAN/VPN.
+If you only need release artifacts without deploy, run scripts/release-modpack.ps1 instead.
+"@
+    }
+}
+
+if (-not $WhatIfPreference -and -not $SkipConnectivityCheck) {
+    Test-DeployTargetReachability -ResolvedTarget $Target
+}
 
 & $releaseScript `
     -ManifestPath $ManifestPath `

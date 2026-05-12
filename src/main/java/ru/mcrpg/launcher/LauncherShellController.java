@@ -3,8 +3,6 @@ package ru.mcrpg.launcher;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -30,6 +28,8 @@ import ru.mcrpg.launcher.ui.SvgIcons;
 public final class LauncherShellController extends AbstractScreenController {
 
     private static final DateTimeFormatter LOG_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final int SERVER_STATUS_TIMEOUT_MS = 1500;
+    private static final String DASHBOARD_UNKNOWN = "—";
 
     private final LaunchCommandBuilder commandBuilder = new LaunchCommandBuilder();
     private final ModpackManifestClient manifestClient = new ModpackManifestClient();
@@ -55,10 +55,28 @@ public final class LauncherShellController extends AbstractScreenController {
     private Label serverRouteValueLabel;
 
     @FXML
+    private Label sidebarStatusTitleLabel;
+
+    @FXML
+    private Label sidebarStatusCopyLabel;
+
+    @FXML
+    private Label sidebarVersionLabel;
+
+    @FXML
     private Label manifestUrlValueLabel;
 
     @FXML
     private Label downloadBaseValueLabel;
+
+    @FXML
+    private Label onlinePlayersValueLabel;
+
+    @FXML
+    private Label minecraftVersionValueLabel;
+
+    @FXML
+    private Label manifestVersionValueLabel;
 
     @FXML
     private Button syncButton;
@@ -105,6 +123,11 @@ public final class LauncherShellController extends AbstractScreenController {
         updateProgressState(false, "Готово к запуску", "ГОТОВО", 0.0d);
         syncFileLabel.setText("Лаунчер готов к работе.");
         syncBytesLabel.setText("Файловая активность пока отсутствует.");
+        onlinePlayersValueLabel.setText(DASHBOARD_UNKNOWN);
+        minecraftVersionValueLabel.setText(DASHBOARD_UNKNOWN);
+        manifestVersionValueLabel.setText(DASHBOARD_UNKNOWN);
+        sidebarStatusTitleLabel.setText("Проверка сервера");
+        sidebarStatusCopyLabel.setText("Проверяем маршрут, manifest и состояние сервера.");
     }
 
     @Override
@@ -126,6 +149,7 @@ public final class LauncherShellController extends AbstractScreenController {
 
         brandLogoLabel.setText(LauncherBrand.APP_TITLE);
         brandSubtitleLabel.setText(LauncherBrand.APP_SUBTITLE);
+        sidebarVersionLabel.setText("Launcher " + LauncherBrand.displayVersion());
         profileChevronLabel.setText("⌄");
         applyWindowControlIcons();
 
@@ -158,6 +182,7 @@ public final class LauncherShellController extends AbstractScreenController {
         serverRouteValueLabel.setText(formatRoute(resolvedConfig));
         manifestUrlValueLabel.setText(manifestUrl);
         downloadBaseValueLabel.setText(deriveManifestDirectory(manifestUrl));
+        applyDashboardLoadingState(hasText(manifestUrl));
         updateServerPresence("ПРОВЕРКА", "checking");
         refreshEndpointPreviewAsync(resolvedConfig);
     }
@@ -317,6 +342,13 @@ public final class LauncherShellController extends AbstractScreenController {
         );
         serverRouteValueLabel.setText(formatRoute(resolvedConfig));
         downloadBaseValueLabel.setText(resolveDisplayDownloadBase(resolvedConfig.getManifestUrl(), syncResult.getManifest()));
+        manifestVersionValueLabel.setText(resolveManifestVersion(syncResult.getManifest()));
+        minecraftVersionValueLabel.setText(resolveMinecraftVersion(syncResult.getManifest()));
+        refreshServerPresenceAsync(
+            valueOrFallback(resolvedConfig.getServerHost(), LauncherConfig.DEFAULT_SERVER_HOST),
+            resolvedConfig.getServerPort(),
+            formatRoute(resolvedConfig)
+        );
     }
 
     private void refreshEndpointPreviewAsync(LauncherConfig config) {
@@ -326,12 +358,16 @@ public final class LauncherShellController extends AbstractScreenController {
             LauncherConfig previewConfig = LauncherDefaults.applyMissingValues(config.copy());
             String manifestUrl = previewConfig.getManifestUrl();
             String downloadBase = deriveManifestDirectory(manifestUrl);
+            String manifestVersion = hasText(manifestUrl) ? "Нет данных" : "Не указан";
+            String minecraftVersion = hasText(manifestUrl) ? DASHBOARD_UNKNOWN : "Не указан";
 
             try {
                 LoadedManifest loadedManifest = manifestClient.load(manifestUrl);
                 ModpackManifest manifest = loadedManifest.getManifest();
                 applyManifestSettings(previewConfig, manifest);
                 downloadBase = resolveDisplayDownloadBase(loadedManifest);
+                manifestVersion = resolveManifestVersion(manifest);
+                minecraftVersion = resolveMinecraftVersion(manifest);
             } catch (Exception ignored) {
             }
 
@@ -339,6 +375,8 @@ public final class LauncherShellController extends AbstractScreenController {
             String resolvedHost = valueOrFallback(previewConfig.getServerHost(), LauncherConfig.DEFAULT_SERVER_HOST);
             int resolvedPort = previewConfig.getServerPort();
             String resolvedDownloadBase = downloadBase;
+            String resolvedManifestVersion = manifestVersion;
+            String resolvedMinecraftVersion = minecraftVersion;
 
             Platform.runLater(() -> {
                 if (requestId != endpointPreviewSequence.get()) {
@@ -346,6 +384,8 @@ public final class LauncherShellController extends AbstractScreenController {
                 }
                 serverRouteValueLabel.setText(resolvedRoute);
                 downloadBaseValueLabel.setText(resolvedDownloadBase);
+                manifestVersionValueLabel.setText(resolvedManifestVersion);
+                minecraftVersionValueLabel.setText(resolvedMinecraftVersion);
                 refreshServerPresenceAsync(resolvedHost, resolvedPort, resolvedRoute);
             });
         }, "launcher-shell-endpoint-preview");
@@ -381,30 +421,99 @@ public final class LauncherShellController extends AbstractScreenController {
 
     private void refreshServerPresenceAsync(String host, int port, String route) {
         updateServerPresence("ПРОВЕРКА", "checking");
+        onlinePlayersValueLabel.setText(DASHBOARD_UNKNOWN);
+        sidebarStatusTitleLabel.setText("Проверка сервера");
+        sidebarStatusCopyLabel.setText("Обновляем пинг и список игроков.");
         long requestId = serverPresenceSequence.incrementAndGet();
 
         Thread thread = new Thread(() -> {
-            boolean online = false;
-            try (Socket socket = new Socket()) {
-                socket.connect(new InetSocketAddress(host, port), 1500);
-                online = true;
+            MinecraftServerStatusProbe.ServerStatus status = null;
+            try {
+                status = MinecraftServerStatusProbe.probe(host, port, SERVER_STATUS_TIMEOUT_MS);
             } catch (IOException ignored) {
             }
 
-            boolean resolvedOnline = online;
+            MinecraftServerStatusProbe.ServerStatus resolvedStatus = status;
             Platform.runLater(() -> {
                 if (requestId != serverPresenceSequence.get()) {
                     return;
                 }
-                updateServerPresence(resolvedOnline ? "Онлайн" : "Оффлайн", resolvedOnline ? "online" : "offline");
-                if (!resolvedOnline) {
-                    appendLog("No response from " + route + ".");
+
+                if (resolvedStatus != null) {
+                    updateServerPresence("Онлайн", "online");
+                    onlinePlayersValueLabel.setText(formatPlayers(resolvedStatus));
+                    sidebarStatusTitleLabel.setText("Сервер отвечает • " + resolvedStatus.getPingMs() + " мс");
+                    sidebarStatusCopyLabel.setText(
+                        "Онлайн " + formatPlayers(resolvedStatus) + ", версия " + resolveServerVersion(resolvedStatus) + "."
+                    );
+                    return;
                 }
+
+                updateServerPresence("Оффлайн", "offline");
+                onlinePlayersValueLabel.setText(DASHBOARD_UNKNOWN);
+                sidebarStatusTitleLabel.setText("Сервер недоступен");
+                sidebarStatusCopyLabel.setText("Маршрут " + route + " не отвечает. Проверьте сервер или сеть.");
+                appendLog("No response from " + route + ".");
             });
         }, "launcher-shell-presence");
 
         thread.setDaemon(true);
         thread.start();
+    }
+
+    private void applyDashboardLoadingState(boolean hasManifestUrl) {
+        manifestVersionValueLabel.setText(hasManifestUrl ? "проверка..." : "не указан");
+        minecraftVersionValueLabel.setText(hasManifestUrl ? "проверка..." : "не указан");
+        onlinePlayersValueLabel.setText(DASHBOARD_UNKNOWN);
+        sidebarStatusTitleLabel.setText("Проверка сервера");
+        sidebarStatusCopyLabel.setText(
+            hasManifestUrl
+                ? "Проверяем маршрут, manifest и состояние сервера."
+                : "Укажите manifest URL, чтобы получить сборку клиента и статус сервера."
+        );
+    }
+
+    private static String resolveManifestVersion(ModpackManifest manifest) {
+        if (manifest == null || !hasText(manifest.getVersion())) {
+            return "нет данных";
+        }
+        return manifest.getVersion().trim();
+    }
+
+    private static String resolveMinecraftVersion(ModpackManifest manifest) {
+        if (manifest == null || manifest.getMinecraft() == null) {
+            return "нет данных";
+        }
+
+        String minecraftVersion = manifest.getMinecraft().getVersion();
+        String forgeVersion = manifest.getMinecraft().getForgeVersion();
+        if (hasText(minecraftVersion) && hasText(forgeVersion)) {
+            return minecraftVersion.trim() + " / " + forgeVersion.trim();
+        }
+        if (hasText(minecraftVersion)) {
+            return minecraftVersion.trim();
+        }
+        if (hasText(forgeVersion)) {
+            return "Forge " + forgeVersion.trim();
+        }
+        return "нет данных";
+    }
+
+    private static String formatPlayers(MinecraftServerStatusProbe.ServerStatus status) {
+        if (status == null || status.getOnlinePlayers() < 0) {
+            return DASHBOARD_UNKNOWN;
+        }
+        if (status.getMaxPlayers() < 0) {
+            return Integer.toString(status.getOnlinePlayers());
+        }
+        return status.getOnlinePlayers() + " / " + status.getMaxPlayers();
+    }
+
+    private static String resolveServerVersion(MinecraftServerStatusProbe.ServerStatus status) {
+        if (status == null || !hasText(status.getVersionName())) {
+            return "неизвестно";
+        }
+        return status.getVersionName().trim();
     }
 
     private void updateServerPresence(String title, String tone) {

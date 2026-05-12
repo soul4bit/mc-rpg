@@ -93,10 +93,12 @@
                                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                                             <children>
                                                 <Region styleClass="system-dot"/>
-                                                <Label text="Все системы работают" styleClass="sidebar-status-title"/>
+                                                <Label fx:id="sidebarStatusTitleLabel" text="Проверка сервера"
+                                                       styleClass="sidebar-status-title"/>
                                             </children>
                                         </HBox>
-                                        <Label text="Сервер онлайн и готов к новым приключениям."
+                                        <Label fx:id="sidebarStatusCopyLabel"
+                                               text="Проверяем маршрут, manifest и состояние сервера."
                                                styleClass="sidebar-status-copy" wrapText="true"/>
                                         <Label fx:id="serverRouteValueLabel" styleClass="sidebar-route" wrapText="true"/>
                                     </children>
@@ -127,7 +129,7 @@
                                     </children>
                                 </HBox>
 
-                                <Label text="Лаунчер v1.2.3" styleClass="sidebar-version"/>
+                                <Label fx:id="sidebarVersionLabel" text="Launcher" styleClass="sidebar-version"/>
                             </children>
                         </VBox>
                     </left>
@@ -296,7 +298,8 @@
                                                         <VBox spacing="6.0">
                                                             <children>
                                                                 <Label text="ИГРОКОВ ОНЛАЙН" styleClass="status-label"/>
-                                                                <Label text="248 / 1000" styleClass="status-value"/>
+                                                                <Label fx:id="onlinePlayersValueLabel" text="—"
+                                                                       styleClass="status-value"/>
                                                             </children>
                                                         </VBox>
                                                     </children>
@@ -314,8 +317,9 @@
                                                         </StackPane>
                                                         <VBox spacing="6.0">
                                                             <children>
-                                                                <Label text="ВЕРСИЯ" styleClass="status-label"/>
-                                                                <Label text="1.20.4" styleClass="status-value"/>
+                                                                <Label text="MINECRAFT" styleClass="status-label"/>
+                                                                <Label fx:id="minecraftVersionValueLabel" text="—"
+                                                                       styleClass="status-value" wrapText="true"/>
                                                             </children>
                                                         </VBox>
                                                     </children>
@@ -333,8 +337,9 @@
                                                         </StackPane>
                                                         <VBox spacing="6.0">
                                                             <children>
-                                                                <Label text="ПОСЛЕДНЕЕ ОБНОВЛЕНИЕ" styleClass="status-label"/>
-                                                                <Label text="18 мая 2024" styleClass="status-value"/>
+                                                                <Label text="MODPACK" styleClass="status-label"/>
+                                                                <Label fx:id="manifestVersionValueLabel" text="—"
+                                                                       styleClass="status-value" wrapText="true"/>
                                                             </children>
                                                         </VBox>
                                                     </children>
