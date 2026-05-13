@@ -11,6 +11,15 @@
                      "workingDirectory":  ".",
                      "launchTemplate":  ""
                  },
+    "launcherUpdate":  {
+                           "version":  "2026.05.13.2",
+                           "url":  "launcher/obsidian-gate-launcher.jar",
+                           "sha256":  "3821907278aaae3691a079a76f7b21a173dc42f135364a3290b6f8a511199ab7",
+                           "size":  25719904,
+                           "required":  false,
+                           "artifactVersion":  "0.1.0-SNAPSHOT",
+                           "fileName":  "obsidian-gate-launcher.jar"
+                       },
     "runtime":  {
                     "packages":  [
                                      {

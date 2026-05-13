@@ -5,6 +5,7 @@ param(
     [string]$DistDir = "dist",
     [string]$ManifestVersion = (Get-Date -Format "yyyy.MM.dd"),
     [switch]$SkipSourceManifestUpdate,
+    [switch]$SkipLauncherRelease,
     [string]$Target = "minecraft@192.168.1.103",
     [string]$RemoteHome = "/home/minecraft",
     [string]$RemoteStageDir = "/home/minecraft/obsidiangate-deploy",
@@ -53,7 +54,8 @@ if (-not $WhatIfPreference -and -not $SkipConnectivityCheck) {
     -ClientSourceDir $ClientSourceDir `
     -DistDir $DistDir `
     -ManifestVersion $ManifestVersion `
-    -SkipSourceManifestUpdate:$SkipSourceManifestUpdate
+    -SkipSourceManifestUpdate:$SkipSourceManifestUpdate `
+    -SkipLauncherRelease:$SkipLauncherRelease
 
 if ($LASTEXITCODE -ne 0) {
     throw "release-modpack.ps1 failed."

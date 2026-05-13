@@ -193,6 +193,7 @@ update.files.before.launch=true
 - `launcher.serverId`: идентификатор сервера для game ticket
 - `launcher.workingDirectory`: рабочая папка внутри `game directory`
 - `launcher.launchTemplate`: шаблон запуска клиента
+- `launcherUpdate`: версия и URL нового launcher `.jar` для самообновления
 - `runtime.packages[]`: portable runtime-пакеты
 - `minecraft`: настройки официального bootstrap Minecraft/Forge
 - `files[]`: список файлов для синхронизации
@@ -211,6 +212,13 @@ update.files.before.launch=true
     "workingDirectory": ".",
     "launchTemplate": ""
   },
+  "launcherUpdate": {
+    "version": "2026.05.13.2",
+    "url": "launcher/obsidian-gate-launcher.jar",
+    "sha256": "PUT_REAL_LAUNCHER_SHA256_HERE",
+    "size": 12345678,
+    "required": false
+  },
   "files": [
     {
       "path": "mods/examplemod.jar",
@@ -228,6 +236,8 @@ update.files.before.launch=true
 ```text
 /var/www/rpg/
   manifest.json
+  launcher/
+    obsidian-gate-launcher.jar
   client/
     runtime/
     mods/
@@ -238,6 +248,7 @@ update.files.before.launch=true
 
 - `manifest.url` можно сделать `http://obsidiangates.duckdns.org:8080/manifest.json`
 - `baseUrl` можно сделать `http://obsidiangates.duckdns.org:8080/client/`
+- `launcherUpdate.url` можно сделать `launcher/obsidian-gate-launcher.jar`; он считается относительно `manifest.json`
 
 Важно: launcher ждёт именно HTTP(S)-раздачу `manifest.json` и файлов модпака. Это не Minecraft-порт `25565`.
 
@@ -280,6 +291,7 @@ update.files.before.launch=true
 - добавляет свежий `forge-auth-client` в `dist/client/mods/`
 - пересчитывает `manifest.files[]` по фактическому содержимому `dist/client/`
 - обновляет `runtime.packages[].sha256` и `runtime.packages[].size` для относительных runtime URL
+- собирает launcher `.jar`, кладёт его в `dist/launcher/` и обновляет `launcherUpdate`
 - пишет `dist/manifest.json`
 - пишет `dist/modpack-release.json`
 
@@ -292,6 +304,7 @@ update.files.before.launch=true
 Скрипт загружает:
 
 - `dist/client/`
+- `dist/launcher/`
 - `dist/manifest.json`
 - серверный auth jar
 
@@ -299,6 +312,7 @@ update.files.before.launch=true
 
 - `~/mc-rpg/mods/`
 - `/var/www/mc-rpg/client/`
+- `/var/www/mc-rpg/launcher/`
 - `/var/www/mc-rpg/manifest.json`
 
 Полный цикл одной командой:

@@ -65,6 +65,11 @@ else
     cp -a "$STAGE_DIR/client/." "$WEB_ROOT/client/"
 fi
 
+if [ -d "$STAGE_DIR/launcher" ]; then
+    install -d "$WEB_ROOT/launcher"
+    cp -a "$STAGE_DIR/launcher/." "$WEB_ROOT/launcher/"
+fi
+
 install -m 644 "$STAGE_DIR/manifest.json" "$WEB_ROOT/manifest.json"
 sha256sum "$SERVER_MODS_DIR/$SERVER_JAR"
 sha256sum "$WEB_ROOT/manifest.json"

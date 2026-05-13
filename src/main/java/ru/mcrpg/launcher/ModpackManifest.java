@@ -10,6 +10,7 @@ public final class ModpackManifest {
     private String version;
     private String baseUrl;
     private LauncherManifestSettings launcher = new LauncherManifestSettings();
+    private LauncherUpdateSettings launcherUpdate = new LauncherUpdateSettings();
     private ModpackRuntime runtime = new ModpackRuntime();
     private MinecraftBootstrapSettings minecraft = new MinecraftBootstrapSettings();
     private List<ModpackFile> files = new ArrayList<ModpackFile>();
@@ -52,6 +53,14 @@ public final class ModpackManifest {
 
     public void setLauncher(LauncherManifestSettings launcher) {
         this.launcher = launcher == null ? new LauncherManifestSettings() : launcher;
+    }
+
+    public LauncherUpdateSettings getLauncherUpdate() {
+        return launcherUpdate;
+    }
+
+    public void setLauncherUpdate(LauncherUpdateSettings launcherUpdate) {
+        this.launcherUpdate = launcherUpdate == null ? new LauncherUpdateSettings() : launcherUpdate;
     }
 
     public ModpackRuntime getRuntime() {

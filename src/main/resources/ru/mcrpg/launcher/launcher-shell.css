@@ -560,6 +560,62 @@
     -fx-font-weight: 600;
 }
 
+.launcher-update-card {
+    -fx-background-color:
+        radial-gradient(center 92% 18%, radius 44%, rgba(103, 232, 249, 0.14), transparent 58%),
+        linear-gradient(to bottom right, rgba(245, 158, 11, 0.18), rgba(91, 33, 182, 0.30));
+    -fx-background-radius: 22;
+    -fx-border-color: rgba(253, 230, 138, 0.34);
+    -fx-border-radius: 22;
+    -fx-padding: 14 16;
+    -fx-effect: dropshadow(gaussian, rgba(245, 158, 11, 0.18), 24, 0.18, 0, 8);
+}
+
+.launcher-update-icon {
+    -fx-min-width: 46;
+    -fx-pref-width: 46;
+    -fx-max-width: 46;
+    -fx-min-height: 46;
+    -fx-pref-height: 46;
+    -fx-max-height: 46;
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(255, 247, 214, 0.20);
+    -fx-border-radius: 16;
+}
+
+.launcher-update-title {
+    -fx-text-fill: #fff7d6;
+    -fx-font-size: 15px;
+    -fx-font-weight: 800;
+}
+
+.launcher-update-copy {
+    -fx-text-fill: rgba(255, 247, 214, 0.86);
+    -fx-font-size: 12px;
+    -fx-line-spacing: 3px;
+}
+
+.launcher-update-button {
+    -fx-background-color: linear-gradient(to bottom, #fff7d6, #fbbf24);
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(255, 255, 255, 0.34);
+    -fx-border-radius: 14;
+    -fx-padding: 10 16;
+    -fx-text-fill: #1f1300;
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-cursor: hand;
+}
+
+.launcher-update-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #fde68a);
+}
+
+.launcher-update-button:disabled {
+    -fx-opacity: 0.58;
+}
+
 .secondary-action-button {
     -fx-background-color: rgba(255, 255, 255, 0.04);
     -fx-border-color: rgba(170, 187, 215, 0.18);

@@ -42,11 +42,13 @@ public final class LauncherShellController extends AbstractScreenController {
     private final MinecraftServerListWriter serverListWriter = new MinecraftServerListWriter();
     private final ModpackManifestClient manifestClient = new ModpackManifestClient();
     private final ModpackSyncService modpackSyncService = new ModpackSyncService(manifestClient);
+    private final LauncherUpdateService launcherUpdateService = new LauncherUpdateService();
     private final AtomicLong endpointPreviewSequence = new AtomicLong();
     private final AtomicLong serverPresenceSequence = new AtomicLong();
     private final AtomicLong syncPreviewSequence = new AtomicLong();
 
     private LauncherConfig currentConfig = LauncherConfig.defaults();
+    private LauncherUpdateCandidate availableLauncherUpdate;
 
     @FXML
     private Label brandLogoLabel;
@@ -124,6 +126,18 @@ public final class LauncherShellController extends AbstractScreenController {
     private VBox previewChangesBox;
 
     @FXML
+    private VBox launcherUpdateCard;
+
+    @FXML
+    private Label launcherUpdateTitleLabel;
+
+    @FXML
+    private Label launcherUpdateDescriptionLabel;
+
+    @FXML
+    private Button launcherUpdateButton;
+
+    @FXML
     private TextArea logArea;
 
     @FXML
@@ -190,6 +204,8 @@ public final class LauncherShellController extends AbstractScreenController {
         syncButton.setOnAction(event -> syncFiles());
         previewButton.setOnAction(event -> previewSyncChanges());
         launchButton.setOnAction(event -> launchClient());
+        launcherUpdateButton.setOnAction(event -> updateLauncher());
+        hideLauncherUpdateCard();
     }
 
     private void applyProfileState() {
@@ -219,6 +235,7 @@ public final class LauncherShellController extends AbstractScreenController {
         manifestUrlValueLabel.setText(manifestUrl);
         downloadBaseValueLabel.setText(deriveManifestDirectory(manifestUrl));
         resetPreviewState();
+        hideLauncherUpdateCard();
         applyDashboardLoadingState(hasText(manifestUrl));
         updateServerPresence("ПРОВЕРКА", "checking");
         refreshEndpointPreviewAsync(resolvedConfig);
@@ -313,6 +330,51 @@ public final class LauncherShellController extends AbstractScreenController {
         }
 
         runTask(LauncherAction.SYNC_AND_LAUNCH, config);
+    }
+
+    private void updateLauncher() {
+        LauncherUpdateCandidate update = availableLauncherUpdate;
+        if (update == null) {
+            showLauncherError("Launcher update is not available.");
+            return;
+        }
+        if (!update.isInstallSupported()) {
+            showLauncherError("Auto-update works only when launcher is running from a jar file.");
+            return;
+        }
+
+        setBusy(true);
+        launcherUpdateButton.setDisable(true);
+        updateProgressState(true, "Скачиваем обновление лаунчера", "UPDATE", ProgressBar.INDETERMINATE_PROGRESS);
+        syncFileLabel.setText("После установки лаунчер перезапустится автоматически.");
+        appendLog("Launcher update requested: " + update.getVersion() + ".");
+
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                launcherUpdateService.installAndRestart(update, LauncherShellController.this::appendLogAsync);
+                return null;
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            appendLog("Launcher update downloaded. Exiting for restart.");
+            Platform.exit();
+            System.exit(0);
+        });
+
+        task.setOnFailed(event -> {
+            setBusy(false);
+            Throwable exception = task.getException();
+            updateProgressState(false, "Обновление лаунчера не удалось", "ОШИБКА", 0.0d);
+            syncFileLabel.setText("Проверьте manifest launcherUpdate и доступность файла лаунчера.");
+            launcherUpdateButton.setDisable(false);
+            showLauncherError(exception == null ? "Launcher update failed." : exception.getMessage());
+        });
+
+        Thread thread = new Thread(task, "launcher-self-update");
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void runTask(LauncherAction action, LauncherConfig requestedConfig) {
@@ -595,6 +657,7 @@ public final class LauncherShellController extends AbstractScreenController {
         Thread thread = new Thread(() -> {
             LauncherConfig previewConfig = LauncherDefaults.applyMissingValues(config.copy());
             String manifestUrl = previewConfig.getManifestUrl();
+            LauncherUpdateCandidate launcherUpdate = null;
             String downloadBase = deriveManifestDirectory(manifestUrl);
             String manifestVersion = hasText(manifestUrl) ? "Нет данных" : "Не указан";
             String minecraftVersion = hasText(manifestUrl) ? DASHBOARD_UNKNOWN : "Не указан";
@@ -606,6 +669,7 @@ public final class LauncherShellController extends AbstractScreenController {
                 downloadBase = resolveDisplayDownloadBase(loadedManifest);
                 manifestVersion = resolveManifestVersion(manifest);
                 minecraftVersion = resolveMinecraftVersion(manifest);
+                launcherUpdate = launcherUpdateService.findUpdate(loadedManifest, LauncherBrand.displayVersion());
             } catch (Exception ignored) {
             }
 
@@ -615,6 +679,7 @@ public final class LauncherShellController extends AbstractScreenController {
             String resolvedDownloadBase = downloadBase;
             String resolvedManifestVersion = manifestVersion;
             String resolvedMinecraftVersion = minecraftVersion;
+            LauncherUpdateCandidate resolvedLauncherUpdate = launcherUpdate;
 
             Platform.runLater(() -> {
                 if (requestId != endpointPreviewSequence.get()) {
@@ -624,12 +689,44 @@ public final class LauncherShellController extends AbstractScreenController {
                 downloadBaseValueLabel.setText(resolvedDownloadBase);
                 manifestVersionValueLabel.setText(resolvedManifestVersion);
                 minecraftVersionValueLabel.setText(resolvedMinecraftVersion);
+                applyLauncherUpdateState(resolvedLauncherUpdate);
                 refreshServerPresenceAsync(resolvedHost, resolvedPort, resolvedRoute);
             });
         }, "launcher-shell-endpoint-preview");
 
         thread.setDaemon(true);
         thread.start();
+    }
+
+    private void applyLauncherUpdateState(LauncherUpdateCandidate update) {
+        availableLauncherUpdate = update;
+        if (update == null) {
+            hideLauncherUpdateCard();
+            return;
+        }
+
+        launcherUpdateCard.setManaged(true);
+        launcherUpdateCard.setVisible(true);
+        launcherUpdateTitleLabel.setText(
+            update.isRequired()
+                ? "Требуется обновление лаунчера"
+                : "Доступно обновление лаунчера"
+        );
+        launcherUpdateDescriptionLabel.setText(
+            "Текущая версия: " + valueOrFallback(update.getCurrentVersion(), "unknown")
+                + ". Новая версия: " + update.getVersion() + "."
+        );
+        launcherUpdateButton.setDisable(!update.isInstallSupported());
+        launcherUpdateButton.setText(update.isInstallSupported() ? "Обновить" : "Скачать вручную");
+    }
+
+    private void hideLauncherUpdateCard() {
+        availableLauncherUpdate = null;
+        if (launcherUpdateCard == null) {
+            return;
+        }
+        launcherUpdateCard.setManaged(false);
+        launcherUpdateCard.setVisible(false);
     }
 
     private void applyManifestSettings(LauncherConfig config, ModpackManifest manifest) {
@@ -792,6 +889,9 @@ public final class LauncherShellController extends AbstractScreenController {
         syncButton.setDisable(busy);
         previewButton.setDisable(busy);
         launchButton.setDisable(busy);
+        if (launcherUpdateButton != null) {
+            launcherUpdateButton.setDisable(busy || availableLauncherUpdate == null || !availableLauncherUpdate.isInstallSupported());
+        }
     }
 
     private void updateProgressState(boolean busy, String statusText, String percentText, double progress) {

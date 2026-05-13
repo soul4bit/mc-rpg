@@ -78,6 +78,9 @@ public final class ModpackManifestClient {
         if (manifest.getLauncher() == null) {
             manifest.setLauncher(new LauncherManifestSettings());
         }
+        if (manifest.getLauncherUpdate() == null) {
+            manifest.setLauncherUpdate(new LauncherUpdateSettings());
+        }
         if (manifest.getRuntime() == null) {
             manifest.setRuntime(new ModpackRuntime());
         }

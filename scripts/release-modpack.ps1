@@ -4,8 +4,10 @@ param(
     [string]$ClientSourceDir = "modpack/client",
     [string]$DistDir = "dist",
     [string]$ManifestVersion = (Get-Date -Format "yyyy.MM.dd"),
+    [string]$LauncherUpdatePath = "launcher/obsidian-gate-launcher.jar",
     [switch]$SkipSourceManifestUpdate,
-    [switch]$SkipAuthRelease
+    [switch]$SkipAuthRelease,
+    [switch]$SkipLauncherRelease
 )
 
 Set-StrictMode -Version Latest
@@ -113,6 +115,42 @@ function Get-FileRecord {
     }
 }
 
+function Get-ArtifactFile {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Directory,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Pattern
+    )
+
+    $artifacts = Get-ChildItem (Join-Path $repoRoot $Directory) -File -Filter $Pattern |
+        Where-Object { $_.Name -notlike "original-*" -and $_.Name -notlike "*-shaded.jar" } |
+        Sort-Object LastWriteTime -Descending
+
+    if (-not $artifacts) {
+        throw "Artifact not found in $Directory for pattern $Pattern"
+    }
+
+    return $artifacts[0]
+}
+
+function Get-ProjectVersion {
+    $pomPath = Join-Path $repoRoot "pom.xml"
+    [xml]$pom = Get-Content $pomPath
+    return [string]$pom.project.version
+}
+
+function Build-LauncherArtifact {
+    Write-Host "==> Building launcher update jar" -ForegroundColor Cyan
+    & mvn "-f" (Join-Path $repoRoot "pom.xml") "package" "-DskipTests"
+    if ($LASTEXITCODE -ne 0) {
+        throw "Launcher Maven build failed."
+    }
+
+    return Get-ArtifactFile -Directory "target" -Pattern "obsidian-gate-launcher-*.jar"
+}
+
 function Copy-DirectoryContent {
     param(
         [Parameter(Mandatory = $true)]
@@ -171,6 +209,37 @@ Get-ChildItem $distClientModsDir -Filter "obsidiangate-forge-auth-client-*.jar" 
 Copy-Item $clientJarPath (Join-Path $distClientModsDir $clientJarName) -Force
 
 $manifest.version = $ManifestVersion
+
+$launcherRecord = $null
+if (-not $SkipLauncherRelease) {
+    $launcherJar = Build-LauncherArtifact
+    $normalizedLauncherPath = Normalize-ManifestPath $LauncherUpdatePath
+    if (-not (Test-RelativeContentPath $normalizedLauncherPath)) {
+        throw "LauncherUpdatePath must be a relative web path: $LauncherUpdatePath"
+    }
+
+    $distLauncherPath = Join-Path $distFullPath ($normalizedLauncherPath.Replace('/', [System.IO.Path]::DirectorySeparatorChar))
+    $distLauncherParent = Split-Path -Parent $distLauncherPath
+    $null = New-Item -ItemType Directory -Path $distLauncherParent -Force
+    Copy-Item $launcherJar.FullName $distLauncherPath -Force
+
+    $distLauncherFile = Get-Item $distLauncherPath
+    $launcherRecord = [pscustomobject][ordered]@{
+        version = $ManifestVersion
+        url = $normalizedLauncherPath
+        sha256 = (Get-FileHash -LiteralPath $distLauncherFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+        size = [int64]$distLauncherFile.Length
+        required = $false
+        artifactVersion = Get-ProjectVersion
+        fileName = $distLauncherFile.Name
+    }
+
+    if ($manifest.PSObject.Properties.Name.Contains("launcherUpdate")) {
+        $manifest.launcherUpdate = $launcherRecord
+    } else {
+        $manifest | Add-Member -NotePropertyName "launcherUpdate" -NotePropertyValue $launcherRecord
+    }
+}
 
 $runtimePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 if ($manifest.runtime -and $manifest.runtime.packages) {
@@ -234,6 +303,7 @@ $metadata = [pscustomobject][ordered]@{
         fileCount = $manifestFiles.Count
     }
     artifacts = $authMetadata.artifacts
+    launcherUpdate = $launcherRecord
 }
 
 $metadataJson = $metadata | ConvertTo-Json -Depth 10
@@ -245,3 +315,6 @@ Write-Host "Manifest version: $($manifest.version)"
 Write-Host "Client source: $ClientSourceDir"
 Write-Host "Web files: $($manifestFiles.Count)"
 Write-Host "Client auth mod: $clientJarName"
+if ($launcherRecord) {
+    Write-Host "Launcher update: $($launcherRecord.url) sha256=$($launcherRecord.sha256) size=$($launcherRecord.size)"
+}

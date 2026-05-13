@@ -290,6 +290,40 @@
                                                         <VBox fx:id="previewChangesBox" spacing="10.0" styleClass="sync-preview-list"/>
                                                     </children>
                                                 </VBox>
+
+                                                <VBox fx:id="launcherUpdateCard" managed="false" maxWidth="560.0"
+                                                      spacing="10.0" styleClass="launcher-update-card" visible="false">
+                                                    <children>
+                                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                            <children>
+                                                                <StackPane styleClass="launcher-update-icon">
+                                                                    <children>
+                                                                        <SVGPath content="M12 3 V15 M7 10 L12 15 L17 10 M5 21 H19"
+                                                                                 fill="TRANSPARENT" scaleX="0.95"
+                                                                                 scaleY="0.95" stroke="#FFF7D6"
+                                                                                 strokeLineCap="ROUND"
+                                                                                 strokeLineJoin="ROUND"
+                                                                                 strokeWidth="2.2"/>
+                                                                    </children>
+                                                                </StackPane>
+                                                                <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                                                                    <children>
+                                                                        <Label fx:id="launcherUpdateTitleLabel"
+                                                                               text="Доступно обновление лаунчера"
+                                                                               styleClass="launcher-update-title"/>
+                                                                        <Label fx:id="launcherUpdateDescriptionLabel"
+                                                                               text="Новая версия будет скачана и установлена автоматически."
+                                                                               styleClass="launcher-update-copy"
+                                                                               wrapText="true"/>
+                                                                    </children>
+                                                                </VBox>
+                                                                <Button fx:id="launcherUpdateButton" mnemonicParsing="false"
+                                                                        styleClass="launcher-update-button"
+                                                                        text="Обновить"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </VBox>
                                             </children>
                                         </VBox>
 

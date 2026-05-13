@@ -34,6 +34,7 @@ $distFullPath = Resolve-InputPath $DistDir
 $metadataPath = Join-Path $distFullPath "modpack-release.json"
 $manifestPath = Join-Path $distFullPath "manifest.json"
 $clientDirPath = Join-Path $distFullPath "client"
+$launcherDirPath = Join-Path $distFullPath "launcher"
 
 if (-not (Test-Path $metadataPath)) {
     throw "Modpack release metadata not found: $metadataPath. Run scripts/release-modpack.ps1 first."
@@ -47,7 +48,12 @@ $metadata = Get-Content $metadataPath -Raw | ConvertFrom-Json
 $serverFileName = $metadata.artifacts.server.fileName
 $serverJarPath = Join-Path $distFullPath $serverFileName
 
-foreach ($path in @($serverJarPath, $manifestPath, $clientDirPath)) {
+$requiredPaths = @($serverJarPath, $manifestPath, $clientDirPath)
+if (Test-Path $launcherDirPath) {
+    $requiredPaths += $launcherDirPath
+}
+
+foreach ($path in $requiredPaths) {
     if (-not (Test-Path $path)) {
         throw "Required release file not found: $path"
     }
@@ -87,12 +93,14 @@ Invoke-External -Command "ssh" -Arguments @(
 ) -Action "Create remote staging directory"
 
 Write-Host "==> Uploading modpack release to $Target" -ForegroundColor Cyan
+$uploadPaths = @($clientDirPath, $serverJarPath, $manifestPath)
+if (Test-Path $launcherDirPath) {
+    $uploadPaths += $launcherDirPath
+}
 Invoke-External -Command "scp" -Arguments @(
-    "-r",
-    $clientDirPath,
-    $serverJarPath,
-    $manifestPath,
-    "${Target}:$RemoteStageDir/"
+    @("-r") +
+    $uploadPaths +
+    @("${Target}:$RemoteStageDir/")
 ) -Action "Upload modpack release"
 
 Write-Host "==> Installing modpack release on remote host" -ForegroundColor Cyan
@@ -111,6 +119,10 @@ if ($LegacyPromptSudo) {
     $remoteCommands.Add("else")
     $remoteCommands.Add("  sudo mkdir -p '$RemoteWebRoot/client'")
     $remoteCommands.Add("  sudo cp -a '$RemoteStageDir/client/.' '$RemoteWebRoot/client/'")
+    $remoteCommands.Add("fi")
+    $remoteCommands.Add("if [ -d '$RemoteStageDir/launcher' ]; then")
+    $remoteCommands.Add("  sudo mkdir -p '$RemoteWebRoot/launcher'")
+    $remoteCommands.Add("  sudo cp -a '$RemoteStageDir/launcher/.' '$RemoteWebRoot/launcher/'")
     $remoteCommands.Add("fi")
     $remoteCommands.Add("sudo install -m 644 '$RemoteStageDir/manifest.json' '$RemoteWebRoot/manifest.json'")
     $remoteCommands.Add("sha256sum '$RemoteServerModsDir/$serverFileName'")
