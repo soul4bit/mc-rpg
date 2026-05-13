@@ -36,6 +36,7 @@ public final class MinecraftBootstrapService {
     private static final String DEFAULT_ASSET_BASE_URL = "https://resources.download.minecraft.net/";
     private static final Pattern MINECRAFT_ARGUMENT_PATTERN = Pattern.compile("\\$\\{([a-zA-Z0-9_]+)\\}");
     private static final String NATIVES_MARKER_FILE = ".natives.properties";
+    private static final int DOWNLOAD_READ_TIMEOUT_MS = 60000;
 
     private final ObjectMapper objectMapper;
     private final LaunchCommandBuilder commandTokenizer;
@@ -738,26 +739,11 @@ public final class MinecraftBootstrapService {
     }
 
     private static void download(URL url, Path target) throws IOException {
-        URLConnection connection = url.openConnection();
-        connection.setConnectTimeout(15000);
-        connection.setReadTimeout(60000);
-
-        try (InputStream inputStream = connection.getInputStream();
-             OutputStream outputStream = Files.newOutputStream(
-                 target,
-                 StandardOpenOption.TRUNCATE_EXISTING,
-                 StandardOpenOption.WRITE
-             )) {
-            copy(inputStream, outputStream);
-        }
+        DownloadUtils.download(url, target, DOWNLOAD_READ_TIMEOUT_MS);
     }
 
     private static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
-        byte[] buffer = new byte[8192];
-        int read;
-        while ((read = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, read);
-        }
+        DownloadUtils.copy(inputStream, outputStream);
     }
 
     private static Path resolveInside(Path root, String entryName) {

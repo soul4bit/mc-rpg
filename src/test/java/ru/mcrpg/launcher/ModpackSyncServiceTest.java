@@ -115,7 +115,7 @@ class ModpackSyncServiceTest {
 
         Path clientDirectory = Files.createDirectories(tempDirectory.resolve("client"));
         Files.copy(forgeJar, clientDirectory.resolve("forge-1.12.2-14.23.5.2864.jar"));
-        writeFile(clientDirectory, "mods/examplemod.jar", "stale-mod");
+        writeFile(clientDirectory, "mods/examplemod.jar", "stale-value");
 
         LauncherConfig config = LauncherConfig.defaults();
         config.setManifestUrl(manifest.toUri().toURL().toString());
@@ -140,6 +140,35 @@ class ModpackSyncServiceTest {
         ModpackSyncPreviewEntry configEntry = findPreviewEntry(previewResult, "config/rpg.cfg");
         assertEquals(ModpackSyncPreviewEntry.State.DOWNLOAD, configEntry.getState());
         assertEquals("missing", configEntry.getReason());
+    }
+
+    @Test
+    void previewUsesSizeMismatchBeforeHashingOutdatedFiles() throws Exception {
+        Path sourceDirectory = Files.createDirectories(tempDirectory.resolve("source"));
+        Path expectedFile = writeFile(sourceDirectory, "mods/examplemod.jar", "expected-content");
+
+        Path manifest = tempDirectory.resolve("manifest.json");
+        String manifestJson = "{\n"
+            + "  \"schemaVersion\": 1,\n"
+            + "  \"baseUrl\": \"" + sourceDirectory.toUri().toURL().toString() + "\",\n"
+            + "  \"files\": [\n"
+            + fileJson("mods/examplemod.jar", expectedFile) + "\n"
+            + "  ]\n"
+            + "}\n";
+        Files.write(manifest, manifestJson.getBytes(StandardCharsets.UTF_8));
+
+        Path clientDirectory = Files.createDirectories(tempDirectory.resolve("client"));
+        writeFile(clientDirectory, "mods/examplemod.jar", "short");
+
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setManifestUrl(manifest.toUri().toURL().toString());
+        config.setGameDirectory(clientDirectory.toString());
+
+        ModpackSyncPreviewResult previewResult = new ModpackSyncService(new ModpackManifestClient()).preview(config, null);
+        ModpackSyncPreviewEntry entry = findPreviewEntry(previewResult, "mods/examplemod.jar");
+
+        assertEquals(ModpackSyncPreviewEntry.State.DOWNLOAD, entry.getState());
+        assertEquals("size-mismatch", entry.getReason());
     }
 
     @Test

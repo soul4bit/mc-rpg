@@ -990,10 +990,16 @@ public final class LauncherShellController extends AbstractScreenController {
         if ("sha256-mismatch".equals(reason)) {
             return "replace";
         }
+        if ("size-mismatch".equals(reason)) {
+            return "replace";
+        }
         return "ready";
     }
 
     private static String resolvePreviewReasonText(String reason) {
+        if ("size-mismatch".equals(reason)) {
+            return "Размер файла не совпадает с manifest, поэтому файл будет заменён.";
+        }
         if ("missing".equals(reason)) {
             return "Файл отсутствует локально и будет скачан заново.";
         }

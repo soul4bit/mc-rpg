@@ -9,6 +9,9 @@ import java.security.NoSuchAlgorithmException;
 
 final class ChecksumUtils {
 
+    private static final int BUFFER_SIZE = 64 * 1024;
+    private static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
+
     private ChecksumUtils() {
     }
 
@@ -26,7 +29,7 @@ final class ChecksumUtils {
 
     static String sha256(InputStream inputStream) throws IOException {
         MessageDigest digest = messageDigest("SHA-256");
-        byte[] buffer = new byte[8192];
+        byte[] buffer = new byte[BUFFER_SIZE];
         int read;
         while ((read = inputStream.read(buffer)) != -1) {
             digest.update(buffer, 0, read);
@@ -36,7 +39,7 @@ final class ChecksumUtils {
 
     static String sha1(InputStream inputStream) throws IOException {
         MessageDigest digest = messageDigest("SHA-1");
-        byte[] buffer = new byte[8192];
+        byte[] buffer = new byte[BUFFER_SIZE];
         int read;
         while ((read = inputStream.read(buffer)) != -1) {
             digest.update(buffer, 0, read);
@@ -53,10 +56,12 @@ final class ChecksumUtils {
     }
 
     private static String toHex(byte[] bytes) {
-        StringBuilder builder = new StringBuilder(bytes.length * 2);
-        for (byte value : bytes) {
-            builder.append(String.format("%02x", value & 0xff));
+        char[] output = new char[bytes.length * 2];
+        for (int index = 0; index < bytes.length; index++) {
+            int value = bytes[index] & 0xff;
+            output[index * 2] = HEX_DIGITS[value >>> 4];
+            output[index * 2 + 1] = HEX_DIGITS[value & 0x0f];
         }
-        return builder.toString();
+        return new String(output);
     }
 }

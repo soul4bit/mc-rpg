@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +18,7 @@ import java.util.zip.ZipInputStream;
 public final class RuntimeSyncService {
 
     private static final String RUNTIME_MARKER_FILE = ".runtime-package.properties";
+    private static final int RUNTIME_DOWNLOAD_READ_TIMEOUT_MS = 60000;
 
     public RuntimeResolution sync(
         LoadedManifest loadedManifest,
@@ -192,7 +192,7 @@ public final class RuntimeSyncService {
                         StandardOpenOption.TRUNCATE_EXISTING,
                         StandardOpenOption.WRITE
                     )) {
-                        copy(zipInputStream, outputStream);
+                        DownloadUtils.copy(zipInputStream, outputStream);
                     }
                 }
                 zipInputStream.closeEntry();
@@ -209,34 +209,8 @@ public final class RuntimeSyncService {
         return resolved;
     }
 
-    private static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
-        byte[] buffer = new byte[8192];
-        int read;
-        while ((read = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, read);
-        }
-    }
-
     private static long download(URL downloadUrl, Path target) throws IOException {
-        URLConnection connection = downloadUrl.openConnection();
-        connection.setConnectTimeout(15000);
-        connection.setReadTimeout(60000);
-
-        long totalBytes = 0L;
-        try (InputStream inputStream = connection.getInputStream();
-             OutputStream outputStream = Files.newOutputStream(
-                 target,
-                 StandardOpenOption.TRUNCATE_EXISTING,
-                 StandardOpenOption.WRITE
-             )) {
-            byte[] buffer = new byte[8192];
-            int read;
-            while ((read = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, read);
-                totalBytes += read;
-            }
-        }
-        return totalBytes;
+        return DownloadUtils.download(downloadUrl, target, RUNTIME_DOWNLOAD_READ_TIMEOUT_MS);
     }
 
     private static Path resolveInstallDirectory(Path gameDirectory, RuntimePackage runtimePackage) {

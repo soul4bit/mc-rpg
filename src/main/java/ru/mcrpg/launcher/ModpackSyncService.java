@@ -1,19 +1,17 @@
 package ru.mcrpg.launcher;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class ModpackSyncService {
+
+    private static final int FILE_DOWNLOAD_READ_TIMEOUT_MS = 30000;
 
     public interface LogSink {
         void log(String message);
@@ -44,7 +42,7 @@ public final class ModpackSyncService {
         int downloadFiles = 0;
         int reusedFiles = 0;
         long downloadBytes = 0L;
-        List<ModpackSyncPreviewEntry> entries = new ArrayList<ModpackSyncPreviewEntry>();
+        List<ModpackSyncPreviewEntry> entries = new ArrayList<ModpackSyncPreviewEntry>(prepared.manifest.getFiles().size());
 
         for (ModpackFile file : prepared.manifest.getFiles()) {
             FileInspection inspection = inspectFile(prepared.gameDirectory, file);
@@ -193,6 +191,13 @@ public final class ModpackSyncService {
             return FileInspection.download(target, expectedSha256, "missing");
         }
 
+        if (file.getSize() != null && file.getSize().longValue() >= 0L) {
+            long existingSize = Files.size(target);
+            if (existingSize != file.getSize().longValue()) {
+                return FileInspection.download(target, expectedSha256, "size-mismatch");
+            }
+        }
+
         String existingSha256 = ChecksumUtils.sha256(target);
         if (existingSha256.equalsIgnoreCase(expectedSha256)) {
             return FileInspection.reused(target, expectedSha256);
@@ -213,25 +218,7 @@ public final class ModpackSyncService {
     }
 
     private static long download(URL downloadUrl, Path target) throws IOException {
-        URLConnection connection = downloadUrl.openConnection();
-        connection.setConnectTimeout(15000);
-        connection.setReadTimeout(30000);
-
-        long totalBytes = 0L;
-        try (InputStream inputStream = connection.getInputStream();
-             OutputStream outputStream = Files.newOutputStream(
-                 target,
-                 StandardOpenOption.TRUNCATE_EXISTING,
-                 StandardOpenOption.WRITE
-             )) {
-            byte[] buffer = new byte[8192];
-            int read;
-            while ((read = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, read);
-                totalBytes += read;
-            }
-        }
-        return totalBytes;
+        return DownloadUtils.download(downloadUrl, target, FILE_DOWNLOAD_READ_TIMEOUT_MS);
     }
 
     private static void verifyDownloadedFile(Path path, ModpackFile file, String expectedSha256) throws IOException {
