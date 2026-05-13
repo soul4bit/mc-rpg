@@ -26,6 +26,7 @@ public final class ForgeAuthClientMod {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        ClientModHotfixes.apply(LOGGER);
         SimpleNetworkWrapper channel = NetworkRegistry.INSTANCE.newSimpleChannel(NETWORK_CHANNEL);
         channel.registerMessage(AuthTicketMessageNoopHandler.class, AuthTicketMessage.class, 0, net.minecraftforge.fml.relauncher.Side.SERVER);
         MinecraftForge.EVENT_BUS.register(new ForgeAuthClientLifecycle(channel, LOGGER));
