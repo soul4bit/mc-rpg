@@ -1,0 +1,110 @@
+Manifest-Version: 1.0
+ContainedDeps: drplibrary-1.12.2-0.1.2.4-SNAPSHOT.jar
+Maven-Artifact: net.dark_roleplay.core_modules:drpcmlocks:1.12.2-1.0.0
+ -SNAPSHOT
+Timestamp: 1543248723041
+
+Name: net/dark_roleplay/core_modules/locks/api/LockHelper.class
+SHA-256-Digest: U9pBzXcYA4IqNdBtcdpCPum+l9BlXZxwh0i88RN6k8Y=
+
+Name: net/dark_roleplay/core_modules/locks/api/blocks/ISpecialLockHand
+ ler.class
+SHA-256-Digest: 42vTQToK8lGITl7ISMTfhUNg57AKhNMKIGF/aUT+S+8=
+
+Name: net/dark_roleplay/core_modules/locks/handler/Capabilities.class
+SHA-256-Digest: a9eaWnTE9zX93e+hRh+PUIkiHMtOeOhSBV9mEVQBuU4=
+
+Name: net/dark_roleplay/core_modules/locks/DRPCMLocks.class
+SHA-256-Digest: QCqGSQGGDQXxOVJaTwGIo9gw1pxgGoFIkQaeaLO22f0=
+
+Name: net/dark_roleplay/core_modules/locks/handler/Localized.class
+SHA-256-Digest: 6ymaG77V4xXO2GCxnDYlz/EJ05bSqK7MnbbXxfTaiAA=
+
+Name: META-INF/libraries/drplibrary-1.12.2-0.1.2.4-SNAPSHOT.jar
+SHA-256-Digest: 8ihSTtsLy4L/umVLYjOnRdjMA6h3Et8Du90yISudeXE=
+
+Name: net/dark_roleplay/core_modules/locks/api/items/ILock.class
+SHA-256-Digest: QhCs/pszLwJIDDvckVAXTB3/g251wfJPef1bHEYQeI4=
+
+Name: net/dark_roleplay/core_modules/locks/DRPCMLocks$ItemRegistry.cla
+ ss
+SHA-256-Digest: mj+GTheOriopRbbWVG6FaixOerrraeDxQIVfUim4SKU=
+
+Name: net/dark_roleplay/core_modules/locks/objects/other/LockData.clas
+ s
+SHA-256-Digest: kR13zkq7l1SOiyHhsKOYCCzudJwI/z9AHx5O13Kx+Lc=
+
+Name: net/dark_roleplay/core_modules/locks/handler/TestItem$1.class
+SHA-256-Digest: WulX0jReddCrxmw6pGehJZxL/SERLVJQ3ZBTl3Vk++U=
+
+Name: net/dark_roleplay/core_modules/locks/objects/capabilities/lock_h
+ older/LockHolderStorage.class
+SHA-256-Digest: hRwPfFBSHNtvu1pkGwNIXJyNXdKie6rrsBo4uy9rH2o=
+
+Name: assets/drpcmlocks/lang/de_de..txt
+SHA-256-Digest: 64AAeUlPOh86UcN7qrBB9o7wWT8mQEBpKq5VgTHCqdU=
+
+Name: net/dark_roleplay/core_modules/locks/objects/events/ConfigChange
+ .class
+SHA-256-Digest: UgKfKyzSlyNndr0AWXvU2ePQUS+SY0iRsC4lVDeQEwI=
+
+Name: net/dark_roleplay/core_modules/locks/api/items/IKey.class
+SHA-256-Digest: lmVoCcb3EbvYisBjM59VbHUxmzdlNWrdWwzAUepOsFY=
+
+Name: net/dark_roleplay/core_modules/locks/objects/packets/CombineLock
+ AndKey.class
+SHA-256-Digest: 5Pu/yL+cpJGpLb7H8DgvMP5p9PpHSB/qHqPfMG6F5aU=
+
+Name: assets/drpcmlocks/lang/en_us.txt
+SHA-256-Digest: MJ6k/KdQmLbDB/xWIjEO21RcgLC8BKcM5L0ZAyYkkl4=
+
+Name: net/dark_roleplay/core_modules/locks/objects/events/AttachCapabi
+ lity.class
+SHA-256-Digest: CSWsETIQbKIuHZuMt7ajlNmJv1APZmEEJhxGF9ET/8U=
+
+Name: META-INF/fml_cache_annotation.json
+SHA-256-Digest: z9WVmym2BhFjHpJCGNjmq4i0bBmiE6qqKhwqiR2TlXI=
+
+Name: net/dark_roleplay/core_modules/locks/objects/capabilities/lock_h
+ older/ILockHolder.class
+SHA-256-Digest: uWu/0EXQ+4puHO3oMpl0Nzqe0y8Jnoib1Bl/YzyxjGc=
+
+Name: pack.mcmeta
+SHA-256-Digest: 27AEJwsw0mmend81UAJT6OaTovkQsuIwgWL82x7Xlus=
+
+Name: net/dark_roleplay/core_modules/locks/objects/capabilities/lock_h
+ older/ILockHolder$Impl.class
+SHA-256-Digest: OivQv38+i1AAN6JemtxTLGCAp87gQpUCexnkJDnpw3Q=
+
+Name: net/dark_roleplay/core_modules/locks/Localizer.class
+SHA-256-Digest: Kf7EgATpJWI9rKE3y4O0dycjv0hNZbiCX/8l5iAAvBs=
+
+Name: net/dark_roleplay/core_modules/locks/handler/Network.class
+SHA-256-Digest: ZWg7CRhur8CpfBwqLkYQie7nvwPMzs1LF2dYdb0q8LM=
+
+Name: net/dark_roleplay/core_modules/locks/objects/events/EventsBlock.
+ class
+SHA-256-Digest: Ws62+yIK8V77X5r2q3wbkKjjPBj4idnpscqtzdKygKg=
+
+Name: net/dark_roleplay/core_modules/locks/DRPCMLocks$1.class
+SHA-256-Digest: OmBtel5tVOlNu1CeJ32Doc7DzxxcDRuwa2BwhCF0JQo=
+
+Name: net/dark_roleplay/core_modules/locks/handler/TestItem.class
+SHA-256-Digest: phJZLi9j1sTo8kTjGlCM6HjTx0rGNR+3ob6A7T4fA8o=
+
+Name: META-INF/fml_cache_class_versions.json
+SHA-256-Digest: mI7cMSdJEkjeUWgmtWOZr2EQQ/hlZOtPrEQbtXslMLo=
+
+Name: mcmod.info
+SHA-256-Digest: BnEFa/aOsh45uh9HZ81jcEj/MHVIu6FZQ2wwSUbECfk=
+
+Name: net/dark_roleplay/core_modules/locks/References.class
+SHA-256-Digest: kauJmD7oM7AFGvxjlaqKuhIWUnC16VqE/bdryH1hrYo=
+
+Name: net/dark_roleplay/core_modules/locks/api/LockHelper$LockResult.c
+ lass
+SHA-256-Digest: SXQ80UUPHYkU3CvhSEm7JuWrjNjZOU/3dvbLaV9sikI=
+
+Name: net/dark_roleplay/core_modules/locks/configs/General.class
+SHA-256-Digest: EY+acgKWesIaPmGs3AUiR3gBTgBy2dxTZV9p3uBvRi8=
+

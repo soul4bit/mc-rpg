@@ -1,0 +1,296 @@
+Manifest-Version: 1.0
+Maven-Artifact: net.dark_roleplay.core_modules:drpcmmaarg:1.12.2-0.10.
+ 0-SNAPSHOT
+Timestamp: 1542372036383
+
+Name: assets/drpcmmaarg/arg/lang/wood/birch.json
+SHA-256-Digest: bUcgnETq5RqkzlMwFHhAkUqrEPaJOMAgaT4sCawaVHE=
+
+Name: assets/drpcmmaarg/arg/textures/wood/plank/plank_spruce.png
+SHA-256-Digest: xmqfi4IxGd0F1vRFW6OypojnyBq29+KB6H+jR+zz2a4=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top/log_top_acacia.png
+SHA-256-Digest: HnSP9VnwH6fsoWazcl4b8rzK3K04/Pum4+gUOGgJFTU=
+
+Name: data/drpcmmaarg/arg/materials/jungle.json
+SHA-256-Digest: l/SQWDwvErb3ocpEf6F85i0bEWPcpP2cy7N55QHWKD4=
+
+Name: net/dark_roleplay/core_modules/maarg/DRPCMMaARG$ServerProxy.clas
+ s
+SHA-256-Digest: UVd9S6bdJ8tXlBYMc58Dty0VSSf0erMVismnxK5quLg=
+
+Name: assets/drpcmmaarg/arg/textures/wood/clean_plank/clean_plank_acac
+ ia.png
+SHA-256-Digest: RfxmURQ1w0kxF1rSrrNepWLDNi/1mvpj+yKDOgnqX9c=
+
+Name: assets/drpcmmaarg/arg/textures/wood/plank/plank_jungle.png
+SHA-256-Digest: TkQg/gtWXIE2l7mQhaGuX9A67Kun+fZ95Yh970s4i2Y=
+
+Name: data/drpcmmaarg/arg/materials/oak.json
+SHA-256-Digest: RCQOQFyz3oByz/IcorFGDRNScld+fjR9KbTDDMMrBRk=
+
+Name: assets/drpcmmaarg/arg/textures/wood/plank/plank_oak.png
+SHA-256-Digest: 1AL7FYKjQbWZ2mLsRn/XcUrQn9n24mbzIGmntx3fJ+w=
+
+Name: net/dark_roleplay/core_modules/maarg/api/exceptions/MissingBuild
+ erArguments.class
+SHA-256-Digest: +hpbfah2BPioLUOnXJVp0Ml18WpKPtG20aSC2SXrJcw=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top_stripped/log_top_str
+ ipped_jungle.png
+SHA-256-Digest: WbOQE6NDPPCXi7OYDzjUfxcRddI8PiA8n6se9BPXw1E=
+
+Name: net/dark_roleplay/core_modules/maarg/DRPCMMaARG.class
+SHA-256-Digest: ci/vxO92fdYXjU23CNgCc5R/6T/bu+ZjCNZi+JNrM7I=
+
+Name: net/dark_roleplay/core_modules/maarg/objects/other/generators/te
+ xtures/TextureGeneratorCache.class
+SHA-256-Digest: ZDMYMx8jI/+AqbVTVMibxVu7siN7O6XtxMgzCTdVIAM=
+
+Name: assets/drpcmmaarg/arg/lang/wood/oak.json
+SHA-256-Digest: mOE7aWkC3xov67+adv4HWkIEtGrn3SzesG4mi3rpLv4=
+
+Name: assets/drpcmmaarg/arg/texture_generators/planks.json
+SHA-256-Digest: 2lWgWVuoDqxSu3eOYNsGbyj9MW3k7P2pI1HiTo5RaaI=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top_stripped/log_top_str
+ ipped_spruce.png
+SHA-256-Digest: iFSLTz2/BbJyQ5VQ5Op4n0jWpQr50zOsn8UAY/aLd7Y=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top_stripped/log_top_str
+ ipped_oak.png
+SHA-256-Digest: PUxaZKZlXGDJOcsk9/rAivmrWfEZje8hRbx/jaBhMLE=
+
+Name: net/dark_roleplay/core_modules/maarg/objects/other/generators/Js
+ onGenerator.class
+SHA-256-Digest: ebfJB6GcY/z+NCK3T2vhzqK5xD54zNatUF7+JZXr2D0=
+
+Name: data/drpcmmaarg/arg/materials/acacia.json
+SHA-256-Digest: +6EoUwsACnD1FmQps/HPq1nIit9NqBNpl/eYsYfYVOc=
+
+Name: assets/drpcmmaarg/arg/textures/wood/clean_plank/clean_plank_birc
+ h.png
+SHA-256-Digest: CU6wWjmcsEJIR+m1LeB/FnE+kwaLT4sKmfyN/CqutpE=
+
+Name: assets/drpcmmaarg/arg/textures/wood/plank/plank_birch.png
+SHA-256-Digest: /rNvUHXSsoqzqKQEu9+aLGBKMb5XI9MBsp+VJEgQnsE=
+
+Name: net/dark_roleplay/core_modules/maarg/References.class
+SHA-256-Digest: OP/yadZEBKBW4OyaG/yeTrZEHU2a1jmZDcb8u9y+ehk=
+
+Name: net/dark_roleplay/core_modules/maarg/configs/ServerConfig.class
+SHA-256-Digest: 6EFisYzQu7f/bFflRYShB8psH4+3dSdwxsefxyhiXh4=
+
+Name: assets/drpcmmaarg/arg/lang/wood/jungle.json
+SHA-256-Digest: BEzkQNCoFRBZThMIan4AJHdH0IiQzBzp6ZzOxj+765w=
+
+Name: META-INF/fml_cache_annotation.json
+SHA-256-Digest: iGiIcBZDazvjvqKgs5/shEdMJOMkoUILY5U0mV3zS1I=
+
+Name: net/dark_roleplay/core_modules/maarg/objects/other/generators/te
+ xtures/TextureResize.class
+SHA-256-Digest: 3/seNsFxWzX4Qf22Ipe+um7LV4eKbpKBo3gOVeCqcv4=
+
+Name: assets/drpcmmaarg/arg/textures/wood/clean_plank/clean_plank_jung
+ le.png
+SHA-256-Digest: gmOGUfxgWuurNcRsau75exKnNeoTnsp2XqQitCy7qe4=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top_stripped/log_top_str
+ ipped_birch.png
+SHA-256-Digest: 98SP6EcDeq1Ij9JosurRqRC3lBSZ/Sk3jvbtBvKXsvk=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top/log_top_jungle.png
+SHA-256-Digest: vIy8zdvohCcZvZqSbLZmMH/q8sAbzX1KcmH4apyMdkg=
+
+Name: data/drpcmmaarg/arg/materials/dark_oak.json
+SHA-256-Digest: MZO1lcVfl/A1pDk7Mt8dFUunfq9rR/0cdx1vcDivHts=
+
+Name: net/dark_roleplay/core_modules/maarg/objects/other/generators/La
+ nguageGenerator.class
+SHA-256-Digest: QflhVOkx0JJ0VFyRN4TUxT77pxlKGaW0SWq3bBEwGag=
+
+Name: assets/drpcmmaarg/arg/lang/wood/acacia.json
+SHA-256-Digest: jAnWhJ4SaGpRPReOCOhzOZxvrY/iYYwbyHQQKcry6UA=
+
+Name: assets/drpcmmaarg/arg/texture_generators/clean_planks.json
+SHA-256-Digest: z8xV8Ve9ll4EeHvJit/zey/B71XrNWeZUtqpIdC7tVw=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side_stripped/log_side_s
+ tripped_spruce.png
+SHA-256-Digest: erGo5j9aUdrCKL3yRUIRHbj/0W3NhUlGpu5czOjE+4w=
+
+Name: net/dark_roleplay/core_modules/maarg/objects/events/ConfigChange
+ d.class
+SHA-256-Digest: i71w5h03yOoDLKjXoO3xjCScH2+DxUl3kx4mA6Vyt+w=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side/log_side_acacia.png
+SHA-256-Digest: awH+QdPtQeZ1/bY8Ro4AgUje6yhhkBAjrhC3Qxq0RD4=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top/log_top_birch.png
+SHA-256-Digest: 1dYO+eVuGPeGP9ko2PbhGtMLt/fdAzQdDgs2+A5EDq0=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top/log_top_spruce.png
+SHA-256-Digest: 6/k6LePTplU8pFlLDzg4NZ8GDDlgvasb56uNKOZ8O08=
+
+Name: net/dark_roleplay/core_modules/maarg/api/arg/MaterialRequirement
+ s.class
+SHA-256-Digest: mveAmj7svRTGVuk5f5VjNfvmfs/zgY1zrX1LOC6UG1Q=
+
+Name: net/dark_roleplay/core_modules/maarg/configs/ClientConfig.class
+SHA-256-Digest: nuPu0BY+kSO7xovhOlfY4JrSWUjnLt/YmHNYc0RzLDs=
+
+Name: net/dark_roleplay/core_modules/maarg/handler/MaterialLoader.clas
+ s
+SHA-256-Digest: 9m4OYlfqsDN2Zo03ePFMZq8kyko7IBr3vYB/qS7z3PE=
+
+Name: net/dark_roleplay/core_modules/maarg/api/Constants$MatWood.class
+SHA-256-Digest: baAgwlafUnuZ5v72Pqiwo+w48jv/Y5AKs4xJEF9uD9k=
+
+Name: net/dark_roleplay/core_modules/maarg/api/arg/IMaterialLoader.cla
+ ss
+SHA-256-Digest: XTRImFvKEGQW2qp3JP8qvxsLQsqaPjQUXaheZtYo6x0=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side_stripped/log_side_s
+ tripped_jungle.png
+SHA-256-Digest: +sbitx0Gibti9jkMRRT+gcjGNoqHmc6VPiLO3K0kYHM=
+
+Name: assets/drpcmmaarg/arg/textures/wood/plank/plank_dark_oak.png
+SHA-256-Digest: oGGHvdKCpgVn9YpRc2B88OFDU5qLASYIjKrDSKcZbHU=
+
+Name: assets/drpcmmaarg/arg/lang/wood/spruce.json
+SHA-256-Digest: nwZEdG8XKW+xnT90jETHR4WwsBN1IK3LaO1ue7ddYvY=
+
+Name: META-INF/fml_cache_class_versions.json
+SHA-256-Digest: 0Yk2CL7CGWAqhXrci64/e6vIzoQFS5530aji6kUyVi4=
+
+Name: net/dark_roleplay/core_modules/maarg/DRPCMMaARG$ClientProxy.clas
+ s
+SHA-256-Digest: /SgzcHb4lE2Ef658yo9bNxUQ+Eyw+tUiVfUFVOiFMTM=
+
+Name: assets/drpcmmaarg/arg/textures/wood/clean_plank/clean_plank_oak.
+ png
+SHA-256-Digest: DToeC1ZB17kampWK2RlXg2YudqF2RcdFs6apr4m0Hdo=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side/log_side_jungle.png
+SHA-256-Digest: wYz/SW1HqxOmMzJnYoxszzekAIVWZuX79Ni82WuEd/I=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side_stripped/log_side_s
+ tripped_birch.png
+SHA-256-Digest: LHkxgKeoiBk2TQUgr3fZo0OTbMzqSOrAQpg/KNxs138=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side/log_side_oak.png
+SHA-256-Digest: amLmFIBtUSI315JY03MzRotS86AcuuPg/HNEroxPBoQ=
+
+Name: net/dark_roleplay/core_modules/maarg/handler/Generator.class
+SHA-256-Digest: WYcHbeVLk7axWLMr/B8XJyu4F0fat3mtCNYYjs4BwPY=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side_stripped/log_side_s
+ tripped_dark_oak.png
+SHA-256-Digest: /IqebZoFkgWDGizAlTRsj7iWbuGJROX02dM4GakhZ9g=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side/log_side_spruce.png
+SHA-256-Digest: dygVSxBwEmf9MxMhiAJHXBvMpWU5cgZ5KavtfrrbVjU=
+
+Name: assets/drpcmmaarg/arg/lang/wood/dark_oak.json
+SHA-256-Digest: WTFxIIZgPxd6PXURPdv5GMH+6dpwQyHzG/q9a7prYpI=
+
+Name: data/drpcmmaarg/arg/materials/spruce.json
+SHA-256-Digest: wgTGotRaWk2/tz1UfJahq4lslsgZQ56bLWuTYt6Th60=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side_stripped/log_side_s
+ tripped_acacia.png
+SHA-256-Digest: hBTH2UZb5Gb2W8IpS3ggt+LmIf14OFCMmiRa3ZdkqGU=
+
+Name: assets/drpcmmaarg/arg/texture_generators/stripped_log.json
+SHA-256-Digest: n2WoFzSZygJwNk1FfyLfdO1pBm17P4FFrRXydwQcB1U=
+
+Name: net/dark_roleplay/core_modules/maarg/objects/other/generators/te
+ xtures/TextureEditors.class
+SHA-256-Digest: B9nE6PY4AbNUyJiywEy2JukNdZhqZCohWq3yjAs5W9U=
+
+Name: net/dark_roleplay/core_modules/maarg/objects/resource_pack/Gener
+ atedResourcePack.class
+SHA-256-Digest: DJ4bfbFftfybZKPzKgMyaap/yc0yN2Of/kts1WufT8E=
+
+Name: assets/drpcmmaarg/arg/textures/wood/clean_plank/clean_plank_spru
+ ce.png
+SHA-256-Digest: XdXtofiR+QDK2vvwMXuKuI/sLC3v0/G/szJSnEQIca8=
+
+Name: assets/drpcmmaarg/arg/textures/wood/clean_plank/clean_plank_dark
+ _oak.png
+SHA-256-Digest: Dpq3qLHx1rdsN/IqPrziExwE33CwzvOHqg5w6SzqGgI=
+
+Name: net/dark_roleplay/core_modules/maarg/objects/commands/ForceRegen
+ .class
+SHA-256-Digest: 9km3ufP1JBhCZ4ghbHAhn05cBugiTHysbZzrRDyrZns=
+
+Name: net/dark_roleplay/core_modules/maarg/api/arg/TextureGeneratorTyp
+ e.class
+SHA-256-Digest: XC77T6Iw8U9Fs9u7ULscZGXV7UiQXcl1RwdQfVTOoS0=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top_stripped/log_top_str
+ ipped_dark_oak.png
+SHA-256-Digest: O4uerJBQ+bb3w1QDkekBI9COkfOtK/uR9xUgFlu3nI8=
+
+Name: data/drpcmmaarg/arg/materials/birch.json
+SHA-256-Digest: O1R8Yp0OXtHFoIxVCZQzsEv76CHH+iJdLzoncMb+VaA=
+
+Name: net/dark_roleplay/core_modules/maarg/api/Constants.class
+SHA-256-Digest: Glh3zVqi768VBLVPE2jm2WVtnX1dzJcoriCtegtf00s=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side/log_side_birch.png
+SHA-256-Digest: qm1H6vPhod84f8XvfDSZPCnmVYE7Yhc3r/VXE0YVeTU=
+
+Name: assets/drpcmmaarg/arg/textures/wood/plank/plank_acacia.png
+SHA-256-Digest: z3UwvakoE7RD4lXK0NOl3IcErIMMDRC7CyjUY1moMYE=
+
+Name: net/dark_roleplay/core_modules/maarg/api/exceptions/InvalidTextu
+ reType.class
+SHA-256-Digest: m1JkFiTmAQ0QTJxbgf5d59ohISKoRAcSwmPWy3rxu/w=
+
+Name: net/dark_roleplay/core_modules/maarg/objects/other/loaders/Gener
+ alMaterialLoader.class
+SHA-256-Digest: ysrDdOBeYGNQ1YnIOqcdgMpQbCQlDw+kiWhFv4zQfMo=
+
+Name: pack.mcmeta
+SHA-256-Digest: qU9FXtpE5KuraKZCU1PKxlwQoNzR9PytgUP3llqGb+Q=
+
+Name: net/dark_roleplay/core_modules/maarg/handler/LogHelper.class
+SHA-256-Digest: LcKKSpz//leHRBJbIDKXUjmLvhOmWL68ISfz2ANm6wE=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side/log_side_dark_oak.p
+ ng
+SHA-256-Digest: BX7ZPIQEWvz9rWVXlFV5tx03TV++0mHVLFaOV5lfzEo=
+
+Name: net/dark_roleplay/core_modules/maarg/api/materials/Material.clas
+ s
+SHA-256-Digest: n0GMlLheHdrCU2ztdOzJbaWsy2NoIHH4gjvU3XJWlEk=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top/log_top_dark_oak.png
+SHA-256-Digest: w9S8GgbXOF9Rg6gYSruXwR9imxVwFnWcnhoFEfktpsU=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top/log_top_oak.png
+SHA-256-Digest: xogakjBi0CmIRuLckHz1A0/jNi6eHCijiK3uyU+idhs=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_side_stripped/log_side_s
+ tripped_oak.png
+SHA-256-Digest: DV5LHmfkqacDR3rJLTMoD7JVjTZcLL92WF44EgUlTyM=
+
+Name: assets/drpcmmaarg/arg/texture_generators/log.json
+SHA-256-Digest: z+ceX98gri+VrEkKW3bjPO5M6lgnoo9pvKgS+Fkf+KA=
+
+Name: assets/drpcmmaarg/arg/textures/wood/log_top_stripped/log_top_str
+ ipped_acacia.png
+SHA-256-Digest: e7xqm9Xgvgw/I3EvoHckzfdPucYozSOTeV3sVDRNBk8=
+
+Name: net/dark_roleplay/core_modules/maarg/handler/LogHelper$1.class
+SHA-256-Digest: qvuEZvOjA4rFN5UWkqhF5APXfgMbup952YGxrM1Jj2c=
+
+Name: net/dark_roleplay/core_modules/maarg/objects/other/generators/Te
+ xtureGenerator.class
+SHA-256-Digest: cWqCodCsaY0QwKZo1OsCsrWsM8B70aVx17DzjuCtPPk=
+
+Name: net/dark_roleplay/core_modules/maarg/handler/MaterialRegistry.cl
+ ass
+SHA-256-Digest: l8gUVROZchhw07Cqjrz1EbLU9NXLDUWHDejUbptd6Xc=
+

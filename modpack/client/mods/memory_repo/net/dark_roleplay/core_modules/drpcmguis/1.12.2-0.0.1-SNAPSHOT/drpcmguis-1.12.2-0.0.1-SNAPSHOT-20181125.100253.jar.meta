@@ -1,0 +1,181 @@
+Manifest-Version: 1.0
+ContainedDeps: drplibrary-1.12.2-0.1.2.4-SNAPSHOT.jar
+Maven-Artifact: net.dark_roleplay.core_modules:drpcmguis:1.12.2-0.0.1-
+ SNAPSHOT
+Timestamp: 1543165373476
+
+Name: net/dark_roleplay/core_modules/guis/References.class
+SHA-256-Digest: Du1lEHhTGUOh0KpskfVVXom7Z2ig6WZzAGRf9mD0TIs=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/other/Dr
+ opable.class
+SHA-256-Digest: kopGc8G4GH2ox9wr21uoLxOPtW8O396BazTYyDnynA8=
+
+Name: net/dark_roleplay/core_modules/guis/handler/Keybinds.class
+SHA-256-Digest: yN2S0S3mnUo9P+JDAl9A9+bi1fIfCmzTM+f5DyN+i8E=
+
+Name: assets/drpcmguis/lang/en_us.lang
+SHA-256-Digest: cho7E5HlgSXRlCl0yz5ym7wAJ6mweqeruCwT112H0z4=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/input/fl
+ oats/SliderBoxFloat.class
+SHA-256-Digest: 6Z8e90pbtBzG6X7a+GvcqZe/JUgiMQpQXJMgLJ8AbYE=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/structur
+ e/IContainerComponent.class
+SHA-256-Digest: BprFuQ4oGb40iljhILaM/8H6oWvLitOskGl5WXyFwHU=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/input/in
+ teger/SliderBoxInteger.class
+SHA-256-Digest: 9piLLOM9i60oaV/4mJo4TLo36+pt1FsIAXLKIDbsZzI=
+
+Name: net/dark_roleplay/core_modules/guis/objects/resource_loaders/Gui
+ TextureSprite.class
+SHA-256-Digest: ch61qCg6BMtr9CIk1P1rm0QeT96b/f/nnSUpDPB3sC0=
+
+Name: net/dark_roleplay/core_modules/guis/objects/testing/coding/CodeB
+ lockObject.class
+SHA-256-Digest: 8K0EKoVG2hrVQ42nrSgx73F/0DkLFrXl0OWNSL3VZOE=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/DRPGuiScreen.
+ class
+SHA-256-Digest: AM4jb793PxDth4b5XFLDlRSR20HvDFp2hEAOCrLfqaE=
+
+Name: META-INF/fml_cache_annotation.json
+SHA-256-Digest: YLwdUESMe53QASaLdrz8k1q/ZMQXucb0tFBLqLfkrHE=
+
+Name: net/dark_roleplay/core_modules/guis/objects/events/HudDraw.class
+SHA-256-Digest: 3tHnrAjaab93IsR32QMsgg93RSnngu1BUkTX4Or6eA0=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/input/ot
+ her/DropDown.class
+SHA-256-Digest: 7kXyZHJuLcIzcB2w7oppcWju2zjpHqnlVpHG2uu7FIo=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/other/It
+ emSelector.class
+SHA-256-Digest: z6suwdVUBtyDYBKwQLjaTPf6UNKekZWldTnZBhukVj4=
+
+Name: net/dark_roleplay/core_modules/guis/DRPCMGuis$ServerProxy.class
+SHA-256-Digest: q4kllAanki7fJYlsBr38mqqCgwWBS+BPLkPdCj7cN8g=
+
+Name: net/dark_roleplay/core_modules/guis/objects/resource_loaders/Gui
+ ThemeLoader.class
+SHA-256-Digest: hPvcIvzUj+vrtjjCfqLmW8fSaai+yQKnhswMB9j/Ezo=
+
+Name: net/dark_roleplay/core_modules/guis/handler/Network.class
+SHA-256-Digest: nkThJd3pahye3sQJJE4EjTqSl1qhgYbd+M9/wPNXvHg=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/other/Dr
+ opField.class
+SHA-256-Digest: KjPBXdBCZLm2+zdc9uPKeGm9798N73tUQ7b5yrkRAsM=
+
+Name: net/dark_roleplay/core_modules/guis/api/layouts/ILayout.class
+SHA-256-Digest: QjDgX2xt4e6nr9eN5YiGqsqpYdfmfM3DskI2KkOnI2c=
+
+Name: net/dark_roleplay/core_modules/guis/configs/ClientConfig.class
+SHA-256-Digest: 5XJusnQ6uvFjcEMg/1o+ecNcbFq74BBOfKnfntyyDjU=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/storage/DRPSl
+ ot.class
+SHA-256-Digest: RqPCCR1mUsejHz5uflDn6dZG8whLjTuMu2HUFDVnpk8=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/input/fl
+ oats/DoubleSliderBoxFloat.class
+SHA-256-Digest: HFsViZYb1KutCIKuQvlU0gX0Z+mRMwjVcOpgk1/Gi3s=
+
+Name: net/dark_roleplay/core_modules/guis/api/huds/Hud.class
+SHA-256-Digest: xcn2xVjg/UZha2gf1D+5kbXkw1hdNw+2OuGrA9ty3rg=
+
+Name: net/dark_roleplay/core_modules/guis/objects/testing/Gui_Test.cla
+ ss
+SHA-256-Digest: Q82Lc4ZeUxhJiiDTv8ujBdm1/jQ2j06vb35Rbi0oTFk=
+
+Name: META-INF/fml_cache_class_versions.json
+SHA-256-Digest: FNjed/PTRD+bXnax6LPlIA5Qoz5VU7k4XigY/XZQDvI=
+
+Name: net/dark_roleplay/core_modules/guis/DRPCMGuis$ClientProxy.class
+SHA-256-Digest: F5IfhXcNhuWY7x0b0tsmlBBR0px1kKpTfn91qOhCMA8=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/other/Mo
+ ver.class
+SHA-256-Digest: 9ynz6EDUx3uOteZUgQYb5g+r6TqaqQ07PNA35S2ii1o=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/input/in
+ teger/RadioGroup.class
+SHA-256-Digest: rnP58qOFDfe0aW9BBl7UrIuJlFl6SdqwElITKhtm1F0=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/input/in
+ teger/RadioButton.class
+SHA-256-Digest: K42+xE/lh7sFxv2Ekwyrxbwn46XLd0gjpxwTqwtSkNo=
+
+Name: net/dark_roleplay/core_modules/guis/handler/Registries.class
+SHA-256-Digest: wBPNavfg4oU19v4YSxN0wTFMFwTagdEMqh5ysaMV8cQ=
+
+Name: META-INF/libraries/drplibrary-1.12.2-0.1.2.4-SNAPSHOT.jar
+SHA-256-Digest: 8ihSTtsLy4L/umVLYjOnRdjMA6h3Et8Du90yISudeXE=
+
+Name: net/dark_roleplay/core_modules/guis/DRPCMGuis.class
+SHA-256-Digest: 3hlDf/gWmDSbKabggF0+bilSbY3j3E3wZUN5ogKUEQY=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/input/bo
+ oleans/Switch.class
+SHA-256-Digest: aCGSjOPklvVBHIMmHd9LC0KT480vOAbBViR51bgP1VA=
+
+Name: assets/drpcmguis/textures/guis/gui_code_elements.png
+SHA-256-Digest: ZDOkhiutPTqXmqELJ34e15YZSkwcpq8nvoHRHmRtI5g=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/Component.cla
+ ss
+SHA-256-Digest: W/QDInn/ynvD/WXjXJVH/N64t8DMXMd5hFxK5UTGTg4=
+
+Name: net/dark_roleplay/core_modules/guis/objects/testing/coding/CodeB
+ lockCondition.class
+SHA-256-Digest: IbVDaDlQBHS0iTjjGsYR/W/oAu2m8aMo64K9W3JNqKk=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/input/bo
+ oleans/CheckBox.class
+SHA-256-Digest: OPhW5KmOYwTfmTmJrRJvA748KqJ3o2nH7ijUIpNJYyM=
+
+Name: assets/drpcmguis/lang/de_de.lang
+SHA-256-Digest: OzqVEGx83U0iJCfkDWwAlXb4wwPpkz/YmobfmOa/Rjo=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/input/in
+ teger/DoubleSliderBoxInteger.class
+SHA-256-Digest: T4dFx03vS/xGysnJDLlAYKuQUIphswKhDTE7dEfDK9s=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/input/st
+ rings/TextBox.class
+SHA-256-Digest: XZ0Pc6l2XOiy9eD12coDqUUxXX9drf3EhGvmPx4iTHg=
+
+Name: net/dark_roleplay/core_modules/guis/objects/testing/coding/Codin
+ gGui.class
+SHA-256-Digest: 9HxL6cIEC1SuggSw9jNhRnIbAlm7joUknjgMhRdGGio=
+
+Name: net/dark_roleplay/core_modules/guis/api/layouts/base/HorizontalL
+ ayout.class
+SHA-256-Digest: R/gA5WCws+lArblVJazkp/ugtqv/3W3qVFF48j5aPvk=
+
+Name: net/dark_roleplay/core_modules/guis/api/huds/Hud$ALIGNMENT.class
+SHA-256-Digest: tzowiunlT2H2NA0Z9joXykhic/GMAQvt9VsTffs+8Eg=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/DRPGuiContain
+ er.class
+SHA-256-Digest: gAwFBcksOeYm1+Q+Fci6ZzVHveC2Cz0dUdXU42zZzZA=
+
+Name: pack.mcmeta
+SHA-256-Digest: qU9FXtpE5KuraKZCU1PKxlwQoNzR9PytgUP3llqGb+Q=
+
+Name: net/dark_roleplay/core_modules/guis/api/components/base/structur
+ e/Panel.class
+SHA-256-Digest: CRaq/wTQrEh85Nyc7EfrNoECdORlR4viWGdV1qNEsxM=
+
+Name: net/dark_roleplay/core_modules/guis/objects/testing/Gui_Test$1.c
+ lass
+SHA-256-Digest: gTgBHjzT71jCJQk1zzq0ZG386niRnM6GqlcfVoN/f5E=
+
+Name: net/dark_roleplay/core_modules/guis/configs/ServerConfig.class
+SHA-256-Digest: 5njjQ83jXEXSBVLOHYdeLzyp+WUru4OMY2SdczehcLo=
+
+Name: assets/drpcmguis/textures/guis/gui_elements.png
+SHA-256-Digest: 6DHE8oMXg6dGLhHpsGk6EvXtVKPZ9G1LcS2SIzmEHJs=
+

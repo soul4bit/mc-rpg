@@ -1,0 +1,198 @@
+Manifest-Version: 1.0
+Maven-Artifact: net.dark_roleplay.core_modules:drpcmblueprints:1.12.2-
+ 1.2.3
+Timestamp: 1542372117778
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/guis/buttons/B
+ utton_SaveLoad.class
+SHA-256-Digest: 6CETXme+ST74JvdxZQRf7N60IjLvhpbcAyghEOIyqcs=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/packets/SyncPa
+ cket_BlueprintBlock$1.class
+SHA-256-Digest: QZFQMpfH3PDCgERtpM8Qof0B0vkgpQS1IQ0fr71POYk=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/guis/buttons/B
+ utton_ChangeMode$1.class
+SHA-256-Digest: W7GhDpN6k4jz4CtRjhoq4Dmo2WEWXhdcZtIfAl3GaiY=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/events/ConfigC
+ hanged.class
+SHA-256-Digest: We7P6+mDrsQZIYr7v1QlXEU2kqcpE7YqOCPyZUvHa2w=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/guis/buttons/B
+ utton_ChangeRenderMode.class
+SHA-256-Digest: UXaGIt1N5EHPCF5mXoKQRl0bSnFq+NPHx+VaLG/zLec=
+
+Name: net/dark_roleplay/core_modules/blueprints/configs/ServerConfig.c
+ lass
+SHA-256-Digest: sTww5FWM/iR40TJ3i5lZLjH+xG9F3gzBE6rLj0GSqHk=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/guis/GuiBluepr
+ intController.class
+SHA-256-Digest: /QKSocbvt/cysyTRpX96vOQeQIJ4q0rQppEA2RwzIOM=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/guis/GuiBluepr
+ intController$1.class
+SHA-256-Digest: Uas5BokeLFIZ2fB0PI+ijaKshlNXFCrBWIsD1LEadGE=
+
+Name: META-INF/fml_cache_annotation.json
+SHA-256-Digest: ys42R2WNtctmf8asmThJCyC4k336DR0/Ll72+ZOqBRY=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/variables/wrap
+ pers/Variable_RenderMode.class
+SHA-256-Digest: 3JBlSQ+OaBphdfcyA0wk5DmlMwJaPXmHC2xMF4yD5RA=
+
+Name: net/dark_roleplay/core_modules/blueprints/References.class
+SHA-256-Digest: wTosiGvxiVTsyss4NfhGmZRoKb3h4nMusa+KtrcJdGY=
+
+Name: assets/drpcmblueprints/blockstates/blueprint_controller.json
+SHA-256-Digest: qu1a/2sAc+XLdcQlhfelG3/QuneWvnQ+wztPKqHUFC0=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/packets/SyncPa
+ cket_BlueprintBlock$2.class
+SHA-256-Digest: gqvEGgKBshIMQqir+viP9XoPE3AApeCGa4NFQTvwtSc=
+
+Name: assets/drpcmblueprints/lang/de_de.lang
+SHA-256-Digest: OzqVEGx83U0iJCfkDWwAlXb4wwPpkz/YmobfmOa/Rjo=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/translations/T
+ ranslations$1.class
+SHA-256-Digest: 2FMurdqjtOB3/8770wTOfPqoGa+fx9CM6CBrIGmrhEc=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/tile_entities/
+ TileEntityBlueprintController.class
+SHA-256-Digest: SMse4Gqerqetv7MyhUbovKIxBVZTnKq4mcZe4q+47OE=
+
+Name: assets/drpcmblueprints/textures/blocks/blueprint_controller/blue
+ print_controller_save.png
+SHA-256-Digest: YCBGI6KPktJhPPcSOcZGDO2hEb9c/7SoXJMdy0DRXYw=
+
+Name: assets/drpcmblueprints/textures/blocks/blueprint_controller/blue
+ print_controller_corner.png
+SHA-256-Digest: fSxWbCnVB1dxWZFAvFwCsfyBeCHaSDqZ02cuY32+6fg=
+
+Name: META-INF/fml_cache_class_versions.json
+SHA-256-Digest: 4z5iNS+RDH0GI6I/biV0oAmItFwqoe+A8SZd0PrW8nU=
+
+Name: assets/drpcmblueprints/lang/en_us.lang
+SHA-256-Digest: cho7E5HlgSXRlCl0yz5ym7wAJ6mweqeruCwT112H0z4=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/packets/Packet
+ _SaveBlueprint$1.class
+SHA-256-Digest: rkw+OmAx0o/r/u8t6XpnkWNeGpnukE9vgZowl+2zH00=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/commands/Creat
+ eBluprintController.class
+SHA-256-Digest: jQz5MiZ+rnqh24ilp+l3ahP3XQIDVCFAeaJZg87bdbY=
+
+Name: assets/drpcmblueprints/textures/blocks/blueprint_controller/blue
+ print_controller_load.png
+SHA-256-Digest: UbKAuBxBwowzHnrS72LG6MFv9NvQLFH/knkvgvvVA/I=
+
+Name: net/dark_roleplay/core_modules/blueprints/DRPCMBlueprints$Server
+ Proxy.class
+SHA-256-Digest: 8276AEgjnNY+KlJBRPCLZpb/HBva6q13wz6RF84x4ZE=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/packets/Packet
+ _LoadBlueprint.class
+SHA-256-Digest: aquVWeuAHYDteOSZTjp7aZFcviZIqeWSLcyuo/iz/Jw=
+
+Name: net/dark_roleplay/core_modules/blueprints/handler/Blocks.class
+SHA-256-Digest: 7JjYSECb8yH/gxTy2DAZ5BVrmhEJwzt8ouoeMMo5HL0=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/translations/T
+ ranslations.class
+SHA-256-Digest: TbcVb3bFAW8d3ojGhR5ixpri4M16+7basX73SrkEcvg=
+
+Name: net/dark_roleplay/core_modules/blueprints/configs/ClientConfig.c
+ lass
+SHA-256-Digest: p8zCv6g0uyjAcDRECWHRQtGk0I2eGj9RgF3xe1A3XQc=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/guis/buttons/B
+ utton_ChangeRenderMode$1.class
+SHA-256-Digest: Ckg+Jpoi3ZcTauAgcRYuS9N/UDWvJ96kZojwl6tc1n8=
+
+Name: net/dark_roleplay/core_modules/blueprints/handler/Permissions.cl
+ ass
+SHA-256-Digest: TB8bt606GX5FWeQ8jNDT3vLSNarcccYFpfKlxfDl70Y=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/blocks/Bluepri
+ ntControllerV2.class
+SHA-256-Digest: uBb40fK1I6Eft0auH2r/+s6hgPmfbg2hSilQxS4Cpm8=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/other/Mode.cla
+ ss
+SHA-256-Digest: Rlf/yy1RJ9WqKGQ/dSntNWiThsDu0t+IGBBze17v4Ds=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/packets/Packet
+ _LoadBlueprint$1.class
+SHA-256-Digest: z3/F4YIdb69z/ZU4x9WLB2Ry45NEJQHgPBw14B2KQKw=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/events/Missing
+ Mappings.class
+SHA-256-Digest: oj157GEezRiDHDIx+9++iLHoqcn/h6X49XMXJHwvj/E=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/tesrs/TESRBlue
+ printController.class
+SHA-256-Digest: M0KemHiTgV0nh/694NQwID0D6SXlfjSU1onZ+vgxnko=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/variables/wrap
+ pers/Variable_Mode.class
+SHA-256-Digest: GiF/xQ5BsnwjAPorQPKnfOsN9e5Tke21QOvHKrLqXOQ=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/tile_entities/
+ TileEntityBuilder.class
+SHA-256-Digest: E3+JJJqWpY9rkLro77qIJk0TXiSOXkQabWft+vY4OEY=
+
+Name: net/dark_roleplay/core_modules/blueprints/handler/Items.class
+SHA-256-Digest: E0iY/elSVF+KEwlrQ9DJ1QiJ7e0Xw3Zp0ByN8CZs7y4=
+
+Name: net/dark_roleplay/core_modules/blueprints/handler/Network.class
+SHA-256-Digest: +NbjO+A+cM2wi8nKOW34xYnzhciyhgf+c8LMrHOEeHA=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/other/RenderMo
+ de.class
+SHA-256-Digest: X1/YC9C+ns5GDUSQUiDTVZ6vDNh2TGjXSVmoBF2yito=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/packets/Packet
+ _SaveBlueprint$1$1.class
+SHA-256-Digest: IXuzOJnZk3zeTe7qEJVLHyQalkMNlqflWL+oeR4/rvE=
+
+Name: net/dark_roleplay/core_modules/blueprints/DRPCMBlueprints.class
+SHA-256-Digest: Cg9Idxx52pKZrJr35ZySlu0inyD78uxhsgG6jpgqL80=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/packets/Packet
+ _SaveBlueprint.class
+SHA-256-Digest: lZjafZ9JDuOCoBQzd37PpbQXdrKWjdShaUIIU7EQxuI=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/blocks/Bluepri
+ ntController.class
+SHA-256-Digest: sE/6s3Mt6e8k7PCz0hC7fSMLFW4rGZLSpREKrEQ5Sr4=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/guis/labels/La
+ bel_AxisInt.class
+SHA-256-Digest: 68/AzyPknUZZk2qY8at2XJWmjcCO6co2NNKvhS6yXFw=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/translations/T
+ ranslations$Translation.class
+SHA-256-Digest: EoxuG5BQyjLMK0yn3dWJFypOxanF8ffF7ahUXfhUPBY=
+
+Name: pack.mcmeta
+SHA-256-Digest: qU9FXtpE5KuraKZCU1PKxlwQoNzR9PytgUP3llqGb+Q=
+
+Name: assets/drpcmblueprints/textures/blocks/blueprint_controller/blue
+ print_controller.png
+SHA-256-Digest: jITixuAjlKs4+QHckg6GwR7jc6RJWMIIRJF2I28rqGE=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/guis/buttons/B
+ utton_ChangeMode.class
+SHA-256-Digest: bgL2P/6db8l8lwml0JQ9963jVh1NApicoOWED8v4ftg=
+
+Name: net/dark_roleplay/core_modules/blueprints/DRPCMBlueprints$Client
+ Proxy.class
+SHA-256-Digest: vEEdDGYv/P338WT8ytlo/AtlOckT3rjeKcafefD+cjI=
+
+Name: net/dark_roleplay/core_modules/blueprints/objects/packets/SyncPa
+ cket_BlueprintBlock.class
+SHA-256-Digest: Z+5iU29GGsTJe06tpOzFN8xG6vKtM25vN5Y5bJK0yPo=
+

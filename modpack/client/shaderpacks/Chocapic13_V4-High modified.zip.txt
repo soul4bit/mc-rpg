@@ -1,0 +1,9 @@
+#Mon Apr 27 15:37:49 UZT 2020
+B_LQ=true
+BLOOM=true
+DOF=true
+DYNAMIC_HANDLIGHT=true
+SSAO=true
+TONEMAP=true
+USE_WATER_TEXTURE=true
+WAVING_VINES=true

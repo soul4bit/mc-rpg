@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.12",
+    "version":  "2026.05.13.1",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -34,21 +34,1995 @@
                   },
     "files":  [
                   {
+                      "path":  "config/animania.cfg",
+                      "sha256":  "f44cedf3b8538f07e351852707173a97c95744601b1a861042b221a65ee92ca0",
+                      "size":  23823,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/antiqueatlas/antiqueatlas.cfg",
+                      "sha256":  "5caab332b0ba70cbd33fdcb0c9f46266616a0b44e7124c7cef43f7c02d7854f8",
+                      "size":  4728,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/antiqueatlas/atlas_overlay.cfg",
+                      "sha256":  "92397aa4b5caa4cb321f5999df906baa646aafb75867b5cf6ffc6ee2f8e90dc3",
+                      "size":  3412,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/antiqueatlas/biome_textures.json",
+                      "sha256":  "997b1feaf2ffd8e690c4240f8d44981234094edc5d37c43197820e9bf6a29807",
+                      "size":  6157,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/antiqueatlas/markers.json",
+                      "sha256":  "c3c3512d623595b202ebbba90bda1c843fae396784ffd80628d674de0fe9bcdd",
+                      "size":  1844,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/antiqueatlas/texture_sets.json",
+                      "sha256":  "c92fad76623beceae72f6ec7dbe2d6d51b19a1f1aba90948f54f945493cb41da",
+                      "size":  154,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/antiqueatlas/tile_textures.json",
+                      "sha256":  "5706d365f7e9591f8c414d2d5a93fb025c49ec8d9524cf214369687b02b06f73",
+                      "size":  1077,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/antiqueatlas/tileids.json",
+                      "sha256":  "deb6b25f78b1a614a6f0fb1a044cc2e743034fe7efe5dc5dc47fd3c518efdb61",
+                      "size":  780,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/atlasextras.cfg",
+                      "sha256":  "82685040d94e8ca3c4b8d0a088da57231daa5f0fb99f563eb57eeb1558004848",
+                      "size":  2610,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/betterfonts.cfg",
+                      "sha256":  "f591d805f5bf2546fdd2bb6391d521bfab61c9cff07516b628ed11603ec042df",
+                      "size":  10514,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/bibliocraft.cfg",
+                      "sha256":  "c1ae1175048cffbadb749be9bb138bbb5623fce16102995a1fa03a7a0c31a1c0",
+                      "size":  5418,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biome_ids.json",
+                      "sha256":  "661c59b8dc2bf2c4699c8afb1c923cae15c95e71149ca63747914ba682bddfc6",
+                      "size":  1549,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/alps.json",
+                      "sha256":  "790145e6eeb051e5af6ea21d2fc74b3123c5e4e09e151e5b97f43eb6222d3b91",
+                      "size":  1556,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/alps_foothills.json",
+                      "sha256":  "89d53519c4ce40e56918f7b16e8763a03e968b84bd84c77510d7851d7d9fe554",
+                      "size":  2062,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/bamboo_forest.json",
+                      "sha256":  "b1f68e0a4204f4b7b9109652939c21374fb410e73bd96c8e40045f68974e0556",
+                      "size":  3295,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/bayou.json",
+                      "sha256":  "75b80b8247b4e3816a0070f39d63ea8259445c55ecef9bf10b6e3290f504e845",
+                      "size":  5831,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/bog.json",
+                      "sha256":  "92718f21666441ad013668e87f0637d77dd51ba4bfc6662de1bf787a847348af",
+                      "size":  6352,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/boreal_forest.json",
+                      "sha256":  "50a4f1d7cff9a762685e4fcf35274f3ce455ec7ff8489cc9f6cea25a7eaa5258",
+                      "size":  3148,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/brushland.json",
+                      "sha256":  "71f11d93097817b70db6aac2e9cf5061770aa9b47ed0043adc2dc46a8e7543f1",
+                      "size":  2706,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/chaparral.json",
+                      "sha256":  "09d42ef86176884353b8741eb9d4013957b188eacc10ec630d5b5495196798b8",
+                      "size":  3695,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/cherry_blossom_grove.json",
+                      "sha256":  "09d3cf765196d0969110561069d02530c1bdc6eb94810370e5dc1462c3b5323f",
+                      "size":  4346,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/cold_desert.json",
+                      "sha256":  "7d1e25944f9a2046c5e6b38ecfcf95714cf84fdd81bfe182e849b65b6a983f15",
+                      "size":  2348,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/coniferous_forest.json",
+                      "sha256":  "0c692de9cdea714057aa98121b91b49e4b8ea4bf90c1e45edd6207590bc8e021",
+                      "size":  4778,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/coral_reef.json",
+                      "sha256":  "601e99b8b1e1d1af6f8a661cfaf0143c8412eef2682ee25f847e01f67028e23b",
+                      "size":  2999,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/corrupted_sands.json",
+                      "sha256":  "068c091f763d59abf7691682544a440513b8d4bc5f708cd4cabae82567d9ff30",
+                      "size":  1661,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/crag.json",
+                      "sha256":  "8d7751cdc73e68bcf82c424207e3093805875898541b721075382e5b8d0978f5",
+                      "size":  2402,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/dead_forest.json",
+                      "sha256":  "b4660be43dba7947d8c70e12c6f6726091b378f7f6c906cee960d261714ae87a",
+                      "size":  2849,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/dead_swamp.json",
+                      "sha256":  "97b942a1bd47f067306893e230201738354a793ed1b4e9ceb9a0f7bdaa870434",
+                      "size":  3360,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/eucalyptus_forest.json",
+                      "sha256":  "d0c32e29e87cd055dc8b6557ec4d26d904238366a9be5242bd59d00fc80d63b0",
+                      "size":  3821,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/fen.json",
+                      "sha256":  "136f6a6fd7fb10884c322a8c7a77d0dcaef85d984977e1b5d805950c48a5d169",
+                      "size":  5001,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/flower_field.json",
+                      "sha256":  "89948cd654e80b6efae201030e21ca9a67ea058b52b62710cd5c51c5bbcc0dd9",
+                      "size":  1999,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/flower_island.json",
+                      "sha256":  "9cc2500f351627c18288d60b11794084c1d6181912af84a3e01b51eae1d06a37",
+                      "size":  2723,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/fungi_forest.json",
+                      "sha256":  "c18cb529f441f504cf40c8ade1e1dc3e76bf6e4031fb5a0070edcab67ca70c70",
+                      "size":  2154,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/glacier.json",
+                      "sha256":  "6502014068d647e2dde226072c2ebe5a66c948c39f94e9ecb5442007cdc14fe5",
+                      "size":  1613,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/grassland.json",
+                      "sha256":  "32d674006d832a3166c559ed508cb58a56febd356ffbc874708382a46d51b22f",
+                      "size":  4182,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/gravel_beach.json",
+                      "sha256":  "0e2baa55d50561c3fa4544a4bf4d89cc94e12e2c05821052e3b1c41123691920",
+                      "size":  1352,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/grove.json",
+                      "sha256":  "ba18e7634d33562214d64b6cec7f19a8649f063a30f8917cc73ad7f259775a63",
+                      "size":  3201,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/highland.json",
+                      "sha256":  "d78d48ef927660daae834fcc245679f7417121dd41d0a09bcc16aa09a38fbaf3",
+                      "size":  1723,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/kelp_forest.json",
+                      "sha256":  "b9afea1cfaff56044f5283ad541ffa609a035c24823ae2560592e23eac55f76c",
+                      "size":  2676,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/land_of_lakes.json",
+                      "sha256":  "2e2af2cb9806b1506b1b8ad1b46ccad4008ab9a224096bbecf128ac9adea9021",
+                      "size":  4921,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/lavender_fields.json",
+                      "sha256":  "e3f6ae1aff47b9a1cca63c08910a1516ef426507853f4192b6658003a10a1291",
+                      "size":  2178,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/lush_desert.json",
+                      "sha256":  "51c093de2455a99208462011a216b38b254671b459ae5f2b08a6c61dd8c32283",
+                      "size":  5246,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/lush_swamp.json",
+                      "sha256":  "2c18252b4cf9c2b85bdafafb134d97e1eaddce2291b2b3d266fcfc23b15e5011",
+                      "size":  7079,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/mangrove.json",
+                      "sha256":  "73ad7fde612b92a69aac656148d0bf61b9bfcfc8a7ab09b95f4420155200f2b8",
+                      "size":  2047,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/maple_woods.json",
+                      "sha256":  "fe9c5a07f96febf68418e1cad8ca9bf8c8b7695ab24f6252aa45e89cdd320300",
+                      "size":  2893,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/marsh.json",
+                      "sha256":  "0c8bd3fc0efa04c6eaf5f2432c95f2542e939e868029de212b4826fd3a9f71a1",
+                      "size":  2958,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/meadow.json",
+                      "sha256":  "c37bb2a07fa889e82b10b4237221dd3c2034e07924f63d6de2e97b12c17bcf17",
+                      "size":  5045,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/moor.json",
+                      "sha256":  "29965b3a042d029669b8ed8609a7ba7220ba07402e0bee41baf91406239b30b2",
+                      "size":  3891,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/mountain.json",
+                      "sha256":  "908d8d246638e8687fdb74f5372fc24c5397a64de4d1f70c11a57dd0bb4b4c32",
+                      "size":  2911,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/mountain_foothills.json",
+                      "sha256":  "b0fa34a88944e090e11e52feb30cc2874a0d7bd0c5313b13192e9f77de6dda2c",
+                      "size":  3798,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/mystic_grove.json",
+                      "sha256":  "9e23bd0a8053a3e4aec06fead493d3bd9ee464dfd6304d04e2586668bc05ac69",
+                      "size":  5620,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/oasis.json",
+                      "sha256":  "10a40f2e4ef66a2b7711c89eb7606ecaaa9632608b6eec4d5c9dfc9cef23ab6c",
+                      "size":  3272,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/ominous_woods.json",
+                      "sha256":  "7618e14b49a85dbe67a287f894bf36d8b3c83626a79b89728fc067d09f7d39f8",
+                      "size":  3927,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/orchard.json",
+                      "sha256":  "c4780126d677fead36300da5198015b3c132a9b34d60f948c06762b94eebcce2",
+                      "size":  3149,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/origin_beach.json",
+                      "sha256":  "a845963c9abec1415d0ce0eec0ba0d9de1d038a53857b87c404d767e61a16f20",
+                      "size":  1412,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/origin_island.json",
+                      "sha256":  "8845e1de63122e0ac671192da42d4cc249a3f2d81cd30b2d1d486d9d09f711fb",
+                      "size":  2101,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/outback.json",
+                      "sha256":  "d3bb51d1eb21524f5b2561c251e3d0574aa40d060b6f5c1cb3f4963b5be2e528",
+                      "size":  3130,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/overgrown_cliffs.json",
+                      "sha256":  "784200b02ce81acf23a2bbcedbd338499c77d522644b7719ce650bc7a85dbec7",
+                      "size":  2168,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/pasture.json",
+                      "sha256":  "6f4c4581bb3cb002da6f211c93cd5e7ffbbd560ef45e2d0934fa0f5a002a7bc8",
+                      "size":  2289,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/phantasmagoric_inferno.json",
+                      "sha256":  "c9712c0038b6ff0d07ad214b587d13d3b6d73b2112be8d7fffe492d20da38343",
+                      "size":  1632,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/prairie.json",
+                      "sha256":  "584445d56448e79b01536ad74c4bb247a2ed7f163180af9a463460b43fecffaa",
+                      "size":  3657,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/quagmire.json",
+                      "sha256":  "9b4f64492b17e9a46aa20b2053fe99f43f108f431f15b002fb8c247bca4fbdf1",
+                      "size":  3850,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/rainforest.json",
+                      "sha256":  "b175e8abaf8ee1b3b3fb202b302ddf0ab458dc043dfcd17b7ad95e406c63dee4",
+                      "size":  4257,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/redwood_forest.json",
+                      "sha256":  "e994a13d6877071d07903e25bb0ef02b612853612ff4451ac3d0d84439099d37",
+                      "size":  3567,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/redwood_forest_edge.json",
+                      "sha256":  "62910d6b413db3bee1683f4d90f040f4d89cfb2aab4e6e4f239e2844fe9735de",
+                      "size":  3043,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/sacred_springs.json",
+                      "sha256":  "cf7d98e63a6f94095ea49e93ac44ed3846be1e4c57543fac331e91555f00861a",
+                      "size":  5402,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/seasonal_forest.json",
+                      "sha256":  "f755b338f46badcfb94bb6c838ba27984c572e5ad7ff0aa4f9428ef9263e0b50",
+                      "size":  4783,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/shield.json",
+                      "sha256":  "01031c16200ce8684ffe18a3e07b777344994a9fd455f69c0746ac231727df39",
+                      "size":  4077,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/shrubland.json",
+                      "sha256":  "7e1b2e469bb130e8ef2b548586d79abd4864fdc3d5131b2a25edc33529f5614d",
+                      "size":  4023,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/snowy_coniferous_forest.json",
+                      "sha256":  "821a28acc23c3b92ad763ae93dd42e8911ecbe8463d62d7f308f2a8e714fd14d",
+                      "size":  3120,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/snowy_forest.json",
+                      "sha256":  "863611bc94dad6e92a1fe8a6a973711cb70aef1cd25906fd2cc40877dfe619a3",
+                      "size":  2523,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/snowy_tundra.json",
+                      "sha256":  "c98590276f170007cbfdfe9491d8e94c1949cf6ca171dd98a4697bab1d5dd9d3",
+                      "size":  3502,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/steppe.json",
+                      "sha256":  "a4a5a515fa4008596a29db4c2d80e5e80cd34278ac874512bd7b04ca4c2c6b31",
+                      "size":  2500,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/temperate_rainforest.json",
+                      "sha256":  "b4997e84d1d7f919510a141112070450aac14a125d1618baec2a708dcd36922f",
+                      "size":  7328,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/tropical_island.json",
+                      "sha256":  "bde954f498defd87280994f7bae6cd5d7ee067b1456c3f0a07cdf69a8e0624a2",
+                      "size":  3159,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/tropical_rainforest.json",
+                      "sha256":  "fa2bd79d2c2db21c59518acab716d2fc9765e14d946e9a5cc97b1da68c7220c8",
+                      "size":  6032,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/tundra.json",
+                      "sha256":  "fa0c12baa92df5b17705689414d87153aca9a2b68d387de39d23e4a35f491bda",
+                      "size":  3522,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/undergarden.json",
+                      "sha256":  "92e47a500c7fac58aacdd4574ff8427ed4c72e0c712b26aaff5f8317ce07ab19",
+                      "size":  2601,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/visceral_heap.json",
+                      "sha256":  "d3a18eaa762abee27a0156446de59856acfd5bc0c576c98dcfcc8504c5c2206b",
+                      "size":  1814,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/volcanic_island.json",
+                      "sha256":  "1a91e496b8fb15eb9e8d36d8bf8aefd7b1e7f62ff4f02ffb1ea709f4dfcd1054",
+                      "size":  2121,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/wasteland.json",
+                      "sha256":  "e340c93da9cefb86b490dc6d264e2a540a1d06153363c5a06d1def48706a0558",
+                      "size":  2968,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/wetland.json",
+                      "sha256":  "77000e430f9f9863ce2682de09f1401a2839207402e8fe2e1bf7da091f3cd049",
+                      "size":  7028,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/white_beach.json",
+                      "sha256":  "69a9e54dcf8da7d5b8da5bf1ba8a23c8c5cced9da1dbfdfdc2beba728df8d6eb",
+                      "size":  1378,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/woodland.json",
+                      "sha256":  "51314ad983b378660c32971fb7937279cee8d50b8685e24f3a7ae32a5506254a",
+                      "size":  4544,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/biomesoplenty/xeric_shrubland.json",
+                      "sha256":  "f784e58ffea157b6fd0995f01ca0e7a79874bd15c9771ad3f4ca8bea990b00f3",
+                      "size":  3043,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/beaches.json",
+                      "sha256":  "11ce93e57c84aeaec79945e82d2ee7e1a708159017d3e7877657c89c265f348a",
+                      "size":  1242,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/birch_forest.json",
+                      "sha256":  "db02c3a484b5e0f0c83d20dae1d37bffc5b38c07b713515392a9e4e271df7bf2",
+                      "size":  2912,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/birch_forest_hills.json",
+                      "sha256":  "db02c3a484b5e0f0c83d20dae1d37bffc5b38c07b713515392a9e4e271df7bf2",
+                      "size":  2912,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/desert.json",
+                      "sha256":  "d43ff912e1430e195d9d174a6cc00238fcf4e4238fbb695d54d6e5dc0e280d41",
+                      "size":  1625,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/desert_hills.json",
+                      "sha256":  "310b12a3476ce9cbf3e9aa9832a7627617953a0b6fcc1391470dcb65ec5516d3",
+                      "size":  1293,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/extreme_hills.json",
+                      "sha256":  "c3c147a263ac9d839dc4b1e9cdbcff00af6aa2461b2f01d974bfcccdad53a599",
+                      "size":  1489,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/extreme_hills_with_trees.json",
+                      "sha256":  "c3c147a263ac9d839dc4b1e9cdbcff00af6aa2461b2f01d974bfcccdad53a599",
+                      "size":  1489,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/forest.json",
+                      "sha256":  "85bcf5e240eca02369bafcb70dc284feff12bea91845a0b081f93c28587d54fd",
+                      "size":  3395,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/forest_hills.json",
+                      "sha256":  "cd3b4a2f7203b7f09163f7f9c1d2535cae45cfe15b791fc835be511009568e82",
+                      "size":  3396,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/hell.json",
+                      "sha256":  "1c4a4cbe3eb11a647e8357a20225b21448af1f99452b29174b5a9dc17f061a29",
+                      "size":  991,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/ice_flats.json",
+                      "sha256":  "d51f3a018c095c6899c3bfbc0274f0812679e56007e1913acd2845dc47eeec51",
+                      "size":  1252,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/ice_mountains.json",
+                      "sha256":  "d51f3a018c095c6899c3bfbc0274f0812679e56007e1913acd2845dc47eeec51",
+                      "size":  1252,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/jungle.json",
+                      "sha256":  "9b751f8e910966ffe852ec5dc71448c547688675da591dd25ccddc4bb9c5e814",
+                      "size":  1965,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/jungle_hills.json",
+                      "sha256":  "9b751f8e910966ffe852ec5dc71448c547688675da591dd25ccddc4bb9c5e814",
+                      "size":  1965,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/mesa.json",
+                      "sha256":  "93ca5fde991a6bad6251b38cc774ffb5d0310a80659f7fb7406b190e9ec379cb",
+                      "size":  1537,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/mesa_clear_rock.json",
+                      "sha256":  "93ca5fde991a6bad6251b38cc774ffb5d0310a80659f7fb7406b190e9ec379cb",
+                      "size":  1537,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/mushroom_island.json",
+                      "sha256":  "6249e197ec40a61740b12f140c884b760dd1884f3c9f0caf6b584aba7af6fead",
+                      "size":  2303,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/mutated_forest.json",
+                      "sha256":  "fecaff8714828d5fc1fb21336ff73bb080b9456943df05e4dd54f9e910cff675",
+                      "size":  2990,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/ocean.json",
+                      "sha256":  "0cf38fbbc51492eb47ef42ca0f6c63989417f067975284aab1be2ba60d539e80",
+                      "size":  1056,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/plains.json",
+                      "sha256":  "a979aab699b229319d6c81009c9dcce44dc140baf78544c89f07442afbf0e1d0",
+                      "size":  1248,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/redwood_taiga.json",
+                      "sha256":  "150e78e10c71600ef372682f62763bd6ed24c105b4bd56e3294a0fe949b5bec7",
+                      "size":  1261,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/redwood_taiga_hills.json",
+                      "sha256":  "150e78e10c71600ef372682f62763bd6ed24c105b4bd56e3294a0fe949b5bec7",
+                      "size":  1261,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/roofed_forest.json",
+                      "sha256":  "cb744089b71700a28aca94295c7feb08faeb727231442407dc7496e05d720ec7",
+                      "size":  1390,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/savanna.json",
+                      "sha256":  "f03e8d3c81a46d494fa91230c7ee7015abbc0527a2197d583c7bf616e84968eb",
+                      "size":  1574,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/savanna_rock.json",
+                      "sha256":  "647729adee5599868bbabb8f69d5cb6c22bc84e2c14f48a0919e9f35c46a5ca4",
+                      "size":  1242,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/sky.json",
+                      "sha256":  "9c38be193b590150873d14183d428f5a335f4178c3c06668a2e11c055071c2e2",
+                      "size":  1524,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/swampland.json",
+                      "sha256":  "7963aeaa4668e58c3f154ba216d419ed41862f7a4aa046a1fd8b42af292a0918",
+                      "size":  4195,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/taiga.json",
+                      "sha256":  "150e78e10c71600ef372682f62763bd6ed24c105b4bd56e3294a0fe949b5bec7",
+                      "size":  1261,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/taiga_cold.json",
+                      "sha256":  "cc881c2692afc963ab6440a8b661c98607cad5218b8f017e16187282e93f8f44",
+                      "size":  1252,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/taiga_cold_hills.json",
+                      "sha256":  "cc881c2692afc963ab6440a8b661c98607cad5218b8f017e16187282e93f8f44",
+                      "size":  1252,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/defaults/vanilla/taiga_hills.json",
+                      "sha256":  "150e78e10c71600ef372682f62763bd6ed24c105b4bd56e3294a0fe949b5bec7",
+                      "size":  1261,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/biomes/Put biome config files here",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/gameplay.cfg",
+                      "sha256":  "be256098e21e145bae3047a6b9d0e297965dcefd7ff999b15db4ff52e05f0b7f",
+                      "size":  172,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/biomesoplenty/misc.cfg",
+                      "sha256":  "a165561d9cb43bb24a5d622d77a3893f4abfa74a73d4f59b8be54611a5771ba1",
+                      "size":  459,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/Dark Roleplay Core/Client.cfg",
+                      "sha256":  "e3ec417a5889c8808c2fa4206bd7fc70acab730828cc332aeb02217adae833b7",
+                      "size":  5164,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/Dark Roleplay Core/Dark Roleplay Core.cfg",
+                      "sha256":  "77f06000471ed026525f5af3d3b8b4af178fb33966fbbc0a37894402dbb148da",
+                      "size":  1650,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/Dark Roleplay Core/Debug.cfg",
+                      "sha256":  "45bb061ea3f24796ef9f8b7b8c966568fd2310e20a99b4451b687b074758eb3e",
+                      "size":  483,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/Dark Roleplay Core/Modules/Blueprints.cfg",
+                      "sha256":  "4d7bffdec4d506d25fd0d1454160677af26c2806e6caf9c3fc792682fc6e8a4f",
+                      "size":  2423,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/Dark Roleplay Core/Modules/Guis.cfg",
+                      "sha256":  "f8ae21e18ead5b881c2c71f9229ccf493e3fc863b10442bb7537738b467eca64",
+                      "size":  24,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/Dark Roleplay Core/Modules/Locks.cfg",
+                      "sha256":  "b561bcfc8a0a1c24e057c1ce770604b666c6d4957845b6c3f3109ac555a5c9b4",
+                      "size":  390,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/Dark Roleplay Core/Modules/MaARG.cfg",
+                      "sha256":  "67214664935952db392c6d000d35ce38551e454bac2034985d27d1ee7d915612",
+                      "size":  185,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/Dark Roleplay Medieval/Dark Roleplay Medieval.cfg",
+                      "sha256":  "b57f5863fa612b88e6d794b6ccda34dca6b27b1a1084392b42bd72a71c4e61f0",
+                      "size":  2178,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/densemetals.cfg",
+                      "sha256":  "5fb76875d3318b585855e93aff85e92c33d2507ec88d1e2262b48c6c96c6912f",
+                      "size":  9098,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/dynamictrees.cfg",
+                      "sha256":  "fcbe8f95bcdedf7d225660c8d86eb52c6787492c22ec35ff0d045a88e8daf6f6",
+                      "size":  4609,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/dynamictrees/dimensions.json",
+                      "sha256":  "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                      "size":  2,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/dynamictrees/worldgen.json",
+                      "sha256":  "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                      "size":  2,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/foamfix.cfg",
+                      "sha256":  "b30bd56983f75403473ef9d59446aa059b9601812c3f2b68e6098c26a7a0d8ff",
+                      "size":  6290,
+                      "executable":  false
+                  },
+                  {
                       "path":  "config/forge.cfg",
-                      "sha256":  "cccdea48d5b1029363ba61b162217653a11b54bf9be160134653b54fc24379aa",
-                      "size":  3865,
+                      "sha256":  "c642d286a0379b2aafd2d282a79239e58d32ac15cc25dfd08bab5747a5d85662",
+                      "size":  3955,
                       "executable":  false
                   },
                   {
                       "path":  "config/forgeChunkLoading.cfg",
-                      "sha256":  "45db4110ebc8c6b614d368981c24392e904fafa985350193cedf59c0809c5a53",
-                      "size":  2155,
+                      "sha256":  "95b66df0da7df0be35ccbc51ad08962b7ddba14f593f0428096547d67fed2378",
+                      "size":  2206,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/bees/bees.json",
+                      "sha256":  "fa9ebc7ee498e24eff59e7486311eb54e8c6991d8e5737910e29dbfb0c78cc25",
+                      "size":  270,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/bees/bees.json.default",
+                      "sha256":  "fa9ebc7ee498e24eff59e7486311eb54e8c6991d8e5737910e29dbfb0c78cc25",
+                      "size":  270,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/bees/flowers.json",
+                      "sha256":  "df842b4cc1fe537405f051bacabf41d7a77093879bd6eb035e7518f9963462da",
+                      "size":  442,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/bees/flowers.json.default",
+                      "sha256":  "df842b4cc1fe537405f051bacabf41d7a77093879bd6eb035e7518f9963462da",
+                      "size":  442,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/brewing.json",
+                      "sha256":  "9c0e435138788a36ae4232ef1c19875dff88ab8b1ade29d4699a6c95c7c60b7a",
+                      "size":  28579,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/brewing.json.default",
+                      "sha256":  "9c0e435138788a36ae4232ef1c19875dff88ab8b1ade29d4699a6c95c7c60b7a",
+                      "size":  28579,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/culturing.json",
+                      "sha256":  "b60402b81d6a5aab016ab8ccb2fea44d12084a00b15149648d1e0a7154396bcc",
+                      "size":  439,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/culturing.json.default",
+                      "sha256":  "b60402b81d6a5aab016ab8ccb2fea44d12084a00b15149648d1e0a7154396bcc",
+                      "size":  439,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/fermenting.json",
+                      "sha256":  "090a63b7410d81376bf5e6e5c7d8fd046fc01f48a89cd73ea3531420fd54c0df",
+                      "size":  97319,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/fermenting.json.default",
+                      "sha256":  "090a63b7410d81376bf5e6e5c7d8fd046fc01f48a89cd73ea3531420fd54c0df",
+                      "size":  97319,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/heatsources.json",
+                      "sha256":  "5f59d5b1e3e3cc25dada5464e3dc9def7eaec3ff2c7c57f3c5deaad7f896b658",
+                      "size":  722,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/heatsources.json.default",
+                      "sha256":  "5f59d5b1e3e3cc25dada5464e3dc9def7eaec3ff2c7c57f3c5deaad7f896b658",
+                      "size":  722,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/pressing.json",
+                      "sha256":  "f3536deb83c71f1ce4f1b6bf42a5201c2b2e99771376d14223626f0250d77d46",
+                      "size":  2277,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/pressing.json.default",
+                      "sha256":  "f3536deb83c71f1ce4f1b6bf42a5201c2b2e99771376d14223626f0250d77d46",
+                      "size":  2277,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/yeast.json",
+                      "sha256":  "ec2ac78ef178a684e3725599c0790be760755b4b34a9d8194fe173d9dd14cc31",
+                      "size":  2031,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/cellar/yeast.json.default",
+                      "sha256":  "ec2ac78ef178a684e3725599c0790be760755b4b34a9d8194fe173d9dd14cc31",
+                      "size":  2031,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/growthcraft-bamboo.cfg",
+                      "sha256":  "c33e6e4072b4d91ecbe16c14a20264dab520f03d41c29c393d03bd8b9d9895c0",
+                      "size":  237,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/growthcraft-bees.cfg",
+                      "sha256":  "73a15a9b3d1e6cb707514deeafb5f0c69e279a31fffdf25cf9aff39ca85a4591",
+                      "size":  1388,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/growthcraft-cellar.cfg",
+                      "sha256":  "5b87ef49bebed382fc59306800baa12e6639f8b84175320bd86fe944a42511e4",
+                      "size":  1936,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/growthcraft-core.cfg",
+                      "sha256":  "f8874506a003648296d030959a8a93ecd7afb82f375437ca6fae447d7b21df72",
+                      "size":  844,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/growthcraft-fistrap.cfg",
+                      "sha256":  "dfb4f362ee67923931c4d100937327fd1e8bc19178538f9c802c1abfa5a8d7ea",
+                      "size":  998,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/growthcraft-hops.cfg",
+                      "sha256":  "5d49e2c72c4e02e790262e9bfde99453f7a0198860cd9fd8e87808022aa0906a",
+                      "size":  522,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/growthcraft-milk.cfg",
+                      "sha256":  "78a764145074b5f4312db2cc54a91cdde1e294b23304f6c8fb7a4f25b3d46043",
+                      "size":  622,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/growthcraft-rice.cfg",
+                      "sha256":  "ff4a9ef01409940645d8ab301fe2dad69183be8c50584fc0138120b2859f2c42",
+                      "size":  1511,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/milk/churn_recipes.json",
+                      "sha256":  "23671a0ad913ac23b79a9f8f3bec38675d983525b0f841a44c25b3797ec6717c",
+                      "size":  513,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/growthcraft/milk/churn_recipes.json.default",
+                      "sha256":  "23671a0ad913ac23b79a9f8f3bec38675d983525b0f841a44c25b3797ec6717c",
+                      "size":  513,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/harvestcraft.cfg",
+                      "sha256":  "d5a34df47039897d33ab44af1144006c8164c04478594e01498753f6b5b3a5c1",
+                      "size":  14552,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/harvestcraft_fruittree.cfg",
+                      "sha256":  "18f44a238c897e12569291f7df72dd054e169ee3d0b5cf03dd7a94ed8714e0d1",
+                      "size":  66504,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/huds/real_time_clock.json",
+                      "sha256":  "7bd88200c158f0b6c8b2c208673eb171f2d0321d1982173715672ca90666ae4f",
+                      "size":  79,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/huds/timbered_clay_view.json",
+                      "sha256":  "8909236b872af139743e05b04210517853b930426954bf6ca8efffe9a47a382f",
+                      "size":  92,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/immersiveengineering.cfg",
+                      "sha256":  "252f0a716716bd10f957d5e62d4437b9096f9e800e974ac0b037e73af0fdc2a4",
+                      "size":  26163,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/immersivepetroleum.cfg",
+                      "sha256":  "ce0869c39645a87df66e2d88c569fe7c1eaaca1c2e53f51e281b4379696df2ce",
+                      "size":  2527,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/InvTweaks.cfg",
+                      "sha256":  "3aa719e13178679783ece0988f7e85cf255362b1e782eecd71b5087c0ff3fb24",
+                      "size":  746,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/InvTweaksRules.txt",
+                      "sha256":  "b63870bb7b08cb7edb1189dd929ae802a8e7a6857ede3d92055038a5c617bb22",
+                      "size":  1237,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/InvTweaksTree.txt",
+                      "sha256":  "5dbafa1e67c70c79660a4da7a663fabfda69724ec352f79d5d4ab5e0323368e8",
+                      "size":  62968,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/jaff.cfg",
+                      "sha256":  "4e9735c2069aac70bf02e926f3fd2ebe90f6afb06bcce401087c4ddc4d7b6173",
+                      "size":  1824,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/jei/bookmarks.ini",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/jei/itemBlacklist.cfg",
+                      "sha256":  "07ca8d1be8d47e47445cb6977acd890d1b277f38b204e6ce1e9dfb9d08cee052",
+                      "size":  853,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/jei/jei.cfg",
+                      "sha256":  "9bb0b893d3492f432c2537fcec93c79d84d63ff726b62b95b1b9183a3feea062",
+                      "size":  3686,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/jei/searchColors.cfg",
+                      "sha256":  "7b83da77215a643a7e30c3fe102f8ef4530d31842751afcfd4d20cd9fa31c190",
+                      "size":  2010,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/jei/worldSettings.cfg",
+                      "sha256":  "a6a648f4f6b03788b7fb4e5c65ea70aad49b361376e057b6bc81671c42f32665",
+                      "size":  2729,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/jepb.cfg",
+                      "sha256":  "c13151baeb9be6de261a7f41bf59b9424e1732869c05a0f32cc259d910784b0d",
+                      "size":  223,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/jeresources/jeresources.cfg",
+                      "sha256":  "23735d0161fd5b81f3f29b8777e1e096d431c74014527101f8a3d0734620bb22",
+                      "size":  1122,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/optifine_1.12.2_hd_u_f5.jar",
+                      "sha256":  "fc70db439793b257228ad50dbb497dd50e33c3e08f7d0d6b2bba3a7d7c349619",
+                      "size":  2598821,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/primal/forgecraft.cfg",
+                      "sha256":  "3862f75a041f037a91d51b391e87e03677285b927868dff86a3872b2015a0635",
+                      "size":  160,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/primal/primal.cfg",
+                      "sha256":  "fbf49434d80dd5270043f34bb38bd68cc346c48de80361b99c24660056c4e401",
+                      "size":  63868,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/quark.cfg",
+                      "sha256":  "7267e56ed0f9ba46b5e1ead124163de8a1d3fe8c9cc4077d83289b17a623b831",
+                      "size":  103858,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/randompatches.cfg",
+                      "sha256":  "addc007e9292e343e9767fdfe874bba0b5de5825a15d27ec2d7ce6f9fb0741e7",
+                      "size":  9417,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/SeedDrop.cfg",
+                      "sha256":  "ceb62fa21880b86fbfeea7474b743320c63b7694c47d650e0ea1215bd1ec1e12",
+                      "size":  1954,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/sereneseasons/biome_info.json",
+                      "sha256":  "e6e907f40f8e4296186bad8ac49df09a9b4a30e4c6a556ad4b2f5618fb6667d2",
+                      "size":  10801,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/sereneseasons/cropfertility.cfg",
+                      "sha256":  "ae5cb9485c8be4c001e088d30d3cbb06a9511f50e78941b18a455e5ffd73bf29",
+                      "size":  14510,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/sereneseasons/seasons.cfg",
+                      "sha256":  "93822287e63ad1e4e7a6b564e26b09d8b82e0417267e291beacd150bfbe8abdc",
+                      "size":  1475,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/soundfilters.cfg",
+                      "sha256":  "857fa014af7daddbe6f912d84e042676b98fc0e306f0ff7fd839e0fa2f92a454",
+                      "size":  3721,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/splash.properties",
+                      "sha256":  "a3da383041c608be3ae441956a6388afed23822d504832333edb5d1c32fc7411",
+                      "size":  375,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/stackable.cfg",
+                      "sha256":  "c1b0421b8b28177ea5d06a2de63e3be90527c5ae66a1090ab14ecf81f581a1df",
+                      "size":  1772,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/teastory.cfg",
+                      "sha256":  "3c6070dcbdaa9ba471f46b42306db19673e4fb7ea3e251991e2cb679843a9abf",
+                      "size":  4992,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/toughasnails/armor_temp_modifiers.json",
+                      "sha256":  "654377720adda18296c9fce91ed267ff5eb66a1b199c7d7534d58716eda44ae6",
+                      "size":  413,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/toughasnails/block_temperature.json",
+                      "sha256":  "52762e12bc55ed001cbe37664b688131854e99dd2961ca0d43e1bbaf7a5a40b3",
+                      "size":  737,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/toughasnails/drink_stats.json",
+                      "sha256":  "8fa2d9d64ff2e5e44102eb17ce750ae7f4f3b6206755a9879173678a244ff44b",
+                      "size":  154,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/toughasnails/gameplay.cfg",
+                      "sha256":  "fa7089694916eb5de4a8b29998a588b14cb0629b336981b1ef4dc8738b06c3e6",
+                      "size":  963,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/toughasnails/material_temperature.json",
+                      "sha256":  "1421d61f7d986399994b0c959c1e491a22459385ef53dfa531271037af245b78",
+                      "size":  17,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/toughasnails/temperature.cfg",
+                      "sha256":  "94782955bce46e7ee243592d71c7be4ce7195c2eae19aecd5a22db325b990a36",
+                      "size":  3923,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes.cfg",
+                      "sha256":  "e262c9341c0357672818754aebb2bed8f1b6f452cd4b08221a728aa7aef26c95",
+                      "size":  6896,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/actuallyadditions.json",
+                      "sha256":  "c05a5ab584c99f46973c74439363403ab30cd8f6e1542816a2f1ee408982787e",
+                      "size":  237,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/aoa3.json",
+                      "sha256":  "ae406acc59a94e540c5c004872cfa12dcc7eaaa12ba12fdaa5ced1b8dbd2602a",
+                      "size":  1315,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/appliedenergistics2.json",
+                      "sha256":  "8c547c214c3e9eca1738ef006da1bbb42c5ecaa2ca2c59f174cbe05cd236f246",
+                      "size":  481,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/aromasdimensionalworld.json",
+                      "sha256":  "c47a0db1d902352d48817659859d21810f635f79454ddbdddb703dc12cab4c57",
+                      "size":  491,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/astralsorcery.json",
+                      "sha256":  "c38d83b1ec4bc71490946cbab4c03a42b906506fa11f56b20025e756a0c6c723",
+                      "size":  723,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/basemetals.json",
+                      "sha256":  "927dfe72b74ab049302d6c70976792af866bc25ecf05a50d60df53d7e8634df3",
+                      "size":  2267,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/baseminerals.json",
+                      "sha256":  "7023a1c9b4a1b8758e79c72a084dcfba3e28d21aa82e29bb5c5a9feb0e8b0f7c",
+                      "size":  1618,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/betterunderground.json",
+                      "sha256":  "6df488a41871efdfce7a92b0f37416c7d9cdf360fc835595293baba81d7edb93",
+                      "size":  235,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/biomesoplenty.json",
+                      "sha256":  "ea6e956829b72b3ea276d53dbc644fe16f6e39183a26782be39fab353f968bc0",
+                      "size":  1550,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/bluepower.json",
+                      "sha256":  "c0952b578d6032d9c82261eb62e710cb13c5e4d4138b4e509dce11c5ad2413e8",
+                      "size":  2064,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/byg.json",
+                      "sha256":  "1b3b1e15c84b5d430f3cd42c98f63a25ba2b7898fee8bbae3c56e77923538950",
+                      "size":  883,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/candyworld.json",
+                      "sha256":  "0acc8a05532cd0652274fdfc1961005ed168f4ed35146aea0e8dca1eb19f887c",
+                      "size":  238,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/communitymod.json",
+                      "sha256":  "aea8d28d415297dcc34151b787a39593ed4561bb242fd20d744132ea22bcdce2",
+                      "size":  475,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/curio.json",
+                      "sha256":  "8e8b458455a05e2d80654111a10fff4da184e98031d608fde162acf8b0653036",
+                      "size":  228,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/customideas.json",
+                      "sha256":  "76c6a94cee2baa02e451f606689b7492b851d8a0943cf42f922997fb82b26165",
+                      "size":  241,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/dartcraftreloaded.json",
+                      "sha256":  "33002d07998dfe97c88257a2b10d69d1934226c62d77de22cc9a86fc0e87a14e",
+                      "size":  244,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/densemetals.json",
+                      "sha256":  "a3b810edd09a7be0473ccd3f26e8dedb9460df387b55d87fc8ab87b6509c0441",
+                      "size":  4128,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/draconicevolution.json",
+                      "sha256":  "ea3345d01b52972aa61cfc603316f580aca0e4f95588b454505a8ce9178adaf1",
+                      "size":  249,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/enderore.json",
+                      "sha256":  "a075508581a10638db37704be9c1b09c0aff538d7b3ba75528e906fc54a9adaf",
+                      "size":  224,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/extremereactors.json",
+                      "sha256":  "525cdb8a388f11c59b0ce6906826d40c499c5802414e05e736e973466a7ccb1f",
+                      "size":  229,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/floricraft.json",
+                      "sha256":  "42e707c5e7e94465ae7a7073a5e44f7de80d541854130cbfbeb6ff76c467308c",
+                      "size":  230,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/forestry.json",
+                      "sha256":  "bbf1a479f2fbd6702caeb02556f3ef873855a1ea472636bf84674488d4c1e51b",
+                      "size":  676,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/geolosys.json",
+                      "sha256":  "302a0134a55977492dc5f48cd525382e5b4dcbbf692a93be2608bfe7963ba4dc",
+                      "size":  3920,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/grimpack.json",
+                      "sha256":  "f1db6be12f964f8df78f5110367db796a6f5252f2a4fe85804a7121fb96408e1",
+                      "size":  1125,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/growthcraft.json",
+                      "sha256":  "f669200213827bf921946cacd387a035313353521eb49f5c679b2cdd55a12d5b",
+                      "size":  232,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/ic2classic.json",
+                      "sha256":  "a871bbe2a9dd0518438f827dd150fe98456f229ca05bf97dd67a3dc86edb546b",
+                      "size":  942,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/immersiveengineering.json",
+                      "sha256":  "980cffbae2ec386b39ee3bb08f92a452852fff0fa1564adecac6992abcf4dc17",
+                      "size":  1399,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/industrialcraft.json",
+                      "sha256":  "402d8602974c9b4a6bce1e2385c4e952411124775d4c787439ddaed38de81962",
+                      "size":  878,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/matteroverdrivelegacy.json",
+                      "sha256":  "5318905ec81853fc162859fbf2ab64680f6130e18ae153f8181a48255f89978f",
+                      "size":  505,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/mekanism.json",
+                      "sha256":  "2e6b58ca518534916d7823f1a09911abca5151cd73d34c300f98bf4418d61cd2",
+                      "size":  656,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/metallurgy4.json",
+                      "sha256":  "df8d3f356698c3f485496936de4d3a6151ff5c8afb3984f0ef1891ba9cbdd30f",
+                      "size":  5826,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/minecraft.json",
+                      "sha256":  "3522479adf6e369300a3938e79c6c44d590ff16cd848b605c15ad4e526e51810",
+                      "size":  1560,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/modernmetals.json",
+                      "sha256":  "dc34eff108baead4a8a02f4ab129020c32f6beba9c33a876530251b22625cc37",
+                      "size":  3723,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/moglowstone.json",
+                      "sha256":  "7c786f26e32fa16e8ad0de52877ee34130365f40296cae29b276fdd52c7c9623",
+                      "size":  236,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/mubble.json",
+                      "sha256":  "40e045234242f38ba967260db802c3763c21646120c39ee31b786a8c11e90815",
+                      "size":  230,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/mysticalagriculture.json",
+                      "sha256":  "e3d2f72ad0eb9aedac3bc64cd18eeccd2cd68d086c4e61304275a6bc73c8c801",
+                      "size":  457,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/mysticalworld.json",
+                      "sha256":  "c9c06582e289078ed7e36fcec5e76088d712a11d21db35f36b198bf4687f335d",
+                      "size":  756,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/nuclearcraft.json",
+                      "sha256":  "e55cb996e1fdf11aa90516354fb934d325b36363aa137e2a5eef8a4ed4f7ded5",
+                      "size":  1805,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/poormetals.json",
+                      "sha256":  "7ec56b33500e9ec10fe91abaf7e59442d99d0a94ae02be4698d63247271cbf8b",
+                      "size":  6458,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/projectred.json",
+                      "sha256":  "032fc303b6d4a35503d0981c5f234a9d44b1587107779bd98b3d2fd84647c033",
+                      "size":  1639,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/pyrotech.json",
+                      "sha256":  "4d3d142d363d20141bbd238c324dcb309a4e1b432768f411663117c46f94d7ce",
+                      "size":  458,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/rftools.json",
+                      "sha256":  "8afa3611d6ac89f814efe5a0882bdc0477bd85bbe0862c441acee27f57bcfe15",
+                      "size":  244,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/scalinghealth.json",
+                      "sha256":  "d5e4e24a35124cdfdc9e6bbe6f1d581a8878ad7fff41ff29ac715be9a4fa71d9",
+                      "size":  240,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/starwars.json",
+                      "sha256":  "31c43c255af089eae7e63025dc241cf79519b9aa2b51d17db831239c9ed9c6bb",
+                      "size":  232,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/taiga.json",
+                      "sha256":  "8e47b9098797ee7c0e096fdec9ebd0fc95e1aba0f5e88768ddbeba25194830f1",
+                      "size":  445,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/techreborn.json",
+                      "sha256":  "863eb6411d43569bb870e5f5e25422c853d3d744f5486d383b8ff2376ceb25af",
+                      "size":  1526,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/thaumcraft.json",
+                      "sha256":  "3275edf9e6831e9c3411f51b2be7121241c51e401aa2581be6744a68f5b876be",
+                      "size":  694,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/thermalfoundation.json",
+                      "sha256":  "3cdda0ee9cc2c8dc66f5806e3b7d08e05221e52f884a3e2ca6be5285f6882fad",
+                      "size":  2810,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/treasure2.json",
+                      "sha256":  "d25b552fe051c1c9214bce21d0e0469b8c69b175384e2c26968c04cf31fcb8c1",
+                      "size":  461,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/wildnature.json",
+                      "sha256":  "94104f2e111e8e65306447083e48fb35156d3a9d837670e7eef12634977768d3",
+                      "size":  1160,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/undergroundbiomes/ores/worldsretold.json",
+                      "sha256":  "0f4887161f3d838b118cbf9d6d2f0abb65b46cda2d89e1e99bd7def8213a488f",
+                      "size":  242,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/vanillafix.cfg",
+                      "sha256":  "ff639643176995c7b2faca05e96c24dbe89befc54719bb958180fe8660165b70",
+                      "size":  463,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/vanillafix/config_version",
+                      "sha256":  "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+                      "size":  1,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/waila/theme/dark.json",
+                      "sha256":  "cd2696aae34e17993d6eb737f7a1bc74d949058463bc304ae0ded14c5cac9f19",
+                      "size":  137,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/waila/theme/vanilla.json",
+                      "sha256":  "b2aae1f2d5b272a9b533a6f13316aefe535173f379efc2ea48bd8fc327c7fa0b",
+                      "size":  140,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/waila/waila.cfg",
+                      "sha256":  "1d6f6a6fd9a4658b47e114174cbdd8e43a86d4b2f764f54c7fda073352af3ac0",
+                      "size":  3114,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/wawla.cfg",
+                      "sha256":  "bfcbc095e6758afe11e7ac1a1874097062f651fa91faa74804bb93761942a243",
+                      "size":  3280,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/YUNG\u0027s Better Caves.cfg",
+                      "sha256":  "6cc0ea8bb2cb3adf006d283463c2cd064aef29d02012544ae2770b9992158e83",
+                      "size":  18478,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/animania-1.12.2-1.7.3.jar",
+                      "sha256":  "87e248a3cf00cde9ef0eec876eb1d3d5f576cd92b4c6a0eebc7b82b69f28d76a",
+                      "size":  8923896,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/antiqueatlas-1.12.2-4.6.3.jar",
+                      "sha256":  "ffd0b65060c1e8375b192acd34c7f71606fcd852bdd36b0f5e37f1c8b6536d1d",
+                      "size":  1239580,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/AtlasExtras-1.12.2-1.7.jar",
+                      "sha256":  "e2d13997acf802e8329743f68530c0976cdd9faba8f70744aea10e734ea867f2",
+                      "size":  58223,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/AutoRegLib-1.3-32.jar",
+                      "sha256":  "d8610a94da8f30815db4612b3291ecdcfd8204eaf1a4db8c5d0663c7b1191d91",
+                      "size":  108306,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/bettercaves-1.12.2-1.6.0.jar",
+                      "sha256":  "cdfd2658a572b247164d65a1c6f2aa696d8320b5a54d68f14c31b2600da478b3",
+                      "size":  408577,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/BiblioCraft[v2.4.5][MC1.12.2].jar",
+                      "sha256":  "b3aab967cf9a2fcaf1330b5a5997f8d31e7a73884eac7451f1f31b2fa1394add",
+                      "size":  5122856,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/BiomesOPlenty_1.12.2_7.0.1.2444_universal.jar",
+                      "sha256":  "33343221c7b84098b41b093db8f2a4def42cc776beb18f5e3d354a321720e286",
+                      "size":  4702147,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/bookworm-1.12.2-2.3.0.jar",
+                      "sha256":  "dbceef277e1fa58d0a01ae090e9889b50b6be62c8087f83d55ea10e92511848e",
+                      "size":  232686,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/Clumps-3.1.2.jar",
+                      "sha256":  "f3ce670e0087f4c6b770fd05ae5c3dfd8462f74c62397932ea72954d1c6c8df4",
+                      "size":  13792,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/CraftStudioAPI-universal-1.0.1.95-mc1.12-alpha.jar",
+                      "sha256":  "3b611b599c2de6de4fded0cc65abb77f40e90cc5f4801d04c0bcdbb1af06e0d0",
+                      "size":  90465,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/crafttweaker2-1.12-4.1.20.jar",
+                      "sha256":  "f2176225db04fc95dce462e7ed45b2aac9c4c58f9887c9beba6f3a096543d389",
+                      "size":  1363036,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/DenseMetals-1.12.2-2.0.0.30.jar",
+                      "sha256":  "9d2670fcaf9eb349f898f7e844db8612963e8968b6e61bd34ee3df3b311ff358",
+                      "size":  156430,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/drpcore-1.12.2-0.4.8.jar",
+                      "sha256":  "3874e252a16d1176ad2706c5c9adc192e714548bc43f164ec272319ea18e40bc",
+                      "size":  1075472,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/drpmedieval-1.12.2-0.3.6.jar",
+                      "sha256":  "39303af6807d8f22168c14bdd773a8561a8646523b966d9e5f9e4408e39b1f29",
+                      "size":  5575065,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/DynamicTrees-1.12.2-0.9.7.jar",
+                      "sha256":  "a06ac23f60f334045eb314f685683b75db93d04815d08da570edeea89372607c",
+                      "size":  789332,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/DynamicTreesBOP-1.12.2-1.4.1e.jar",
+                      "sha256":  "2174836f5c585e4d5d7a19f804ee23fcc904e7937591eda1b44bd60540721e10",
+                      "size":  394175,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/DynamicTreesPHC-1.12.2-1.4.2.jar",
+                      "sha256":  "041f7dce4c3275bafaaba6e385a5b19f564d93d21a7f26ae0cd600333844351e",
+                      "size":  79147,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/farseek-1.12-2.5.jar",
+                      "sha256":  "27e9fae4b5d419a0f82798f541cb74c32119a601497712c35475d1cbca116a89",
+                      "size":  531566,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/foamfix-0.10.10-1.12.2.jar",
+                      "sha256":  "9429d2680f38bc1e3e2c87c98e95d4896241f5ee0f2e627d15610c68c473a2e8",
+                      "size":  201683,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/ForgeCraft-1.6.51.jar",
+                      "sha256":  "1d6170fdcb44d8144f72fae46a15177568acdcf23bebfe2f91379f50164814e6",
+                      "size":  1771809,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/growthcraft-1.12.2-4.1.3.200.jar",
+                      "sha256":  "1aee11e06ccfa7f79ff8fbb0e9c4454d039ca622e4e32f3369fedf6c01532cea",
+                      "size":  2386318,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/Hwyla_1.8.26_B41_1.12.2.jar",
+                      "sha256":  "e9ddecd4920ee9a57e11e4b43fb1dd395bbf37e276be726a99a2590272304124",
+                      "size":  453778,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/ImmersiveEngineering-0.12-92.jar",
+                      "sha256":  "c5ccdd4892679317bfbe7c0018d5255db611ba2cebb88190493a19496cb5e19e",
+                      "size":  6802153,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/immersivepetroleum-1.12.2-1.1.9.jar",
+                      "sha256":  "6e6b7bcd22966ef6362eec013ef915521c22232f847c3153b57189b5a4011823",
+                      "size":  906018,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/InventoryTweaks-1.63.jar",
+                      "sha256":  "ef2fdcb59f9a766ee5c3c4c514c78f0a9e35b3d6bf02c17051b7dd4e94efdf7a",
+                      "size":  263258,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/jei_1.12.2-4.15.0.291.jar",
+                      "sha256":  "51e4410e1bfb30e3b31fa79bfa7e09a7a83f320d7c665767ee505a8d03b3fb90",
+                      "size":  651473,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/jepb-1.12-1.2.1.jar",
+                      "sha256":  "1d4841af1f9988651f8174f0b1e90b5d8effa86f41490c987348f9e57527b01b",
+                      "size":  27195,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/jetif-1.12.2-1.5.1.jar",
+                      "sha256":  "90f7d2f739a51a9b2c029e635eb6ebfb0f2ca63f48a2183edd2022779e8b8216",
+                      "size":  28946,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/JustAFewFish-1.7_for_1.12.jar",
+                      "sha256":  "7ecfaaf0d407c694d87a111f1dbd62a29a9924c10c9141d072a5a57462d7a3f2",
+                      "size":  238863,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/just-enough-harvestcraft-1.12.2-1.7.0.jar",
+                      "sha256":  "937433a734154498d396114560e45bdac15e5d8a878767cb51926e8a00ce52ef",
+                      "size":  42287,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/JustEnoughPetroleum-0.1.jar",
+                      "sha256":  "26f60a6549f5167aa10e03a25f3180a310d4cb7f1521d6ee04fcb0db2fefd5e3",
+                      "size":  18945,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/JustEnoughResources-1.12.2-0.9.2.60.jar",
+                      "sha256":  "9ea4d7df19c0a53880aae5e745ef1e886854bea5c533878688587a5e3fdaebdd",
+                      "size":  222270,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/mcw_windows_1.0.0_mc1.12.2.jar",
+                      "sha256":  "e243520b4d1baa9a64817b904b5bd54edbfa9ee8713569f678e8f35202508704",
+                      "size":  124758,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/blusunrize/ImmersiveEngineering-core/0.12-92/ImmersiveEngineering-core-0.12-92.jar",
+                      "sha256":  "1af259e7b9626f34fc09604cf0980a8c68f8f255b9ad22f5a75a49b0da05e9be",
+                      "size":  7636,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/blusunrize/ImmersiveEngineering-core/0.12-92/ImmersiveEngineering-core-0.12-92.jar.meta",
+                      "sha256":  "fefe511cbb8ac5f44030d87ff81b4fd7c35750b6bf85c0783f7d392d5d89a0c8",
+                      "size":  747,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmblueprints/1.12.2-1.2.3/drpcmblueprints-1.12.2-1.2.3.jar",
+                      "sha256":  "634b3ab2ecdb719a9008d4b1ecbf85df20970312f584235d32a5e0d36af754e9",
+                      "size":  81126,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmblueprints/1.12.2-1.2.3/drpcmblueprints-1.12.2-1.2.3.jar.meta",
+                      "sha256":  "ab8d51e465698ca3d9616007467236cc17a288c62e0475f72fc736a7acc0b593",
+                      "size":  7804,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmguis/1.12.2-0.0.1-SNAPSHOT/drpcmguis-1.12.2-0.0.1-SNAPSHOT-20181125.100253.jar",
+                      "sha256":  "2cd47738d9b7cbee9fe8f81946b66070df39f0d04b1b43992dd801c557874729",
+                      "size":  266596,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmguis/1.12.2-0.0.1-SNAPSHOT/drpcmguis-1.12.2-0.0.1-SNAPSHOT-20181125.100253.jar.meta",
+                      "sha256":  "c763eb4aad5b0ebf930c3f158e1ff4c06a23e9201f34e702e3e9067bf708ba83",
+                      "size":  7118,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmguis/1.12.2-0.0.1-SNAPSHOT/maven-metadata.json",
+                      "sha256":  "89d19656d915b4ded42e79eec7caf14c2dd083486ab383151cbce55b328a5a1c",
+                      "size":  73,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmlocks/1.12.2-1.0.0-SNAPSHOT/drpcmlocks-1.12.2-1.0.0-SNAPSHOT-20181126.091203.jar",
+                      "sha256":  "427fae74203d74590d1b5a2ee1a4a5e6a4426c6aa28b4faf286c5b2f604ea918",
+                      "size":  181395,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmlocks/1.12.2-1.0.0-SNAPSHOT/drpcmlocks-1.12.2-1.0.0-SNAPSHOT-20181126.091203.jar.meta",
+                      "sha256":  "65f022e137fdfcc62e97b0338462c063a3b92506cde11af96b66769770a455ca",
+                      "size":  4247,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmlocks/1.12.2-1.0.0-SNAPSHOT/maven-metadata.json",
+                      "sha256":  "9d4e12413da5b7799ff22db7a008f98d95fd5d43ba5e7b0625a4d767ec2ffa9e",
+                      "size":  73,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmmaarg/1.12.2-0.10.0-SNAPSHOT/drpcmmaarg-1.12.2-0.10.0-SNAPSHOT-20181116.054036.jar",
+                      "sha256":  "4b75cf634672756fba0d254dbe82fa0f8b7102f1c01bfcf1d5a7582c84e7f999",
+                      "size":  94477,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmmaarg/1.12.2-0.10.0-SNAPSHOT/drpcmmaarg-1.12.2-0.10.0-SNAPSHOT-20181116.054036.jar.meta",
+                      "sha256":  "ef184ad25810cfab75cd63c593c4efb2b13e67fbd010a343deff0c2815ff5fd5",
+                      "size":  11653,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmmaarg/1.12.2-0.10.0-SNAPSHOT/maven-metadata.json",
+                      "sha256":  "2508d1c41bb040fecbbb3875e533489592f49c57919926d9f348e4ae20cff5c8",
+                      "size":  73,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.2.4-SNAPSHOT/drplibrary-1.12.2-0.1.2.4-SNAPSHOT-20181116.032433.jar",
+                      "sha256":  "f228524edb0bcb82ffba654b6233a745d8cc03a87712df03bbdd32212b9d7971",
+                      "size":  166706,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.2.4-SNAPSHOT/drplibrary-1.12.2-0.1.2.4-SNAPSHOT-20181116.032433.jar.meta",
+                      "sha256":  "38d12c26e882c54db82e80be2cf7a291577d49024d37e3289f2d3aebd50370be",
+                      "size":  17743,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.2.4-SNAPSHOT/maven-metadata.json",
+                      "sha256":  "557e70dfa032ef0fe55f1e1dce92dcb69f2367e2b22b377f3ddf6fbc70861049",
+                      "size":  73,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.3-SNAPSHOT/drplibrary-1.12.2-0.1.3-SNAPSHOT-20190130.014240.jar",
+                      "sha256":  "43686fc036e91f933e2b0a7d4025d1809b13eaaa0fc9fc3efdaab164ae02ecf0",
+                      "size":  172662,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.3-SNAPSHOT/drplibrary-1.12.2-0.1.3-SNAPSHOT-20190130.014240.jar.meta",
+                      "sha256":  "def508b047b36f9396bafdf23a9f125c9280db05f8916028e26dabe8b9f4064d",
+                      "size":  18046,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.3-SNAPSHOT/maven-metadata.json",
+                      "sha256":  "5194b7403c476fe1ae367797182b108cc8ad8a28835a381e385f091df76320ce",
+                      "size":  73,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/MouseTweaks_2.10_mc1.12.2.jar",
+                      "sha256":  "77969c0e7f76c078ebb7004642e86746d57f47b7a46237fcb1c06d4a55679448",
+                      "size":  75170,
                       "executable":  false
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "afdd754568d570a499d4662ba74f0e777c0208a1e6d8542db572f5fb5e390d6e",
-                      "size":  25726,
+                      "sha256":  "2131bce66528033f31829f6ddd053cfe0de19d868d4b4ad21bf3e79c4795f1c8",
+                      "size":  28989,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/Pam\u0027s+HarvestCraft+1.12.2zg.jar",
+                      "sha256":  "9542e0863473b2cf61eff3fa7bdb9f096aaf7fc446c54750cbaa9db47a58f2fa",
+                      "size":  4912890,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/PrimalCore-1.12.2-0.6.105.jar",
+                      "sha256":  "d17a90a7eda1cdb7619e5538173af6b95116a49fcea674b66247e367e13efdd1",
+                      "size":  6017836,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/Quark-r1.6-178.jar",
+                      "sha256":  "03df598aa5092f4fbcca32b5935d200f00e828cf8d43df65f3e137e8657b496b",
+                      "size":  3901586,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/randompatches-1.12.2-1.21.0.0.jar",
+                      "sha256":  "2a039e714ef010556a0186dd3fb75cc1d841819225e76e7b71a21f2f23b230d1",
+                      "size":  283420,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/savemystronghold-1.12.2-1.0.0.jar",
+                      "sha256":  "f66add4cc170c116a76d81f303681c5b7cc110d1871350c58daf9262e1a7a0af",
+                      "size":  53797,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/SeedDrop-1.2.1-1.12.jar",
+                      "sha256":  "662adf2f6ff423937f944616e0fabadb13655adb82c55e183ff60be40dcce5fe",
+                      "size":  6501,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/SereneSeasons_1.12.2_1.2.18_universal.jar",
+                      "sha256":  "f52033660557331cc4847337325fdab05b07df0ceaa851382cf46137286e243a",
+                      "size":  185187,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/SoundFilters-0.12_for_1.12.jar",
+                      "sha256":  "bba03ad5a0121b2075d50b789563c4897076d59a67b3e79e9e7acde98cb2312b",
+                      "size":  43161,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/stackable-1.12.2-1.3.3.jar",
+                      "sha256":  "5a19de561ddc54f2efceac0c8b1b714f21a82d8200498aa5fb688b2d185c8452",
+                      "size":  89639,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/streams-1.12-0.4.8.jar",
+                      "sha256":  "ed4beaa1536ac5631c6fcb317f1ca9bbfab1e7b0dd3e0f1fbf7676983a27b79a",
+                      "size":  270338,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/TeaStory-3.3.3-B32.404-1.12.2.jar",
+                      "sha256":  "22b18d6cec62fbae2e6c88413552349c76dd2fdb226ea01af461d93b62cdeb78",
+                      "size":  1190185,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/thebirdwatchingmod-1.5.0.jar",
+                      "sha256":  "45105f4ec23f0398d74dbcc4aebf5435de2832145520825de8322c73664396ec",
+                      "size":  963488,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/ToughAsNails-1.12.2-3.1.0.139-universal.jar",
+                      "sha256":  "039d1c1304e4f58d2c4b141a6d251a1d3f8f173f0a0d21efaa51c9f4a65abd61",
+                      "size":  354871,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/TTFR-1.12.1-1.9.1.jar",
+                      "sha256":  "5c09afdef46c63d3e5faf82a8b0b990ea9d250fd074d8ec2af4b52f90542a1a0",
+                      "size":  33127,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/UndergroundBiomesConstructs-1.12-1.3.7.jar",
+                      "sha256":  "56a28ba28e75dcd2211f6e4de06d2bdaaf288067ac5e3d76cdc6d7f5ff54f55d",
+                      "size":  1310157,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/VanillaFix-1.0.10-150.jar",
+                      "sha256":  "267bd0cd995d95ee55c4c201076525c529d0275a51ce1e43c247f0f9ba894fcc",
+                      "size":  1025896,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/Wawla_1.12.2_2.6.274.jar",
+                      "sha256":  "677289b04c28334d66b1b942575c489ff077a6f2e5990b56758a8fcd17fa7cb9",
+                      "size":  94120,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/bushy-leaves-1.12.2.zip",
+                      "sha256":  "6f0944ed7289ff58e3ae76d5fa2a06bb5e908cdcb4997d2dac8c302d32cdf813",
+                      "size":  53273,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/Faithful 1.12.2-rv4.zip",
+                      "sha256":  "0487ca1c2da95f0991c569195c3d0b5ff773e2aa70ed0f49aad1eec746e24376",
+                      "size":  6878379,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ModdedFaithful 1.12.2-rv1.zip",
+                      "sha256":  "35003161f71d18e2a79926aa1ad5b93da8237775f6fd2e7146fcab9d8f4d3ab8",
+                      "size":  2433157,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "scripts/project.zs",
+                      "sha256":  "3e03b256574af57cc56dee2950bad074f5845b434a0a252c19717d1b4fe4cf4e",
+                      "size":  253,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "shaderpacks/Chocapic13_V4-High modified.zip",
+                      "sha256":  "2b48e7bcf68acba87971580a8ce71730e1b7bfc01f4ac3e831bea2a3b5cd1a5e",
+                      "size":  27431,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "shaderpacks/Chocapic13_V4-High modified.zip.txt",
+                      "sha256":  "98846bb50808259aae79514fa4c1dccbaa9e474832dd1fc2f2597898b94e5d5d",
+                      "size":  156,
                       "executable":  false
                   }
               ]

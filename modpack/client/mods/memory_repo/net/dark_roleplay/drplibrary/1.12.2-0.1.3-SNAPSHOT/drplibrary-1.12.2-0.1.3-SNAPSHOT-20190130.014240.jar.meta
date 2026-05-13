@@ -1,0 +1,460 @@
+Manifest-Version: 1.0
+Maven-Artifact: net.dark_roleplay:drplibrary:1.12.2-0.1.3-SNAPSHOT
+Timestamp: 1548794560853
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/exception/U
+ nsupportedVersionException.class
+SHA-256-Digest: fyjCPLduh7T6pOVFulLBCqeCLcLdiFRZWUZB6z7l6Fo=
+
+Name: net/dark_roleplay/library/experimental/guis/modular/Modular_Butt
+ ons.class
+SHA-256-Digest: cIO+5xAZYen+Z2v5gTvpjH5FFrb9u4rv+ME/JeBNKsk=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IPlacedB
+ ehavior$Multiple.class
+SHA-256-Digest: xll7JKp9T0If4oi+2WKeH52LlyGabjrnTzAo5tX40lQ=
+
+Name: net/dark_roleplay/library/resources/ResourceHelper.class
+SHA-256-Digest: /6umtIzlaa62pUBxVov+6Aa3VlVgZfvQ8B7cA/LubMI=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/header/Load
+ erBlueprintHeader$LoaderV1.class
+SHA-256-Digest: Ic7j6Lb0IRWkQM7G7YMpBHnbh0GWweX6Kc0yOs+BoMI=
+
+Name: net/dark_roleplay/library/blueprints/Blueprint.class
+SHA-256-Digest: KCDEV8B2uCav3Az1UxwE+/Q26pYvJ/74sXC/0I+UdGU=
+
+Name: assets/drplibrary/textures/guis/modular_gui/vanilla_buttons_enab
+ led.png
+SHA-256-Digest: JRHyV8cZrPEHHlW2UriGC1i9E4Cf0mcL2tZot8NElng=
+
+Name: assets/drplibrary/textures/guis/modular_gui/vanilla_buttons_hove
+ red.png
+SHA-256-Digest: 4rZ+Gh8m1oJAMv8tGzXtAvpel529BVDS3DCXTBbmSkk=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IBreakin
+ gBehavior$Multiple.class
+SHA-256-Digest: d6/rMAqlxL750YdCuIWVE23+mr9STYsCJ/NIpgoIS+4=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/palletes/IP
+ allete.class
+SHA-256-Digest: g17hw9ZCYQUMWeh6F5/Pu+CPDG3gTGdpm789tlopzvk=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IRandomD
+ isplayTickBehavior$Multiple.class
+SHA-256-Digest: PxcC3qKjkJSlP21X5fW7ZGQDuipr1Lw10JrWgPkF2GE=
+
+Name: META-INF/fml_cache_annotation.json
+SHA-256-Digest: /xjTMn19zXHEfDOjotGc8bXukLK+bfBR/IQrfTfg7eI=
+
+Name: net/dark_roleplay/library/References.class
+SHA-256-Digest: nVE9IETf7lNDRZn7ta9W80pzTm14gEoQfVqH1fGJYAU=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IUpdateT
+ ickBehavior$Multiple.class
+SHA-256-Digest: O/uBv2DSvBTqSHHVC1j1GuQSFz4nvRXyhh04/RcXITk=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/Constants.c
+ lass
+SHA-256-Digest: LWfjCn50RyG0qt6BmXBDVmExsgN3gOPuF25E3G+VB0M=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/exception/D
+ ataCorruptedException.class
+SHA-256-Digest: 7Ez0wShjuERs7xoiP0Zngc/iZ4xXRw0MjhqlwPkZGSg=
+
+Name: net/dark_roleplay/library/experimental/connected_model/Horizonta
+ lConnectedModelBaker.class
+SHA-256-Digest: KaP3mxSZuQjAcbWoPJcHI5WvgwTKs5SIrMEatbAGIXE=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/INeighbo
+ rChangedBehavior$Multiple.class
+SHA-256-Digest: R0/6yinCERdMhbP0z40TycG99wsPikOOaspJB73P/D8=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IActivat
+ edBehavior.class
+SHA-256-Digest: Fobg/ofgxqku3UL0RrS+BLIKNNvCn7Q8V61scB2uIqU=
+
+Name: net/dark_roleplay/library/sides/IProxy.class
+SHA-256-Digest: h8MlBhrRVSBRVpyrCGlDJUigLDBY/kedW3A6olbNdfI=
+
+Name: net/dark_roleplay/library/experimental/guis/modular/ModularGui_T
+ emplate.class
+SHA-256-Digest: OtKaC/hYSNsFQxWX2Y/JRzQVjdMHDd0PWxDSgBqmY94=
+
+Name: net/dark_roleplay/library/DRPLibrary$ClientProxy.class
+SHA-256-Digest: qhYmc4nBEFNnXY8zK0FDUoOjz0CdNoCRI/NkNBSnJMw=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IClicked
+ Behavior$Multiple.class
+SHA-256-Digest: d/5GrnYI5Yz8sFTzh5sIGdVm65yQe/UYrw4PG2zxYC8=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IAddedBe
+ havior$Multiple.class
+SHA-256-Digest: 8fnVwswALqou1/7m++glh+lBgFHbOA3mSNmn9p05yRo=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/palletes/Gl
+ obalPallete.class
+SHA-256-Digest: EftSjc9KNVboTUpDpoENxGFXpAa9ZFwZvx6kUyFCX/k=
+
+Name: META-INF/fml_cache_class_versions.json
+SHA-256-Digest: mefCv6ggqydLGrYIwZB9wzv3UFDcq6XvezFkODdhvhE=
+
+Name: net/dark_roleplay/library/experimental/guis/ModularGui_Handler.c
+ lass
+SHA-256-Digest: kFVe1m0ZZR/pFmIOxHk0dqZ1t609BPb+N0RmM/Tr33M=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/Gui_Screen.
+ class
+SHA-256-Digest: Ye+0MisPNW+FJH16avDu1SXoIhJGXa8o7YI2tTDH6HM=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IRainTic
+ kBehavior.class
+SHA-256-Digest: WgT3KOmpSkJl1uBl5NPhPwhVJ3jQadxpdB3fdQ3a3Jk=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IHarvest
+ edBehavior$Multiple.class
+SHA-256-Digest: HZd6pca7lzMkLMtU4pp2gKYZKCwIC0yLXA3iS1Wi5mY=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IAddedBe
+ havior.class
+SHA-256-Digest: 96dnQ30J0Rq77NrIqHr1AqzflZ9SE5ZT/m3m1K/HSHk=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IBoundin
+ gBoxBehavior$SimpleImpl.class
+SHA-256-Digest: 3SEBO5k4lL+tcqilnvwfPLbsOfzk/PnbLag7SxyNNEQ=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IDestroy
+ edBehavior$Multiple.class
+SHA-256-Digest: xsWR0cctrDmDNqeIsHdgHLGpVKn3wuIIH5dt4OODT4I=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IWalkedU
+ ponBehavior.class
+SHA-256-Digest: eOHkcWtEXw+39DlW5MAb3HocnKmvptkV9wbyN5cwIPo=
+
+Name: net/dark_roleplay/library/DRPLibrary$ServerProxy.class
+SHA-256-Digest: +0jO3jniQuyCst18rTcko8c+9xhXQ+k3YGnm0f0ikzc=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IDestroy
+ edBehavior.class
+SHA-256-Digest: vLVa7Rvz/FGuVr+R7hbs5JV40PiVnv3NkqMmWhrcBxM=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/buttons/But
+ ton_ChangeBool.class
+SHA-256-Digest: By2lWCxw1FL0tFzAXv88s0+dhWesv4bo8WdNyqt+ayY=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IFallenU
+ ponBehavior$Multiple.class
+SHA-256-Digest: vWb7rwKjtuhnxTCwIyOQ2kZwkn1Wn0Lgf9/vWxAl8mk=
+
+Name: net/dark_roleplay/library/blueprints/Blueprint$1.class
+SHA-256-Digest: IXuyvAXg7CoU2uHR5GPaQ5P5Ac8lGTywrQC0YApDdFU=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IPlacedB
+ ehavior.class
+SHA-256-Digest: 6/GIoyNH8mBxguYPuWZRFCTNB3hMAfTXsgGvHWxmLn0=
+
+Name: net/dark_roleplay/library/util/InDevUtil.class
+SHA-256-Digest: VAPEn2PvUq59xGblnEKYyi8C215L2ExzAh6vtrA5CVE=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/loaders/Pal
+ leteHelper.class
+SHA-256-Digest: tFhu1wkITBJoXkxLz8H+YPVW8S4C0/OGb6BBJKhioDY=
+
+Name: net/dark_roleplay/library/DRPLibrary.class
+SHA-256-Digest: szQBVUTJd3BQ0P2sUg1w/4MjLWlsZVnWECZnRWMaUIU=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/buttons/But
+ ton_ChangeInt.class
+SHA-256-Digest: 5QpZFGIe/IX5QvaZyzWvHIn8QG2ksg4UdUZBdapidk8=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/Gui_Panel.c
+ lass
+SHA-256-Digest: dHXLPq2NqXrhmRtm6qpzcrmJLmuf+iQsgg2wfKLs6lg=
+
+Name: net/dark_roleplay/library/blueprints/Settings.class
+SHA-256-Digest: yzPTf/WHaX0/eZ6PLWcQcWFCxxafOmttz2Hhdkz/4UU=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/Gui_Label.c
+ lass
+SHA-256-Digest: nUKQv6RyCNz0QewQ8f4WTus6Kg6hGb3AihkEVZEwj5s=
+
+Name: pack.mcmeta
+SHA-256-Digest: Q1DKWEiMM1uLpuwhyq0HyCfxrY4kZIKXXSx+acJHOqM=
+
+Name: net/dark_roleplay/library/experimental/connected_model/Connected
+ ModelLoader.class
+SHA-256-Digest: EEwtAinCqYlgi4n9P+ukugxxkfD2QPzNaYIMc8LxVv4=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IRainTic
+ kBehavior$Multiple.class
+SHA-256-Digest: 0JUAkEIgfX33+g0Hk35Tl69OgHJlvqJ/kDwZsFu6Cus=
+
+Name: net/dark_roleplay/library/experimental/blocks/BlockSettings.clas
+ s
+SHA-256-Digest: eti5dse0e8g9m3k1XIV7MmEcXGZy4IYcSuYi7Og67yk=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/palletes/Gl
+ obalPalleteLoader.class
+SHA-256-Digest: QczPoxtrD/KyLJkpdK0bdmfMvdXJUlD+ZJp0C0OWlbg=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/ICollide
+ dWithBehavior.class
+SHA-256-Digest: HyxBJUhfSo6hd/A2VXpO4uTHQh4KnGysnUaSQfhTlfk=
+
+Name: net/dark_roleplay/library/experimental/data_compression/IntArray
+ Compression.class
+SHA-256-Digest: Xc3RYnq2XPLNjch7GatIV+MmU4YOG+sr5sFdbf/tDMU=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/ICollide
+ dWithBehavior$Multiple.class
+SHA-256-Digest: ICZmPYt7oN24Qx4g/BqIiJFTICTIbjn3RD71snrmFik=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/MultiBeh
+ avior.class
+SHA-256-Digest: 1ukD5jY7G2W8+luIjEtbR1PxVmlf12rkwymqzxK9OU4=
+
+Name: net/dark_roleplay/library/experimental/variables/wrappers/Intege
+ rWrapper.class
+SHA-256-Digest: A6FT5EKV6jjkNn3bHYsR/DylHt6NDnU0seRYnIBtEng=
+
+Name: net/dark_roleplay/library/blueprints/BlueprintUtil.class
+SHA-256-Digest: AKrhyFzHejo6H9/06AO7ph6r6z2AJBZPg/Hw4+gorno=
+
+Name: net/dark_roleplay/library/experimental/guis/IGuiElement.class
+SHA-256-Digest: Ul8zVIx+jkaUDvgDjCqUbsga92r8ThTRzDtx0X98Bms=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/Gui_Scrollb
+ ar.class
+SHA-256-Digest: 8gP6wAYIYNBjVdUJY2imzyIZyM53Oxs0tNKV9pYtYXQ=
+
+Name: net/dark_roleplay/library/experimental/connected_model/Connected
+ ModelBlock.class
+SHA-256-Digest: Min9frLXSAuddeiNnjqfqSOzpBQI5u0SebMmKHbZFKo=
+
+Name: net/dark_roleplay/library/experimental/connected_model/Connected
+ ModelBlockStates.class
+SHA-256-Digest: LK0TKIHolZVC7wQA2j7bZIjy4jnuMrvpVYfED5Sf0sM=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IBreakin
+ gBehavior.class
+SHA-256-Digest: 0HJIPokvBg3ekp1HhcrG3GSS+wKF7YUaljOAwmea3F0=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/Gui_Scrolle
+ dPanel.class
+SHA-256-Digest: 6ID8EfTxRtAqUWRjYmWCmvZt22yamgJPRTvNeggT9vk=
+
+Name: net/dark_roleplay/library/networking/PacketBase$Client.class
+SHA-256-Digest: 4hzoCYOesv04r6oerOntapPJfyBYg+q8ss2rHcgdd0s=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/layers/Laye
+ rLoader.class
+SHA-256-Digest: eI8VhZHVuW5IO/1Unl1/ZcjyeE0cm8UUF0+o4z+43qc=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IWalkedU
+ ponBehavior$Multiple.class
+SHA-256-Digest: ujjs584Sc6DSS0VUSPSYhYSh3CsuHHF6FjmCH53rZoU=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IHarvest
+ edBehavior.class
+SHA-256-Digest: mQ+zfmfLcz0Ra+xaCHc6Ed6v2ZZYo8rcbDRRTGMWk3A=
+
+Name: net/dark_roleplay/library/experimental/variables/wrappers/Boolea
+ nWrapper.class
+SHA-256-Digest: sWOORHZiQJ5slJuPQTR4yoSY2GXYlzu7JlZ9tipUSao=
+
+Name: net/dark_roleplay/library/networking/PacketBase.class
+SHA-256-Digest: 2Kl63qkk6ApXAsNSRfqUSa+cwxFuKPAtGUB87kxOPYI=
+
+Name: net/dark_roleplay/library/experimental/guis/modular/Modular_Back
+ ground.class
+SHA-256-Digest: q9jRXlIgHaWY99Z8ecfVGE0URO+n+3eUl4d69jxaP+c=
+
+Name: net/dark_roleplay/library/experimental/guis/modular/ModularGuiHa
+ ndler.class
+SHA-256-Digest: 3KZS/v38cGPIeNdUrswVK29t/By+42Kep8ZT9jbFRv8=
+
+Name: net/dark_roleplay/library/capabilities/CapabilityProvider.class
+SHA-256-Digest: ZciU/WFqy06+gq5aaSxyQW/XdlqFFUd05oyMDIB1NzA=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/Gui_Button.
+ class
+SHA-256-Digest: hOJGEJhs5PoQ4cGLOg93Iu69oZU1/xd6+kIcEgxamyg=
+
+Name: assets/drplibrary/textures/guis/modular_gui/vanilla_hollow.png
+SHA-256-Digest: EjkDB0rPoQ2mSOct3jBwUMQnPmb+u2dF4lOdH4aBmts=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/INeighbo
+ rChangedBehavior.class
+SHA-256-Digest: E5Gj6NRKQSMTXU032xZyq4+LyccCRxdlciA6GKqmvfY=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/header/Load
+ erBlueprintHeader$LoaderV2.class
+SHA-256-Digest: uj8MuG9D4RKsLoX7wT6vh89TdF2LCLQjOKvZ8L/HISc=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/Constants$L
+ oadingState.class
+SHA-256-Digest: ekgLcWVRKuw3p2hAgMJ0e67FF0t5GFJrGOwFiev72og=
+
+Name: net/dark_roleplay/library/experimental/zip_helper/ZipNBTHelper.c
+ lass
+SHA-256-Digest: 3CZVF2A8zJPho21QOTzGM05C+NXKX0ahc2mKMhqAg+I=
+
+Name: net/dark_roleplay/library/experimental/guis/IGuiElement$IMPL.cla
+ ss
+SHA-256-Digest: QA493bzXDTl17m2E+A+pbdgSK40OdvrYYHVQovpBrys=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IActivat
+ edBehavior$Multiple.class
+SHA-256-Digest: GhTXEQyTnRZfxPrQTVcvPcvQxsUyG0VtqZdVWeBIjGg=
+
+Name: net/dark_roleplay/library/resources/ModDataFolders.class
+SHA-256-Digest: D4hyzuS+nCvMFG+7SvTUvIJvAc25poJgYZ2cjg1KIbQ=
+
+Name: net/dark_roleplay/library/configs/prefabs/RGB.class
+SHA-256-Digest: /gfhkQROT8tfjeostYYjL522qcZvWRU5e4obYoMrO7o=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IExplode
+ dBehavior.class
+SHA-256-Digest: SngdPMwfWICctk7T0A19qoYs1A2hyxuSz/i6fW/nYNs=
+
+Name: net/dark_roleplay/library/experimental/blocks/DRPBlock.class
+SHA-256-Digest: L1tS2gGTF0zyIRx31a2HMzr1pdOZKfQqfvS//YRZLwQ=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/header/Load
+ erBlueprintHeader.class
+SHA-256-Digest: ZeHdmilbcK23PBMkzNEptomy5MV1BHOwl+pKPyQCso0=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IBlockBe
+ havior.class
+SHA-256-Digest: m3sRlTtUid+5NZRR0MIegB/5sxAHvdejuVIR4Vt98GU=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/FileHelper.
+ class
+SHA-256-Digest: tVeDy6VA/fcsAQpwc6iy/VyKDxkovwqRXzdVCknRaHY=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IRandomT
+ ickBehavior.class
+SHA-256-Digest: I61CCSQxW65yOAhgRRyTedX8m5lrltN6qn4ASjseuoE=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/Gui_Frame.c
+ lass
+SHA-256-Digest: +JTOOzD1Rh/WEXsA7VOwVRQ+6Dz1UoqHA8wngxyvz7M=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/layers/Laye
+ r.class
+SHA-256-Digest: e4TwggNrk8DNTOlU7YTgWgUJ6ailOcNiW2+30iU0nb4=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IPlaceme
+ ntBehavior.class
+SHA-256-Digest: +aoiGUDp9WfoxRzUIfq1QkyyDGHUjhWH8+rXv8zCvr8=
+
+Name: net/dark_roleplay/library/experimental/guis/modular/ModularGui_D
+ rawer.class
+SHA-256-Digest: 6+kzkymLlLTgjSuSl0U4YYeB/JAcatU6KO7mYnv/5hE=
+
+Name: net/dark_roleplay/library/networking/PacketBase$Server.class
+SHA-256-Digest: PdPaM1QV6O6eN2TPXwXWZBW5U+g4/4epyrmApedQRN8=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IExplode
+ dBehavior$Multiple.class
+SHA-256-Digest: 6Loro64us1ZiSFZCSmG8Q9FtJsTB2sgLnd7p2bSV3hI=
+
+Name: assets/drplibrary/textures/guis/modular_gui/vanilla_buttons_disa
+ bled.png
+SHA-256-Digest: D/6bN7SPHALDCP02CyLBhfD0+ezmVOvzALSwSGfcVRM=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IBoundin
+ gBoxBehavior.class
+SHA-256-Digest: V3pQxUhRMQTnM8bgI564XBYEnY6EjuGNZwKagkOAT0g=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/palletes/Lo
+ calPallete.class
+SHA-256-Digest: VY78Pv8z5KnAEc0XmP2tSiozMKyQ+k01Yfr37l96Tkg=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/Constants$C
+ ompressionType.class
+SHA-256-Digest: rZHjAfyuE/uGIhPASpm1NH9mgBzuB4GlbtOoPZEBkM4=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/Gui_Textfie
+ ld.class
+SHA-256-Digest: qELHtwyi95jy6Kp1wwDJOA4uDroZqNzlFCF1mtfPTtY=
+
+Name: net/dark_roleplay/library/configs/prefabs/RGBA.class
+SHA-256-Digest: Tw8PYEbgGoSUTLmyuk6Sifj3GsYW3lZeKfnUjPMNa2U=
+
+Name: net/dark_roleplay/library/experimental/variables/wrappers/FloatW
+ rapper.class
+SHA-256-Digest: RLpt0EQhyyqB7V9xa6vuY3glmbhazilnVH/pRgGy5yY=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/Gui_Icon.cl
+ ass
+SHA-256-Digest: jZGYB+SejBvu9hM5DsZQLGHNcSXWialp92rFqonzLno=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IFallenU
+ ponBehavior.class
+SHA-256-Digest: i4pEuFOrhhVLecxB3OI85cI5HD4pTn+sa9Wg93t2h+U=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/header/Blue
+ printHeader.class
+SHA-256-Digest: 7dGLZjxVRbA2iaQXboFRGhxod9uV/3jSLeN04Gf0d+g=
+
+Name: net/dark_roleplay/library/experimental/guis/modular/ModularGui_D
+ rawer$1.class
+SHA-256-Digest: BseJM+ETxj7a1MWlWkayfxScECd9tJYFZsRBtXBUORw=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IRandomD
+ isplayTickBehavior.class
+SHA-256-Digest: qeS3ZxLAg4iW8AM21xPrTw1aU23XzAa0B9ACSNTxcQg=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/Blueprint.c
+ lass
+SHA-256-Digest: PsWrBRh4DyqenC1m7DoG6RXNt3AK/UKxuZcy9kFvlgM=
+
+Name: net/dark_roleplay/library/experimental/package-info.class
+SHA-256-Digest: u9dJxihcXAhH2+7RE1dLkw7wa9U4aPjRNwH7joXS0pI=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/header/Writ
+ erBlueprintHeader.class
+SHA-256-Digest: PrJd/1RGufCYMSlhizs+HLl/Ds1Axn6VfqNajkrFrkE=
+
+Name: net/dark_roleplay/library/experimental/guis/modular/ModularGui_D
+ rawer$State.class
+SHA-256-Digest: BHrl7bDdHs1E4qFd+zHSE6ogXTWG1cdBddzJnkWu4xE=
+
+Name: net/dark_roleplay/library/experimental/variables/wrappers/String
+ Wrapper.class
+SHA-256-Digest: rrtA4Gupn2BKIfDnkuZ938iSnCYda8M23W4xBjG4Ecg=
+
+Name: assets/drplibrary/textures/guis/modular_gui/vanilla_normal.png
+SHA-256-Digest: DcNpIFKD1pJrVxDoGuLe8z+kboUMz+HNkLAGXZTFSRo=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IClicked
+ Behavior.class
+SHA-256-Digest: 0lBWzBUm/7uqW5UA5x7CsfvEsEVUdiE+OrJCueVtlGw=
+
+Name: net/dark_roleplay/library/experimental/models/DelayedModel.class
+SHA-256-Digest: 65TMspPcZf3fVok3f/9R01PjduDUhEEc+D58YnvAJLA=
+
+Name: net/dark_roleplay/library/experimental/connected_model/Horizonta
+ lConnectedModelBaker$1.class
+SHA-256-Digest: 7/jDdZ22k/JADL6OuuOKvILrbWg4rZZMZ8rJ/beqe5E=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IUpdateT
+ ickBehavior.class
+SHA-256-Digest: Mj49jA0QHJDnNB8UnE0nnsPCL1cDvnaOcwMNlbRV7+I=
+
+Name: net/dark_roleplay/library/experimental/blocks/behaviors/IPlaceme
+ ntBehavior$Multiple.class
+SHA-256-Digest: /LCJi5TBFfIzqYYEigXXCU1ms6ValiWtGjvJKGk40uY=
+
+Name: net/dark_roleplay/library/experimental/guis/elements/Gui_Panel$I
+ MPL.class
+SHA-256-Digest: nnpvxHbjV4bTyL+E4p6HjdpjigKDKuoBmMDyevXE/GI=
+
+Name: net/dark_roleplay/library/experimental/blueprints/v2/exception/N
+ otContainedInPalleteException.class
+SHA-256-Digest: dqNfV/aXCmDOdEXLKPv97/4joBHRTl7OIPNu8QUqPtw=
+
+Name: assets/drplibrary/textures/guis/modular_gui/vanilla.json
+SHA-256-Digest: x++1y/twzzg1gxl7/rPh5cNLMZ90alD4i457JYM6Vr0=
+
