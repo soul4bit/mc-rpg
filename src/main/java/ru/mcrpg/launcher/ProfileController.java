@@ -139,8 +139,8 @@ public final class ProfileController extends AbstractScreenController {
 
     private void renderAccount(AuthAccount account) {
         profileNameLabel.setText(account.getUsername());
-        profileRoleLabel.setText(account.getRole().isEmpty() ? "player" : account.getRole());
-        profileEmailLabel.setText(account.getEmail().isEmpty() ? "email not set" : account.getEmail());
+        profileRoleLabel.setText(account.getRole().isEmpty() ? "Игрок" : account.getRole());
+        profileEmailLabel.setText(account.getEmail().isEmpty() ? "Email не указан" : account.getEmail());
         accountIdLabel.setText(account.getId());
         launcherPathLabel.setText(state().getConfig().getGameDirectory());
         launcherServerIdLabel.setText(state().getConfig().getServerId());

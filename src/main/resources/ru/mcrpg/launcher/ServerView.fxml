@@ -17,7 +17,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.mcrpg.launcher.ServerController"
-            prefWidth="1360.0" prefHeight="820.0" styleClass="account-root, app-window">
+            prefHeight="820.0" prefWidth="1360.0" styleClass="account-root, app-window">
     <left>
         <StackPane prefWidth="264.0" styleClass="sidebar">
             <children>
@@ -25,121 +25,121 @@
                     <content>
                         <VBox spacing="18.0" styleClass="sidebar-content">
                             <padding>
-                                <Insets top="18.0" right="16.0" bottom="18.0" left="16.0"/>
+                                <Insets bottom="18.0" left="16.0" right="16.0" top="18.0"/>
                             </padding>
                             <children>
-                <VBox spacing="10.0" styleClass="sidebar-brand-card">
-                    <children>
-                        <ImageView fitWidth="188.0" preserveRatio="true">
-                            <image>
-                                <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
-                            </image>
-                        </ImageView>
-                        <Label text="SERVER PULSE" styleClass="screen-kicker"/>
-                        <Label text="Экран показывает итоговый маршрут, manifest overrides и живой ответ Minecraft-сервера."
-                               wrapText="true" styleClass="label-muted"/>
-                    </children>
-                </VBox>
-
-                <Label text="НАВИГАЦИЯ" styleClass="sidebar-section-label"/>
-
-                <VBox spacing="8.0" styleClass="nav-group">
-                    <children>
-                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenHome" spacing="14.0"
-                              styleClass="nav-item">
-                            <children>
-                                <StackPane styleClass="nav-icon-badge">
+                                <VBox spacing="10.0" styleClass="sidebar-brand-card">
                                     <children>
-                                        <SVGPath content="M3 11.5 L12 4 L21 11.5 M5.5 10.5 V20 H10.7 V14.4 H13.3 V20 H18.5 V10.5"
-                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
-                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
-                                                 strokeWidth="2.2"/>
-                                    </children>
-                                </StackPane>
-                                <Label text="Главная" styleClass="nav-text"/>
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenProfile" spacing="14.0"
-                              styleClass="nav-item">
-                            <children>
-                                <StackPane styleClass="nav-icon-badge">
-                                    <children>
-                                        <SVGPath content="M12 12 A4 4 0 1 1 12 4 A4 4 0 1 1 12 12 M5 20 C5.8 16.8 8.2 15 12 15 C15.8 15 18.2 16.8 19 20"
-                                                 fill="TRANSPARENT" scaleX="0.88" scaleY="0.88"
-                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
-                                                 strokeWidth="2.0"/>
-                                    </children>
-                                </StackPane>
-                                <Label text="Профиль" styleClass="nav-text"/>
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenMods" spacing="14.0"
-                              styleClass="nav-item">
-                            <children>
-                                <StackPane styleClass="nav-icon-badge">
-                                    <children>
-                                        <SVGPath content="M12 3 L20 7.5 V16.5 L12 21 L4 16.5 V7.5 Z M4.5 7.7 L12 11.9 L19.5 7.7 M12 12 V20.5"
-                                                 fill="TRANSPARENT" scaleX="0.9" scaleY="0.9"
-                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
-                                                 strokeWidth="2.0"/>
-                                    </children>
-                                </StackPane>
-                                <Label text="Моды" styleClass="nav-text"/>
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenSettings" spacing="14.0"
-                              styleClass="nav-item">
-                            <children>
-                                <StackPane styleClass="nav-icon-badge">
-                                    <children>
-                                        <Label text="⚙" styleClass="nav-glyph"/>
-                                    </children>
-                                </StackPane>
-                                <Label text="Настройки" styleClass="nav-text"/>
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="nav-item, nav-item-active">
-                            <children>
-                                <StackPane styleClass="nav-icon-badge, nav-icon-badge-active">
-                                    <children>
-                                        <SVGPath content="M5 5 Q5 3.5 6.5 3.5 H17.5 Q19 3.5 19 5 V19 Q19 20.5 17.5 20.5 H6.5 Q5 20.5 5 19 Z M8 8 H16 M8 12 H16 M8 16 H12"
-                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
-                                                 stroke="#F4E6FF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
-                                                 strokeWidth="2.0"/>
-                                    </children>
-                                </StackPane>
-                                <Label styleClass="nav-text, nav-text-active" text="Сервер"/>
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
-
-                <VBox spacing="12.0" styleClass="sidebar-footer-card">
-                    <padding>
-                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
-                    </padding>
-                    <children>
-                        <Label text="Live status" styleClass="label-value"/>
-                        <Label text="Manifest preview и server probe читаются вместе, поэтому экран показывает реальный connect route."
-                               wrapText="true" styleClass="label-muted"/>
-                        <HBox spacing="8.0">
-                            <children>
-                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
-                                    <children>
-                                        <Label text="PING" styleClass="sidebar-chip-label"/>
-                                        <Label text="live" styleClass="sidebar-chip-value"/>
+                                        <ImageView fitWidth="188.0" preserveRatio="true">
+                                            <image>
+                                                <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
+                                            </image>
+                                        </ImageView>
+                                        <Label text="СОСТОЯНИЕ СЕРВЕРА" styleClass="screen-kicker"/>
+                                        <Label text="Экран соединяет живой ответ сервера, manifest и итоговый маршрут запуска."
+                                               styleClass="label-muted" wrapText="true"/>
                                     </children>
                                 </VBox>
-                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
+
+                                <Label text="РАЗДЕЛЫ" styleClass="sidebar-section-label"/>
+
+                                <VBox spacing="8.0" styleClass="nav-group">
                                     <children>
-                                        <Label text="ROUTE" styleClass="sidebar-chip-label"/>
-                                        <Label text="resolved" styleClass="sidebar-chip-value"/>
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenHome" spacing="14.0"
+                                              styleClass="nav-item">
+                                            <children>
+                                                <StackPane styleClass="nav-icon-badge">
+                                                    <children>
+                                                        <SVGPath content="M3 11.5 L12 4 L21 11.5 M5.5 10.5 V20 H10.7 V14.4 H13.3 V20 H18.5 V10.5"
+                                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
+                                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                                 strokeWidth="2.2"/>
+                                                    </children>
+                                                </StackPane>
+                                                <Label styleClass="nav-text" text="Главная"/>
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="nav-item, nav-item-active">
+                                            <children>
+                                                <StackPane styleClass="nav-icon-badge, nav-icon-badge-active">
+                                                    <children>
+                                                        <SVGPath content="M5 5 Q5 3.5 6.5 3.5 H17.5 Q19 3.5 19 5 V19 Q19 20.5 17.5 20.5 H6.5 Q5 20.5 5 19 Z M8 8 H16 M8 12 H16 M8 16 H12"
+                                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
+                                                                 stroke="#F4E6FF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                                 strokeWidth="2.0"/>
+                                                    </children>
+                                                </StackPane>
+                                                <Label styleClass="nav-text, nav-text-active" text="Сервер"/>
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenMods" spacing="14.0"
+                                              styleClass="nav-item">
+                                            <children>
+                                                <StackPane styleClass="nav-icon-badge">
+                                                    <children>
+                                                        <SVGPath content="M12 3 L20 7.5 V16.5 L12 21 L4 16.5 V7.5 Z M4.5 7.7 L12 11.9 L19.5 7.7 M12 12 V20.5"
+                                                                 fill="TRANSPARENT" scaleX="0.9" scaleY="0.9"
+                                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                                 strokeWidth="2.0"/>
+                                                    </children>
+                                                </StackPane>
+                                                <Label styleClass="nav-text" text="Моды"/>
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenSettings" spacing="14.0"
+                                              styleClass="nav-item">
+                                            <children>
+                                                <StackPane styleClass="nav-icon-badge">
+                                                    <children>
+                                                        <Label styleClass="nav-glyph" text="⚙"/>
+                                                    </children>
+                                                </StackPane>
+                                                <Label styleClass="nav-text" text="Настройки"/>
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenProfile" spacing="14.0"
+                                              styleClass="nav-item">
+                                            <children>
+                                                <StackPane styleClass="nav-icon-badge">
+                                                    <children>
+                                                        <SVGPath content="M12 12 A4 4 0 1 1 12 4 A4 4 0 1 1 12 12 M5 20 C5.8 16.8 8.2 15 12 15 C15.8 15 18.2 16.8 19 20"
+                                                                 fill="TRANSPARENT" scaleX="0.88" scaleY="0.88"
+                                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                                 strokeWidth="2.0"/>
+                                                    </children>
+                                                </StackPane>
+                                                <Label styleClass="nav-text" text="Профиль"/>
+                                            </children>
+                                        </HBox>
                                     </children>
                                 </VBox>
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
+
+                                <VBox spacing="12.0" styleClass="sidebar-footer-card">
+                                    <padding>
+                                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+                                    </padding>
+                                    <children>
+                                        <Label text="Что видно на экране" styleClass="label-value"/>
+                                        <Label text="Локальный маршрут, итоговый адрес после manifest и живой статус Minecraft-сервера."
+                                               styleClass="label-muted" wrapText="true"/>
+                                        <HBox spacing="8.0">
+                                            <children>
+                                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="PING" styleClass="sidebar-chip-label"/>
+                                                        <Label text="живой" styleClass="sidebar-chip-value"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="ROUTE" styleClass="sidebar-chip-label"/>
+                                                        <Label text="итоговый" styleClass="sidebar-chip-value"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
                             </children>
                         </VBox>
                     </content>
@@ -151,170 +151,173 @@
     <center>
         <StackPane>
             <children>
-                <ImageView fitWidth="1080.0" fitHeight="820.0" preserveRatio="false" opacity="0.42">
+                <ImageView fitHeight="820.0" fitWidth="1080.0" opacity="0.42" preserveRatio="false">
                     <image>
                         <Image url="@obsidiangate/images/backgrounds/hero_portal_background.png"/>
                     </image>
                 </ImageView>
-                <Pane styleClass="profile-overlay"/>
+                <Pane styleClass="page-overlay"/>
 
                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="settings-scroll">
                     <content>
                         <VBox spacing="18.0" styleClass="settings-scroll-content">
                             <padding>
-                                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
                             </padding>
                             <children>
-                        <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag"
-                              spacing="16.0">
-                            <children>
-                                <VBox spacing="4.0">
+                                <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag"
+                                      spacing="16.0" styleClass="page-toolbar">
                                     <children>
-                                        <Label text="NETWORK + MANIFEST" styleClass="screen-kicker"/>
-                                        <Label text="Сервер и manifest" styleClass="auth-title"/>
-                                        <Label text="Живой экран маршрута подключения, версий клиента и ответа сервера."
-                                               styleClass="label-muted" wrapText="true"/>
+                                        <VBox spacing="4.0">
+                                            <children>
+                                                <Label text="СЕРВЕР И MANIFEST" styleClass="screen-kicker"/>
+                                                <Label text="Сервер и подключение" styleClass="auth-title"/>
+                                                <Label text="Верхний блок показывает текущее состояние сервера, а карточки ниже объясняют, откуда взялся итоговый маршрут."
+                                                       styleClass="label-muted" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Button fx:id="minimizeWindowButton" mnemonicParsing="false"
+                                                onAction="#minimizeWindow" styleClass="window-control"/>
+                                        <Button fx:id="closeWindowButton" mnemonicParsing="false"
+                                                onAction="#closeWindow" styleClass="window-control, window-control-close"/>
                                     </children>
-                                </VBox>
-                                <Region HBox.hgrow="ALWAYS"/>
-                                <Button fx:id="minimizeWindowButton" mnemonicParsing="false"
-                                        onAction="#minimizeWindow" styleClass="window-control"/>
-                                <Button fx:id="closeWindowButton" mnemonicParsing="false"
-                                        onAction="#closeWindow" styleClass="window-control, window-control-close"/>
-                            </children>
-                        </HBox>
+                                </HBox>
 
-                        <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="profile-hero-card">
-                            <children>
-                                <VBox spacing="12.0" HBox.hgrow="ALWAYS">
+                                <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="profile-hero-card">
                                     <children>
-                                        <Label text="Сводка подключения" styleClass="profile-main-name"/>
-                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                        <VBox spacing="14.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Region fx:id="serverPresenceIndicator"
-                                                        styleClass="server-presence-indicator, server-presence-checking"/>
-                                                <Label fx:id="serverPresenceValueLabel" text="Проверка"
-                                                       styleClass="metric-value"/>
+                                                <Label text="Текущий статус сервера" styleClass="profile-main-name"/>
+                                                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                    <children>
+                                                        <Region fx:id="serverPresenceIndicator"
+                                                                styleClass="server-presence-indicator, server-presence-checking"/>
+                                                        <Label fx:id="serverPresenceValueLabel" styleClass="metric-value" text="Проверка"/>
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="statusLabel" styleClass="label-body" wrapText="true"/>
+                                                <FlowPane hgap="10.0" prefWrapLength="640.0" vgap="10.0">
+                                                    <children>
+                                                        <VBox spacing="4.0" styleClass="info-chip, info-chip-strong">
+                                                            <children>
+                                                                <Label text="Итоговый маршрут" styleClass="info-chip-label"/>
+                                                                <Label fx:id="resolvedRouteValueLabel" styleClass="info-chip-value" wrapText="true"/>
+                                                            </children>
+                                                        </VBox>
+                                                        <VBox spacing="4.0" styleClass="info-chip">
+                                                            <children>
+                                                                <Label text="Версия modpack" styleClass="info-chip-label"/>
+                                                                <Label fx:id="manifestVersionValueLabel" styleClass="info-chip-value" wrapText="true"/>
+                                                            </children>
+                                                        </VBox>
+                                                        <VBox spacing="4.0" styleClass="info-chip">
+                                                            <children>
+                                                                <Label text="Идентификатор сервера" styleClass="info-chip-label"/>
+                                                                <Label fx:id="serverIdValueLabel" styleClass="info-chip-value" wrapText="true"/>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </FlowPane>
                                             </children>
-                                        </HBox>
-                                        <Label fx:id="statusLabel" styleClass="label-body" wrapText="true"/>
+                                        </VBox>
+                                        <VBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="action-stack">
+                                            <children>
+                                                <Button minWidth="220.0" mnemonicParsing="false" onAction="#onRefreshStatus"
+                                                        styleClass="primary-button" text="Обновить состояние"/>
+                                                <Label text="Повторно читает manifest и отправляет новый запрос к серверу."
+                                                       styleClass="label-muted" wrapText="true"/>
+                                            </children>
+                                        </VBox>
                                     </children>
-                                </VBox>
-                                <VBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="action-stack">
-                                    <children>
-                                        <Button minWidth="200.0" mnemonicParsing="false" onAction="#onRefreshStatus"
-                                                styleClass="primary-button" text="Обновить status"/>
-                                        <Label text="Повторно читает manifest и делает свежий status probe."
-                                               styleClass="label-muted"/>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </HBox>
+                                </HBox>
 
-                        <FlowPane hgap="18.0" vgap="18.0" prefWrapLength="980.0">
-                            <children>
-                                <VBox prefWidth="180.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
+                                <FlowPane hgap="18.0" prefWrapLength="980.0" vgap="18.0">
                                     <children>
-                                        <Label text="PLAYERS" styleClass="label-muted"/>
-                                        <Label fx:id="playersValueLabel" styleClass="metric-value"/>
+                                        <VBox prefWidth="160.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
+                                            <children>
+                                                <Label text="ИГРОКИ" styleClass="label-muted"/>
+                                                <Label fx:id="playersValueLabel" styleClass="metric-value"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox prefWidth="160.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
+                                            <children>
+                                                <Label text="PING" styleClass="label-muted"/>
+                                                <Label fx:id="pingValueLabel" styleClass="metric-value"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox prefWidth="290.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
+                                            <children>
+                                                <Label text="ВЕРСИЯ ИГРЫ" styleClass="label-muted"/>
+                                                <Label fx:id="minecraftVersionValueLabel" styleClass="metric-value-small" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="6.0" styleClass="metric-card, metric-card-compact" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label text="ЛОКАЛЬНЫЙ МАРШРУТ" styleClass="label-muted"/>
+                                                <Label fx:id="localRouteValueLabel" styleClass="metric-value-small" wrapText="true"/>
+                                            </children>
+                                        </VBox>
                                     </children>
-                                </VBox>
-                                <VBox prefWidth="180.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
-                                    <children>
-                                        <Label text="PING" styleClass="label-muted"/>
-                                        <Label fx:id="pingValueLabel" styleClass="metric-value"/>
-                                    </children>
-                                </VBox>
-                                <VBox prefWidth="280.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
-                                    <children>
-                                        <Label text="MINECRAFT / FORGE" styleClass="label-muted"/>
-                                        <Label fx:id="minecraftVersionValueLabel" styleClass="metric-value-small" wrapText="true"/>
-                                    </children>
-                                </VBox>
-                                <VBox prefWidth="220.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
-                                    <children>
-                                        <Label text="MODPACK VERSION" styleClass="label-muted"/>
-                                        <Label fx:id="manifestVersionValueLabel" styleClass="metric-value-small" wrapText="true"/>
-                                    </children>
-                                </VBox>
-                                <VBox spacing="6.0" styleClass="metric-card, metric-card-compact" HBox.hgrow="ALWAYS">
-                                    <children>
-                                        <Label text="OVERRIDES" styleClass="label-muted"/>
-                                        <Label fx:id="overrideSummaryLabel" styleClass="metric-value-small" wrapText="true"/>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </FlowPane>
+                                </FlowPane>
 
-                        <FlowPane hgap="20.0" vgap="20.0" prefWrapLength="980.0" VBox.vgrow="ALWAYS">
-                            <children>
-                                <VBox prefWidth="320.0" spacing="16.0" styleClass="profile-card">
+                                <FlowPane hgap="20.0" prefWrapLength="980.0" vgap="20.0" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <Label text="Маршрут" styleClass="label-value"/>
-                                        <Label text="Сначала применяется локальный config, затем возможные overrides из manifest."
-                                               wrapText="true" styleClass="label-muted"/>
-                                        <VBox spacing="8.0" styleClass="settings-field-stack">
+                                        <VBox prefWidth="300.0" spacing="16.0" styleClass="profile-card">
                                             <children>
-                                                <Label text="Local Route" styleClass="field-label"/>
-                                                <Label fx:id="localRouteValueLabel" styleClass="label-body" wrapText="true"/>
+                                                <Label text="Manifest и загрузки" styleClass="label-value"/>
+                                                <Label text="Показывает, откуда читается manifest и где launcher ищет файлы для загрузки."
+                                                       styleClass="label-body" wrapText="true"/>
+                                                <VBox spacing="8.0" styleClass="detail-pair">
+                                                    <children>
+                                                        <Label text="Адрес manifest" styleClass="field-label"/>
+                                                        <Label fx:id="manifestUrlValueLabel" styleClass="label-body" wrapText="true"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="8.0" styleClass="detail-pair">
+                                                    <children>
+                                                        <Label text="База загрузок" styleClass="field-label"/>
+                                                        <Label fx:id="downloadBaseValueLabel" styleClass="label-body" wrapText="true"/>
+                                                    </children>
+                                                </VBox>
                                             </children>
                                         </VBox>
-                                        <VBox spacing="8.0" styleClass="settings-field-stack">
-                                            <children>
-                                                <Label text="Resolved Route" styleClass="field-label"/>
-                                                <Label fx:id="resolvedRouteValueLabel" styleClass="label-body" wrapText="true"/>
-                                            </children>
-                                        </VBox>
-                                        <VBox spacing="8.0" styleClass="settings-field-stack">
-                                            <children>
-                                                <Label text="Server ID" styleClass="field-label"/>
-                                                <Label fx:id="serverIdValueLabel" styleClass="label-body" wrapText="true"/>
-                                            </children>
-                                        </VBox>
-                                    </children>
-                                </VBox>
 
-                                <VBox prefWidth="320.0" spacing="16.0" styleClass="profile-card">
-                                    <children>
-                                        <Label text="Manifest" styleClass="label-value"/>
-                                        <Label text="Отсюда видно, какой endpoint используется для чтения modpack-файлов и откуда строится download base."
-                                               wrapText="true" styleClass="label-muted"/>
-                                        <VBox spacing="8.0" styleClass="settings-field-stack">
+                                        <VBox prefWidth="300.0" spacing="16.0" styleClass="profile-card">
                                             <children>
-                                                <Label text="Manifest URL" styleClass="field-label"/>
-                                                <Label fx:id="manifestUrlValueLabel" styleClass="label-body" wrapText="true"/>
+                                                <Label text="Подключение" styleClass="label-value"/>
+                                                <Label text="Сравнение локального маршрута и итоговой конфигурации после применения manifest."
+                                                       styleClass="label-body" wrapText="true"/>
+                                                <VBox spacing="8.0" styleClass="detail-pair">
+                                                    <children>
+                                                        <Label text="Изменения от manifest" styleClass="field-label"/>
+                                                        <Label fx:id="overrideSummaryLabel" styleClass="label-body" wrapText="true"/>
+                                                    </children>
+                                                </VBox>
                                             </children>
                                         </VBox>
-                                        <VBox spacing="8.0" styleClass="settings-field-stack">
-                                            <children>
-                                                <Label text="Resolved Download Base" styleClass="field-label"/>
-                                                <Label fx:id="downloadBaseValueLabel" styleClass="label-body" wrapText="true"/>
-                                            </children>
-                                        </VBox>
-                                    </children>
-                                </VBox>
 
-                                <VBox prefWidth="320.0" spacing="16.0" styleClass="profile-card">
-                                    <children>
-                                        <Label text="Backend и launch" styleClass="label-value"/>
-                                        <Label text="Auth API и working directory напрямую влияют на ticket flow и итоговый старт игры."
-                                               wrapText="true" styleClass="label-muted"/>
-                                        <VBox spacing="8.0" styleClass="settings-field-stack">
+                                        <VBox prefWidth="300.0" spacing="16.0" styleClass="profile-card">
                                             <children>
-                                                <Label text="Auth Base URL" styleClass="field-label"/>
-                                                <Label fx:id="authBaseValueLabel" styleClass="label-body" wrapText="true"/>
-                                            </children>
-                                        </VBox>
-                                        <VBox spacing="8.0" styleClass="settings-field-stack">
-                                            <children>
-                                                <Label text="Working Directory" styleClass="field-label"/>
-                                                <Label fx:id="workingDirectoryValueLabel" styleClass="label-body" wrapText="true"/>
+                                                <Label text="Auth и рабочая среда" styleClass="label-value"/>
+                                                <Label text="Эти параметры участвуют в получении ticket и в финальном запуске клиента."
+                                                       styleClass="label-body" wrapText="true"/>
+                                                <VBox spacing="8.0" styleClass="detail-pair">
+                                                    <children>
+                                                        <Label text="Auth Base URL" styleClass="field-label"/>
+                                                        <Label fx:id="authBaseValueLabel" styleClass="label-body" wrapText="true"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="8.0" styleClass="detail-pair">
+                                                    <children>
+                                                        <Label text="Рабочая папка" styleClass="field-label"/>
+                                                        <Label fx:id="workingDirectoryValueLabel" styleClass="label-body" wrapText="true"/>
+                                                    </children>
+                                                </VBox>
                                             </children>
                                         </VBox>
                                     </children>
-                                </VBox>
-                            </children>
-                        </FlowPane>
+                                </FlowPane>
                             </children>
                         </VBox>
                     </content>

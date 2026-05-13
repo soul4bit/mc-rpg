@@ -28,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Arc;
 import ru.mcrpg.launcher.ui.SvgIcons;
 
 public final class LauncherShellController extends AbstractScreenController {
@@ -90,6 +91,15 @@ public final class LauncherShellController extends AbstractScreenController {
     private Label manifestVersionValueLabel;
 
     @FXML
+    private Label footerOnlinePlayersValueLabel;
+
+    @FXML
+    private Label footerMinecraftVersionValueLabel;
+
+    @FXML
+    private Label footerManifestVersionValueLabel;
+
+    @FXML
     private Button syncButton;
 
     @FXML
@@ -111,6 +121,9 @@ public final class LauncherShellController extends AbstractScreenController {
     private ProgressBar syncProgressBar;
 
     @FXML
+    private Arc syncProgressArc;
+
+    @FXML
     private Label syncPercentLabel;
 
     @FXML
@@ -126,7 +139,7 @@ public final class LauncherShellController extends AbstractScreenController {
     private VBox previewChangesBox;
 
     @FXML
-    private VBox launcherUpdateCard;
+    private HBox launcherUpdateCard;
 
     @FXML
     private Label launcherUpdateTitleLabel;
@@ -156,9 +169,8 @@ public final class LauncherShellController extends AbstractScreenController {
         syncFileLabel.setText("Лаунчер готов к работе.");
         syncBytesLabel.setText("Файловая активность пока отсутствует.");
         resetPreviewState();
-        onlinePlayersValueLabel.setText(DASHBOARD_UNKNOWN);
-        minecraftVersionValueLabel.setText(DASHBOARD_UNKNOWN);
-        manifestVersionValueLabel.setText(DASHBOARD_UNKNOWN);
+        updateOnlinePlayersValue(DASHBOARD_UNKNOWN);
+        updateVersionValues(DASHBOARD_UNKNOWN, DASHBOARD_UNKNOWN);
         sidebarStatusTitleLabel.setText("Проверка сервера");
         sidebarStatusCopyLabel.setText("Проверяем маршрут, manifest и состояние сервера.");
     }
@@ -367,9 +379,9 @@ public final class LauncherShellController extends AbstractScreenController {
             setBusy(false);
             Throwable exception = task.getException();
             updateProgressState(false, "Обновление лаунчера не удалось", "ОШИБКА", 0.0d);
-            syncFileLabel.setText("Проверьте manifest launcherUpdate и доступность файла лаунчера.");
+            syncFileLabel.setText(resolveLauncherUpdateFailureSummary(exception));
             launcherUpdateButton.setDisable(false);
-            showLauncherError(exception == null ? "Launcher update failed." : exception.getMessage());
+            showLauncherError(resolveLauncherUpdateFailureMessage(exception, update));
         });
 
         Thread thread = new Thread(task, "launcher-self-update");
@@ -503,8 +515,10 @@ public final class LauncherShellController extends AbstractScreenController {
         applyPreviewFromSyncResult(syncResult);
         serverRouteValueLabel.setText(formatRoute(resolvedConfig));
         downloadBaseValueLabel.setText(resolveDisplayDownloadBase(resolvedConfig.getManifestUrl(), syncResult.getManifest()));
-        manifestVersionValueLabel.setText(resolveManifestVersion(syncResult.getManifest()));
-        minecraftVersionValueLabel.setText(resolveMinecraftVersion(syncResult.getManifest()));
+        updateVersionValues(
+            resolveMinecraftVersion(syncResult.getManifest()),
+            resolveManifestVersion(syncResult.getManifest())
+        );
         refreshServerPresenceAsync(
             valueOrFallback(resolvedConfig.getServerHost(), LauncherConfig.DEFAULT_SERVER_HOST),
             resolvedConfig.getServerPort(),
@@ -687,8 +701,7 @@ public final class LauncherShellController extends AbstractScreenController {
                 }
                 serverRouteValueLabel.setText(resolvedRoute);
                 downloadBaseValueLabel.setText(resolvedDownloadBase);
-                manifestVersionValueLabel.setText(resolvedManifestVersion);
-                minecraftVersionValueLabel.setText(resolvedMinecraftVersion);
+                updateVersionValues(resolvedMinecraftVersion, resolvedManifestVersion);
                 applyLauncherUpdateState(resolvedLauncherUpdate);
                 refreshServerPresenceAsync(resolvedHost, resolvedPort, resolvedRoute);
             });
@@ -756,7 +769,7 @@ public final class LauncherShellController extends AbstractScreenController {
 
     private void refreshServerPresenceAsync(String host, int port, String route) {
         updateServerPresence("ПРОВЕРКА", "checking");
-        onlinePlayersValueLabel.setText(DASHBOARD_UNKNOWN);
+        updateOnlinePlayersValue(DASHBOARD_UNKNOWN);
         sidebarStatusTitleLabel.setText("Проверка сервера");
         sidebarStatusCopyLabel.setText("Обновляем пинг и список игроков.");
         long requestId = serverPresenceSequence.incrementAndGet();
@@ -776,7 +789,7 @@ public final class LauncherShellController extends AbstractScreenController {
 
                 if (resolvedStatus != null) {
                     updateServerPresence("Онлайн", "online");
-                    onlinePlayersValueLabel.setText(formatPlayers(resolvedStatus));
+                    updateOnlinePlayersValue(formatPlayers(resolvedStatus));
                     sidebarStatusTitleLabel.setText("Сервер отвечает • " + resolvedStatus.getPingMs() + " мс");
                     sidebarStatusCopyLabel.setText(
                         "Онлайн " + formatPlayers(resolvedStatus) + ", версия " + resolveServerVersion(resolvedStatus) + "."
@@ -785,7 +798,7 @@ public final class LauncherShellController extends AbstractScreenController {
                 }
 
                 updateServerPresence("Оффлайн", "offline");
-                onlinePlayersValueLabel.setText(DASHBOARD_UNKNOWN);
+                updateOnlinePlayersValue(DASHBOARD_UNKNOWN);
                 sidebarStatusTitleLabel.setText("Сервер недоступен");
                 sidebarStatusCopyLabel.setText("Маршрут " + route + " не отвечает. Проверьте сервер или сеть.");
                 appendLog("No response from " + route + ".");
@@ -797,9 +810,11 @@ public final class LauncherShellController extends AbstractScreenController {
     }
 
     private void applyDashboardLoadingState(boolean hasManifestUrl) {
-        manifestVersionValueLabel.setText(hasManifestUrl ? "проверка..." : "не указан");
-        minecraftVersionValueLabel.setText(hasManifestUrl ? "проверка..." : "не указан");
-        onlinePlayersValueLabel.setText(DASHBOARD_UNKNOWN);
+        updateVersionValues(
+            hasManifestUrl ? "проверка..." : "не указан",
+            hasManifestUrl ? "проверка..." : "не указан"
+        );
+        updateOnlinePlayersValue(DASHBOARD_UNKNOWN);
         sidebarStatusTitleLabel.setText("Проверка сервера");
         sidebarStatusCopyLabel.setText(
             hasManifestUrl
@@ -896,10 +911,43 @@ public final class LauncherShellController extends AbstractScreenController {
 
     private void updateProgressState(boolean busy, String statusText, String percentText, double progress) {
         syncProgressBar.setProgress(progress);
+        updateSyncProgressRing(progress);
         syncStatusLabel.setText(statusText);
         syncPercentLabel.setText(percentText);
         if (busy) {
             syncBytesLabel.setText("Лаунчер выполняет операцию...");
+        }
+    }
+
+    private void updateSyncProgressRing(double progress) {
+        if (syncProgressArc == null) {
+            return;
+        }
+
+        if (progress < 0.0d) {
+            syncProgressArc.setLength(-96.0d);
+            return;
+        }
+
+        double clampedProgress = Math.max(0.0d, Math.min(1.0d, progress));
+        syncProgressArc.setLength(-360.0d * clampedProgress);
+    }
+
+    private void updateOnlinePlayersValue(String value) {
+        onlinePlayersValueLabel.setText(value);
+        if (footerOnlinePlayersValueLabel != null) {
+            footerOnlinePlayersValueLabel.setText(value);
+        }
+    }
+
+    private void updateVersionValues(String minecraftVersion, String manifestVersion) {
+        minecraftVersionValueLabel.setText(minecraftVersion);
+        manifestVersionValueLabel.setText(manifestVersion);
+        if (footerMinecraftVersionValueLabel != null) {
+            footerMinecraftVersionValueLabel.setText(minecraftVersion);
+        }
+        if (footerManifestVersionValueLabel != null) {
+            footerManifestVersionValueLabel.setText(manifestVersion);
         }
     }
 
@@ -925,6 +973,46 @@ public final class LauncherShellController extends AbstractScreenController {
     private void showLauncherError(String message) {
         appendLog("Error: " + message);
         showError(message);
+    }
+
+    private String resolveLauncherUpdateFailureSummary(Throwable exception) {
+        String message = exception == null ? "" : valueOrFallback(exception.getMessage(), "");
+        String normalized = message.toLowerCase(Locale.ROOT);
+        if (normalized.contains("http 404")) {
+            return "Файл обновления не найден на сервере.";
+        }
+        if (normalized.contains("timed out")) {
+            return "Сервер обновлений не ответил вовремя.";
+        }
+        if (normalized.contains("connection refused")) {
+            return "Сервер обновлений отклонил соединение.";
+        }
+        return "Проверьте manifest launcherUpdate и доступность файла лаунчера.";
+    }
+
+    private String resolveLauncherUpdateFailureMessage(Throwable exception, LauncherUpdateCandidate update) {
+        if (exception == null) {
+            return "Не удалось обновить лаунчер.";
+        }
+
+        String message = valueOrFallback(exception.getMessage(), "Неизвестная ошибка.");
+        String normalized = message.toLowerCase(Locale.ROOT);
+        String downloadUrl = update == null || update.getDownloadUrl() == null
+            ? "не указан"
+            : update.getDownloadUrl().toString();
+
+        if (normalized.contains("http 404")) {
+            return "Файл обновления не найден на сервере: " + downloadUrl
+                + ". Опубликуйте jar в каталоге /launcher/ или проверьте launcherUpdate.url в manifest.";
+        }
+        if (normalized.contains("timed out")) {
+            return "Сервер обновлений не ответил вовремя: " + downloadUrl + ". Проверьте доступность хоста и сети.";
+        }
+        if (normalized.contains("connection refused")) {
+            return "Сервер обновлений отклонил соединение: " + downloadUrl + ". Проверьте, что веб-сервер запущен.";
+        }
+
+        return "Не удалось обновить лаунчер: " + message;
     }
 
     private boolean handleExpiredSession(Throwable exception) {

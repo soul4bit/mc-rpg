@@ -134,7 +134,7 @@ public final class ServerController extends AbstractScreenController {
         String manifestVersion = "нет данных";
         String minecraftVersion = "нет данных";
         String downloadBase = deriveManifestDirectory(manifestUrl);
-        String manifestSummary = "Manifest overrides не обнаружены.";
+        String manifestSummary = "Изменений от manifest не найдено.";
         String statusText = "Проверка manifest и статуса Minecraft сервера.";
 
         try {
@@ -263,15 +263,15 @@ public final class ServerController extends AbstractScreenController {
 
     private static String buildOverrideSummary(LauncherConfig localConfig, LauncherConfig resolvedConfig) {
         StringBuilder summary = new StringBuilder();
-        appendOverride(summary, "route", formatRoute(localConfig), formatRoute(resolvedConfig));
+        appendOverride(summary, "маршрут", formatRoute(localConfig), formatRoute(resolvedConfig));
         appendOverride(summary, "auth", localConfig.getAuthBaseUrl(), resolvedConfig.getAuthBaseUrl());
-        appendOverride(summary, "serverId", localConfig.getServerId(), resolvedConfig.getServerId());
-        appendOverride(summary, "workingDir", localConfig.getWorkingDirectory(), resolvedConfig.getWorkingDirectory());
+        appendOverride(summary, "server id", localConfig.getServerId(), resolvedConfig.getServerId());
+        appendOverride(summary, "рабочая папка", localConfig.getWorkingDirectory(), resolvedConfig.getWorkingDirectory());
 
         if (summary.length() == 0) {
-            return "Manifest overrides не изменили локальный конфиг.";
+            return "Manifest не изменил локальные параметры.";
         }
-        return "Manifest overrides: " + summary;
+        return "Изменения от manifest: " + summary;
     }
 
     private static void appendOverride(StringBuilder summary, String name, String before, String after) {
@@ -359,7 +359,7 @@ public final class ServerController extends AbstractScreenController {
 
     private static String deriveManifestDirectory(String manifestUrl) {
         if (!hasText(manifestUrl)) {
-            return "Manifest URL is not configured.";
+            return "Адрес manifest не настроен.";
         }
         String resolved = manifestUrl.trim();
         int separator = resolved.lastIndexOf('/');

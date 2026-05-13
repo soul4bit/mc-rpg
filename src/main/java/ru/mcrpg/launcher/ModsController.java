@@ -103,7 +103,7 @@ public final class ModsController extends AbstractScreenController {
         task.setOnFailed(event -> {
             Throwable error = task.getException();
             statusLabel.setText(error == null ? "Не удалось загрузить manifest." : error.getMessage());
-            runtimePackagesBox.getChildren().setAll(createEmptyState("Runtime packages пока недоступны."));
+            runtimePackagesBox.getChildren().setAll(createEmptyState("Runtime-пакеты пока недоступны."));
             manifestFilesBox.getChildren().setAll(createEmptyState("Список files[] пока недоступен."));
         });
 
@@ -156,8 +156,8 @@ public final class ModsController extends AbstractScreenController {
         manifestUrlValueLabel.setText(snapshot.loadedManifest.getSourceUrl().toString());
         downloadBaseValueLabel.setText(resolveDisplayDownloadBase(snapshot.loadedManifest));
         statusLabel.setText(
-            "Manifest " + normalizeText(manifest.getVersion()) + ": " + snapshot.files.size()
-                + " files, " + snapshot.runtimePackages.size() + " runtime packages."
+            "Версия " + normalizeText(manifest.getVersion()) + ": " + snapshot.files.size()
+                + " файлов, " + snapshot.runtimePackages.size() + " runtime-пакетов."
         );
 
         renderRuntimePackages(snapshot.runtimePackages);
@@ -167,7 +167,7 @@ public final class ModsController extends AbstractScreenController {
     private void renderRuntimePackages(List<RuntimePackage> runtimePackages) {
         runtimePackagesBox.getChildren().clear();
         if (runtimePackages == null || runtimePackages.isEmpty()) {
-            runtimePackagesBox.getChildren().add(createEmptyState("Runtime packages в manifest не объявлены."));
+            runtimePackagesBox.getChildren().add(createEmptyState("Runtime-пакеты в manifest не объявлены."));
             return;
         }
 
@@ -200,10 +200,10 @@ public final class ModsController extends AbstractScreenController {
 
         VBox details = new VBox(6.0);
         details.getChildren().add(createDetailRow("URL", normalizeText(runtimePackage.getUrl())));
-        details.getChildren().add(createDetailRow("Extract Dir", normalizeText(runtimePackage.getExtractDir())));
-        details.getChildren().add(createDetailRow("Java Path", normalizeText(runtimePackage.getJavaPath())));
-        details.getChildren().add(createDetailRow("SHA256", normalizeHash(runtimePackage.getSha256())));
-        details.getChildren().add(createDetailRow("Size", formatBytes(runtimePackage.getSize() == null ? 0L : runtimePackage.getSize().longValue())));
+        details.getChildren().add(createDetailRow("Папка распаковки", normalizeText(runtimePackage.getExtractDir())));
+        details.getChildren().add(createDetailRow("Путь к Java", normalizeText(runtimePackage.getJavaPath())));
+        details.getChildren().add(createDetailRow("SHA-256", normalizeHash(runtimePackage.getSha256())));
+        details.getChildren().add(createDetailRow("Размер", formatBytes(runtimePackage.getSize() == null ? 0L : runtimePackage.getSize().longValue())));
 
         card.getChildren().addAll(titleRow, details);
         return card;
@@ -220,15 +220,15 @@ public final class ModsController extends AbstractScreenController {
         titleRow.getChildren().addAll(title, createBadge(resolveFileCategory(file)));
 
         HBox metricsRow = new HBox(14.0);
-        metricsRow.getChildren().add(createMetricChip("size", formatBytes(file.getSize() == null ? 0L : file.getSize().longValue())));
+        metricsRow.getChildren().add(createMetricChip("размер", formatBytes(file.getSize() == null ? 0L : file.getSize().longValue())));
         metricsRow.getChildren().add(createMetricChip("sha", normalizeHash(file.getSha256())));
-        metricsRow.getChildren().add(createMetricChip("exec", file.isExecutable() ? "yes" : "no"));
+        metricsRow.getChildren().add(createMetricChip("запуск", file.isExecutable() ? "да" : "нет"));
 
         VBox details = new VBox(6.0);
         if (hasText(file.getUrl())) {
-            details.getChildren().add(createDetailRow("File URL", file.getUrl().trim()));
+            details.getChildren().add(createDetailRow("URL файла", file.getUrl().trim()));
         }
-        details.getChildren().add(createDetailRow("Artifact", extractLeafName(file.getPath())));
+        details.getChildren().add(createDetailRow("Имя файла", extractLeafName(file.getPath())));
 
         card.getChildren().addAll(titleRow, metricsRow, details);
         return card;
@@ -289,7 +289,7 @@ public final class ModsController extends AbstractScreenController {
         manifestUrlValueLabel.setText("...");
         downloadBaseValueLabel.setText("...");
         statusLabel.setText("Загружаем manifest и строим список modpack файлов...");
-        runtimePackagesBox.getChildren().setAll(createEmptyState("Проверяем runtime packages..."));
+        runtimePackagesBox.getChildren().setAll(createEmptyState("Проверяем runtime-пакеты..."));
         manifestFilesBox.getChildren().setAll(createEmptyState("Проверяем manifest.files[]..."));
     }
 
@@ -307,15 +307,15 @@ public final class ModsController extends AbstractScreenController {
     private static String resolveFileCategory(ModpackFile file) {
         String path = file == null ? "" : normalizeText(file.getPath()).toLowerCase(java.util.Locale.ROOT);
         if (path.startsWith("mods/")) {
-            return "mod";
+            return "мод";
         }
         if (path.startsWith("config/")) {
-            return "config";
+            return "конфиг";
         }
         if (path.startsWith("runtime/")) {
             return "runtime";
         }
-        return "file";
+        return "файл";
     }
 
     private static boolean startsWithDirectory(String path, String prefix) {
@@ -348,7 +348,7 @@ public final class ModsController extends AbstractScreenController {
 
     private static String deriveManifestDirectory(String manifestUrl) {
         if (!hasText(manifestUrl)) {
-            return "Manifest URL is not configured.";
+            return "Адрес manifest не настроен.";
         }
         String resolved = manifestUrl.trim();
         int separator = resolved.lastIndexOf('/');

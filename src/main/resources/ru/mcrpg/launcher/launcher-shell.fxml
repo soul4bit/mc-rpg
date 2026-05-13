@@ -9,499 +9,399 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.SVGPath?>
 
 <StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="ru.mcrpg.launcher.LauncherShellController" styleClass="shell-root">
     <children>
-        <StackPane maxWidth="Infinity" maxHeight="Infinity" styleClass="window-shell">
-            <children>
-                <BorderPane prefWidth="1360.0" prefHeight="820.0" styleClass="shell-frame">
-                    <left>
-                        <StackPane prefWidth="264.0" styleClass="sidebar">
-                            <children>
-                                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
-                                            styleClass="sidebar-scroll">
-                                    <content>
-                                        <VBox spacing="18.0" styleClass="sidebar-content">
-                                            <padding>
-                                                <Insets bottom="18.0" left="16.0" right="16.0" top="18.0"/>
-                                            </padding>
-                                            <children>
-                                <VBox spacing="10.0" styleClass="sidebar-brand-card-shell">
-                                    <children>
-                                        <ImageView fitWidth="188.0" preserveRatio="true">
-                                            <image>
-                                                <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
-                                            </image>
-                                        </ImageView>
-                                        <Label text="CONTROL HUB" styleClass="sidebar-section-label"/>
-                                        <Label text="Главный маршрут запуска, live status и preview sync собраны в одном месте."
-                                               styleClass="sidebar-brand-copy" wrapText="true"/>
-                                    </children>
-                                </VBox>
+        <Region maxHeight="Infinity" maxWidth="Infinity" styleClass="scene-backdrop"/>
 
-                                <Label text="SECTIONS" styleClass="sidebar-section-label"/>
+        <StackPane maxHeight="Infinity" maxWidth="Infinity" styleClass="window-shell">
+            <children>
+                <BorderPane prefHeight="780.0" prefWidth="1180.0" styleClass="shell-frame">
+                    <left>
+                        <VBox prefWidth="196.0" spacing="18.0" styleClass="sidebar">
+                            <padding>
+                                <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+                            </padding>
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="brand-row">
+                                    <children>
+                                        <StackPane styleClass="brand-mark">
+                                            <children>
+                                                <SVGPath content="M12 2 L18.5 4.5 V10.7 C18.5 15.4 15.7 19.5 12 22 C8.3 19.5 5.5 15.4 5.5 10.7 V4.5 Z"
+                                                         fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
+                                                         stroke="#E9D7B7" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                         strokeWidth="1.8"/>
+                                            </children>
+                                        </StackPane>
+                                        <VBox spacing="2.0">
+                                            <children>
+                                                <Label styleClass="brand-name" text="OBSIDIANGATE"/>
+                                                <Label styleClass="brand-meta" text="launcher"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
                                 <VBox spacing="8.0" styleClass="nav-group">
                                     <children>
-                                        <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="nav-item, nav-item-active">
+                                        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="nav-item, nav-item-active">
                                             <children>
                                                 <StackPane styleClass="nav-icon-badge, nav-icon-badge-active">
                                                     <children>
                                                         <SVGPath content="M3 11.5 L12 4 L21 11.5 M5.5 10.5 V20 H10.7 V14.4 H13.3 V20 H18.5 V10.5"
-                                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
-                                                                 stroke="#F4E6FF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
-                                                                 strokeWidth="2.2"/>
-                                                    </children>
-                                                </StackPane>
-                                                <Label text="Главная" styleClass="nav-text, nav-text-active"/>
-                                            </children>
-                                        </HBox>
-                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openServerScreen" spacing="14.0"
-                                              styleClass="nav-item">
-                                            <children>
-                                                <StackPane styleClass="nav-icon-badge">
-                                                    <children>
-                                                        <SVGPath content="M5 5 Q5 3.5 6.5 3.5 H17.5 Q19 3.5 19 5 V19 Q19 20.5 17.5 20.5 H6.5 Q5 20.5 5 19 Z M8 8 H16 M8 12 H16 M8 16 H12"
-                                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
-                                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                                 fill="TRANSPARENT" scaleX="0.84" scaleY="0.84"
+                                                                 stroke="#E9D7B7" strokeLineCap="ROUND" strokeLineJoin="ROUND"
                                                                  strokeWidth="2.0"/>
                                                     </children>
                                                 </StackPane>
-                                                <Label text="Сервер" styleClass="nav-text"/>
+                                                <Label styleClass="nav-text, nav-text-active" text="Главная"/>
                                             </children>
                                         </HBox>
-                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openModsScreen" spacing="14.0"
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openProfileScreen" spacing="12.0"
                                               styleClass="nav-item">
                                             <children>
                                                 <StackPane styleClass="nav-icon-badge">
                                                     <children>
-                                                        <SVGPath content="M12 3 L20 7.5 V16.5 L12 21 L4 16.5 V7.5 Z M4.5 7.7 L12 11.9 L19.5 7.7 M12 12 V20.5"
-                                                                 fill="TRANSPARENT" scaleX="0.9" scaleY="0.9"
-                                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                        <SVGPath content="M12 5 A3.5 3.5 0 1 1 12 12 A3.5 3.5 0 1 1 12 5 M5 20 C5.8 16.8 8 15.2 12 15.2 C16 15.2 18.2 16.8 19 20"
+                                                                 fill="TRANSPARENT" scaleX="0.84" scaleY="0.84"
+                                                                 stroke="#A6B0BF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
                                                                  strokeWidth="2.0"/>
                                                     </children>
                                                 </StackPane>
-                                                <Label text="Моды" styleClass="nav-text"/>
+                                                <Label styleClass="nav-text" text="Профиль"/>
                                             </children>
                                         </HBox>
-                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openSettingsScreen" spacing="14.0"
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#openSettingsScreen" spacing="12.0"
                                               styleClass="nav-item">
                                             <children>
                                                 <StackPane styleClass="nav-icon-badge">
                                                     <children>
-                                                        <Label text="⚙" styleClass="nav-glyph"/>
+                                                        <Label styleClass="nav-glyph" text="⚙"/>
                                                     </children>
                                                 </StackPane>
-                                                <Label text="Настройки" styleClass="nav-text"/>
+                                                <Label styleClass="nav-text" text="Настройки"/>
                                             </children>
                                         </HBox>
                                     </children>
                                 </VBox>
 
-                                <Label text="SERVER ROUTE" styleClass="sidebar-section-label"/>
-                                <VBox spacing="10.0" styleClass="sidebar-status-card">
-                                    <children>
-                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                            <children>
-                                                <Region styleClass="system-dot"/>
-                                                <Label fx:id="sidebarStatusTitleLabel" text="Проверка сервера"
-                                                       styleClass="sidebar-status-title"/>
-                                            </children>
-                                        </HBox>
-                                        <Label fx:id="sidebarStatusCopyLabel"
-                                               text="Проверяем маршрут, manifest и состояние сервера."
-                                               styleClass="sidebar-status-copy" wrapText="true"/>
-                                        <Label fx:id="serverRouteValueLabel" styleClass="sidebar-route" wrapText="true"/>
-                                    </children>
-                                </VBox>
+                                <Region VBox.vgrow="ALWAYS"/>
 
-                                <Label text="COMMUNITY" styleClass="sidebar-section-label"/>
-                                <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="social-row">
+                                <HBox alignment="CENTER_LEFT" onMouseClicked="#openProfileScreen" spacing="12.0"
+                                      styleClass="profile-sidebar-card">
                                     <children>
-                                        <StackPane styleClass="social-chip">
+                                        <StackPane styleClass="sidebar-avatar-shell">
                                             <children>
-                                                <Label text="DS" styleClass="social-chip-label"/>
+                                                <ImageView fitHeight="40.0" fitWidth="40.0" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@obsidiangate/images/avatar/player_avatar.png"/>
+                                                    </image>
+                                                </ImageView>
                                             </children>
                                         </StackPane>
-                                        <StackPane styleClass="social-chip">
+                                        <VBox spacing="2.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label text="VK" styleClass="social-chip-label"/>
+                                                <Label fx:id="profileNameLabel" styleClass="sidebar-profile-name"
+                                                       text="Soul4"/>
+                                                <Label fx:id="profileRankLabel" styleClass="sidebar-profile-rank"
+                                                       text="Online"/>
                                             </children>
-                                        </StackPane>
-                                        <StackPane styleClass="social-chip">
-                                            <children>
-                                                <Label text="RD" styleClass="social-chip-label"/>
-                                            </children>
-                                        </StackPane>
-                                        <StackPane styleClass="social-chip">
-                                            <children>
-                                                <Label text="WEB" styleClass="social-chip-label"/>
-                                            </children>
-                                        </StackPane>
+                                        </VBox>
+                                        <Label fx:id="profileChevronLabel" styleClass="sidebar-profile-chevron" text="⌄"/>
                                     </children>
                                 </HBox>
 
-                                <Label fx:id="sidebarVersionLabel" text="Launcher" styleClass="sidebar-version"/>
-                                            </children>
-                                        </VBox>
-                                    </content>
-                                </ScrollPane>
+                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="sidebar-footer-row">
+                                    <children>
+                                        <Label styleClass="sidebar-footer-link" text="Discord"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Label fx:id="sidebarVersionLabel" styleClass="sidebar-version" text="Launcher"/>
+                                    </children>
+                                </HBox>
                             </children>
-                        </StackPane>
+                        </VBox>
                     </left>
                     <center>
                         <StackPane styleClass="hero-stage">
                             <children>
-                                <Region styleClass="hero-background"/>
-                                <Region mouseTransparent="true" styleClass="hero-overlay"/>
+                                <Region mouseTransparent="true" styleClass="stage-glow stage-glow-left"/>
+                                <Region mouseTransparent="true" styleClass="stage-glow stage-glow-right"/>
 
                                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
                                             styleClass="shell-scroll">
                                     <content>
-                                        <VBox spacing="14.0" styleClass="content-column">
+                                        <VBox alignment="TOP_CENTER" spacing="16.0" styleClass="content-column">
                                             <padding>
-                                                <Insets bottom="20.0" left="20.0" right="20.0" top="12.0"/>
+                                                <Insets bottom="24.0" left="20.0" right="20.0" top="18.0"/>
                                             </padding>
                                             <children>
-                                        <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow"
-                                              onMousePressed="#captureWindowDrag" spacing="12.0" styleClass="top-strip">
-                                            <children>
-                                                <Region HBox.hgrow="ALWAYS"/>
-                                                <HBox alignment="CENTER_LEFT" onMouseClicked="#openProfileScreen"
-                                                      spacing="14.0" styleClass="profile-chip">
+                                                <VBox maxWidth="760.0" spacing="14.0" styleClass="dashboard-shell">
                                                     <children>
-                                                        <StackPane styleClass="avatar-shell">
+                                                        <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow"
+                                                              onMousePressed="#captureWindowDrag" styleClass="top-strip">
                                                             <children>
-                                                                <ImageView fitHeight="58.0" fitWidth="58.0"
-                                                                           preserveRatio="true">
-                                                                    <image>
-                                                                        <Image url="@obsidiangate/images/avatar/player_avatar.png"/>
-                                                                    </image>
-                                                                </ImageView>
-                                                            </children>
-                                                        </StackPane>
-                                                        <VBox spacing="4.0">
-                                                            <children>
-                                                                <Label fx:id="profileNameLabel" text="Arcanist_42" styleClass="profile-name"/>
-                                                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                                                <Region HBox.hgrow="ALWAYS"/>
+                                                                <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="window-bar">
                                                                     <children>
-                                                                        <Region styleClass="gem-mark"/>
-                                                                        <Label fx:id="profileRankLabel" text="Ветеран" styleClass="profile-rank"/>
+                                                                        <Button fx:id="minimizeWindowButton" mnemonicParsing="false"
+                                                                                onAction="#minimizeWindow"
+                                                                                styleClass="window-control, window-control-minimize"/>
+                                                                        <Button fx:id="closeWindowButton" mnemonicParsing="false"
+                                                                                onAction="#closeWindow"
+                                                                                styleClass="window-control, window-control-close"/>
                                                                     </children>
                                                                 </HBox>
                                                             </children>
-                                                        </VBox>
-                                                        <Label fx:id="profileChevronLabel" text="⌄" styleClass="profile-chevron"/>
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="window-bar">
-                                                    <children>
-                                                        <Button fx:id="minimizeWindowButton" mnemonicParsing="false"
-                                                                onAction="#minimizeWindow"
-                                                                styleClass="window-control, window-control-minimize"/>
-                                                        <Button fx:id="closeWindowButton" mnemonicParsing="false"
-                                                                onAction="#closeWindow"
-                                                                styleClass="window-control, window-control-close"/>
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </HBox>
-
-                                        <VBox alignment="CENTER" spacing="12.0" styleClass="hero-copy">
-                                            <children>
-                                                <Label text="LAUNCHER CONTROL PANEL" styleClass="hero-kicker"/>
-                                                <HBox alignment="CENTER" spacing="18.0">
-                                                    <children>
-                                                        <Region styleClass="ornament-line"/>
-                                                        <Region styleClass="ornament-gem"/>
-                                                        <Region styleClass="ornament-line"/>
-                                                    </children>
-                                                </HBox>
-                                                <Label text="OBSIDIANGATE" styleClass="hero-title"/>
-                                                <HBox alignment="CENTER" spacing="18.0">
-                                                    <children>
-                                                        <Region styleClass="subtitle-line"/>
-                                                        <Label text="MINECRAFT RPG ПРИКЛЮЧЕНИЕ" styleClass="hero-subtitle"/>
-                                                        <Region styleClass="subtitle-line"/>
-                                                    </children>
-                                                </HBox>
-                                                <Label maxWidth="560.0"
-                                                       text="Погрузись в мир магии, древних&#10;тайн и бесконечных приключений."
-                                                       textAlignment="CENTER" wrapText="true"
-                                                       styleClass="hero-description"/>
-                                                <Button fx:id="launchButton" alignment="CENTER" contentDisplay="LEFT"
-                                                        mnemonicParsing="false" styleClass="play-button" text="ИГРАТЬ">
-                                                    <graphic>
-                                                        <SVGPath content="M14.6 5.1 L20 4 L18.9 9.4 L8.7 19.6 L4.4 15.3 Z M6.8 17.2 L3.8 20.2 M7.2 13.6 L10.4 16.8 M11.8 7.9 L16.1 12.2"
-                                                                 fill="TRANSPARENT" scaleX="1.58" scaleY="1.58"
-                                                                 stroke="#F6ECFF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
-                                                                 strokeWidth="1.8"/>
-                                                    </graphic>
-                                                </Button>
-
-                                                <VBox maxWidth="560.0" spacing="10.0" styleClass="sync-panel">
-                                                    <children>
-                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                                            <children>
-                                                                <Label fx:id="syncStatusLabel" text="Готово к запуску"
-                                                                       styleClass="sync-status"/>
-                                                                <Region HBox.hgrow="ALWAYS"/>
-                                                                <Label fx:id="syncPercentLabel" text="ГОТОВО"
-                                                                       styleClass="sync-percent"/>
-                                                            </children>
                                                         </HBox>
-                                                        <Label fx:id="syncFileLabel" styleClass="sync-file" wrapText="true"/>
-                                                        <ProgressBar fx:id="syncProgressBar" maxWidth="1.7976931348623157E308"
-                                                                     progress="0.0" styleClass="launcher-progress"/>
-                                                        <HBox alignment="CENTER_LEFT" spacing="14.0">
-                                                            <children>
-                                                                <Button fx:id="syncButton" alignment="CENTER"
-                                                                        contentDisplay="LEFT" mnemonicParsing="false"
-                                                                        styleClass="secondary-action-button"
-                                                                        text="Синхронизировать">
-                                                                    <graphic>
-                                                                        <SVGPath content="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"
-                                                                                fill="#F3F4F6" scaleX="0.96"
-                                                                                 scaleY="0.96"/>
-                                                                    </graphic>
-                                                                </Button>
-                                                                <Button fx:id="previewButton" alignment="CENTER"
-                                                                        contentDisplay="LEFT" mnemonicParsing="false"
-                                                                        styleClass="secondary-action-button"
-                                                                        text="Предпросмотр">
-                                                                    <graphic>
-                                                                        <SVGPath content="M12 5 C6.5 5 2 12 2 12 C2 12 6.5 19 12 19 C17.5 19 22 12 22 12 C22 12 17.5 5 12 5 Z M12 9 A3 3 0 1 1 12 15 A3 3 0 1 1 12 9 Z"
-                                                                                 fill="#F3F4F6" scaleX="0.96"
-                                                                                 scaleY="0.96"/>
-                                                                    </graphic>
-                                                                </Button>
-                                                                <Region HBox.hgrow="ALWAYS"/>
-                                                                <Label fx:id="syncBytesLabel" text="Файловая активность пока отсутствует."
-                                                                       styleClass="sync-bytes"/>
-                                                            </children>
-                                                        </HBox>
-                                                        <Label fx:id="previewSummaryLabel" styleClass="sync-preview-summary" wrapText="true"/>
-                                                        <VBox fx:id="previewChangesBox" spacing="10.0" styleClass="sync-preview-list"/>
-                                                    </children>
-                                                </VBox>
 
-                                                <VBox fx:id="launcherUpdateCard" managed="false" maxWidth="560.0"
-                                                      spacing="10.0" styleClass="launcher-update-card" visible="false">
-                                                    <children>
-                                                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                                        <StackPane minHeight="210.0" prefHeight="210.0" styleClass="hero-card">
+                                                            <children>
+                                                                <Region styleClass="hero-card-image"/>
+                                                                <Region mouseTransparent="true" styleClass="hero-card-overlay"/>
+                                                                <VBox maxWidth="380.0" spacing="10.0" styleClass="hero-copy">
+                                                                    <children>
+                                                                        <Label styleClass="hero-kicker" text="OBSIDIANGATE"/>
+                                                                        <Label styleClass="hero-title" text="Minecraft RPG приключение"
+                                                                               wrapText="true"/>
+                                                                        <Label styleClass="hero-subtitle"
+                                                                               text="Погрузись в мир магии, древних тайн и бесконечных приключений."
+                                                                               wrapText="true"/>
+                                                                    </children>
+                                                                </VBox>
+                                                            </children>
+                                                        </StackPane>
+
+                                                        <HBox fx:id="launcherUpdateCard" alignment="CENTER_LEFT" managed="false"
+                                                              spacing="14.0" styleClass="launcher-update-card" visible="false">
                                                             <children>
                                                                 <StackPane styleClass="launcher-update-icon">
                                                                     <children>
                                                                         <SVGPath content="M12 3 V15 M7 10 L12 15 L17 10 M5 21 H19"
-                                                                                 fill="TRANSPARENT" scaleX="0.95"
-                                                                                 scaleY="0.95" stroke="#FFF7D6"
-                                                                                 strokeLineCap="ROUND"
-                                                                                 strokeLineJoin="ROUND"
-                                                                                 strokeWidth="2.2"/>
+                                                                                 fill="TRANSPARENT" scaleX="0.88" scaleY="0.88"
+                                                                                 stroke="#E9D7B7" strokeLineCap="ROUND"
+                                                                                 strokeLineJoin="ROUND" strokeWidth="2.0"/>
                                                                     </children>
                                                                 </StackPane>
                                                                 <VBox spacing="3.0" HBox.hgrow="ALWAYS">
                                                                     <children>
                                                                         <Label fx:id="launcherUpdateTitleLabel"
-                                                                               text="Доступно обновление лаунчера"
-                                                                               styleClass="launcher-update-title"/>
+                                                                               styleClass="launcher-update-title"
+                                                                               text="Доступно обновление лаунчера"/>
                                                                         <Label fx:id="launcherUpdateDescriptionLabel"
-                                                                               text="Новая версия будет скачана и установлена автоматически."
                                                                                styleClass="launcher-update-copy"
+                                                                               text="Новая версия будет скачана и установлена автоматически."
                                                                                wrapText="true"/>
                                                                     </children>
                                                                 </VBox>
-                                                                <Button fx:id="launcherUpdateButton" mnemonicParsing="false"
-                                                                        styleClass="launcher-update-button"
-                                                                        text="Обновить"/>
+                                                                <VBox alignment="CENTER_RIGHT" spacing="8.0">
+                                                                    <children>
+                                                                        <Label styleClass="launcher-update-badge" text="Доступно"/>
+                                                                        <Button fx:id="launcherUpdateButton" mnemonicParsing="false"
+                                                                                styleClass="launcher-update-button"
+                                                                                text="Обновить"/>
+                                                                    </children>
+                                                                </VBox>
+                                                            </children>
+                                                        </HBox>
+
+                                                        <VBox spacing="12.0" styleClass="sync-panel">
+                                                            <children>
+                                                                <HBox alignment="CENTER_LEFT" spacing="16.0">
+                                                                    <children>
+                                                                        <StackPane minWidth="84.0" prefWidth="84.0" maxWidth="84.0"
+                                                                                  minHeight="84.0" prefHeight="84.0" maxHeight="84.0"
+                                                                                  styleClass="sync-ring-shell">
+                                                                            <children>
+                                                                                <Circle radius="31.0" styleClass="sync-ring-track"/>
+                                                                                <Arc fx:id="syncProgressArc" length="0.0" radiusX="31.0"
+                                                                                     radiusY="31.0" startAngle="90.0"
+                                                                                     styleClass="sync-ring-value" type="OPEN"/>
+                                                                                <Label fx:id="syncPercentLabel" styleClass="sync-percent"
+                                                                                       text="0%"/>
+                                                                            </children>
+                                                                        </StackPane>
+
+                                                                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                                            <children>
+                                                                                <Label fx:id="syncStatusLabel" styleClass="sync-status"
+                                                                                       text="Готово к запуску"/>
+                                                                                <Label fx:id="syncFileLabel" styleClass="sync-file"
+                                                                                       wrapText="true"/>
+                                                                                <Label fx:id="syncBytesLabel" styleClass="sync-bytes"
+                                                                                       text="Файловая активность пока отсутствует."/>
+                                                                            </children>
+                                                                        </VBox>
+
+                                                                        <VBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="sync-actions">
+                                                                            <children>
+                                                                                <Button fx:id="syncButton" alignment="CENTER"
+                                                                                        contentDisplay="LEFT"
+                                                                                        mnemonicParsing="false"
+                                                                                        styleClass="secondary-action-button"
+                                                                                        text="Синхронизировать">
+                                                                                    <graphic>
+                                                                                        <SVGPath content="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"
+                                                                                                 fill="#F4F6F9" scaleX="0.88"
+                                                                                                 scaleY="0.88"/>
+                                                                                    </graphic>
+                                                                                </Button>
+                                                                                <Button fx:id="previewButton" alignment="CENTER"
+                                                                                        contentDisplay="LEFT"
+                                                                                        mnemonicParsing="false"
+                                                                                        styleClass="secondary-action-button"
+                                                                                        text="Предпросмотр">
+                                                                                    <graphic>
+                                                                                        <SVGPath content="M12 5 C6.5 5 2 12 2 12 C2 12 6.5 19 12 19 C17.5 19 22 12 22 12 C22 12 17.5 5 12 5 Z M12 9 A3 3 0 1 1 12 15 A3 3 0 1 1 12 9 Z"
+                                                                                                 fill="#F4F6F9" scaleX="0.88"
+                                                                                                 scaleY="0.88"/>
+                                                                                    </graphic>
+                                                                                </Button>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                </HBox>
+
+                                                                <ProgressBar fx:id="syncProgressBar" maxWidth="1.7976931348623157E308"
+                                                                             progress="0.0" styleClass="launcher-progress"/>
+                                                                <Label fx:id="previewSummaryLabel" styleClass="sync-preview-summary"
+                                                                       wrapText="true"/>
+                                                                <VBox fx:id="previewChangesBox" spacing="10.0"
+                                                                      styleClass="sync-preview-list"/>
+                                                            </children>
+                                                        </VBox>
+
+                                                        <VBox spacing="12.0" styleClass="server-card">
+                                                            <children>
+                                                                <HBox alignment="CENTER_LEFT">
+                                                                    <children>
+                                                                        <Label styleClass="server-card-title" text="Статус сервера"/>
+                                                                        <Region HBox.hgrow="ALWAYS"/>
+                                                                        <Label styleClass="server-card-link" text="Подробнее"/>
+                                                                    </children>
+                                                                </HBox>
+
+                                                                <HBox alignment="TOP_LEFT" spacing="14.0">
+                                                                    <children>
+                                                                        <StackPane minWidth="72.0" prefWidth="72.0" maxWidth="72.0"
+                                                                                  minHeight="72.0" prefHeight="72.0" maxHeight="72.0"
+                                                                                  styleClass="server-thumb">
+                                                                            <children>
+                                                                                <Region styleClass="server-thumb-art"/>
+                                                                            </children>
+                                                                        </StackPane>
+
+                                                                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                                                            <children>
+                                                                                <Label styleClass="server-name" text="RPG World"/>
+                                                                                <Label fx:id="serverRouteValueLabel"
+                                                                                       styleClass="server-route"
+                                                                                       wrapText="true"/>
+                                                                                <Label fx:id="sidebarStatusTitleLabel"
+                                                                                       styleClass="server-status-title"
+                                                                                       text="Проверка сервера"/>
+                                                                                <Label fx:id="sidebarStatusCopyLabel"
+                                                                                       styleClass="server-status-copy"
+                                                                                       wrapText="true"/>
+                                                                            </children>
+                                                                        </VBox>
+
+                                                                        <VBox alignment="TOP_RIGHT" spacing="8.0">
+                                                                            <children>
+                                                                                <HBox alignment="CENTER_RIGHT" spacing="8.0">
+                                                                                    <children>
+                                                                                        <Region fx:id="serverPresenceIndicator"
+                                                                                                styleClass="presence-indicator, presence-checking"/>
+                                                                                        <Label fx:id="serverPresenceLabel"
+                                                                                               styleClass="presence-value"
+                                                                                               text="ПРОВЕРКА"/>
+                                                                                    </children>
+                                                                                </HBox>
+                                                                                <Label fx:id="onlinePlayersValueLabel"
+                                                                                       styleClass="player-count"
+                                                                                       text="—"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                </HBox>
+
+                                                                <HBox spacing="10.0">
+                                                                    <children>
+                                                                        <VBox spacing="3.0" styleClass="metric-chip" HBox.hgrow="ALWAYS">
+                                                                            <children>
+                                                                                <Label styleClass="metric-chip-label"
+                                                                                       text="MINECRAFT"/>
+                                                                                <Label fx:id="minecraftVersionValueLabel"
+                                                                                       styleClass="metric-chip-value"
+                                                                                       text="—" wrapText="true"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox spacing="3.0" styleClass="metric-chip" HBox.hgrow="ALWAYS">
+                                                                            <children>
+                                                                                <Label styleClass="metric-chip-label"
+                                                                                       text="MODPACK"/>
+                                                                                <Label fx:id="manifestVersionValueLabel"
+                                                                                       styleClass="metric-chip-value"
+                                                                                       text="—" wrapText="true"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                </HBox>
+                                                            </children>
+                                                        </VBox>
+
+                                                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="play-row">
+                                                            <children>
+                                                                <Button fx:id="launchButton" alignment="CENTER"
+                                                                        contentDisplay="LEFT" mnemonicParsing="false"
+                                                                        styleClass="play-button" text="Играть"
+                                                                        HBox.hgrow="ALWAYS">
+                                                                    <graphic>
+                                                                        <SVGPath content="M8 6 L18 12 L8 18 Z"
+                                                                                 fill="#1A1410" scaleX="1.0" scaleY="1.0"/>
+                                                                    </graphic>
+                                                                </Button>
+                                                                <Button mnemonicParsing="false" onAction="#openSettingsScreen"
+                                                                        styleClass="quick-settings-button" text="⚙"/>
+                                                            </children>
+                                                        </HBox>
+
+                                                        <HBox alignment="CENTER_LEFT" spacing="18.0" styleClass="footer-bar">
+                                                            <children>
+                                                                <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="footer-item">
+                                                                    <children>
+                                                                        <Label styleClass="footer-label" text="ИГРОКОВ ОНЛАЙН"/>
+                                                                        <Label fx:id="footerOnlinePlayersValueLabel"
+                                                                               styleClass="footer-value" text="—"/>
+                                                                    </children>
+                                                                </HBox>
+                                                                <Region HBox.hgrow="ALWAYS"/>
+                                                                <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="footer-item">
+                                                                    <children>
+                                                                        <Label styleClass="footer-label" text="MINECRAFT"/>
+                                                                        <Label fx:id="footerMinecraftVersionValueLabel"
+                                                                               styleClass="footer-value" text="—" wrapText="true"/>
+                                                                    </children>
+                                                                </HBox>
+                                                                <Region HBox.hgrow="ALWAYS"/>
+                                                                <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="footer-item">
+                                                                    <children>
+                                                                        <Label styleClass="footer-label" text="MODPACK"/>
+                                                                        <Label fx:id="footerManifestVersionValueLabel"
+                                                                               styleClass="footer-value" text="—" wrapText="true"/>
+                                                                    </children>
+                                                                </HBox>
                                                             </children>
                                                         </HBox>
                                                     </children>
                                                 </VBox>
-                                            </children>
-                                        </VBox>
-
-                                        <HBox alignment="CENTER" spacing="0.0" styleClass="status-panel">
-                                            <children>
-                                                <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="status-item" HBox.hgrow="ALWAYS">
-                                                    <children>
-                                                        <StackPane styleClass="status-icon-wrap">
-                                                            <children>
-                                                                <SVGPath content="M12 3.2 L19 6 V11.3 C19 15.7 16.2 19 12 20.8 C7.8 19 5 15.7 5 11.3 V6 Z M12 8 V15 M8.8 11.3 H15.2"
-                                                                         fill="TRANSPARENT" scaleX="0.88" scaleY="0.88"
-                                                                         stroke="#D8C5FF" strokeLineCap="ROUND"
-                                                                         strokeLineJoin="ROUND" strokeWidth="2.0"/>
-                                                            </children>
-                                                        </StackPane>
-                                                        <VBox spacing="6.0">
-                                                            <children>
-                                                                <Label text="СТАТУС СЕРВЕРА" styleClass="status-label"/>
-                                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                                                    <children>
-                                                                        <Region fx:id="serverPresenceIndicator"
-                                                                                styleClass="presence-indicator, presence-checking"/>
-                                                                        <Label fx:id="serverPresenceLabel" text="ПРОВЕРКА"
-                                                                               styleClass="presence-value"/>
-                                                                    </children>
-                                                                </HBox>
-                                                            </children>
-                                                        </VBox>
-                                                    </children>
-                                                </HBox>
-                                                <Region styleClass="status-divider"/>
-                                                <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="status-item" HBox.hgrow="ALWAYS">
-                                                    <children>
-                                                        <StackPane styleClass="status-icon-wrap">
-                                                            <children>
-                                                                <SVGPath content="M9 5 A3 3 0 1 1 9 11 A3 3 0 1 1 9 5 M3.5 19 C4.2 15.9 6.3 14.3 9 14.3 C11.7 14.3 13.8 15.9 14.5 19 M16.5 6.7 A2.3 2.3 0 1 1 16.5 11.3 A2.3 2.3 0 1 1 16.5 6.7 M14.5 14.8 C17.2 14.9 19.1 16.2 19.7 19"
-                                                                         fill="TRANSPARENT" scaleX="0.84" scaleY="0.84"
-                                                                         stroke="#B671FF" strokeLineCap="ROUND"
-                                                                         strokeLineJoin="ROUND" strokeWidth="1.9"/>
-                                                            </children>
-                                                        </StackPane>
-                                                        <VBox spacing="6.0">
-                                                            <children>
-                                                                <Label text="ИГРОКОВ ОНЛАЙН" styleClass="status-label"/>
-                                                                <Label fx:id="onlinePlayersValueLabel" text="—"
-                                                                       styleClass="status-value"/>
-                                                            </children>
-                                                        </VBox>
-                                                    </children>
-                                                </HBox>
-                                                <Region styleClass="status-divider"/>
-                                                <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="status-item" HBox.hgrow="ALWAYS">
-                                                    <children>
-                                                        <StackPane styleClass="status-icon-wrap">
-                                                            <children>
-                                                                <SVGPath content="M12 3 L20 7.5 V16.5 L12 21 L4 16.5 V7.5 Z M4.5 7.7 L12 11.9 L19.5 7.7 M12 12 V20.5"
-                                                                         fill="TRANSPARENT" scaleX="0.88" scaleY="0.88"
-                                                                         stroke="#A855F7" strokeLineCap="ROUND"
-                                                                         strokeLineJoin="ROUND" strokeWidth="2.0"/>
-                                                            </children>
-                                                        </StackPane>
-                                                        <VBox spacing="6.0">
-                                                            <children>
-                                                                <Label text="MINECRAFT" styleClass="status-label"/>
-                                                                <Label fx:id="minecraftVersionValueLabel" text="—"
-                                                                       styleClass="status-value" wrapText="true"/>
-                                                            </children>
-                                                        </VBox>
-                                                    </children>
-                                                </HBox>
-                                                <Region styleClass="status-divider"/>
-                                                <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="status-item" HBox.hgrow="ALWAYS">
-                                                    <children>
-                                                        <StackPane styleClass="status-icon-wrap">
-                                                            <children>
-                                                                <SVGPath content="M5 5 H19 V20 H5 Z M8 3 V7 M16 3 V7 M5 10 H19 M8 14 H8.01 M12 14 H12.01 M16 14 H16.01 M8 17 H8.01 M12 17 H12.01"
-                                                                         fill="TRANSPARENT" scaleX="0.9" scaleY="0.9"
-                                                                         stroke="#B671FF" strokeLineCap="ROUND"
-                                                                         strokeLineJoin="ROUND" strokeWidth="2.0"/>
-                                                            </children>
-                                                        </StackPane>
-                                                        <VBox spacing="6.0">
-                                                            <children>
-                                                                <Label text="MODPACK" styleClass="status-label"/>
-                                                                <Label fx:id="manifestVersionValueLabel" text="—"
-                                                                       styleClass="status-value" wrapText="true"/>
-                                                            </children>
-                                                        </VBox>
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </HBox>
-
-                                        <FlowPane alignment="CENTER" hgap="14.0" vgap="14.0" prefWrapLength="940.0"
-                                                  styleClass="card-row">
-                                            <children>
-                                                <StackPane prefWidth="300.0" prefHeight="156.0" styleClass="info-card">
-                                                    <children>
-                                                        <Region mouseTransparent="true" styleClass="card-art, about-art"/>
-                                                        <VBox spacing="18.0" styleClass="card-content">
-                                                            <children>
-                                                                <HBox alignment="CENTER_LEFT" spacing="14.0">
-                                                                    <children>
-                                                                        <StackPane styleClass="card-icon-wrap">
-                                                                            <children>
-                                                                                <SVGPath content="M12 3 A9 9 0 1 1 12 21 A9 9 0 1 1 12 3 M12 10 V16 M12 7 H12.01"
-                                                                                         fill="TRANSPARENT" scaleX="0.88"
-                                                                                         scaleY="0.88" stroke="#C46CFF"
-                                                                                         strokeLineCap="ROUND"
-                                                                                         strokeLineJoin="ROUND"
-                                                                                         strokeWidth="2.0"/>
-                                                                            </children>
-                                                                        </StackPane>
-                                                                        <Label text="О сервере" styleClass="card-heading"/>
-                                                                    </children>
-                                                                </HBox>
-                                                                <Label text="Уникальный RPG-мир, кланы, данжи и магия."
-                                                                       styleClass="card-copy" wrapText="true"/>
-                                                            </children>
-                                                        </VBox>
-                                                    </children>
-                                                </StackPane>
-
-                                                <StackPane prefWidth="300.0" prefHeight="156.0" styleClass="info-card">
-                                                    <children>
-                                                        <Region mouseTransparent="true" styleClass="card-art, path-art"/>
-                                                        <VBox spacing="18.0" styleClass="card-content">
-                                                            <children>
-                                                                <HBox alignment="CENTER_LEFT" spacing="14.0">
-                                                                    <children>
-                                                                        <StackPane styleClass="card-icon-wrap">
-                                                                            <children>
-                                                                                <SVGPath content="M14.6 5.1 L20 4 L18.9 9.4 L8.7 19.6 L4.4 15.3 Z M6.8 17.2 L3.8 20.2 M7.2 13.6 L10.4 16.8 M11.8 7.9 L16.1 12.2"
-                                                                                         fill="TRANSPARENT" scaleX="0.9"
-                                                                                         scaleY="0.9" stroke="#C46CFF"
-                                                                                         strokeLineCap="ROUND"
-                                                                                         strokeLineJoin="ROUND"
-                                                                                         strokeWidth="1.9"/>
-                                                                            </children>
-                                                                        </StackPane>
-                                                                        <Label text="Ваш путь" styleClass="card-heading"/>
-                                                                    </children>
-                                                                </HBox>
-                                                                <Label text="Выберите класс, развивайте героя и открывайте новые земли."
-                                                                       styleClass="card-copy" wrapText="true"/>
-                                                            </children>
-                                                        </VBox>
-                                                    </children>
-                                                </StackPane>
-
-                                                <StackPane prefWidth="300.0" prefHeight="156.0" styleClass="info-card">
-                                                    <children>
-                                                        <Region mouseTransparent="true" styleClass="card-art, support-art"/>
-                                                        <VBox spacing="18.0" styleClass="card-content">
-                                                            <children>
-                                                                <HBox alignment="CENTER_LEFT" spacing="14.0">
-                                                                    <children>
-                                                                        <StackPane styleClass="card-icon-wrap">
-                                                                            <children>
-                                                                                <SVGPath content="M4 13 A8 8 0 0 1 20 13 M4 13 V17 A2 2 0 0 0 6 19 H7 V12 H6 A2 2 0 0 0 4 14 M20 13 V17 A2 2 0 0 1 18 19 H17 V12 H18 A2 2 0 0 1 20 14 M15 21 H12"
-                                                                                         fill="TRANSPARENT" scaleX="0.9"
-                                                                                         scaleY="0.9" stroke="#C46CFF"
-                                                                                         strokeLineCap="ROUND"
-                                                                                         strokeLineJoin="ROUND"
-                                                                                         strokeWidth="2.0"/>
-                                                                            </children>
-                                                                        </StackPane>
-                                                                        <Label text="Поддержка" styleClass="card-heading"/>
-                                                                    </children>
-                                                                </HBox>
-                                                                <Label text="Discord, сайт и помощь сообщества всегда рядом."
-                                                                       styleClass="card-copy" wrapText="true"/>
-                                                            </children>
-                                                        </VBox>
-                                                    </children>
-                                                </StackPane>
-                                            </children>
-                                        </FlowPane>
                                             </children>
                                         </VBox>
                                     </content>

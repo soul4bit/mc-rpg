@@ -17,7 +17,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.mcrpg.launcher.ProfileController"
-            prefWidth="1360.0" prefHeight="820.0" styleClass="account-root, app-window">
+            prefHeight="820.0" prefWidth="1360.0" styleClass="account-root, app-window">
     <left>
         <StackPane prefWidth="264.0" styleClass="sidebar">
             <children>
@@ -25,124 +25,124 @@
                     <content>
                         <VBox spacing="18.0" styleClass="sidebar-content">
                             <padding>
-                                <Insets top="18.0" right="16.0" bottom="18.0" left="16.0"/>
+                                <Insets bottom="18.0" left="16.0" right="16.0" top="18.0"/>
                             </padding>
                             <children>
-                <VBox spacing="10.0" styleClass="sidebar-brand-card">
-                    <children>
-                        <ImageView fitWidth="188.0" preserveRatio="true">
-                            <image>
-                                <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
-                            </image>
-                        </ImageView>
-                        <Label text="ACCOUNT HUB" styleClass="screen-kicker"/>
-                        <Label text="Профиль игрока, маршрут запуска и состояние сессии собраны в одном экране."
-                               wrapText="true" styleClass="label-muted"/>
-                    </children>
-                </VBox>
-
-                <Label text="НАВИГАЦИЯ" styleClass="sidebar-section-label"/>
-
-                <VBox spacing="8.0" styleClass="nav-group">
-                    <children>
-                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenHome" spacing="14.0"
-                              styleClass="nav-item">
-                            <children>
-                                <StackPane styleClass="nav-icon-badge">
+                                <VBox spacing="10.0" styleClass="sidebar-brand-card">
                                     <children>
-                                        <SVGPath content="M3 11.5 L12 4 L21 11.5 M5.5 10.5 V20 H10.7 V14.4 H13.3 V20 H18.5 V10.5"
-                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
-                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
-                                                 strokeWidth="2.2"/>
-                                    </children>
-                                </StackPane>
-                                <Label text="Главная" styleClass="nav-text"/>
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenServer" spacing="14.0"
-                              styleClass="nav-item">
-                            <children>
-                                <StackPane styleClass="nav-icon-badge">
-                                    <children>
-                                        <SVGPath content="M5 5 Q5 3.5 6.5 3.5 H17.5 Q19 3.5 19 5 V19 Q19 20.5 17.5 20.5 H6.5 Q5 20.5 5 19 Z M8 8 H16 M8 12 H16 M8 16 H12"
-                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
-                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
-                                                 strokeWidth="2.0"/>
-                                    </children>
-                                </StackPane>
-                                <Label text="Сервер" styleClass="nav-text"/>
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenMods" spacing="14.0"
-                              styleClass="nav-item">
-                            <children>
-                                <StackPane styleClass="nav-icon-badge">
-                                    <children>
-                                        <SVGPath content="M12 3 L20 7.5 V16.5 L12 21 L4 16.5 V7.5 Z M4.5 7.7 L12 11.9 L19.5 7.7 M12 12 V20.5"
-                                                 fill="TRANSPARENT" scaleX="0.9" scaleY="0.9"
-                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
-                                                 strokeWidth="2.0"/>
-                                    </children>
-                                </StackPane>
-                                <Label text="Моды" styleClass="nav-text"/>
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenSettings" spacing="14.0"
-                              styleClass="nav-item">
-                            <children>
-                                <StackPane styleClass="nav-icon-badge">
-                                    <children>
-                                        <Label text="⚙" styleClass="nav-glyph"/>
-                                    </children>
-                                </StackPane>
-                                <Label text="Настройки" styleClass="nav-text"/>
-                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="nav-item, nav-item-active">
-                            <children>
-                                <StackPane styleClass="nav-icon-badge, nav-icon-badge-active">
-                                    <children>
-                                        <SVGPath content="M12 12 A4 4 0 1 1 12 4 A4 4 0 1 1 12 12 M5 20 C5.8 16.8 8.2 15 12 15 C15.8 15 18.2 16.8 19 20"
-                                                 fill="TRANSPARENT" scaleX="0.88" scaleY="0.88"
-                                                 stroke="#F4E6FF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
-                                                 strokeWidth="2.0"/>
-                                    </children>
-                                </StackPane>
-                                <Label styleClass="nav-text, nav-text-active" text="Профиль"/>
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
-
-                <VBox spacing="12.0" styleClass="sidebar-footer-card">
-                    <padding>
-                        <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
-                    </padding>
-                    <children>
-                        <Label text="Аккаунт защищен" styleClass="label-value"/>
-                        <Label text="Текущая сессия привязана к launcher auth и backend API."
-                               wrapText="true" styleClass="label-muted"/>
-                        <HBox spacing="8.0">
-                            <children>
-                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
-                                    <children>
-                                        <Label text="AUTH" styleClass="sidebar-chip-label"/>
-                                        <Label text="backend" styleClass="sidebar-chip-value"/>
+                                        <ImageView fitWidth="188.0" preserveRatio="true">
+                                            <image>
+                                                <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
+                                            </image>
+                                        </ImageView>
+                                        <Label text="ЛИЧНЫЙ КАБИНЕТ" styleClass="screen-kicker"/>
+                                        <Label text="Здесь собраны данные аккаунта, безопасность и быстрые переходы к настройкам запуска."
+                                               styleClass="label-muted" wrapText="true"/>
                                     </children>
                                 </VBox>
-                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
+
+                                <Label text="РАЗДЕЛЫ" styleClass="sidebar-section-label"/>
+
+                                <VBox spacing="8.0" styleClass="nav-group">
                                     <children>
-                                        <Label text="STATE" styleClass="sidebar-chip-label"/>
-                                        <Label text="live" styleClass="sidebar-chip-value"/>
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenHome" spacing="14.0"
+                                              styleClass="nav-item">
+                                            <children>
+                                                <StackPane styleClass="nav-icon-badge">
+                                                    <children>
+                                                        <SVGPath content="M3 11.5 L12 4 L21 11.5 M5.5 10.5 V20 H10.7 V14.4 H13.3 V20 H18.5 V10.5"
+                                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
+                                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                                 strokeWidth="2.2"/>
+                                                    </children>
+                                                </StackPane>
+                                                <Label styleClass="nav-text" text="Главная"/>
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenServer" spacing="14.0"
+                                              styleClass="nav-item">
+                                            <children>
+                                                <StackPane styleClass="nav-icon-badge">
+                                                    <children>
+                                                        <SVGPath content="M5 5 Q5 3.5 6.5 3.5 H17.5 Q19 3.5 19 5 V19 Q19 20.5 17.5 20.5 H6.5 Q5 20.5 5 19 Z M8 8 H16 M8 12 H16 M8 16 H12"
+                                                                 fill="TRANSPARENT" scaleX="0.92" scaleY="0.92"
+                                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                                 strokeWidth="2.0"/>
+                                                    </children>
+                                                </StackPane>
+                                                <Label styleClass="nav-text" text="Сервер"/>
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenMods" spacing="14.0"
+                                              styleClass="nav-item">
+                                            <children>
+                                                <StackPane styleClass="nav-icon-badge">
+                                                    <children>
+                                                        <SVGPath content="M12 3 L20 7.5 V16.5 L12 21 L4 16.5 V7.5 Z M4.5 7.7 L12 11.9 L19.5 7.7 M12 12 V20.5"
+                                                                 fill="TRANSPARENT" scaleX="0.9" scaleY="0.9"
+                                                                 stroke="#9CA3AF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                                 strokeWidth="2.0"/>
+                                                    </children>
+                                                </StackPane>
+                                                <Label styleClass="nav-text" text="Моды"/>
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" onMouseClicked="#onOpenSettings" spacing="14.0"
+                                              styleClass="nav-item">
+                                            <children>
+                                                <StackPane styleClass="nav-icon-badge">
+                                                    <children>
+                                                        <Label styleClass="nav-glyph" text="⚙"/>
+                                                    </children>
+                                                </StackPane>
+                                                <Label styleClass="nav-text" text="Настройки"/>
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="nav-item, nav-item-active">
+                                            <children>
+                                                <StackPane styleClass="nav-icon-badge, nav-icon-badge-active">
+                                                    <children>
+                                                        <SVGPath content="M12 12 A4 4 0 1 1 12 4 A4 4 0 1 1 12 12 M5 20 C5.8 16.8 8.2 15 12 15 C15.8 15 18.2 16.8 19 20"
+                                                                 fill="TRANSPARENT" scaleX="0.88" scaleY="0.88"
+                                                                 stroke="#F4E6FF" strokeLineCap="ROUND" strokeLineJoin="ROUND"
+                                                                 strokeWidth="2.0"/>
+                                                    </children>
+                                                </StackPane>
+                                                <Label styleClass="nav-text, nav-text-active" text="Профиль"/>
+                                            </children>
+                                        </HBox>
                                     </children>
                                 </VBox>
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
 
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onLogout"
-                        styleClass="secondary-button" text="Выйти"/>
+                                <VBox spacing="12.0" styleClass="sidebar-footer-card">
+                                    <padding>
+                                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+                                    </padding>
+                                    <children>
+                                        <Label text="Текущая сессия" styleClass="label-value"/>
+                                        <Label text="Если доступ истечёт, лаунчер вернёт на экран входа и попросит авторизоваться заново."
+                                               styleClass="label-muted" wrapText="true"/>
+                                        <HBox spacing="8.0">
+                                            <children>
+                                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="ВХОД" styleClass="sidebar-chip-label"/>
+                                                        <Label text="активен" styleClass="sidebar-chip-value"/>
+                                                    </children>
+                                                </VBox>
+                                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label text="SYNC" styleClass="sidebar-chip-label"/>
+                                                        <Label text="доступен" styleClass="sidebar-chip-value"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+
+                                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onLogout"
+                                        styleClass="secondary-button" text="Выйти из аккаунта"/>
                             </children>
                         </VBox>
                     </content>
@@ -154,140 +154,140 @@
     <center>
         <StackPane>
             <children>
-                <ImageView fitWidth="1080.0" fitHeight="820.0" preserveRatio="false" opacity="0.42">
+                <ImageView fitHeight="820.0" fitWidth="1080.0" opacity="0.42" preserveRatio="false">
                     <image>
                         <Image url="@obsidiangate/images/backgrounds/hero_portal_background.png"/>
                     </image>
                 </ImageView>
-                <Pane styleClass="profile-overlay"/>
+                <Pane styleClass="page-overlay"/>
 
                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="settings-scroll">
                     <content>
                         <VBox spacing="18.0" styleClass="settings-scroll-content">
                             <padding>
-                                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
                             </padding>
                             <children>
-                        <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag"
-                              spacing="16.0">
-                            <children>
-                                <VBox spacing="4.0">
+                                <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag"
+                                      spacing="16.0" styleClass="page-toolbar">
                                     <children>
-                                        <Label text="PLAYER IDENTITY" styleClass="screen-kicker"/>
-                                        <Label text="Личный кабинет" styleClass="auth-title"/>
-                                        <Label text="Профиль, безопасность и игровые данные в одном маршруте."
-                                               styleClass="label-muted"/>
+                                        <VBox spacing="4.0">
+                                            <children>
+                                                <Label text="АККАУНТ И БЕЗОПАСНОСТЬ" styleClass="screen-kicker"/>
+                                                <Label text="Профиль игрока" styleClass="auth-title"/>
+                                                <Label text="Основные данные аккаунта и быстрые действия собраны на одном экране."
+                                                       styleClass="label-muted" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Button fx:id="minimizeWindowButton" mnemonicParsing="false"
+                                                onAction="#minimizeWindow" styleClass="window-control"/>
+                                        <Button fx:id="closeWindowButton" mnemonicParsing="false"
+                                                onAction="#closeWindow" styleClass="window-control, window-control-close"/>
                                     </children>
-                                </VBox>
-                                <Region HBox.hgrow="ALWAYS"/>
-                                <Button fx:id="minimizeWindowButton" mnemonicParsing="false"
-                                        onAction="#minimizeWindow" styleClass="window-control"/>
-                                <Button fx:id="closeWindowButton" mnemonicParsing="false"
-                                        onAction="#closeWindow" styleClass="window-control, window-control-close"/>
-                            </children>
-                        </HBox>
+                                </HBox>
 
-                        <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="profile-hero-card">
-                            <children>
-                                <StackPane styleClass="avatar-frame">
+                                <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="profile-hero-card">
                                     <children>
-                                        <ImageView fitWidth="96.0" fitHeight="96.0">
-                                            <image>
-                                                <Image url="@obsidiangate/images/avatar/player_avatar.png"/>
-                                            </image>
-                                        </ImageView>
+                                        <StackPane styleClass="avatar-frame">
+                                            <children>
+                                                <ImageView fitHeight="96.0" fitWidth="96.0">
+                                                    <image>
+                                                        <Image url="@obsidiangate/images/avatar/player_avatar.png"/>
+                                                    </image>
+                                                </ImageView>
+                                            </children>
+                                        </StackPane>
+                                        <VBox spacing="10.0">
+                                            <children>
+                                                <Label fx:id="profileNameLabel" styleClass="profile-main-name"/>
+                                                <Label fx:id="profileRoleLabel" styleClass="label-purple-accent"/>
+                                                <Label fx:id="profileEmailLabel" styleClass="label-body" wrapText="true"/>
+                                                <Label fx:id="statusLabel" styleClass="label-muted" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <VBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="action-stack">
+                                            <children>
+                                                <Button mnemonicParsing="false" onAction="#onEditProfile"
+                                                        styleClass="primary-button" text="Изменить профиль"/>
+                                                <Button mnemonicParsing="false" onAction="#onChangeSkin"
+                                                        styleClass="secondary-button" text="Сменить скин"/>
+                                            </children>
+                                        </VBox>
                                     </children>
-                                </StackPane>
-                                <VBox spacing="10.0">
-                                    <children>
-                                        <Label fx:id="profileNameLabel" styleClass="profile-main-name"/>
-                                        <Label fx:id="profileRoleLabel" styleClass="label-purple"/>
-                                        <Label fx:id="profileEmailLabel" styleClass="label-body"/>
-                                        <Label fx:id="statusLabel" styleClass="label-muted" wrapText="true"/>
-                                    </children>
-                                </VBox>
-                                <Region HBox.hgrow="ALWAYS"/>
-                                <VBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="action-stack">
-                                    <children>
-                                        <Button mnemonicParsing="false" onAction="#onChangeSkin"
-                                                styleClass="primary-button" text="Сменить скин"/>
-                                        <Button mnemonicParsing="false" onAction="#onEditProfile"
-                                                styleClass="secondary-button" text="Изменить профиль"/>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </HBox>
+                                </HBox>
 
-                        <FlowPane hgap="18.0" vgap="18.0" prefWrapLength="980.0">
-                            <children>
-                                <VBox prefWidth="210.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
+                                <FlowPane hgap="18.0" prefWrapLength="980.0" vgap="18.0">
                                     <children>
-                                        <Label text="ACCOUNT ID" styleClass="label-muted"/>
-                                        <Label fx:id="accountIdLabel" styleClass="metric-value-small" wrapText="true"/>
+                                        <VBox prefWidth="220.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
+                                            <children>
+                                                <Label text="ID АККАУНТА" styleClass="label-muted"/>
+                                                <Label fx:id="accountIdLabel" styleClass="metric-value-small" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox prefWidth="180.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
+                                            <children>
+                                                <Label text="РЕЖИМ ВХОДА" styleClass="label-muted"/>
+                                                <Label text="через лаунчер" styleClass="metric-value-small"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox prefWidth="220.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
+                                            <children>
+                                                <Label text="SERVER ID" styleClass="label-muted"/>
+                                                <Label fx:id="launcherServerIdLabel" styleClass="metric-value-small" wrapText="true"/>
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="6.0" styleClass="metric-card, metric-card-compact" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label text="ПАПКА ИГРЫ" styleClass="label-muted"/>
+                                                <Label fx:id="launcherPathLabel" styleClass="metric-value-small" wrapText="true"/>
+                                            </children>
+                                        </VBox>
                                     </children>
-                                </VBox>
-                                <VBox prefWidth="210.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
-                                    <children>
-                                        <Label text="AUTH" styleClass="label-muted"/>
-                                        <Label text="launcher-auth" styleClass="metric-value"/>
-                                        <Label text="через backend API" styleClass="label-purple"/>
-                                    </children>
-                                </VBox>
-                                <VBox prefWidth="210.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
-                                    <children>
-                                        <Label text="SERVER ID" styleClass="label-muted"/>
-                                        <Label fx:id="launcherServerIdLabel" styleClass="metric-value-small" wrapText="true"/>
-                                    </children>
-                                </VBox>
-                                <VBox prefWidth="210.0" spacing="6.0" styleClass="metric-card, metric-card-compact">
-                                    <children>
-                                        <Label text="GAME DIR" styleClass="label-muted"/>
-                                        <Label fx:id="launcherPathLabel" styleClass="metric-value-small" wrapText="true"/>
-                                    </children>
-                                </VBox>
-                            </children>
-                        </FlowPane>
+                                </FlowPane>
 
-                        <FlowPane hgap="20.0" vgap="20.0" prefWrapLength="980.0" VBox.vgrow="ALWAYS">
-                            <children>
-                                <VBox prefWidth="320.0" spacing="16.0" styleClass="profile-card">
+                                <FlowPane hgap="20.0" prefWrapLength="980.0" vgap="20.0" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <Label text="Безопасность" styleClass="label-value"/>
-                                        <Label text="Email привязан к backend-аккаунту и участвует в auth flow."
-                                               styleClass="label-body" wrapText="true"/>
-                                        <Label text="Следующий этап: смена пароля и подключение 2FA." styleClass="label-muted"/>
-                                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onEnableTwoFactor"
-                                                styleClass="secondary-button" text="Включить 2FA"/>
-                                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onChangePassword"
-                                                styleClass="secondary-button" text="Сменить пароль"/>
-                                    </children>
-                                </VBox>
+                                        <VBox prefWidth="300.0" spacing="16.0" styleClass="profile-card">
+                                            <children>
+                                                <Label text="Безопасность" styleClass="label-value"/>
+                                                <Label text="Управление паролем и дополнительной защитой аккаунта."
+                                                       styleClass="label-body" wrapText="true"/>
+                                                <Label text="Сейчас здесь доступны базовые действия. Позже можно будет подключить 2FA."
+                                                       styleClass="label-muted" wrapText="true"/>
+                                                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onChangePassword"
+                                                        styleClass="secondary-button" text="Сменить пароль"/>
+                                                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onEnableTwoFactor"
+                                                        styleClass="secondary-button" text="Подключить 2FA"/>
+                                            </children>
+                                        </VBox>
 
-                                <VBox prefWidth="320.0" spacing="16.0" styleClass="profile-card">
-                                    <children>
-                                        <Label text="Персонаж" styleClass="label-value"/>
-                                        <Label text="Серверные метрики и RPG-статистика появятся здесь после полной интеграции backend и Forge-мода."
-                                               wrapText="true" styleClass="label-body"/>
-                                        <Label text="Сейчас экран готов под будущие игровые данные и персональный прогресс."
-                                               wrapText="true" styleClass="label-muted"/>
-                                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenStats"
-                                                styleClass="secondary-button" text="Открыть статистику"/>
-                                    </children>
-                                </VBox>
+                                        <VBox prefWidth="300.0" spacing="16.0" styleClass="profile-card">
+                                            <children>
+                                                <Label text="Игровой профиль" styleClass="label-value"/>
+                                                <Label text="Отсюда будет удобно открывать статистику, состояние персонажа и будущие серверные данные."
+                                                       styleClass="label-body" wrapText="true"/>
+                                                <Label text="Экран уже готов под дальнейшее расширение без перегрузки интерфейса."
+                                                       styleClass="label-muted" wrapText="true"/>
+                                                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onOpenStats"
+                                                        styleClass="secondary-button" text="Открыть статистику"/>
+                                            </children>
+                                        </VBox>
 
-                                <VBox prefWidth="320.0" spacing="16.0" styleClass="profile-card">
-                                    <children>
-                                        <Label text="Launcher flow" styleClass="label-value"/>
-                                        <Label text="Перед стартом клиента launcher получает одноразовый game ticket и пробрасывает его в игру."
-                                               wrapText="true" styleClass="label-body"/>
-                                        <Label text="Отсюда удобно перейти к настройкам маршрута, manifest и путей запуска."
-                                               wrapText="true" styleClass="label-muted"/>
-                                        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onLauncherSettings"
-                                                styleClass="secondary-button" text="Открыть настройки"/>
+                                        <VBox prefWidth="300.0" spacing="16.0" styleClass="profile-card">
+                                            <children>
+                                                <Label text="Launcher и запуск" styleClass="label-value"/>
+                                                <Label text="Здесь видно, к какому серверу и какой директории сейчас привязан ваш аккаунт."
+                                                       styleClass="label-body" wrapText="true"/>
+                                                <Label text="Если нужно поменять путь, manifest или Java-команду, переходите в настройки."
+                                                       styleClass="label-muted" wrapText="true"/>
+                                                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#onLauncherSettings"
+                                                        styleClass="secondary-button" text="Открыть настройки запуска"/>
+                                            </children>
+                                        </VBox>
                                     </children>
-                                </VBox>
-                            </children>
-                        </FlowPane>
+                                </FlowPane>
                             </children>
                         </VBox>
                     </content>
