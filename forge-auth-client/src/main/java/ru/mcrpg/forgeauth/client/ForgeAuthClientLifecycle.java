@@ -1,13 +1,14 @@
 package ru.mcrpg.forgeauth.client;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Instant;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import ru.mcrpg.gameauth.GameTicketProof;
 import ru.mcrpg.gameauth.LauncherSession;
 import ru.mcrpg.gameauth.LauncherSessionFiles;
@@ -19,6 +20,7 @@ final class ForgeAuthClientLifecycle {
     private final LauncherSessionFiles sessionFiles;
 
     private LauncherSession pendingSession;
+    private Path pendingSessionPath;
     private boolean pendingSend;
     private boolean alreadySent;
     private int ticksUntilSend;
@@ -32,14 +34,20 @@ final class ForgeAuthClientLifecycle {
     @SubscribeEvent
     public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event) {
         pendingSession = null;
+        pendingSessionPath = null;
         pendingSend = false;
         alreadySent = false;
         ticksUntilSend = 0;
 
         try {
-            LauncherSession session = sessionFiles.readFromSystemProperty();
+            pendingSessionPath = sessionFiles.resolveFromSystemProperty();
+            LauncherSession session = sessionFiles.read(pendingSessionPath);
             if (session.isExpired(Instant.now())) {
                 logger.warning("Launcher session ticket already expired. Ticket will not be sent.");
+                return;
+            }
+            if (!session.hasTickets()) {
+                logger.warning("Launcher session has no remaining reconnect tickets. Ticket will not be sent.");
                 return;
             }
 
@@ -82,6 +90,7 @@ final class ForgeAuthClientLifecycle {
         }
 
         channel.sendToServer(new AuthTicketMessage(proof));
+        consumeCurrentTicket();
         alreadySent = true;
         pendingSend = false;
         logger.info(String.format(
@@ -93,8 +102,21 @@ final class ForgeAuthClientLifecycle {
     @SubscribeEvent
     public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         pendingSession = null;
+        pendingSessionPath = null;
         pendingSend = false;
         alreadySent = false;
         ticksUntilSend = 0;
+    }
+
+    private void consumeCurrentTicket() {
+        if (pendingSession == null || pendingSessionPath == null) {
+            return;
+        }
+
+        try {
+            sessionFiles.write(pendingSessionPath, pendingSession.consumeTicket());
+        } catch (IOException exception) {
+            logger.log(Level.WARNING, "Failed to persist remaining reconnect tickets.", exception);
+        }
     }
 }

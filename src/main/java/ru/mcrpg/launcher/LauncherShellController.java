@@ -36,8 +36,10 @@ public final class LauncherShellController extends AbstractScreenController {
     private static final int SERVER_STATUS_TIMEOUT_MS = 1500;
     private static final String DASHBOARD_UNKNOWN = "—";
     private static final int PREVIEW_ENTRY_LIMIT = 4;
+    private static final int RECONNECT_TICKET_COUNT = 5;
 
     private final LaunchCommandBuilder commandBuilder = new LaunchCommandBuilder();
+    private final MinecraftServerListWriter serverListWriter = new MinecraftServerListWriter();
     private final ModpackManifestClient manifestClient = new ModpackManifestClient();
     private final ModpackSyncService modpackSyncService = new ModpackSyncService(manifestClient);
     private final AtomicLong endpointPreviewSequence = new AtomicLong();
@@ -339,10 +341,13 @@ public final class LauncherShellController extends AbstractScreenController {
                     List<String> command;
                     if (effectiveSession != null && effectiveSession.getAccount() != null) {
                         effectiveSession = context().getAuthService().refreshIfNeeded(effectiveConfig, effectiveSession);
-                        GameTicket gameTicket = context().getAuthService().createGameTicket(effectiveConfig, effectiveSession);
-                        Path sessionFile = context().getSessionFileWriter().write(effectiveConfig, gameTicket);
+                        List<GameTicket> reconnectTickets = createReconnectTickets(effectiveConfig, effectiveSession);
+                        GameTicket gameTicket = reconnectTickets.get(0);
+                        Path sessionFile = context().getSessionFileWriter().write(effectiveConfig, reconnectTickets);
                         effectiveConfig.setUsername(effectiveSession.getAccount().getUsername());
-                        appendLogAsync("Created game ticket for " + gameTicket.getUsername() + ".");
+                        appendLogAsync(
+                            "Prepared " + reconnectTickets.size() + " launcher reconnect tickets for " + gameTicket.getUsername() + "."
+                        );
                         command = commandBuilder.build(
                             effectiveConfig,
                             LaunchIdentity.authenticated(
@@ -354,6 +359,13 @@ public final class LauncherShellController extends AbstractScreenController {
                         );
                     } else {
                         command = commandBuilder.build(effectiveConfig);
+                    }
+
+                    try {
+                        serverListWriter.upsert(effectiveConfig);
+                        appendLogAsync("Saved Minecraft server entry: " + effectiveConfig.getServerHost() + ":" + effectiveConfig.getServerPort());
+                    } catch (IOException | IllegalArgumentException exception) {
+                        appendLogAsync("Minecraft server list update skipped: " + exception.getMessage());
                     }
 
                     Path workingDirectory = resolveWorkingDirectory(effectiveConfig);
@@ -766,6 +778,14 @@ public final class LauncherShellController extends AbstractScreenController {
             }
         }
         return process.waitFor();
+    }
+
+    private List<GameTicket> createReconnectTickets(LauncherConfig config, AuthSession session) throws IOException {
+        List<GameTicket> tickets = new ArrayList<GameTicket>(RECONNECT_TICKET_COUNT);
+        for (int index = 0; index < RECONNECT_TICKET_COUNT; index++) {
+            tickets.add(context().getAuthService().createGameTicket(config, session));
+        }
+        return tickets;
     }
 
     private void setBusy(boolean busy) {
