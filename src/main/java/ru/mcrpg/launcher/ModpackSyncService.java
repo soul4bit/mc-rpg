@@ -257,11 +257,7 @@ public final class ModpackSyncService {
     private static URL resolveDownloadUrl(LoadedManifest loadedManifest, ModpackManifest manifest, ModpackFile file)
         throws IOException {
         String relativeUrl = hasText(file.getUrl()) ? file.getUrl().trim() : normalizeUrlPath(file.getPath());
-        URL baseUrl = loadedManifest.getSourceUrl();
-        if (hasText(manifest.getBaseUrl())) {
-            baseUrl = new URL(loadedManifest.getSourceUrl(), manifest.getBaseUrl().trim());
-        }
-        return new URL(baseUrl, relativeUrl);
+        return DownloadUrlResolver.resolve(loadedManifest.getSourceUrl(), manifest.getBaseUrl(), relativeUrl);
     }
 
     private static void applyManifestSettings(LauncherConfig config, ModpackManifest manifest, Path gameDirectory) {

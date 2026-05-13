@@ -148,12 +148,11 @@ public final class RuntimeSyncService {
 
     private static URL resolveDownloadUrl(LoadedManifest loadedManifest, ModpackManifest manifest, String rawUrl)
         throws IOException {
-        String url = requireText(rawUrl, "Runtime package url is missing.");
-        URL baseUrl = loadedManifest.getSourceUrl();
-        if (hasText(manifest.getBaseUrl())) {
-            baseUrl = new URL(loadedManifest.getSourceUrl(), manifest.getBaseUrl().trim());
-        }
-        return new URL(baseUrl, url.trim());
+        return DownloadUrlResolver.resolve(
+            loadedManifest.getSourceUrl(),
+            manifest.getBaseUrl(),
+            requireText(rawUrl, "Runtime package url is missing.")
+        );
     }
 
     private static void verifyArchive(RuntimePackage runtimePackage, Path archiveFile) throws IOException {

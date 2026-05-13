@@ -107,7 +107,7 @@ function Get-FileRecord {
 
     return [pscustomobject][ordered]@{
         path = $RelativePath
-        sha256 = (Get-FileHash $File.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+        sha256 = (Get-FileHash -LiteralPath $File.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
         size = [int64]$File.Length
         executable = $false
     }
@@ -192,7 +192,7 @@ if ($manifest.runtime -and $manifest.runtime.packages) {
         }
 
         $runtimeFile = Get-Item $runtimeFilePath
-        $package.sha256 = (Get-FileHash $runtimeFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+        $package.sha256 = (Get-FileHash -LiteralPath $runtimeFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
         $package.size = [int64]$runtimeFile.Length
     }
 }
