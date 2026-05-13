@@ -124,9 +124,9 @@ function Get-ArtifactFile {
         [string]$Pattern
     )
 
-    $artifacts = Get-ChildItem (Join-Path $repoRoot $Directory) -File -Filter $Pattern |
+    $artifacts = @(Get-ChildItem (Join-Path $repoRoot $Directory) -File -Filter $Pattern |
         Where-Object { $_.Name -notlike "original-*" -and $_.Name -notlike "*-shaded.jar" } |
-        Sort-Object LastWriteTime -Descending
+        Sort-Object LastWriteTime -Descending)
 
     if (-not $artifacts) {
         throw "Artifact not found in $Directory for pattern $Pattern"
@@ -143,12 +143,14 @@ function Get-ProjectVersion {
 
 function Build-LauncherArtifact {
     Write-Host "==> Building launcher update jar" -ForegroundColor Cyan
-    & mvn "-f" (Join-Path $repoRoot "pom.xml") "package" "-DskipTests"
-    if ($LASTEXITCODE -ne 0) {
+    & mvn "-f" (Join-Path $repoRoot "pom.xml") "package" "-DskipTests" |
+        ForEach-Object { Write-Host $_ }
+    $mavenExitCode = $LASTEXITCODE
+    if ($mavenExitCode -ne 0) {
         throw "Launcher Maven build failed."
     }
 
-    return Get-ArtifactFile -Directory "target" -Pattern "obsidian-gate-launcher-*.jar"
+    return (Get-ArtifactFile -Directory "target" -Pattern "obsidian-gate-launcher-*.jar")
 }
 
 function Copy-DirectoryContent {
