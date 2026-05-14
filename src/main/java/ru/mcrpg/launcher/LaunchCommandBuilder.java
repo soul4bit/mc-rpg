@@ -1,23 +1,16 @@
 package ru.mcrpg.launcher;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class LaunchCommandBuilder {
 
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{([a-zA-Z][a-zA-Z0-9]*)}");
-
-    public List<String> build(LauncherConfig config) {
-        String username = trim(config.getUsername());
-        return build(config, LaunchIdentity.offline(username, offlineUuid(username)));
-    }
 
     public List<String> build(LauncherConfig config, LaunchIdentity identity) {
         String template = requireText(config.getLaunchTemplate(), "Укажи шаблон команды запуска.");
@@ -180,11 +173,4 @@ public final class LaunchCommandBuilder {
         }
     }
 
-    private static String offlineUuid(String username) {
-        String normalized = trim(username);
-        if (normalized.isEmpty()) {
-            return "";
-        }
-        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + normalized).getBytes(StandardCharsets.UTF_8)).toString();
-    }
 }

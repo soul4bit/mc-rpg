@@ -20,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
@@ -29,7 +28,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Arc;
-import ru.mcrpg.launcher.ui.SvgIcons;
 
 public final class LauncherShellController extends AbstractScreenController {
 
@@ -109,12 +107,6 @@ public final class LauncherShellController extends AbstractScreenController {
     private Button launchButton;
 
     @FXML
-    private Button minimizeWindowButton;
-
-    @FXML
-    private Button closeWindowButton;
-
-    @FXML
     private Label syncFileLabel;
 
     @FXML
@@ -188,21 +180,6 @@ public final class LauncherShellController extends AbstractScreenController {
         router().open(state().isAuthenticated() ? ScreenRouter.Screen.PROFILE : ScreenRouter.Screen.AUTH);
     }
 
-    @FXML
-    private void openSettingsScreen() {
-        router().open(ScreenRouter.Screen.SETTINGS);
-    }
-
-    @FXML
-    private void openServerScreen() {
-        router().open(ScreenRouter.Screen.SERVER);
-    }
-
-    @FXML
-    private void openModsScreen() {
-        router().open(ScreenRouter.Screen.MODS);
-    }
-
     private void configureControls() {
         logArea.setEditable(false);
         logArea.setWrapText(true);
@@ -211,7 +188,6 @@ public final class LauncherShellController extends AbstractScreenController {
         brandSubtitleLabel.setText(LauncherBrand.APP_SUBTITLE);
         sidebarVersionLabel.setText("Launcher " + LauncherBrand.displayVersion());
         profileChevronLabel.setText("⌄");
-        applyWindowControlIcons();
 
         syncButton.setOnAction(event -> syncFiles());
         previewButton.setOnAction(event -> previewSyncChanges());
@@ -230,8 +206,8 @@ public final class LauncherShellController extends AbstractScreenController {
         }
 
         profileNameLabel.setText("Гость");
-        profileRankLabel.setText("Оффлайн режим");
-        syncFileLabel.setText("Авторизуйтесь для запуска через серверный аккаунт или продолжайте оффлайн.");
+        profileRankLabel.setText("Не авторизован");
+        syncFileLabel.setText("Авторизуйтесь для запуска через серверный аккаунт.");
     }
 
     private void applyConfigToView(LauncherConfig config) {
@@ -328,6 +304,12 @@ public final class LauncherShellController extends AbstractScreenController {
     }
 
     private void launchClient() {
+        if (!state().isAuthenticated()) {
+            state().setAuthNotice("Авторизуйтесь перед запуском клиента.");
+            router().open(ScreenRouter.Screen.AUTH);
+            return;
+        }
+
         LauncherConfig config;
         try {
             config = buildCurrentConfig();
@@ -413,27 +395,26 @@ public final class LauncherShellController extends AbstractScreenController {
                 Integer exitCode = null;
                 if (action == LauncherAction.SYNC_AND_LAUNCH) {
                     List<String> command;
-                    if (effectiveSession != null && effectiveSession.getAccount() != null) {
-                        effectiveSession = context().getAuthService().refreshIfNeeded(effectiveConfig, effectiveSession);
-                        List<GameTicket> reconnectTickets = createReconnectTickets(effectiveConfig, effectiveSession);
-                        GameTicket gameTicket = reconnectTickets.get(0);
-                        Path sessionFile = context().getSessionFileWriter().write(effectiveConfig, reconnectTickets);
-                        effectiveConfig.setUsername(effectiveSession.getAccount().getUsername());
-                        appendLogAsync(
-                            "Prepared " + reconnectTickets.size() + " launcher reconnect tickets for " + gameTicket.getUsername() + "."
-                        );
-                        command = commandBuilder.build(
-                            effectiveConfig,
-                            LaunchIdentity.authenticated(
-                                effectiveSession.getAccount().getUsername(),
-                                gameTicket.getUuid(),
-                                effectiveSession.getAccessToken(),
-                                sessionFile
-                            )
-                        );
-                    } else {
-                        command = commandBuilder.build(effectiveConfig);
+                    if (effectiveSession == null || effectiveSession.getAccount() == null) {
+                        throw new AuthSessionExpiredException("Авторизуйтесь перед запуском клиента.", null);
                     }
+                    effectiveSession = context().getAuthService().refreshIfNeeded(effectiveConfig, effectiveSession);
+                    List<GameTicket> reconnectTickets = createReconnectTickets(effectiveConfig, effectiveSession);
+                    GameTicket gameTicket = reconnectTickets.get(0);
+                    Path sessionFile = context().getSessionFileWriter().write(effectiveConfig, reconnectTickets);
+                    effectiveConfig.setUsername(effectiveSession.getAccount().getUsername());
+                    appendLogAsync(
+                        "Prepared " + reconnectTickets.size() + " launcher reconnect tickets for " + gameTicket.getUsername() + "."
+                    );
+                    command = commandBuilder.build(
+                        effectiveConfig,
+                        LaunchIdentity.authenticated(
+                            effectiveSession.getAccount().getUsername(),
+                            gameTicket.getUuid(),
+                            effectiveSession.getAccessToken(),
+                            sessionFile
+                        )
+                    );
 
                     try {
                         serverListWriter.upsert(effectiveConfig);
@@ -1031,17 +1012,6 @@ public final class LauncherShellController extends AbstractScreenController {
         appendLog("Saved session expired. Redirecting to login.");
         router().open(ScreenRouter.Screen.AUTH);
         return true;
-    }
-
-    private void applySvgIconOnlyButton(Button button, String iconName, double size, String color) {
-        button.setText("");
-        button.setGraphic(SvgIcons.icon(iconName, size, color));
-        button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-    }
-
-    private void applyWindowControlIcons() {
-        applySvgIconOnlyButton(minimizeWindowButton, "minimize", 18, "#D9D9D9");
-        applySvgIconOnlyButton(closeWindowButton, "close", 18, "#D9D9D9");
     }
 
     private Path resolveWorkingDirectory(LauncherConfig config) {

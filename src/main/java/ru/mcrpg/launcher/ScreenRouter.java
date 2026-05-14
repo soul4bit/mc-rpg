@@ -15,10 +15,7 @@ public final class ScreenRouter {
         AUTH("/ru/mcrpg/launcher/AuthView.fxml", "/ru/mcrpg/launcher/account.css"),
         REGISTER("/ru/mcrpg/launcher/RegisterView.fxml", "/ru/mcrpg/launcher/account.css"),
         HOME("/ru/mcrpg/launcher/launcher-shell.fxml", "/ru/mcrpg/launcher/launcher-shell.css"),
-        PROFILE("/ru/mcrpg/launcher/ProfileView.fxml", "/ru/mcrpg/launcher/account.css"),
-        MODS("/ru/mcrpg/launcher/ModsView.fxml", "/ru/mcrpg/launcher/account.css"),
-        SERVER("/ru/mcrpg/launcher/ServerView.fxml", "/ru/mcrpg/launcher/account.css"),
-        SETTINGS("/ru/mcrpg/launcher/SettingsView.fxml", "/ru/mcrpg/launcher/account.css");
+        PROFILE("/ru/mcrpg/launcher/ProfileView.fxml", "/ru/mcrpg/launcher/account.css");
 
         private final String fxmlPath;
         private final String stylesheetPath;

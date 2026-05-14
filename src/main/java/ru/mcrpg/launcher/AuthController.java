@@ -9,7 +9,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ru.mcrpg.launcher.ui.SvgIcons;
 
 public final class AuthController extends AbstractScreenController {
 
@@ -26,19 +25,7 @@ public final class AuthController extends AbstractScreenController {
     private Hyperlink openRegisterLink;
 
     @FXML
-    private Hyperlink forgotPasswordLink;
-
-    @FXML
     private Button loginButton;
-
-    @FXML
-    private Button offlineButton;
-
-    @FXML
-    private Button minimizeWindowButton;
-
-    @FXML
-    private Button closeWindowButton;
 
     @FXML
     private Label statusLabel;
@@ -46,8 +33,6 @@ public final class AuthController extends AbstractScreenController {
     @FXML
     private void initialize() {
         rememberCheck.setSelected(true);
-        forgotPasswordLink.setOnAction(event -> showInfo("Восстановление пароля", "Экран восстановления пароля пока не подключен."));
-        applyWindowControls();
     }
 
     @Override
@@ -110,21 +95,12 @@ public final class AuthController extends AbstractScreenController {
         router().open(ScreenRouter.Screen.REGISTER);
     }
 
-    @FXML
-    private void onOffline() {
-        state().setSession(null);
-        setStatus("");
-        router().open(ScreenRouter.Screen.HOME);
-    }
-
     private void setBusy(boolean value) {
         loginButton.setDisable(value);
-        offlineButton.setDisable(value);
         loginField.setDisable(value);
         passwordField.setDisable(value);
         rememberCheck.setDisable(value);
         openRegisterLink.setDisable(value);
-        forgotPasswordLink.setDisable(value);
     }
 
     private void setStatus(String message) {
@@ -136,10 +112,4 @@ public final class AuthController extends AbstractScreenController {
         return notice == null ? "" : notice;
     }
 
-    private void applyWindowControls() {
-        minimizeWindowButton.setText("");
-        minimizeWindowButton.setGraphic(SvgIcons.icon("minimize", 18, "#D9D9D9"));
-        closeWindowButton.setText("");
-        closeWindowButton.setGraphic(SvgIcons.icon("close", 18, "#D9D9D9"));
-    }
 }

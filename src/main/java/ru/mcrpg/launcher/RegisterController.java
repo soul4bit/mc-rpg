@@ -10,7 +10,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ru.mcrpg.launcher.ui.SvgIcons;
 
 public final class RegisterController extends AbstractScreenController {
 
@@ -38,17 +37,10 @@ public final class RegisterController extends AbstractScreenController {
     private Hyperlink openLoginLink;
 
     @FXML
-    private Button minimizeWindowButton;
-
-    @FXML
-    private Button closeWindowButton;
-
-    @FXML
     private Label statusLabel;
 
     @FXML
     private void initialize() {
-        applyWindowControls();
         statusLabel.setText("");
     }
 
@@ -135,10 +127,4 @@ public final class RegisterController extends AbstractScreenController {
         statusLabel.setText(message == null ? "" : message.trim());
     }
 
-    private void applyWindowControls() {
-        minimizeWindowButton.setText("");
-        minimizeWindowButton.setGraphic(SvgIcons.icon("minimize", 18, "#D9D9D9"));
-        closeWindowButton.setText("");
-        closeWindowButton.setGraphic(SvgIcons.icon("close", 18, "#D9D9D9"));
-    }
 }

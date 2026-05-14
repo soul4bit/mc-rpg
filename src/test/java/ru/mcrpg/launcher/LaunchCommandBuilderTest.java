@@ -3,11 +3,9 @@ package ru.mcrpg.launcher;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class LaunchCommandBuilderTest {
@@ -17,7 +15,6 @@ class LaunchCommandBuilderTest {
     @Test
     void buildKeepsPlaceholderValueWithSpacesAsSingleArgument() {
         LauncherConfig config = LauncherConfig.defaults();
-        config.setUsername("Player One");
         config.setJavaCommand("java");
         config.setGameDirectory("C:/Games/MC RPG");
         config.setWorkingDirectory("C:/Games/MC RPG");
@@ -25,7 +22,7 @@ class LaunchCommandBuilderTest {
         config.setServerPort(25565);
         config.setLaunchTemplate("{java} -jar forge.jar --gameDir {gameDir} --username {username}");
 
-        List<String> command = builder.build(config);
+        List<String> command = builder.build(config, identity("Player One"));
 
         assertEquals(
             Arrays.asList("java", "-jar", "forge.jar", "--gameDir", "C:/Games/MC RPG", "--username", "Player One"),
@@ -36,7 +33,6 @@ class LaunchCommandBuilderTest {
     @Test
     void buildSupportsQuotedSegmentsInTemplate() {
         LauncherConfig config = LauncherConfig.defaults();
-        config.setUsername("RPG");
         config.setJavaCommand("java");
         config.setGameDirectory("/srv/mc-rpg");
         config.setWorkingDirectory("/srv/mc-rpg");
@@ -44,7 +40,7 @@ class LaunchCommandBuilderTest {
         config.setServerPort(25565);
         config.setLaunchTemplate("{java} --label \"Player {username}\" --server {serverHost}");
 
-        List<String> command = builder.build(config);
+        List<String> command = builder.build(config, identity("RPG"));
 
         assertEquals(Arrays.asList("java", "--label", "Player RPG", "--server", LauncherConfig.DEFAULT_SERVER_HOST), command);
     }
@@ -58,7 +54,7 @@ class LaunchCommandBuilderTest {
 
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
-            () -> builder.build(config)
+            () -> builder.build(config, identity("RPG"))
         );
 
         assertEquals(
@@ -78,26 +74,25 @@ class LaunchCommandBuilderTest {
         config.setServerPort(25565);
         config.setLaunchTemplate("start-client.bat");
 
-        List<String> command = builder.build(config);
+        List<String> command = builder.build(config, identity("RPG"));
 
         assertEquals(Arrays.asList("start-client.bat"), command);
     }
 
     @Test
-    void buildSupportsOfflineAuthPlaceholders() {
+    void buildSupportsAuthenticatedPlaceholders() {
         LauncherConfig config = LauncherConfig.defaults();
-        config.setUsername("Soul4");
         config.setLaunchTemplate("{java} --uuid {uuid} --token {accessToken} --userType {userType}");
 
-        List<String> command = builder.build(config);
+        List<String> command = builder.build(config, identity("Soul4"));
 
         assertEquals(
             Arrays.asList(
                 "java",
                 "--uuid",
-                UUID.nameUUIDFromBytes("OfflinePlayer:Soul4".getBytes(StandardCharsets.UTF_8)).toString(),
+                "uuid-Soul4",
                 "--token",
-                "0",
+                "token-Soul4",
                 "--userType",
                 "legacy"
             ),
@@ -127,5 +122,9 @@ class LaunchCommandBuilderTest {
             ),
             command
         );
+    }
+
+    private static LaunchIdentity identity(String username) {
+        return LaunchIdentity.authenticated(username, "uuid-" + username, "token-" + username, null);
     }
 }

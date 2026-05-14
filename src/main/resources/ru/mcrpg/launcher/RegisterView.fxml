@@ -7,189 +7,83 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="ru.mcrpg.launcher.RegisterController" styleClass="account-root">
-    <children>
-        <ImageView fitWidth="1360.0" fitHeight="820.0" opacity="0.66" preserveRatio="false">
-            <image>
-                <Image url="@obsidiangate/images/backgrounds/hero_portal_background.png"/>
-            </image>
-        </ImageView>
-        <Pane styleClass="auth-background-overlay"/>
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.mcrpg.launcher.RegisterController"
+            prefHeight="720.0" prefWidth="1040.0" styleClass="account-root">
+    <top>
+        <HBox alignment="CENTER_LEFT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag"
+              spacing="10.0" styleClass="top-bar">
+            <padding>
+                <Insets bottom="10.0" left="14.0" right="10.0" top="10.0"/>
+            </padding>
+            <children>
+                <Label styleClass="app-title" text="ObsidianGate"/>
+                <Label styleClass="muted" text="Регистрация"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button mnemonicParsing="false" onAction="#minimizeWindow" styleClass="window-button" text="_"/>
+                <Button mnemonicParsing="false" onAction="#closeWindow" styleClass="window-button" text="X"/>
+            </children>
+        </HBox>
+    </top>
 
-        <BorderPane prefHeight="820.0" prefWidth="1360.0" styleClass="app-window">
-            <top>
-                <HBox alignment="CENTER_RIGHT" onMouseDragged="#dragWindow" onMousePressed="#captureWindowDrag"
-                      spacing="12.0" styleClass="account-window-bar">
-                    <padding>
-                        <Insets bottom="0.0" left="30.0" right="30.0" top="24.0"/>
-                    </padding>
+    <center>
+        <VBox alignment="CENTER" spacing="12.0">
+            <padding>
+                <Insets bottom="24.0" left="24.0" right="24.0" top="24.0"/>
+            </padding>
+            <children>
+                <VBox maxWidth="460.0" spacing="12.0" styleClass="section">
                     <children>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="minimizeWindowButton" mnemonicParsing="false"
-                                onAction="#minimizeWindow" styleClass="window-control"/>
-                        <Button fx:id="closeWindowButton" mnemonicParsing="false"
-                                onAction="#closeWindow" styleClass="window-control, window-control-close"/>
-                    </children>
-                </HBox>
-            </top>
+                        <Label styleClass="page-title" text="Создать аккаунт"/>
+                        <Label styleClass="muted" text="Аккаунт будет использоваться для входа в лаунчер и сервер." wrapText="true"/>
 
-            <center>
-                <HBox alignment="CENTER" spacing="28.0">
-                    <padding>
-                        <Insets bottom="40.0" left="48.0" right="48.0" top="10.0"/>
-                    </padding>
-                    <children>
-                        <VBox maxWidth="448.0" prefWidth="448.0" spacing="20.0" styleClass="auth-side-card">
+                        <VBox spacing="5.0">
                             <children>
-                                <ImageView fitWidth="184.0" preserveRatio="true">
-                                    <image>
-                                        <Image url="@obsidiangate/images/logo/obsidiangate_logo_transparent_soft.png"/>
-                                    </image>
-                                </ImageView>
-
-                                <VBox spacing="10.0">
-                                    <children>
-                                        <Label text="НОВЫЙ АККАУНТ" styleClass="screen-kicker"/>
-                                        <Label text="Создайте вход один раз" styleClass="title-main" wrapText="true"/>
-                                        <Label text="После регистрации тот же аккаунт можно использовать для лаунчера, сайта и серверной авторизации."
-                                               styleClass="label-body" wrapText="true"/>
-                                    </children>
-                                </VBox>
-
-                                <VBox spacing="12.0">
-                                    <children>
-                                        <VBox spacing="8.0" styleClass="mini-stat-card">
-                                            <children>
-                                                <Label text="Никнейм как в игре" styleClass="mini-stat-title"/>
-                                                <Label text="Используйте латиницу, цифры и подчёркивание. Это имя понадобится и для входа, и для персонажа."
-                                                       styleClass="mini-stat-copy" wrapText="true"/>
-                                            </children>
-                                        </VBox>
-                                        <VBox spacing="8.0" styleClass="mini-stat-card">
-                                            <children>
-                                                <Label text="Email для восстановления" styleClass="mini-stat-title"/>
-                                                <Label text="Он пригодится для входа и будущего восстановления доступа, когда этот экран будет подключён."
-                                                       styleClass="mini-stat-copy" wrapText="true"/>
-                                            </children>
-                                        </VBox>
-                                        <VBox spacing="8.0" styleClass="mini-stat-card">
-                                            <children>
-                                                <Label text="Сразу откроется лаунчер" styleClass="mini-stat-title"/>
-                                                <Label text="После успешной регистрации аккаунт будет авторизован автоматически и перенаправит на главный экран."
-                                                       styleClass="mini-stat-copy" wrapText="true"/>
-                                            </children>
-                                        </VBox>
-                                    </children>
-                                </VBox>
-
-                                <VBox spacing="12.0" styleClass="sidebar-footer-card">
-                                    <padding>
-                                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
-                                    </padding>
-                                    <children>
-                                        <Label text="Перед созданием аккаунта" styleClass="label-value"/>
-                                        <Label text="Проверьте правильность никнейма и email: они сразу станут базой для дальнейшего входа и работы профиля."
-                                               styleClass="label-muted" wrapText="true"/>
-                                        <HBox spacing="8.0">
-                                            <children>
-                                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
-                                                    <children>
-                                                        <Label text="НИК" styleClass="sidebar-chip-label"/>
-                                                        <Label text="3-16 знаков" styleClass="sidebar-chip-value"/>
-                                                    </children>
-                                                </VBox>
-                                                <VBox spacing="4.0" styleClass="sidebar-chip" HBox.hgrow="ALWAYS">
-                                                    <children>
-                                                        <Label text="ПАРОЛЬ" styleClass="sidebar-chip-label"/>
-                                                        <Label text="от 8 символов" styleClass="sidebar-chip-value"/>
-                                                    </children>
-                                                </VBox>
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
+                                <Label styleClass="field-label" text="Ник"/>
+                                <TextField fx:id="usernameField" promptText="A-Za-z0-9_, 3-16 символов"/>
                             </children>
                         </VBox>
 
-                        <VBox maxWidth="472.0" prefWidth="472.0" spacing="18.0" styleClass="auth-card">
+                        <VBox spacing="5.0">
                             <children>
-                                <VBox spacing="8.0">
-                                    <children>
-                                        <Label text="СОЗДАНИЕ АККАУНТА" styleClass="screen-kicker"/>
-                                        <Label text="Регистрация" styleClass="auth-title"/>
-                                        <Label text="Заполните поля ниже, чтобы создать аккаунт ObsidianGate и сразу продолжить работу в лаунчере."
-                                               styleClass="auth-subtitle" wrapText="true"/>
-                                    </children>
-                                </VBox>
-
-                                <VBox spacing="12.0">
-                                    <children>
-                                        <VBox spacing="7.0">
-                                            <children>
-                                                <Label text="Никнейм" styleClass="field-label"/>
-                                                <TextField fx:id="usernameField" promptText="Например: Arcanist_42"
-                                                           styleClass="auth-field"/>
-                                            </children>
-                                        </VBox>
-                                        <VBox spacing="7.0">
-                                            <children>
-                                                <Label text="Email" styleClass="field-label"/>
-                                                <TextField fx:id="emailField" promptText="you@example.com"
-                                                           styleClass="auth-field"/>
-                                            </children>
-                                        </VBox>
-                                        <VBox spacing="7.0">
-                                            <children>
-                                                <Label text="Пароль" styleClass="field-label"/>
-                                                <PasswordField fx:id="passwordField" promptText="Минимум 8 символов"
-                                                               styleClass="auth-field"/>
-                                            </children>
-                                        </VBox>
-                                        <VBox spacing="7.0">
-                                            <children>
-                                                <Label text="Повторите пароль" styleClass="field-label"/>
-                                                <PasswordField fx:id="confirmPasswordField" promptText="Введите пароль ещё раз"
-                                                               styleClass="auth-field"/>
-                                            </children>
-                                        </VBox>
-                                    </children>
-                                </VBox>
-
-                                <CheckBox fx:id="rulesCheck"
-                                          styleClass="check-box"
-                                          text="Я принимаю правила сервера и пользовательское соглашение"
-                                          wrapText="true"/>
-
-                                <Label fx:id="statusLabel" styleClass="status-error" wrapText="true"/>
-
-                                <Button fx:id="registerButton" maxWidth="Infinity" mnemonicParsing="false"
-                                        onAction="#onRegister" styleClass="primary-button"
-                                        text="Создать аккаунт и войти"/>
-
-                                <Region styleClass="divider"/>
-
-                                <HBox alignment="CENTER" spacing="8.0">
-                                    <children>
-                                        <Label text="Уже есть аккаунт?" styleClass="label-muted"/>
-                                        <Hyperlink fx:id="openLoginLink" onAction="#openLogin"
-                                                   styleClass="link-button" text="Вернуться ко входу"/>
-                                    </children>
-                                </HBox>
+                                <Label styleClass="field-label" text="Email"/>
+                                <TextField fx:id="emailField" promptText="you@example.com"/>
                             </children>
                         </VBox>
+
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label styleClass="field-label" text="Пароль"/>
+                                <PasswordField fx:id="passwordField" promptText="Минимум 8 символов"/>
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label styleClass="field-label" text="Повтор пароля"/>
+                                <PasswordField fx:id="confirmPasswordField" promptText="Введите пароль ещё раз"/>
+                            </children>
+                        </VBox>
+
+                        <CheckBox fx:id="rulesCheck" text="Я принимаю правила сервера"/>
+                        <Label fx:id="statusLabel" styleClass="status-error" wrapText="true"/>
+                        <Button fx:id="registerButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                onAction="#onRegister" styleClass="primary-button" text="Зарегистрироваться"/>
+
+                        <HBox alignment="CENTER" spacing="6.0">
+                            <children>
+                                <Label styleClass="muted" text="Уже есть аккаунт?"/>
+                                <Hyperlink fx:id="openLoginLink" onAction="#openLogin" text="Войти"/>
+                            </children>
+                        </HBox>
                     </children>
-                </HBox>
-            </center>
-        </BorderPane>
-    </children>
-</StackPane>
+                </VBox>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

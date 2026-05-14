@@ -18,10 +18,6 @@ public final class LaunchIdentity {
         this.sessionFile = sessionFile;
     }
 
-    public static LaunchIdentity offline(String username, String uuid) {
-        return new LaunchIdentity(username, uuid, "0", "legacy", null);
-    }
-
     public static LaunchIdentity authenticated(String username, String uuid, String accessToken, Path sessionFile) {
         return new LaunchIdentity(username, uuid, accessToken, "legacy", sessionFile);
     }

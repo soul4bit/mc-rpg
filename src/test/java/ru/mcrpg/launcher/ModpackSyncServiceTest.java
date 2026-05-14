@@ -334,7 +334,10 @@ class ModpackSyncServiceTest {
         assertTrue(result.getResolvedConfig().getLaunchTemplate().contains("--tweakClass"));
         assertFalse(result.getResolvedConfig().getLaunchTemplate().contains("\\"));
 
-        List<String> command = new LaunchCommandBuilder().build(result.getResolvedConfig());
+        List<String> command = new LaunchCommandBuilder().build(
+            result.getResolvedConfig(),
+            LaunchIdentity.authenticated("Soul4", "uuid-Soul4", "token-Soul4", null)
+        );
         assertTrue(command.contains("net.minecraft.launchwrapper.Launch"));
         assertTrue(command.contains("--tweakClass"));
         assertTrue(command.contains("net.minecraftforge.fml.common.launcher.FMLTweaker"));

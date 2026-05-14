@@ -45,14 +45,6 @@ public abstract class AbstractScreenController implements LauncherContextAware {
         alert.showAndWait();
     }
 
-    protected final void showInfo(String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, resolveMessage(message), ButtonType.OK);
-        alert.initOwner(stage());
-        alert.setTitle(LauncherBrand.APP_NAME);
-        alert.setHeaderText(resolveMessage(header));
-        alert.showAndWait();
-    }
-
     @FXML
     protected final void captureWindowDrag(MouseEvent event) {
         dragOffsetX = event.getScreenX() - stage().getX();

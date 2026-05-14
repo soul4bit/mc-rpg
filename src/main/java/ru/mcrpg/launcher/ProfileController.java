@@ -3,9 +3,7 @@ package ru.mcrpg.launcher;
 import java.io.IOException;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import ru.mcrpg.launcher.ui.SvgIcons;
 
 public final class ProfileController extends AbstractScreenController {
 
@@ -30,17 +28,6 @@ public final class ProfileController extends AbstractScreenController {
     @FXML
     private Label statusLabel;
 
-    @FXML
-    private Button minimizeWindowButton;
-
-    @FXML
-    private Button closeWindowButton;
-
-    @FXML
-    private void initialize() {
-        applyWindowControls();
-    }
-
     @Override
     protected void onContextBound(LauncherContext context) {
         if (!state().isAuthenticated()) {
@@ -57,55 +44,10 @@ public final class ProfileController extends AbstractScreenController {
     }
 
     @FXML
-    private void onOpenSettings() {
-        router().open(ScreenRouter.Screen.SETTINGS);
-    }
-
-    @FXML
-    private void onOpenServer() {
-        router().open(ScreenRouter.Screen.SERVER);
-    }
-
-    @FXML
-    private void onOpenMods() {
-        router().open(ScreenRouter.Screen.MODS);
-    }
-
-    @FXML
     private void onLogout() {
         context().getAuthService().logoutQuietly(state().getConfig(), state().getSession());
         state().setSession(null);
         router().open(ScreenRouter.Screen.AUTH);
-    }
-
-    @FXML
-    private void onChangeSkin() {
-        showInfo("Скин", "Загрузка скина будет подключена после клиентского мода.");
-    }
-
-    @FXML
-    private void onEditProfile() {
-        showInfo("Профиль", "Редактирование профиля пока не подключено.");
-    }
-
-    @FXML
-    private void onEnableTwoFactor() {
-        showInfo("2FA", "Подключение двухфакторной защиты пока не реализовано.");
-    }
-
-    @FXML
-    private void onChangePassword() {
-        showInfo("Пароль", "Смена пароля будет добавлена отдельным окном.");
-    }
-
-    @FXML
-    private void onOpenStats() {
-        showInfo("Статистика", "Подробная статистика персонажа пока не подключена.");
-    }
-
-    @FXML
-    private void onLauncherSettings() {
-        router().open(ScreenRouter.Screen.SETTINGS);
     }
 
     private void refreshProfileAsync() {
@@ -158,10 +100,4 @@ public final class ProfileController extends AbstractScreenController {
         return true;
     }
 
-    private void applyWindowControls() {
-        minimizeWindowButton.setText("");
-        minimizeWindowButton.setGraphic(SvgIcons.icon("minimize", 18, "#D9D9D9"));
-        closeWindowButton.setText("");
-        closeWindowButton.setGraphic(SvgIcons.icon("close", 18, "#D9D9D9"));
-    }
 }
