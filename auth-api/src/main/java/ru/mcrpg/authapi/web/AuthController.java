@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mcrpg.authapi.domain.entity.AccountEntity;
+import ru.mcrpg.authapi.service.AvatarCatalog;
 import ru.mcrpg.authapi.service.AuthService;
 import ru.mcrpg.authapi.service.RequestAuthService;
 
@@ -21,10 +23,12 @@ public class AuthController {
 
     private final AuthService authService;
     private final RequestAuthService requestAuthService;
+    private final AvatarCatalog avatarCatalog;
 
-    public AuthController(AuthService authService, RequestAuthService requestAuthService) {
+    public AuthController(AuthService authService, RequestAuthService requestAuthService, AvatarCatalog avatarCatalog) {
         this.authService = authService;
         this.requestAuthService = requestAuthService;
+        this.avatarCatalog = avatarCatalog;
     }
 
     @PostMapping("/auth/register")
@@ -74,7 +78,7 @@ public class AuthController {
         return toAccountResponse(authService.updateEmail(account, request.email()));
     }
 
-    private static AuthSessionResponse toSessionResponse(AuthService.AuthSessionResult result) {
+    private AuthSessionResponse toSessionResponse(AuthService.AuthSessionResult result) {
         return new AuthSessionResponse(
             toAccountResponse(result.account()),
             result.accessToken(),
@@ -84,13 +88,22 @@ public class AuthController {
         );
     }
 
-    static AccountResponse toAccountResponse(AccountEntity account) {
+    private AccountResponse toAccountResponse(AccountEntity account) {
+        String avatar = avatarCatalog.avatarFor(account);
         return new AccountResponse(
             account.getId().toString(),
             account.getUsername(),
             account.getEmail(),
             account.getRole(),
-            account.getStatus()
+            account.getStatus(),
+            avatar,
+            avatarUrl(avatar)
         );
+    }
+
+    private static String avatarUrl(String avatar) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+            .pathSegment("avatars", avatar)
+            .toUriString();
     }
 }

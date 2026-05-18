@@ -1,0 +1,28 @@
+Third-party mod credits
+
+Xaero's Minimap
+Official page: https://modrinth.com/mod/xaeros-minimap
+
+Xaero's World Map
+Official page: https://modrinth.com/mod/xaeros-world-map
+
+XaeroLib
+Official page: https://modrinth.com/mod/xaerolib
+
+Waystones
+Official page: https://www.curseforge.com/minecraft/mc-mods/waystones
+
+Baubles
+Official page: https://www.curseforge.com/minecraft/mc-mods/baubles
+
+Thaumcraft
+Official page: https://www.curseforge.com/minecraft/mc-mods/thaumcraft
+
+DivineRPG
+Official page: https://www.curseforge.com/minecraft/mc-mods/official-divinerpg
+
+Roguelike Dungeons
+Official page: https://www.curseforge.com/minecraft/mc-mods/roguelike-dungeons
+
+The Twilight Forest
+Official page: https://www.curseforge.com/minecraft/mc-mods/the-twilight-forest

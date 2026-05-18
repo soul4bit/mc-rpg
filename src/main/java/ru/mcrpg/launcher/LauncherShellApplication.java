@@ -1,9 +1,11 @@
 package ru.mcrpg.launcher;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -16,6 +18,7 @@ public final class LauncherShellApplication extends Application {
     private static final double MIN_WINDOW_HEIGHT = 800;
     private static final double SCREEN_MARGIN_WIDTH = 32;
     private static final double SCREEN_MARGIN_HEIGHT = 48;
+    private static final String WINDOW_ICON_PATH = "/ru/mcrpg/launcher/assets/brand-cube.png";
 
     public static void launchApp(String[] args) {
         launch(args);
@@ -25,6 +28,7 @@ public final class LauncherShellApplication extends Application {
     public void start(Stage stage) {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle(LauncherBrand.APP_NAME);
+        applyWindowIcon(stage);
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         double availableWidth = Math.max(960.0d, screenBounds.getWidth() - SCREEN_MARGIN_WIDTH);
@@ -53,6 +57,13 @@ public final class LauncherShellApplication extends Application {
 
         stage.setOnCloseRequest(event -> context.persistStateQuietly());
         router.open(state.isAuthenticated() ? ScreenRouter.Screen.HOME : ScreenRouter.Screen.AUTH);
+    }
+
+    private static void applyWindowIcon(Stage stage) {
+        URL iconUrl = LauncherShellApplication.class.getResource(WINDOW_ICON_PATH);
+        if (iconUrl != null) {
+            stage.getIcons().add(new Image(iconUrl.toExternalForm()));
+        }
     }
 
     private static LauncherConfig loadConfig(LauncherConfigStore configStore) {

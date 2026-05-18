@@ -5,7 +5,7 @@ public final class LauncherConfig {
     public static final String DEFAULT_SERVER_HOST = "obsidiangates.duckdns.org";
     public static final int DEFAULT_SERVER_PORT = 25565;
     public static final String DEFAULT_LAUNCH_TEMPLATE =
-        "{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}";
+        "{java} -jar forge-1.12.2-14.23.5.2847.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}";
 
     private String username;
     private String javaCommand;
@@ -18,6 +18,7 @@ public final class LauncherConfig {
     private String authBaseUrl;
     private String serverId;
     private boolean updateFilesBeforeLaunch;
+    private boolean launcherUpdatesEnabled;
 
     public static LauncherConfig defaults() {
         LauncherConfig config = new LauncherConfig();
@@ -32,6 +33,7 @@ public final class LauncherConfig {
         config.setAuthBaseUrl(LauncherDefaults.defaultAuthBaseUrl(DEFAULT_SERVER_HOST));
         config.setServerId(LauncherDefaults.defaultServerId());
         config.setUpdateFilesBeforeLaunch(true);
+        config.setLauncherUpdatesEnabled(true);
         return config;
     }
 
@@ -48,6 +50,7 @@ public final class LauncherConfig {
         copy.setAuthBaseUrl(authBaseUrl);
         copy.setServerId(serverId);
         copy.setUpdateFilesBeforeLaunch(updateFilesBeforeLaunch);
+        copy.setLauncherUpdatesEnabled(launcherUpdatesEnabled);
         return copy;
     }
 
@@ -137,6 +140,14 @@ public final class LauncherConfig {
 
     public void setUpdateFilesBeforeLaunch(boolean updateFilesBeforeLaunch) {
         this.updateFilesBeforeLaunch = updateFilesBeforeLaunch;
+    }
+
+    public boolean isLauncherUpdatesEnabled() {
+        return launcherUpdatesEnabled;
+    }
+
+    public void setLauncherUpdatesEnabled(boolean launcherUpdatesEnabled) {
+        this.launcherUpdatesEnabled = launcherUpdatesEnabled;
     }
 
     private static String sanitize(String value) {

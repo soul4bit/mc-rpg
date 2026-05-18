@@ -4,7 +4,7 @@ param(
     [string]$ClientSourceDir = "modpack/client",
     [string]$DistDir = "dist",
     [string]$ManifestVersion = (Get-Date -Format "yyyy.MM.dd"),
-    [string]$LauncherUpdatePath = "launcher/obsidian-gate-launcher.jar",
+    [string]$LauncherUpdatePath = "client/launcher/obsidian-gate-launcher.jar",
     [switch]$SkipSourceManifestUpdate,
     [switch]$SkipAuthRelease,
     [switch]$SkipLauncherRelease
@@ -34,6 +34,61 @@ $distFullPath = Resolve-InputPath $DistDir
 $authMetadataPath = Join-Path $distFullPath "auth-release.json"
 $distManifestPath = Join-Path $distFullPath "manifest.json"
 $modpackMetadataPath = Join-Path $distFullPath "modpack-release.json"
+$distServerRoot = Join-Path $distFullPath "server"
+
+$serverModPaths = @(
+    "mods/animania-1.12.2-1.7.3.jar",
+    "mods/antiqueatlas-1.12.2-4.6.3.jar",
+    "mods/AtlasExtras-1.12.2-1.7.jar",
+    "mods/AutoRegLib-1.3-32.jar",
+    "mods/Baubles-1.12-1.5.2.jar",
+    "mods/bettercaves-1.12.2-1.6.0.jar",
+    "mods/BiblioCraft[v2.4.5][MC1.12.2].jar",
+    "mods/BiomesOPlenty_1.12.2_7.0.1.2444_universal.jar",
+    "mods/bookworm-1.12.2-2.3.0.jar",
+    "mods/Clumps-3.1.2.jar",
+    "mods/CraftStudioAPI-universal-1.0.1.95-mc1.12-alpha.jar",
+    "mods/crafttweaker2-1.12-4.1.20.jar",
+    "mods/DenseMetals-1.12.2-2.0.0.30.jar",
+    "mods/DivineRPG-1.7.1.jar",
+    "mods/drpcore-1.12.2-0.4.8.jar",
+    "mods/drpmedieval-1.12.2-0.3.6.jar",
+    "mods/DynamicTrees-1.12.2-0.9.7.jar",
+    "mods/DynamicTreesBOP-1.12.2-1.4.1e.jar",
+    "mods/DynamicTreesPHC-1.12.2-1.4.2.jar",
+    "mods/farseek-1.12-2.5.jar",
+    "mods/foamfix-0.10.10-1.12.2.jar",
+    "mods/ForgeCraft-1.6.51.jar",
+    "mods/growthcraft-1.12.2-4.1.3.200.jar",
+    "mods/ImmersiveEngineering-0.12-92.jar",
+    "mods/immersivepetroleum-1.12.2-1.1.9.jar",
+    "mods/JustAFewFish-1.7_for_1.12.jar",
+    "mods/mcw_windows_1.0.0_mc1.12.2.jar",
+    "mods/Pam's+HarvestCraft+1.12.2zg.jar",
+    "mods/PrimalCore-1.12.2-0.6.105.jar",
+    "mods/Quark-r1.6-178.jar",
+    "mods/randompatches-1.12.2-1.21.0.0.jar",
+    "mods/RoguelikeDungeons-1.12.2-1.8.0.jar",
+    "mods/savemystronghold-1.12.2-1.0.0.jar",
+    "mods/SeedDrop-1.2.1-1.12.jar",
+    "mods/SereneSeasons_1.12.2_1.2.18_universal.jar",
+    "mods/stackable-1.12.2-1.3.3.jar",
+    "mods/streams-1.12-0.4.8.jar",
+    "mods/TeaStory-3.3.3-B32.404-1.12.2.jar",
+    "mods/Thaumcraft-1.12.2-6.1.BETA26.jar",
+    "mods/thebirdwatchingmod-1.5.0.jar",
+    "mods/twilightforest-1.12.2-3.11.1021-universal.jar",
+    "mods/ToughAsNails-1.12.2-3.1.0.139-universal.jar",
+    "mods/UndergroundBiomesConstructs-1.12-1.3.7.jar",
+    "mods/Waystones_1.12.2-4.1.0.jar",
+    "mods/memory_repo/blusunrize/ImmersiveEngineering-core/0.12-92/ImmersiveEngineering-core-0.12-92.jar",
+    "mods/memory_repo/net/dark_roleplay/core_modules/drpcmblueprints/1.12.2-1.2.3/drpcmblueprints-1.12.2-1.2.3.jar",
+    "mods/memory_repo/net/dark_roleplay/core_modules/drpcmguis/1.12.2-0.0.1-SNAPSHOT/drpcmguis-1.12.2-0.0.1-SNAPSHOT-20181125.100253.jar",
+    "mods/memory_repo/net/dark_roleplay/core_modules/drpcmlocks/1.12.2-1.0.0-SNAPSHOT/drpcmlocks-1.12.2-1.0.0-SNAPSHOT-20181126.091203.jar",
+    "mods/memory_repo/net/dark_roleplay/core_modules/drpcmmaarg/1.12.2-0.10.0-SNAPSHOT/drpcmmaarg-1.12.2-0.10.0-SNAPSHOT-20181116.054036.jar",
+    "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.2.4-SNAPSHOT/drplibrary-1.12.2-0.1.2.4-SNAPSHOT-20181116.032433.jar",
+    "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.3-SNAPSHOT/drplibrary-1.12.2-0.1.3-SNAPSHOT-20190130.014240.jar"
+)
 
 if (-not (Test-Path $manifestFullPath)) {
     throw "Manifest not found: $manifestFullPath"
@@ -150,6 +205,14 @@ function Build-LauncherArtifact {
         throw "Launcher Maven build failed."
     }
 
+    $shadedArtifact = Get-ChildItem (Join-Path $repoRoot "target") -File -Filter "obsidian-gate-launcher-*-shaded.jar" |
+        Sort-Object LastWriteTime -Descending |
+        Select-Object -First 1
+
+    if ($shadedArtifact) {
+        return $shadedArtifact
+    }
+
     return (Get-ArtifactFile -Directory "target" -Pattern "obsidian-gate-launcher-*.jar")
 }
 
@@ -171,6 +234,31 @@ function Copy-DirectoryContent {
     Get-ChildItem $Source -Force | ForEach-Object {
         Copy-Item $_.FullName -Destination $Destination -Recurse -Force
     }
+}
+
+function Copy-RelativeFile {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourceRoot,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationRoot,
+
+        [Parameter(Mandatory = $true)]
+        [string]$RelativePath
+    )
+
+    $normalizedPath = Normalize-ManifestPath $RelativePath
+    $sourcePath = Join-Path $SourceRoot ($normalizedPath.Replace('/', [System.IO.Path]::DirectorySeparatorChar))
+    if (-not (Test-Path -LiteralPath $sourcePath -PathType Leaf)) {
+        throw "Server file declared for release was not found: $normalizedPath"
+    }
+
+    $destinationPath = Join-Path $DestinationRoot ($normalizedPath.Replace('/', [System.IO.Path]::DirectorySeparatorChar))
+    $destinationParent = Split-Path -Parent $destinationPath
+    $null = New-Item -ItemType Directory -Path $destinationParent -Force
+    Copy-Item -LiteralPath $sourcePath -Destination $destinationPath -Force
+    return Get-Item -LiteralPath $destinationPath
 }
 
 if (-not $SkipAuthRelease) {
@@ -210,9 +298,42 @@ Get-ChildItem $distClientModsDir -Filter "obsidiangate-forge-auth-client-*.jar" 
 
 Copy-Item $clientJarPath (Join-Path $distClientModsDir $clientJarName) -Force
 
+Write-Host "==> Preparing server-side modpack files" -ForegroundColor Cyan
+if (Test-Path $distServerRoot) {
+    Remove-Item $distServerRoot -Recurse -Force
+}
+
+$null = New-Item -ItemType Directory -Path $distServerRoot -Force
+$serverFiles = [System.Collections.Generic.List[object]]::new()
+
+foreach ($serverModPath in $serverModPaths) {
+    $serverModFile = Copy-RelativeFile `
+        -SourceRoot $clientSourceFullPath `
+        -DestinationRoot $distServerRoot `
+        -RelativePath $serverModPath
+    $serverFiles.Add((Get-FileRecord -File $serverModFile -RelativePath (Normalize-ManifestPath $serverModPath)))
+}
+
+foreach ($serverDirectoryName in @("config", "scripts")) {
+    $sourceDirectory = Join-Path $clientSourceFullPath $serverDirectoryName
+    if (-not (Test-Path -LiteralPath $sourceDirectory -PathType Container)) {
+        continue
+    }
+
+    $destinationDirectory = Join-Path $distServerRoot $serverDirectoryName
+    Copy-DirectoryContent -Source $sourceDirectory -Destination $destinationDirectory
+    Get-ChildItem $destinationDirectory -Recurse -File -Force |
+        Sort-Object FullName |
+        ForEach-Object {
+            $relativePath = Get-RelativePath -Root $distServerRoot -Path $_.FullName
+            $serverFiles.Add((Get-FileRecord -File $_ -RelativePath $relativePath))
+        }
+}
+
 $manifest.version = $ManifestVersion
 
 $launcherRecord = $null
+$launcherClientRelativePath = $null
 if (-not $SkipLauncherRelease) {
     $launcherJar = Build-LauncherArtifact
     $normalizedLauncherPath = Normalize-ManifestPath $LauncherUpdatePath
@@ -234,6 +355,10 @@ if (-not $SkipLauncherRelease) {
         required = $false
         artifactVersion = Get-ProjectVersion
         fileName = $distLauncherFile.Name
+    }
+
+    if ($normalizedLauncherPath.StartsWith("client/", [System.StringComparison]::OrdinalIgnoreCase)) {
+        $launcherClientRelativePath = $normalizedLauncherPath.Substring("client/".Length)
     }
 
     if ($manifest.PSObject.Properties.Name.Contains("launcherUpdate")) {
@@ -279,6 +404,9 @@ Get-ChildItem $distClientRoot -Recurse -File -Force |
         if ($runtimePaths.Contains($relativePath)) {
             return
         }
+        if ($launcherClientRelativePath -and $relativePath.Equals($launcherClientRelativePath, [System.StringComparison]::OrdinalIgnoreCase)) {
+            return
+        }
 
         $manifestFiles.Add((Get-FileRecord -File $_ -RelativePath $relativePath))
     }
@@ -304,6 +432,12 @@ $metadata = [pscustomobject][ordered]@{
         distPath = "client"
         fileCount = $manifestFiles.Count
     }
+    server = [pscustomobject][ordered]@{
+        sourcePath = $ClientSourceDir
+        distPath = "server"
+        modCount = $serverModPaths.Count
+        fileCount = $serverFiles.Count
+    }
     artifacts = $authMetadata.artifacts
     launcherUpdate = $launcherRecord
 }
@@ -316,6 +450,7 @@ Write-Host "Modpack release prepared in $distFullPath" -ForegroundColor Green
 Write-Host "Manifest version: $($manifest.version)"
 Write-Host "Client source: $ClientSourceDir"
 Write-Host "Web files: $($manifestFiles.Count)"
+Write-Host "Server files: $($serverFiles.Count)"
 Write-Host "Client auth mod: $clientJarName"
 if ($launcherRecord) {
     Write-Host "Launcher update: $($launcherRecord.url) sha256=$($launcherRecord.sha256) size=$($launcherRecord.size)"

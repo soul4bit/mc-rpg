@@ -34,6 +34,7 @@ public final class MinecraftBootstrapService {
     private static final String DEFAULT_VERSION_MANIFEST_URL =
         "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
     private static final String DEFAULT_ASSET_BASE_URL = "https://resources.download.minecraft.net/";
+    private static final String DEFAULT_LIBRARY_BASE_URL = "https://libraries.minecraft.net/";
     private static final Pattern MINECRAFT_ARGUMENT_PATTERN = Pattern.compile("\\$\\{([a-zA-Z0-9_]+)\\}");
     private static final String NATIVES_MARKER_FILE = ".natives.properties";
     private static final int DOWNLOAD_READ_TIMEOUT_MS = 60000;
@@ -214,8 +215,45 @@ public final class MinecraftBootstrapService {
     ) throws IOException {
         byte[] versionBytes;
         try (ZipFile zipFile = new ZipFile(installerFile.toFile())) {
-            versionBytes = readRequiredEntry(zipFile, "version.json");
-            VersionMetadata versionMetadata = readJson(new ByteArrayInputStream(versionBytes), VersionMetadata.class);
+            ZipEntry modernVersionEntry = zipFile.getEntry("version.json");
+            VersionMetadata versionMetadata;
+            byte[] forgeArtifactBytes;
+            if (modernVersionEntry != null) {
+                versionBytes = readEntry(zipFile, modernVersionEntry);
+                versionMetadata = readJson(new ByteArrayInputStream(versionBytes), VersionMetadata.class);
+                normalizeLegacyLibraryDownloads(versionMetadata);
+            } else {
+                LegacyInstallProfile installProfile = readJson(
+                    new ByteArrayInputStream(readRequiredEntry(zipFile, "install_profile.json")),
+                    LegacyInstallProfile.class
+                );
+                if (installProfile.versionInfo == null) {
+                    throw new IOException("Forge installer does not contain version metadata.");
+                }
+
+                versionMetadata = installProfile.versionInfo;
+                versionMetadata.id = forgeVersionId;
+                normalizeLegacyLibraryDownloads(versionMetadata);
+
+                Download legacyForgeArtifact = findForgeArtifact(versionMetadata);
+                if (legacyForgeArtifact == null || !hasText(legacyForgeArtifact.path)) {
+                    throw new IOException("Forge installer does not describe runtime forge artifact.");
+                }
+
+                String legacyArtifactEntry = installProfile.install == null ? "" : installProfile.install.filePath;
+                forgeArtifactBytes = readRequiredEntry(
+                    zipFile,
+                    requireText(legacyArtifactEntry, "Forge installer does not contain a runtime artifact path.")
+                );
+
+                Path legacyForgeArtifactPath = librariesDirectory.resolve(toSystemPath(legacyForgeArtifact.path)).normalize();
+                writeJson(versionJsonPath, versionMetadata);
+                writeBytes(legacyForgeArtifactPath, forgeArtifactBytes);
+                verifyExistingFile(legacyForgeArtifactPath, legacyForgeArtifact);
+                log(logSink, "Forge metadata installed: " + forgeVersionId);
+                return new ForgeInstallData(versionMetadata, versionJsonPath, legacyForgeArtifactPath);
+            }
+
             if (!forgeVersionId.equals(versionMetadata.id)) {
                 throw new IOException("Unexpected Forge version id in installer: " + versionMetadata.id);
             }
@@ -226,7 +264,7 @@ public final class MinecraftBootstrapService {
             }
 
             String installerArtifactEntry = "maven/" + forgeArtifact.path.replace('\\', '/');
-            byte[] forgeArtifactBytes = readRequiredEntry(zipFile, installerArtifactEntry);
+            forgeArtifactBytes = readRequiredEntry(zipFile, installerArtifactEntry);
             Path forgeArtifactPath = librariesDirectory.resolve(toSystemPath(forgeArtifact.path)).normalize();
             writeBytes(versionJsonPath, versionBytes);
             writeBytes(forgeArtifactPath, forgeArtifactBytes);
@@ -234,6 +272,61 @@ public final class MinecraftBootstrapService {
             log(logSink, "Forge metadata installed: " + forgeVersionId);
             return new ForgeInstallData(versionMetadata, versionJsonPath, forgeArtifactPath);
         }
+    }
+
+    private void normalizeLegacyLibraryDownloads(VersionMetadata versionMetadata) {
+        if (versionMetadata == null || versionMetadata.libraries == null) {
+            return;
+        }
+
+        for (Library library : versionMetadata.libraries) {
+            if (library == null || !hasText(library.name)) {
+                continue;
+            }
+            if (library.downloads == null) {
+                library.downloads = new LibraryDownloads();
+            }
+            if (library.downloads.artifact != null && hasText(library.downloads.artifact.path)) {
+                continue;
+            }
+
+            Download artifact = new Download();
+            artifact.path = mavenArtifactPath(library.name);
+            artifact.url = resolveLibraryDownloadUrl(library, artifact.path);
+            artifact.sha1 = firstChecksum(library.checksums);
+            library.downloads.artifact = artifact;
+        }
+    }
+
+    private static String resolveLibraryDownloadUrl(Library library, String artifactPath) {
+        String baseUrl = hasText(library.url) ? library.url.trim() : DEFAULT_LIBRARY_BASE_URL;
+        return (baseUrl.endsWith("/") ? baseUrl : baseUrl + "/") + artifactPath;
+    }
+
+    private static String firstChecksum(List<String> checksums) {
+        if (checksums == null) {
+            return "";
+        }
+        for (String checksum : checksums) {
+            if (hasText(checksum)) {
+                return checksum.trim();
+            }
+        }
+        return "";
+    }
+
+    private static String mavenArtifactPath(String name) {
+        String[] parts = name.split(":");
+        if (parts.length < 3) {
+            throw new IllegalArgumentException("Unsupported Maven coordinate: " + name);
+        }
+
+        String groupPath = parts[0].replace('.', '/');
+        String artifact = parts[1];
+        String version = parts[2];
+        String classifier = parts.length >= 4 && hasText(parts[3]) ? "-" + parts[3].trim() : "";
+        String fileName = artifact + "-" + version + classifier + ".jar";
+        return groupPath + "/" + artifact + "/" + version + "/" + fileName;
     }
 
     private Path ensureFileDownloaded(
@@ -597,7 +690,13 @@ public final class MinecraftBootstrapService {
     }
 
     private static boolean isAllowed(Library library, PlatformInfo platform) {
-        if (library == null || library.rules == null || library.rules.isEmpty()) {
+        if (library == null) {
+            return false;
+        }
+        if (Boolean.FALSE.equals(library.clientreq)) {
+            return false;
+        }
+        if (library.rules == null || library.rules.isEmpty()) {
             return true;
         }
 
@@ -703,6 +802,10 @@ public final class MinecraftBootstrapService {
         if (Files.isRegularFile(target)) {
             return;
         }
+        writeJson(target, value);
+    }
+
+    private void writeJson(Path target, Object value) throws IOException {
         Path parent = target.getParent();
         if (parent != null) {
             Files.createDirectories(parent);
@@ -731,6 +834,10 @@ public final class MinecraftBootstrapService {
             throw new IOException("Missing entry in archive: " + entryName);
         }
 
+        return readEntry(zipFile, entry);
+    }
+
+    private static byte[] readEntry(ZipFile zipFile, ZipEntry entry) throws IOException {
         try (InputStream inputStream = zipFile.getInputStream(entry);
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             copy(inputStream, outputStream);
@@ -798,6 +905,15 @@ public final class MinecraftBootstrapService {
         }
     }
 
+    private static final class LegacyInstallProfile {
+        public LegacyInstall install = new LegacyInstall();
+        public VersionMetadata versionInfo;
+    }
+
+    private static final class LegacyInstall {
+        public String filePath;
+    }
+
     private static final class NativeLibrary {
         private final Path archive;
         private final List<String> exclude;
@@ -851,6 +967,10 @@ public final class MinecraftBootstrapService {
 
     private static final class Library {
         public String name;
+        public String url;
+        public List<String> checksums = new ArrayList<String>();
+        public Boolean clientreq;
+        public Boolean serverreq;
         public LibraryDownloads downloads = new LibraryDownloads();
         public Map<String, String> natives = new LinkedHashMap<String, String>();
         public Extract extract = new Extract();

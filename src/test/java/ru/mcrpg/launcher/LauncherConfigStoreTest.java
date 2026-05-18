@@ -29,6 +29,7 @@ class LauncherConfigStoreTest {
         config.setAuthBaseUrl("https://example.com/api");
         config.setServerId("obsidiangate-main");
         config.setUpdateFilesBeforeLaunch(false);
+        config.setLauncherUpdatesEnabled(false);
 
         store.save(config);
         LauncherConfig restored = store.load();
@@ -44,6 +45,7 @@ class LauncherConfigStoreTest {
         assertEquals("https://example.com/api", restored.getAuthBaseUrl());
         assertEquals("obsidiangate-main", restored.getServerId());
         assertEquals(false, restored.isUpdateFilesBeforeLaunch());
+        assertEquals(false, restored.isLauncherUpdatesEnabled());
     }
 
     @Test

@@ -231,9 +231,11 @@ public final class AuthApiClient {
         public String email;
         public String role;
         public String status;
+        public String avatar;
+        public String avatarUrl;
 
         private AuthAccount toAccount() {
-            return new AuthAccount(id, username, email, role, status);
+            return new AuthAccount(id, username, email, role, status, avatar, avatarUrl);
         }
     }
 

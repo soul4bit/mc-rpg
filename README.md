@@ -124,7 +124,7 @@ working.directory=
 server.host=obsidiangates.duckdns.org
 server.port=25565
 manifest.url=http://obsidiangates.duckdns.org:8080/manifest.json
-launch.template={java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}
+launch.template={java} -jar forge-1.12.2-14.23.5.2847.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}
 update.files.before.launch=true
 ```
 
@@ -174,7 +174,7 @@ update.files.before.launch=true
 Пример:
 
 ```text
-{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}
+{java} -jar forge-1.12.2-14.23.5.2847.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}
 ```
 
 Если в шаблоне нет `{gameSessionFile}`, launcher сам добавит `-Dobsidiangate.sessionFile=...` сразу после java-команды.
@@ -304,6 +304,7 @@ update.files.before.launch=true
 Скрипт загружает:
 
 - `dist/client/`
+- `dist/server/`
 - `dist/launcher/`
 - `dist/manifest.json`
 - серверный auth jar
@@ -311,6 +312,8 @@ update.files.before.launch=true
 и устанавливает их в:
 
 - `~/mc-rpg/mods/`
+- `~/mc-rpg/config/`
+- `~/mc-rpg/scripts/`
 - `/var/www/mc-rpg/client/`
 - `/var/www/mc-rpg/launcher/`
 - `/var/www/mc-rpg/manifest.json`
@@ -328,6 +331,8 @@ update.files.before.launch=true
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\setup-deploy-access.ps1 -Target minecraft@192.168.1.103
 ```
+
+Re-run this command after changing `scripts/obsidiangate-remote-deploy.sh`, because the server keeps its own copy at `/usr/local/bin/obsidiangate-deploy`.
 
 Скрипт:
 

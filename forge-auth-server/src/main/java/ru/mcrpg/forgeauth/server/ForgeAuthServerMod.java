@@ -5,6 +5,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -26,6 +27,7 @@ public final class ForgeAuthServerMod {
 
     private static final Logger LOGGER = Logger.getLogger(MOD_NAME);
     private static final ForgeAuthServerLifecycle LIFECYCLE = new ForgeAuthServerLifecycle(LOGGER);
+    private static final SpawnProtectionService SPAWN_PROTECTION = new SpawnProtectionService(LOGGER);
 
     static ForgeAuthServerLifecycle getLifecycle() {
         return LIFECYCLE;
@@ -35,7 +37,9 @@ public final class ForgeAuthServerMod {
     public void init(FMLInitializationEvent event) {
         SimpleNetworkWrapper channel = NetworkRegistry.INSTANCE.newSimpleChannel(NETWORK_CHANNEL);
         channel.registerMessage(AuthTicketMessageHandler.class, AuthTicketMessage.class, 0, net.minecraftforge.fml.relauncher.Side.SERVER);
+        SPAWN_PROTECTION.load();
         MinecraftForge.EVENT_BUS.register(LIFECYCLE);
+        MinecraftForge.EVENT_BUS.register(SPAWN_PROTECTION);
 
         AuthServerConfig config = AuthServerConfig.fromSystem();
         if (config.isReady()) {
@@ -51,6 +55,12 @@ public final class ForgeAuthServerMod {
                 "Set -D" + AuthServerConfig.AUTH_BASE_URL_PROPERTY + " and -D" + AuthServerConfig.SERVER_ID_PROPERTY + "."
             );
         }
+    }
+
+    @EventHandler
+    public void onServerStarting(FMLServerStartingEvent event) {
+        SpawnCommand.register(event);
+        SpawnProtectionCommand.register(event, SPAWN_PROTECTION);
     }
 
     @EventHandler

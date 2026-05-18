@@ -41,7 +41,15 @@ public final class AuthSessionStore {
         try (InputStream inputStream = Files.newInputStream(sessionFile)) {
             StoredSession stored = objectMapper.readValue(inputStream, StoredSession.class);
             AuthSession session = new AuthSession(
-                new AuthAccount(stored.accountId, stored.username, stored.email, stored.role, stored.status),
+                new AuthAccount(
+                    stored.accountId,
+                    stored.username,
+                    stored.email,
+                    stored.role,
+                    stored.status,
+                    stored.avatar,
+                    stored.avatarUrl
+                ),
                 stored.accessToken,
                 stored.refreshToken,
                 stored.expiresAt,
@@ -68,6 +76,8 @@ public final class AuthSessionStore {
         stored.email = session.getAccount().getEmail();
         stored.role = session.getAccount().getRole();
         stored.status = session.getAccount().getStatus();
+        stored.avatar = session.getAccount().getAvatar();
+        stored.avatarUrl = session.getAccount().getAvatarUrl();
         stored.accessToken = session.getAccessToken();
         stored.refreshToken = session.getRefreshToken();
         stored.expiresAt = session.getExpiresAt();
@@ -92,6 +102,8 @@ public final class AuthSessionStore {
         public String email;
         public String role;
         public String status;
+        public String avatar;
+        public String avatarUrl;
         public String accessToken;
         public String refreshToken;
         public Instant expiresAt;

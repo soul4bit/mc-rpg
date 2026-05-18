@@ -1,13 +1,16 @@
 package ru.mcrpg.launcher;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,19 +26,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Arc;
+import ru.mcrpg.launcher.ui.AvatarImages;
+import ru.mcrpg.launcher.ui.LauncherIcons;
 
 public final class LauncherShellController extends AbstractScreenController {
 
     private static final DateTimeFormatter LOG_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final DateTimeFormatter UPDATE_CHECK_TIME_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
     private static final int SERVER_STATUS_TIMEOUT_MS = 1500;
     private static final String DASHBOARD_UNKNOWN = "—";
     private static final int PREVIEW_ENTRY_LIMIT = 4;
     private static final int RECONNECT_TICKET_COUNT = 5;
+    private static final String REQUIRED_RESOURCE_PACK = "ObsidianGate-Fixes-1.12.2";
 
     private final LaunchCommandBuilder commandBuilder = new LaunchCommandBuilder();
     private final MinecraftServerListWriter serverListWriter = new MinecraftServerListWriter();
@@ -53,9 +61,6 @@ public final class LauncherShellController extends AbstractScreenController {
     private Label brandLogoLabel;
 
     @FXML
-    private Label brandSubtitleLabel;
-
-    @FXML
     private Region serverPresenceIndicator;
 
     @FXML
@@ -65,10 +70,22 @@ public final class LauncherShellController extends AbstractScreenController {
     private Label serverRouteValueLabel;
 
     @FXML
-    private Label sidebarStatusTitleLabel;
+    private Label serverPingValueLabel;
 
     @FXML
-    private Label sidebarStatusCopyLabel;
+    private Label serverVersionValueLabel;
+
+    @FXML
+    private StackPane serverLogoPane;
+
+    @FXML
+    private Label serverPlayersIconLabel;
+
+    @FXML
+    private Label serverPingIconLabel;
+
+    @FXML
+    private Label serverVersionIconLabel;
 
     @FXML
     private Label sidebarVersionLabel;
@@ -78,6 +95,9 @@ public final class LauncherShellController extends AbstractScreenController {
 
     @FXML
     private Label downloadBaseValueLabel;
+
+    @FXML
+    private Label modpackSizeValueLabel;
 
     @FXML
     private Label onlinePlayersValueLabel;
@@ -98,6 +118,27 @@ public final class LauncherShellController extends AbstractScreenController {
     private Label footerManifestVersionValueLabel;
 
     @FXML
+    private Label configNameLabel;
+
+    @FXML
+    private Label homeWelcomeLabel;
+
+    @FXML
+    private Button homeNavButton;
+
+    @FXML
+    private Button settingsNavButton;
+
+    @FXML
+    private Button settingsButton;
+
+    @FXML
+    private Button openSiteButton;
+
+    @FXML
+    private Button profileManageButton;
+
+    @FXML
     private Button syncButton;
 
     @FXML
@@ -107,13 +148,19 @@ public final class LauncherShellController extends AbstractScreenController {
     private Button launchButton;
 
     @FXML
+    private Button launchArrowButton;
+
+    @FXML
+    private Button openLogButton;
+
+    @FXML
+    private Button clearLogButton;
+
+    @FXML
     private Label syncFileLabel;
 
     @FXML
     private ProgressBar syncProgressBar;
-
-    @FXML
-    private Arc syncProgressArc;
 
     @FXML
     private Label syncPercentLabel;
@@ -143,32 +190,57 @@ public final class LauncherShellController extends AbstractScreenController {
     private Button launcherUpdateButton;
 
     @FXML
+    private Label launcherUpdateStatusIconLabel;
+
+    @FXML
+    private Label launcherUpdateStatusLabel;
+
+    @FXML
+    private Label launcherUpdateCheckedLabel;
+
+    @FXML
+    private Button launcherUpdateCheckButton;
+
+    @FXML
     private TextArea logArea;
 
     @FXML
     private Label profileNameLabel;
 
     @FXML
+    private ImageView profileAvatarView;
+
+    @FXML
+    private ImageView sidebarProfileAvatarView;
+
+    @FXML
+    private Label sidebarProfileNameLabel;
+
+    @FXML
     private Label profileRankLabel;
 
     @FXML
-    private Label profileChevronLabel;
+    private Label sidebarProfileStatusLabel;
 
     @FXML
     private void initialize() {
         configureControls();
-        updateProgressState(false, "Готово к запуску", "ГОТОВО", 0.0d);
+        updateProgressState(false, "Синхронизация модпака", "Готово", 0.0d);
         syncFileLabel.setText("Лаунчер готов к работе.");
         syncBytesLabel.setText("Файловая активность пока отсутствует.");
         resetPreviewState();
         updateOnlinePlayersValue(DASHBOARD_UNKNOWN);
+        updateServerDetailValues(DASHBOARD_UNKNOWN, DASHBOARD_UNKNOWN);
         updateVersionValues(DASHBOARD_UNKNOWN, DASHBOARD_UNKNOWN);
-        sidebarStatusTitleLabel.setText("Проверка сервера");
-        sidebarStatusCopyLabel.setText("Проверяем маршрут, manifest и состояние сервера.");
+        updateModpackSizeValue(DASHBOARD_UNKNOWN);
     }
 
     @Override
     protected void onContextBound(LauncherContext context) {
+        if (!state().isAuthenticated()) {
+            router().open(ScreenRouter.Screen.AUTH);
+            return;
+        }
         currentConfig = LauncherDefaults.applyMissingValues(state().getConfig().copy());
         applyConfigToView(currentConfig);
         applyProfileState();
@@ -180,34 +252,120 @@ public final class LauncherShellController extends AbstractScreenController {
         router().open(state().isAuthenticated() ? ScreenRouter.Screen.PROFILE : ScreenRouter.Screen.AUTH);
     }
 
+    @FXML
+    private void openSettings() {
+        openConfigLocation();
+    }
+
+    private void openConfigLocation() {
+        try {
+            Path configFile = context().getConfigStore().getConfigFile().toAbsolutePath().normalize();
+            Path target = Files.exists(configFile) ? configFile : configFile.getParent();
+            if (target == null) {
+                throw new IOException("Config path is not available.");
+            }
+            openDesktopPath(target);
+            appendLog("Opened launcher config location: " + target);
+        } catch (Exception exception) {
+            showLauncherError("Не удалось открыть настройки лаунчера: " + exception.getMessage());
+        }
+    }
+
+    private void openDownloadBaseLocation() {
+        try {
+            String location = deriveManifestDirectory(buildCurrentConfig().getManifestUrl());
+            openExternalLocation(location);
+            appendLog("Opened launcher source: " + location);
+        } catch (Exception exception) {
+            showLauncherError("Не удалось открыть источник сборки: " + exception.getMessage());
+        }
+    }
+
     private void configureControls() {
-        logArea.setEditable(false);
-        logArea.setWrapText(true);
+        if (logArea != null) {
+            logArea.setEditable(false);
+            logArea.setWrapText(true);
+        }
 
+        configureWindowButtons();
         brandLogoLabel.setText(LauncherBrand.APP_TITLE);
-        brandSubtitleLabel.setText(LauncherBrand.APP_SUBTITLE);
         sidebarVersionLabel.setText("Launcher " + LauncherBrand.displayVersion());
-        profileChevronLabel.setText("⌄");
+        applyIcons();
 
-        syncButton.setOnAction(event -> syncFiles());
         previewButton.setOnAction(event -> previewSyncChanges());
         launchButton.setOnAction(event -> launchClient());
+        launchArrowButton.setOnAction(event -> launchClient());
+        settingsButton.setOnAction(event -> openConfigLocation());
+        openSiteButton.setOnAction(event -> openDownloadBaseLocation());
+        if (openLogButton != null) {
+            openLogButton.setOnAction(event -> focusLaunchLog());
+        }
+        if (clearLogButton != null && logArea != null) {
+            clearLogButton.setOnAction(event -> logArea.clear());
+        }
         launcherUpdateButton.setOnAction(event -> updateLauncher());
+        launcherUpdateCheckButton.setOnAction(event -> checkLauncherUpdates());
         hideLauncherUpdateCard();
+    }
+
+    private void applyIcons() {
+        homeNavButton.setGraphic(LauncherIcons.icon("home", 18.0d, "#9b5cf6"));
+        settingsNavButton.setGraphic(LauncherIcons.icon("settings", 18.0d, "#c9d1d9"));
+        launchButton.setGraphic(LauncherIcons.icon("play", 28.0d, "#ffffff"));
+        settingsButton.setGraphic(LauncherIcons.icon("settings", 22.0d, "#c9d1d9"));
+        syncButton.setText("");
+        syncButton.setGraphic(LauncherIcons.icon("check-circle", 36.0d, "#22c55e"));
+        syncButton.setMouseTransparent(true);
+        serverLogoPane.getChildren().setAll(LauncherIcons.logoCube(42.0d));
+        serverPlayersIconLabel.setGraphic(LauncherIcons.icon("users", 22.0d, "#cfd3e6"));
+        serverPingIconLabel.setGraphic(LauncherIcons.icon("signal", 22.0d, "#22c55e"));
+        serverVersionIconLabel.setGraphic(LauncherIcons.icon("cube-small", 22.0d, "#cfd3e6"));
+        previewButton.setGraphic(LauncherIcons.icon("refresh", 23.0d, "#c084fc"));
+        launcherUpdateStatusIconLabel.setGraphic(LauncherIcons.icon("check-circle", 16.0d, "#22c55e"));
+        launcherUpdateCheckButton.setGraphic(LauncherIcons.icon("refresh", 16.0d, "#aeb7c6"));
+        openSiteButton.setGraphic(LauncherIcons.icon("external", 15.0d, "#f5f7fa"));
+        profileManageButton.setGraphic(LauncherIcons.icon("profile", 21.0d, "#c084fc"));
+        if (openLogButton != null) {
+            openLogButton.setGraphic(LauncherIcons.icon("external", 15.0d, "#f5f7fa"));
+        }
+        if (clearLogButton != null) {
+            clearLogButton.setGraphic(LauncherIcons.icon("trash", 15.0d, "#f5f7fa"));
+        }
     }
 
     private void applyProfileState() {
         if (state().isAuthenticated()) {
             AuthAccount account = state().getSession().getAccount();
             profileNameLabel.setText(account.getUsername());
+            sidebarProfileNameLabel.setText(account.getUsername());
             profileRankLabel.setText(resolveRoleLabel(account.getRole()));
+            applyProfileAvatar(account);
+            sidebarProfileStatusLabel.setText("в сети");
+            if (homeWelcomeLabel != null) {
+                homeWelcomeLabel.setText("Добро пожаловать, " + account.getUsername() + "!");
+            }
             syncFileLabel.setText("Сессия активна. Перед запуском будет получен игровой ticket.");
             return;
         }
 
-        profileNameLabel.setText("Гость");
-        profileRankLabel.setText("Не авторизован");
+        profileNameLabel.setText("Не вошли");
+        sidebarProfileNameLabel.setText("Не вошли");
+        profileRankLabel.setText("Вход в аккаунт");
+        applyProfileAvatar(null);
+        sidebarProfileStatusLabel.setText("вход нужен");
+        if (homeWelcomeLabel != null) {
+            homeWelcomeLabel.setText("Войдите в аккаунт");
+        }
         syncFileLabel.setText("Авторизуйтесь для запуска через серверный аккаунт.");
+    }
+
+    private void applyProfileAvatar(AuthAccount account) {
+        if (profileAvatarView != null) {
+            profileAvatarView.setImage(AvatarImages.forAccount(account));
+        }
+        if (sidebarProfileAvatarView != null) {
+            sidebarProfileAvatarView.setImage(AvatarImages.forAccount(account));
+        }
     }
 
     private void applyConfigToView(LauncherConfig config) {
@@ -220,12 +378,15 @@ public final class LauncherShellController extends AbstractScreenController {
 
         syncPreviewSequence.incrementAndGet();
         serverRouteValueLabel.setText(formatRoute(resolvedConfig));
-        manifestUrlValueLabel.setText(manifestUrl);
+        updateConfigurationLabel(DASHBOARD_UNKNOWN, DASHBOARD_UNKNOWN);
+        manifestUrlValueLabel.setText(formatManifestLocation(manifestUrl));
         downloadBaseValueLabel.setText(deriveManifestDirectory(manifestUrl));
+        updateModpackSizeValue(DASHBOARD_UNKNOWN);
         resetPreviewState();
         hideLauncherUpdateCard();
         applyDashboardLoadingState(hasText(manifestUrl));
         updateServerPresence("ПРОВЕРКА", "checking");
+        applyLauncherUpdateFooterChecking();
         refreshEndpointPreviewAsync(resolvedConfig);
     }
 
@@ -291,8 +452,8 @@ public final class LauncherShellController extends AbstractScreenController {
             Throwable exception = task.getException();
             updateProgressState(false, "Предпросмотр завершился ошибкой", "ОШИБКА", 0.0d);
             syncBytesLabel.setText("Предпросмотр не построен.");
-            previewSummaryLabel.setText("Не удалось сравнить локальные файлы с manifest.files[].");
-            previewChangesBox.getChildren().setAll(
+            setPreviewSummary("Не удалось сравнить локальные файлы с manifest.files[].");
+            setPreviewChanges(
                 createPreviewEmptyState(exception == null ? "Preview failed." : exception.getMessage())
             );
             showLauncherError(exception == null ? "Preview failed." : exception.getMessage());
@@ -324,6 +485,29 @@ public final class LauncherShellController extends AbstractScreenController {
         }
 
         runTask(LauncherAction.SYNC_AND_LAUNCH, config);
+    }
+
+    private void focusLaunchLog() {
+        if (logArea == null) {
+            return;
+        }
+        logArea.requestFocus();
+        logArea.positionCaret(logArea.getLength());
+    }
+
+    private void checkLauncherUpdates() {
+        LauncherConfig config;
+        try {
+            config = buildCurrentConfig();
+            requireText(config.getManifestUrl(), "Set manifest URL in the launcher config before checking updates.");
+        } catch (Exception exception) {
+            showLauncherError(exception.getMessage());
+            return;
+        }
+
+        appendLog("Launcher update check requested.");
+        applyLauncherUpdateFooterChecking();
+        refreshEndpointPreviewAsync(config);
     }
 
     private void updateLauncher() {
@@ -423,6 +607,7 @@ public final class LauncherShellController extends AbstractScreenController {
                         appendLogAsync("Minecraft server list update skipped: " + exception.getMessage());
                     }
 
+                    ensureRequiredResourcePack(effectiveConfig);
                     Path workingDirectory = resolveWorkingDirectory(effectiveConfig);
                     appendLogAsync("Launch command: " + commandBuilder.preview(command));
                     if (workingDirectory != null) {
@@ -447,11 +632,10 @@ public final class LauncherShellController extends AbstractScreenController {
                 persistConfig(result.resolvedConfig, false);
                 applyProfileState();
 
-                if (result.syncResult != null) {
+                if (result.exitCode != null) {
+                    applyLastLaunchResult(result.exitCode.intValue());
+                } else if (result.syncResult != null) {
                     applySyncResult(result.syncResult, result.resolvedConfig);
-                } else if (result.exitCode != null) {
-                    updateProgressState(false, "Игровая сессия завершена", "ГОТОВО", 0.0d);
-                    syncBytesLabel.setText("Код выхода " + result.exitCode);
                 } else {
                     updateProgressState(false, "Готово к запуску", "ГОТОВО", 0.0d);
                 }
@@ -494,8 +678,10 @@ public final class LauncherShellController extends AbstractScreenController {
                 + syncResult.getReusedFiles() + "."
         );
         applyPreviewFromSyncResult(syncResult);
+        manifestUrlValueLabel.setText(formatManifestLocation(resolvedConfig.getManifestUrl()));
         serverRouteValueLabel.setText(formatRoute(resolvedConfig));
         downloadBaseValueLabel.setText(resolveDisplayDownloadBase(resolvedConfig.getManifestUrl(), syncResult.getManifest()));
+        updateModpackSizeValue(formatManifestSize(syncResult.getManifest()));
         updateVersionValues(
             resolveMinecraftVersion(syncResult.getManifest()),
             resolveManifestVersion(syncResult.getManifest())
@@ -512,16 +698,17 @@ public final class LauncherShellController extends AbstractScreenController {
         int reusedFiles = previewResult.getReusedFiles();
         int totalFiles = previewResult.getEntries().size();
         String manifestVersion = resolveManifestVersion(previewResult.getManifest());
+        updateModpackSizeValue(formatManifestSize(previewResult.getManifest()));
 
         if (downloadFiles <= 0) {
             updateProgressState(false, "Локальные файлы актуальны", "PREVIEW", 0.0d);
             syncFileLabel.setText("Все manifest.files[] уже совпадают с локальной сборкой.");
             syncBytesLabel.setText("К скачиванию 0 B");
-            previewSummaryLabel.setText(
+            setPreviewSummary(
                 "Manifest " + manifestVersion + ": все " + totalFiles
                     + " файлов актуальны. Preview сравнивает только manifest.files[]."
             );
-            previewChangesBox.getChildren().setAll(
+            setPreviewChanges(
                 createPreviewEmptyState("Изменений не найдено. Синхронизация скачает 0 файлов.")
             );
             return;
@@ -530,7 +717,7 @@ public final class LauncherShellController extends AbstractScreenController {
         updateProgressState(false, "Нужна синхронизация", "PREVIEW", 0.0d);
         syncFileLabel.setText("Найдено " + downloadFiles + " файлов для обновления до запуска.");
         syncBytesLabel.setText("К скачиванию " + formatBytes(previewResult.getDownloadBytes()));
-        previewSummaryLabel.setText(
+        setPreviewSummary(
             "Manifest " + manifestVersion + ": " + downloadFiles + " из " + totalFiles
                 + " файлов требуют sync, актуальны " + reusedFiles + "."
         );
@@ -538,25 +725,25 @@ public final class LauncherShellController extends AbstractScreenController {
     }
 
     private void applyPreviewFromSyncResult(ModpackSyncResult syncResult) {
-        previewSummaryLabel.setText(
+        setPreviewSummary(
             "Manifest " + resolveManifestVersion(syncResult.getManifest())
                 + ": sync завершен, локальная копия должна совпадать с manifest.files[]."
         );
-        previewChangesBox.getChildren().setAll(
+        setPreviewChanges(
             createPreviewEmptyState("Последняя синхронизация завершена. Для перепроверки запустите предпросмотр снова.")
         );
     }
 
     private void applyPreviewLoadingState() {
-        previewSummaryLabel.setText("Проверяем sha256 локальных файлов и сравниваем их с manifest.files[].");
-        previewChangesBox.getChildren().setAll(
+        setPreviewSummary("Проверяем sha256 локальных файлов и сравниваем их с manifest.files[].");
+        setPreviewChanges(
             createPreviewEmptyState("Сканируем game directory и строим список изменений...")
         );
     }
 
     private void resetPreviewState() {
-        previewSummaryLabel.setText("Предпросмотр ещё не запускался.");
-        previewChangesBox.getChildren().setAll(
+        setPreviewSummary("Предпросмотр ещё не запускался.");
+        setPreviewChanges(
             createPreviewEmptyState("Нажмите «Предпросмотр», чтобы заранее увидеть изменения перед sync.")
         );
     }
@@ -583,7 +770,25 @@ public final class LauncherShellController extends AbstractScreenController {
             nodes.add(moreLabel);
         }
 
-        previewChangesBox.getChildren().setAll(nodes);
+        setPreviewChanges(nodes);
+    }
+
+    private void setPreviewSummary(String message) {
+        if (previewSummaryLabel != null) {
+            previewSummaryLabel.setText(message);
+        }
+    }
+
+    private void setPreviewChanges(Node... nodes) {
+        if (previewChangesBox != null) {
+            previewChangesBox.getChildren().setAll(nodes);
+        }
+    }
+
+    private void setPreviewChanges(List<Node> nodes) {
+        if (previewChangesBox != null) {
+            previewChangesBox.getChildren().setAll(nodes);
+        }
     }
 
     private Node createPreviewEntryCard(ModpackSyncPreviewEntry entry) {
@@ -653,9 +858,11 @@ public final class LauncherShellController extends AbstractScreenController {
             LauncherConfig previewConfig = LauncherDefaults.applyMissingValues(config.copy());
             String manifestUrl = previewConfig.getManifestUrl();
             LauncherUpdateCandidate launcherUpdate = null;
+            boolean launcherUpdateCheckSucceeded = true;
             String downloadBase = deriveManifestDirectory(manifestUrl);
             String manifestVersion = hasText(manifestUrl) ? "Нет данных" : "Не указан";
             String minecraftVersion = hasText(manifestUrl) ? DASHBOARD_UNKNOWN : "Не указан";
+            String modpackSize = hasText(manifestUrl) ? DASHBOARD_UNKNOWN : "Не указан";
 
             try {
                 LoadedManifest loadedManifest = manifestClient.load(manifestUrl);
@@ -664,8 +871,12 @@ public final class LauncherShellController extends AbstractScreenController {
                 downloadBase = resolveDisplayDownloadBase(loadedManifest);
                 manifestVersion = resolveManifestVersion(manifest);
                 minecraftVersion = resolveMinecraftVersion(manifest);
-                launcherUpdate = launcherUpdateService.findUpdate(loadedManifest, LauncherBrand.displayVersion());
+                modpackSize = formatManifestSize(manifest);
+                if (previewConfig.isLauncherUpdatesEnabled()) {
+                    launcherUpdate = launcherUpdateService.findUpdate(loadedManifest, LauncherBrand.displayVersion());
+                }
             } catch (Exception ignored) {
+                launcherUpdateCheckSucceeded = false;
             }
 
             String resolvedRoute = formatRoute(previewConfig);
@@ -674,7 +885,9 @@ public final class LauncherShellController extends AbstractScreenController {
             String resolvedDownloadBase = downloadBase;
             String resolvedManifestVersion = manifestVersion;
             String resolvedMinecraftVersion = minecraftVersion;
+            String resolvedModpackSize = modpackSize;
             LauncherUpdateCandidate resolvedLauncherUpdate = launcherUpdate;
+            boolean resolvedLauncherUpdateCheckSucceeded = launcherUpdateCheckSucceeded;
 
             Platform.runLater(() -> {
                 if (requestId != endpointPreviewSequence.get()) {
@@ -683,7 +896,8 @@ public final class LauncherShellController extends AbstractScreenController {
                 serverRouteValueLabel.setText(resolvedRoute);
                 downloadBaseValueLabel.setText(resolvedDownloadBase);
                 updateVersionValues(resolvedMinecraftVersion, resolvedManifestVersion);
-                applyLauncherUpdateState(resolvedLauncherUpdate);
+                updateModpackSizeValue(resolvedModpackSize);
+                applyLauncherUpdateState(resolvedLauncherUpdate, resolvedLauncherUpdateCheckSucceeded);
                 refreshServerPresenceAsync(resolvedHost, resolvedPort, resolvedRoute);
             });
         }, "launcher-shell-endpoint-preview");
@@ -692,10 +906,16 @@ public final class LauncherShellController extends AbstractScreenController {
         thread.start();
     }
 
-    private void applyLauncherUpdateState(LauncherUpdateCandidate update) {
+    private void applyLauncherUpdateState(LauncherUpdateCandidate update, boolean checkSucceeded) {
         availableLauncherUpdate = update;
+        if (!checkSucceeded) {
+            hideLauncherUpdateCard();
+            applyLauncherUpdateFooterFailed();
+            return;
+        }
         if (update == null) {
             hideLauncherUpdateCard();
+            applyLauncherUpdateFooterUpToDate();
             return;
         }
 
@@ -712,6 +932,7 @@ public final class LauncherShellController extends AbstractScreenController {
         );
         launcherUpdateButton.setDisable(!update.isInstallSupported());
         launcherUpdateButton.setText(update.isInstallSupported() ? "Обновить" : "Скачать вручную");
+        applyLauncherUpdateFooterAvailable(update);
     }
 
     private void hideLauncherUpdateCard() {
@@ -721,6 +942,48 @@ public final class LauncherShellController extends AbstractScreenController {
         }
         launcherUpdateCard.setManaged(false);
         launcherUpdateCard.setVisible(false);
+    }
+
+    private void applyLauncherUpdateFooterChecking() {
+        if (launcherUpdateStatusLabel == null) {
+            return;
+        }
+        launcherUpdateStatusIconLabel.setGraphic(LauncherIcons.icon("refresh", 16.0d, "#aeb7c6"));
+        launcherUpdateStatusLabel.setText("Проверяем обновления");
+        if (launcherUpdateCheckButton != null) {
+            launcherUpdateCheckButton.setDisable(true);
+        }
+    }
+
+    private void applyLauncherUpdateFooterUpToDate() {
+        applyLauncherUpdateFooter("Launcher актуален", "check-circle", "#22c55e");
+    }
+
+    private void applyLauncherUpdateFooterAvailable(LauncherUpdateCandidate update) {
+        String version = update == null ? "" : update.getVersion();
+        String text = hasText(version) ? "Доступно обновление " + version : "Доступно обновление";
+        applyLauncherUpdateFooter(text, "download", "#c084fc");
+    }
+
+    private void applyLauncherUpdateFooterFailed() {
+        applyLauncherUpdateFooter("Проверка не удалась", "refresh", "#ef4444");
+        if (launcherUpdateCheckedLabel != null) {
+            launcherUpdateCheckedLabel.setText("Обновлено: ошибка");
+        }
+    }
+
+    private void applyLauncherUpdateFooter(String status, String icon, String color) {
+        if (launcherUpdateStatusLabel == null) {
+            return;
+        }
+        launcherUpdateStatusIconLabel.setGraphic(LauncherIcons.icon(icon, 16.0d, color));
+        launcherUpdateStatusLabel.setText(status);
+        if (launcherUpdateCheckedLabel != null) {
+            launcherUpdateCheckedLabel.setText("Обновлено: " + LocalDateTime.now().format(UPDATE_CHECK_TIME_FORMAT));
+        }
+        if (launcherUpdateCheckButton != null) {
+            launcherUpdateCheckButton.setDisable(false);
+        }
     }
 
     private void applyManifestSettings(LauncherConfig config, ModpackManifest manifest) {
@@ -751,8 +1014,7 @@ public final class LauncherShellController extends AbstractScreenController {
     private void refreshServerPresenceAsync(String host, int port, String route) {
         updateServerPresence("ПРОВЕРКА", "checking");
         updateOnlinePlayersValue(DASHBOARD_UNKNOWN);
-        sidebarStatusTitleLabel.setText("Проверка сервера");
-        sidebarStatusCopyLabel.setText("Обновляем пинг и список игроков.");
+        updateServerDetailValues("...", "...");
         long requestId = serverPresenceSequence.incrementAndGet();
 
         Thread thread = new Thread(() -> {
@@ -771,17 +1033,13 @@ public final class LauncherShellController extends AbstractScreenController {
                 if (resolvedStatus != null) {
                     updateServerPresence("Онлайн", "online");
                     updateOnlinePlayersValue(formatPlayers(resolvedStatus));
-                    sidebarStatusTitleLabel.setText("Сервер отвечает • " + resolvedStatus.getPingMs() + " мс");
-                    sidebarStatusCopyLabel.setText(
-                        "Онлайн " + formatPlayers(resolvedStatus) + ", версия " + resolveServerVersion(resolvedStatus) + "."
-                    );
+                    updateServerDetailValues(resolvedStatus.getPingMs() + " мс", resolveServerVersion(resolvedStatus));
                     return;
                 }
 
                 updateServerPresence("Оффлайн", "offline");
                 updateOnlinePlayersValue(DASHBOARD_UNKNOWN);
-                sidebarStatusTitleLabel.setText("Сервер недоступен");
-                sidebarStatusCopyLabel.setText("Маршрут " + route + " не отвечает. Проверьте сервер или сеть.");
+                updateServerDetailValues(DASHBOARD_UNKNOWN, DASHBOARD_UNKNOWN);
                 appendLog("No response from " + route + ".");
             });
         }, "launcher-shell-presence");
@@ -796,12 +1054,8 @@ public final class LauncherShellController extends AbstractScreenController {
             hasManifestUrl ? "проверка..." : "не указан"
         );
         updateOnlinePlayersValue(DASHBOARD_UNKNOWN);
-        sidebarStatusTitleLabel.setText("Проверка сервера");
-        sidebarStatusCopyLabel.setText(
-            hasManifestUrl
-                ? "Проверяем маршрут, manifest и состояние сервера."
-                : "Укажите manifest URL, чтобы получить сборку клиента и статус сервера."
-        );
+        updateServerDetailValues(DASHBOARD_UNKNOWN, DASHBOARD_UNKNOWN);
+        updateModpackSizeValue(hasManifestUrl ? DASHBOARD_UNKNOWN : "не указан");
     }
 
     private static String resolveManifestVersion(ModpackManifest manifest) {
@@ -873,6 +1127,17 @@ public final class LauncherShellController extends AbstractScreenController {
         return process.waitFor();
     }
 
+    private void ensureRequiredResourcePack(LauncherConfig config) {
+        try {
+            Path gameDirectory = resolveGameDirectory(config);
+            if (MinecraftResourcePackOptions.ensureEnabled(gameDirectory, REQUIRED_RESOURCE_PACK)) {
+                appendLogAsync("Enabled required resource pack: " + REQUIRED_RESOURCE_PACK);
+            }
+        } catch (IOException | IllegalArgumentException exception) {
+            appendLogAsync("Required resource pack setup skipped: " + exception.getMessage());
+        }
+    }
+
     private List<GameTicket> createReconnectTickets(LauncherConfig config, AuthSession session) throws IOException {
         List<GameTicket> tickets = new ArrayList<GameTicket>(RECONNECT_TICKET_COUNT);
         for (int index = 0; index < RECONNECT_TICKET_COUNT; index++) {
@@ -881,18 +1146,45 @@ public final class LauncherShellController extends AbstractScreenController {
         return tickets;
     }
 
+    private void openDesktopPath(Path target) throws IOException {
+        if (!Desktop.isDesktopSupported()) {
+            throw new IOException("Desktop integration is not supported.");
+        }
+        Desktop desktop = Desktop.getDesktop();
+        if (!desktop.isSupported(Desktop.Action.OPEN)) {
+            throw new IOException("Opening files is not supported.");
+        }
+        desktop.open(target.toFile());
+    }
+
+    private void openExternalLocation(String location) throws Exception {
+        if (!hasText(location)) {
+            throw new IOException("Location is not configured.");
+        }
+        if (!Desktop.isDesktopSupported()) {
+            throw new IOException("Desktop integration is not supported.");
+        }
+        Desktop desktop = Desktop.getDesktop();
+        if (!desktop.isSupported(Desktop.Action.BROWSE)) {
+            throw new IOException("Opening links is not supported.");
+        }
+        desktop.browse(new URI(location.trim()));
+    }
+
     private void setBusy(boolean busy) {
-        syncButton.setDisable(busy);
         previewButton.setDisable(busy);
         launchButton.setDisable(busy);
+        launchArrowButton.setDisable(busy);
         if (launcherUpdateButton != null) {
             launcherUpdateButton.setDisable(busy || availableLauncherUpdate == null || !availableLauncherUpdate.isInstallSupported());
+        }
+        if (launcherUpdateCheckButton != null) {
+            launcherUpdateCheckButton.setDisable(busy);
         }
     }
 
     private void updateProgressState(boolean busy, String statusText, String percentText, double progress) {
         syncProgressBar.setProgress(progress);
-        updateSyncProgressRing(progress);
         syncStatusLabel.setText(statusText);
         syncPercentLabel.setText(percentText);
         if (busy) {
@@ -900,18 +1192,12 @@ public final class LauncherShellController extends AbstractScreenController {
         }
     }
 
-    private void updateSyncProgressRing(double progress) {
-        if (syncProgressArc == null) {
-            return;
-        }
-
-        if (progress < 0.0d) {
-            syncProgressArc.setLength(-96.0d);
-            return;
-        }
-
-        double clampedProgress = Math.max(0.0d, Math.min(1.0d, progress));
-        syncProgressArc.setLength(-360.0d * clampedProgress);
+    private void applyLastLaunchResult(int exitCode) {
+        String statusText = exitCode == 0
+            ? "Последний запуск завершён успешно"
+            : "Последний запуск завершён с ошибкой";
+        updateProgressState(false, statusText, "ГОТОВО", 0.0d);
+        syncBytesLabel.setText(LocalTime.now().format(LOG_TIME_FORMAT) + "  •  Код выхода: " + exitCode);
     }
 
     private void updateOnlinePlayersValue(String value) {
@@ -921,15 +1207,47 @@ public final class LauncherShellController extends AbstractScreenController {
         }
     }
 
+    private void updateServerDetailValues(String ping, String version) {
+        serverPingValueLabel.setText(normalizeText(ping));
+        serverVersionValueLabel.setText(normalizeText(version));
+    }
+
+    private void updateModpackSizeValue(String value) {
+        modpackSizeValueLabel.setText(normalizeText(value));
+    }
+
     private void updateVersionValues(String minecraftVersion, String manifestVersion) {
         minecraftVersionValueLabel.setText(minecraftVersion);
         manifestVersionValueLabel.setText(manifestVersion);
+        updateConfigurationLabel(minecraftVersion, manifestVersion);
         if (footerMinecraftVersionValueLabel != null) {
             footerMinecraftVersionValueLabel.setText(minecraftVersion);
         }
         if (footerManifestVersionValueLabel != null) {
             footerManifestVersionValueLabel.setText(manifestVersion);
         }
+    }
+
+    private void updateConfigurationLabel(String minecraftVersion, String manifestVersion) {
+        if (configNameLabel == null) {
+            return;
+        }
+        String version = hasText(minecraftVersion) && !DASHBOARD_UNKNOWN.equals(minecraftVersion)
+            ? minecraftVersion
+            : manifestVersion;
+        configNameLabel.setText("ObsidianGate " + formatBuildDisplayVersion(version));
+    }
+
+    private static String formatBuildDisplayVersion(String version) {
+        String normalizedVersion = normalizeText(version);
+        if (DASHBOARD_UNKNOWN.equals(normalizedVersion)) {
+            return "1.12.2";
+        }
+        int forgeSeparatorIndex = normalizedVersion.indexOf('/');
+        if (forgeSeparatorIndex >= 0) {
+            normalizedVersion = normalizedVersion.substring(0, forgeSeparatorIndex).trim();
+        }
+        return hasText(normalizedVersion) ? normalizedVersion : "1.12.2";
     }
 
     private void persistConfig(LauncherConfig config, boolean logPath) throws IOException {
@@ -942,6 +1260,9 @@ public final class LauncherShellController extends AbstractScreenController {
     }
 
     private void appendLog(String message) {
+        if (logArea == null) {
+            return;
+        }
         String resolvedMessage = message == null ? "" : message;
         logArea.appendText("[" + LocalTime.now().format(LOG_TIME_FORMAT) + "] " + resolvedMessage + System.lineSeparator());
         logArea.positionCaret(logArea.getLength());
@@ -1015,10 +1336,7 @@ public final class LauncherShellController extends AbstractScreenController {
     }
 
     private Path resolveWorkingDirectory(LauncherConfig config) {
-        Path gameDirectory = null;
-        if (hasText(config.getGameDirectory())) {
-            gameDirectory = Paths.get(config.getGameDirectory().trim()).toAbsolutePath().normalize();
-        }
+        Path gameDirectory = resolveGameDirectory(config);
 
         if (!hasText(config.getWorkingDirectory())) {
             if (gameDirectory == null) {
@@ -1042,6 +1360,13 @@ public final class LauncherShellController extends AbstractScreenController {
             throw new IllegalArgumentException("Working directory was not found: " + workingDirectory);
         }
         return workingDirectory;
+    }
+
+    private static Path resolveGameDirectory(LauncherConfig config) {
+        if (config == null || !hasText(config.getGameDirectory())) {
+            return null;
+        }
+        return Paths.get(config.getGameDirectory().trim()).toAbsolutePath().normalize();
     }
 
     private static String formatRoute(LauncherConfig config) {
@@ -1109,6 +1434,31 @@ public final class LauncherShellController extends AbstractScreenController {
         return String.format(Locale.US, "%.1f MB", Double.valueOf(megabytes));
     }
 
+    private static String formatManifestSize(ModpackManifest manifest) {
+        if (manifest == null || manifest.getFiles() == null || manifest.getFiles().isEmpty()) {
+            return DASHBOARD_UNKNOWN;
+        }
+        long totalBytes = 0L;
+        for (ModpackFile file : manifest.getFiles()) {
+            if (file != null && file.getSize() != null && file.getSize().longValue() > 0L) {
+                totalBytes += file.getSize().longValue();
+            }
+        }
+        return formatBytes(totalBytes);
+    }
+
+    private static String formatManifestLocation(String manifestUrl) {
+        if (!hasText(manifestUrl)) {
+            return DASHBOARD_UNKNOWN;
+        }
+        String normalized = manifestUrl.trim();
+        int separator = normalized.lastIndexOf('/');
+        if (separator >= 0 && separator < normalized.length() - 1) {
+            return normalized.substring(separator + 1);
+        }
+        return normalized;
+    }
+
     private static String normalizeText(String value) {
         return hasText(value) ? value.trim() : DASHBOARD_UNKNOWN;
     }
@@ -1168,7 +1518,7 @@ public final class LauncherShellController extends AbstractScreenController {
     }
 
     private static boolean shouldSyncBeforeLaunch(LauncherConfig config) {
-        return config.isUpdateFilesBeforeLaunch() && hasText(config.getManifestUrl());
+        return hasText(config.getManifestUrl());
     }
 
     private static boolean hasText(String value) {

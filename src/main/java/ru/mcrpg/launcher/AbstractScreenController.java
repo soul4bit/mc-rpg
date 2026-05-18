@@ -1,16 +1,35 @@
 package ru.mcrpg.launcher;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import ru.mcrpg.launcher.ui.LauncherIcons;
 
 public abstract class AbstractScreenController implements LauncherContextAware {
 
     private LauncherContext context;
     private double dragOffsetX;
     private double dragOffsetY;
+
+    @FXML
+    private Button minimizeWindowButton;
+
+    @FXML
+    private Button maximizeWindowButton;
+
+    @FXML
+    private Button closeWindowButton;
+
+    @FXML
+    private StackPane brandLogoPane;
 
     @Override
     public final void bindContext(LauncherContext context) {
@@ -37,12 +56,32 @@ public abstract class AbstractScreenController implements LauncherContextAware {
         return context.getStage();
     }
 
+    protected final void configureWindowButtons() {
+        configureWindowButton(minimizeWindowButton, "window-minimize");
+        configureWindowButton(maximizeWindowButton, "window-maximize");
+        configureWindowButton(closeWindowButton, "window-close");
+        configureBrandLogo(brandLogoPane);
+    }
+
     protected final void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR, resolveMessage(message), ButtonType.OK);
         alert.initOwner(stage());
         alert.setTitle(LauncherBrand.APP_NAME);
         alert.setHeaderText("Ошибка");
         alert.showAndWait();
+    }
+
+    protected final void openLauncherConfigLocation() {
+        try {
+            Path configFile = context().getConfigStore().getConfigFile().toAbsolutePath().normalize();
+            Path target = Files.exists(configFile) ? configFile : configFile.getParent();
+            if (target == null) {
+                throw new IOException("Config path is not available.");
+            }
+            openDesktopPath(target);
+        } catch (Exception exception) {
+            showError("Не удалось открыть настройки лаунчера: " + exception.getMessage());
+        }
     }
 
     @FXML
@@ -63,11 +102,42 @@ public abstract class AbstractScreenController implements LauncherContextAware {
     }
 
     @FXML
+    protected final void toggleMaximizeWindow() {
+        stage().setMaximized(!stage().isMaximized());
+    }
+
+    @FXML
     protected final void closeWindow() {
         stage().close();
     }
 
     private static String resolveMessage(String message) {
         return message == null || message.trim().isEmpty() ? "Unknown launcher state." : message.trim();
+    }
+
+    private static void openDesktopPath(Path target) throws IOException {
+        if (!Desktop.isDesktopSupported()) {
+            throw new IOException("Desktop integration is not supported.");
+        }
+        Desktop desktop = Desktop.getDesktop();
+        if (!desktop.isSupported(Desktop.Action.OPEN)) {
+            throw new IOException("Opening files is not supported.");
+        }
+        desktop.open(target.toFile());
+    }
+
+    private static void configureWindowButton(Button button, String iconName) {
+        if (button == null) {
+            return;
+        }
+        button.setText("");
+        button.setGraphic(LauncherIcons.icon(iconName, 16.0d, "#c9d1d9"));
+    }
+
+    private static void configureBrandLogo(StackPane pane) {
+        if (pane == null) {
+            return;
+        }
+        pane.getChildren().setAll(LauncherIcons.logoCube(44.0d));
     }
 }

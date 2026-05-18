@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.13.1",
+    "version":  "2026.05.18.11",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -12,12 +12,12 @@
                      "launchTemplate":  ""
                  },
     "launcherUpdate":  {
-                           "version":  "2026.05.13.1",
-                           "url":  "launcher/obsidian-gate-launcher.jar",
-                           "sha256":  "3821907278aaae3691a079a76f7b21a173dc42f135364a3290b6f8a511199ab7",
-                           "size":  25719904,
+                           "version":  "2026.05.18.2",
+                           "url":  "client/launcher/obsidian-gate-launcher.jar",
+                           "sha256":  "c24494c6a7e47f1292cd85bc7484b63145dae37b653ea4a4eda71674c1789959",
+                           "size":  15605811,
                            "required":  false,
-                           "artifactVersion":  "0.1.0-SNAPSHOT",
+                           "artifactVersion":  "0.1.4-test",
                            "fileName":  "obsidian-gate-launcher.jar"
                        },
     "runtime":  {
@@ -35,7 +35,7 @@
                 },
     "minecraft":  {
                       "version":  "1.12.2",
-                      "forgeVersion":  "14.23.5.2864",
+                      "forgeVersion":  "14.23.5.2847",
                       "versionManifestUrl":  "",
                       "forgeInstallerUrl":  "",
                       "assetBaseUrl":  "",
@@ -1105,6 +1105,12 @@
                       "executable":  false
                   },
                   {
+                      "path":  "config/obsidiangate-spawn-protection.properties",
+                      "sha256":  "9c7b8b958874d058c76e2e01c8b8b298a00c28fc839e4ebc8351c9caf8b16039",
+                      "size":  176,
+                      "executable":  false
+                  },
+                  {
                       "path":  "config/optifine_1.12.2_hd_u_f5.jar",
                       "sha256":  "fc70db439793b257228ad50dbb497dd50e33c3e08f7d0d6b2bba3a7d7c349619",
                       "size":  2598821,
@@ -1597,6 +1603,12 @@
                       "executable":  false
                   },
                   {
+                      "path":  "mods/Baubles-1.12-1.5.2.jar",
+                      "sha256":  "b32010b2f2778aa1188585e7ead91ad46d4cb2c715f9c778a61848ba7fe51f8d",
+                      "size":  108450,
+                      "executable":  false
+                  },
+                  {
                       "path":  "mods/bettercaves-1.12.2-1.6.0.jar",
                       "sha256":  "cdfd2658a572b247164d65a1c6f2aa696d8320b5a54d68f14c31b2600da478b3",
                       "size":  408577,
@@ -1642,6 +1654,12 @@
                       "path":  "mods/DenseMetals-1.12.2-2.0.0.30.jar",
                       "sha256":  "9d2670fcaf9eb349f898f7e844db8612963e8968b6e61bd34ee3df3b311ff358",
                       "size":  156430,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/DivineRPG-1.7.1.jar",
+                      "sha256":  "6a220de5ccde3580f44e113d3e89ade6e9196a11799fc6c3c03fbfd5a520a491",
+                      "size":  18732935,
                       "executable":  false
                   },
                   {
@@ -1892,7 +1910,7 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "254838d666338218170545c6a672a7f4176efdb9afe65a0476590eaf83f1d14b",
+                      "sha256":  "8f3a45548588d3fc3fb07b5ae01d72003ddf99238be5c543971695beabdb6a7d",
                       "size":  28989,
                       "executable":  false
                   },
@@ -1918,6 +1936,12 @@
                       "path":  "mods/randompatches-1.12.2-1.21.0.0.jar",
                       "sha256":  "2a039e714ef010556a0186dd3fb75cc1d841819225e76e7b71a21f2f23b230d1",
                       "size":  283420,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/RoguelikeDungeons-1.12.2-1.8.0.jar",
+                      "sha256":  "0668c6dd53adfb837e2cb9e2650b9925fe250063f12bcd159d9f80093d4fef20",
+                      "size":  701215,
                       "executable":  false
                   },
                   {
@@ -1963,6 +1987,12 @@
                       "executable":  false
                   },
                   {
+                      "path":  "mods/Thaumcraft-1.12.2-6.1.BETA26.jar",
+                      "sha256":  "9425f8643581b27ff8845b087c8bc6fc10425a32942f1a3f0e265ce6b38f7b5f",
+                      "size":  11360786,
+                      "executable":  false
+                  },
+                  {
                       "path":  "mods/thebirdwatchingmod-1.5.0.jar",
                       "sha256":  "45105f4ec23f0398d74dbcc4aebf5435de2832145520825de8322c73664396ec",
                       "size":  963488,
@@ -1978,6 +2008,12 @@
                       "path":  "mods/TTFR-1.12.1-1.9.1.jar",
                       "sha256":  "5c09afdef46c63d3e5faf82a8b0b990ea9d250fd074d8ec2af4b52f90542a1a0",
                       "size":  33127,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/twilightforest-1.12.2-3.11.1021-universal.jar",
+                      "sha256":  "e1cee0a1e8f4aaedbd4381308fe6f32a6f69935e7bfb0df0748c2b292fb821ce",
+                      "size":  28721862,
                       "executable":  false
                   },
                   {
@@ -1999,6 +2035,30 @@
                       "executable":  false
                   },
                   {
+                      "path":  "mods/Waystones_1.12.2-4.1.0.jar",
+                      "sha256":  "5e79f329154d9a6225130f2b29dbcb0f603e2e622637e39ca566f8179b02ca15",
+                      "size":  178994,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/xaerolib-forge-1.12.2-1.1.0.jar",
+                      "sha256":  "777127ce764ec4ea096ba5245609994de4c6290db2b5cf7d41d3ce17a6662767",
+                      "size":  597314,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/xaerominimap-forge-1.12.2-25.3.13.jar",
+                      "sha256":  "d802b3f714a7633c1810511d4079975c681d930c6f6c2039cd7664df35c62a3d",
+                      "size":  1992503,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/xaeroworldmap-forge-1.12.2-1.40.16.jar",
+                      "sha256":  "b5382be704ec8b213bd03dcd37ae2666346fedd6582702cb2a5463f3ba281775",
+                      "size":  924972,
+                      "executable":  false
+                  },
+                  {
                       "path":  "resourcepacks/bushy-leaves-1.12.2.zip",
                       "sha256":  "6f0944ed7289ff58e3ae76d5fa2a06bb5e908cdcb4997d2dac8c302d32cdf813",
                       "size":  53273,
@@ -2017,9 +2077,261 @@
                       "executable":  false
                   },
                   {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpcmmaarg/textures/blocks/clean_planks/clean_planks_%wood%.png",
+                      "sha256":  "071c1afea8b6dbd9675ae99e3e3d1447549102c2b017802536167d3eacf439bd",
+                      "size":  402,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/models/item/anvil.json",
+                      "sha256":  "e27442fcd5446634e84e000b63bbf20b52664426d7b00bd13a400b28dcd4f8be",
+                      "size":  105,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/models/item/cauldron.json",
+                      "sha256":  "7b2934fe17e437740638c93918434b2ef34e4287609121e2142e2dd2d2f3ce65",
+                      "size":  108,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/models/item/hanging_cauldron.json",
+                      "sha256":  "17e66348d3f9a69cd1bc0220781cf6ac398f7f98990c68fa4c4cd991d64d585c",
+                      "size":  116,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/models/item/old_blocks/air.json",
+                      "sha256":  "d4d2bd8748840e318b8ee560c5c5b3354b7244a9c3ef929d60c01be163ea8db0",
+                      "size":  41,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/textures/blocks/.png",
+                      "sha256":  "ffba33faaa3d3fec27428586dcfbe17cb1442b4ef489d9d9865463384a03ad6a",
+                      "size":  255,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/textures/blocks/clean_planks/clean_planks_spruce.png",
+                      "sha256":  "071c1afea8b6dbd9675ae99e3e3d1447549102c2b017802536167d3eacf439bd",
+                      "size":  402,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/textures/blocks/placeholder.png",
+                      "sha256":  "33251779843ee7a9a0139ab73c4affd45d1faa160dc0b58b34ce4c2f343ab023",
+                      "size":  1903,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/models/item/leatherhelmet.json",
+                      "sha256":  "83dba6557a4e75cb29309fa4aa359e0146d33399a72f12bd5caf23a5dae7bfd3",
+                      "size":  96,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/models/item/stonetongs_hotiron.json",
+                      "sha256":  "5714cd4e6e38533fc3086dcdb8fc0f5196303aca20b20757fe44ec17c58a5228",
+                      "size":  51,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/blocks/bronze_ingot_hot.png",
+                      "sha256":  "76b94b0256cda86bc7c0d942b13118404d7b05a46c2c5d9b1c7f83be7911273c",
+                      "size":  680,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/clean_cleaniron_ingot.png",
+                      "sha256":  "387a61f9dd4774d480f2c5585d64e014f3952b57a36a26ccd27011a7291ba738",
+                      "size":  601,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/clean_iron/0.0201.png",
+                      "sha256":  "2d6f57930eaf0a99977dd0b164dbcda8c19599f6fec03dc7b01d6e64acce51dd",
+                      "size":  827,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/clean_iron_ingot.png",
+                      "sha256":  "387a61f9dd4774d480f2c5585d64e014f3952b57a36a26ccd27011a7291ba738",
+                      "size":  601,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/copper/1.png",
+                      "sha256":  "76aeabef8454a43cad421ef5f7f6ceba5bdd0d2b1360fa8967dfb575b5fd787f",
+                      "size":  3246,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/finished_bronze_hot.png",
+                      "sha256":  "be5020a0fbd649829ec96941cfc35fc1bd684011e747eca9a1fe28393001b754",
+                      "size":  3264,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/finished_copper.png",
+                      "sha256":  "76aeabef8454a43cad421ef5f7f6ceba5bdd0d2b1360fa8967dfb575b5fd787f",
+                      "size":  3246,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/hot_bronze.png",
+                      "sha256":  "6a4a459c40435255da561f208a93874a3030f6b23c73b11246cd5c6870a0148a",
+                      "size":  787,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/iron_ingot.png",
+                      "sha256":  "1cc09bf9b5cda459fb88bd98b179d5273ce0ea50443afdd4d152514a58ee66c5",
+                      "size":  376,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/steel_ingot.png",
+                      "sha256":  "c8ef4299180340ff3db93381fa8b049128bb1189fce60716cd0aeec7263a93a7",
+                      "size":  562,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/wootz_ingot.png",
+                      "sha256":  "b96191795501b9e7a929b38a2708e9a94f019f5a231f3223a06d2b4d3292b1ce",
+                      "size":  846,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/immersiveengineering/models/block/iesixsides.json",
+                      "sha256":  "161d1f936d98df26e0caeff573bab7fcc30804bd7330bf41027692c106566507",
+                      "size":  521,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/immersivepetroleum/models/item/metal_multiblock.json",
+                      "sha256":  "db8e2e4f7997373248e1823c425004bef395735d8a6b6263457d7393aa2ed31f",
+                      "size":  109,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/immersivepetroleum/models/item/stone_decoration.json",
+                      "sha256":  "658f375581865fcdf5f0c68f9c94532395c551bf6974a73ff6145a3b0dde34aa",
+                      "size":  118,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/blockstates/torch.json",
+                      "sha256":  "7fe5148d474ea9b99273520458fc52f001b4993965382704cfc0b7e00e569738",
+                      "size":  663,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/models/block/cube-all.json",
+                      "sha256":  "12e6675c5c97ec161dc7246e37faf8cb88c7d9845c00494c0af3172a5991da84",
+                      "size":  43,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/block/leaves_big_oak_bl.png",
+                      "sha256":  "1066faf89fed385057bf33bbc769c987d1a93b6b8d8630fb120409be2b2076ca",
+                      "size":  1625,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/1.png",
+                      "sha256":  "be5020a0fbd649829ec96941cfc35fc1bd684011e747eca9a1fe28393001b754",
+                      "size":  3264,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/anvil_base_top.png",
+                      "sha256":  "765a0b62fed2d40850b3993d6bae08cdc22fa3bc1ca40ea2e63932cdd86cdef2",
+                      "size":  701,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/checker_test.png",
+                      "sha256":  "cb40143045debad3b75dc779d4305024965b2325d652915b9a26ead9baadbf07",
+                      "size":  151,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/dirty_sand.png",
+                      "sha256":  "ee8b5c122638fd6f1d77ed2222c9fccbb97abe583829760bbddef22a11ac0b69",
+                      "size":  719,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/e_particle.png",
+                      "sha256":  "24057afa48698276dbabdc818fb071a8dc560512b75c3d72d4032ca82255b7bc",
+                      "size":  3175,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/e_texture.png",
+                      "sha256":  "24057afa48698276dbabdc818fb071a8dc560512b75c3d72d4032ca82255b7bc",
+                      "size":  3175,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/iron_ingot.png",
+                      "sha256":  "1cc09bf9b5cda459fb88bd98b179d5273ce0ea50443afdd4d152514a58ee66c5",
+                      "size":  376,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/iron_ingot_dark.png",
+                      "sha256":  "dda95686bcdcee9c1f9ad02a67cb69f9d8cdadf7cb0852f39a2ca1cfec55d39e",
+                      "size":  464,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/iron_ingot_hot.png",
+                      "sha256":  "7c3f634ba50f420eb5c389a9ad43b9a35436de18a5bcb41474e6d7bdc537c1ac",
+                      "size":  801,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/iron_ingot_light.png",
+                      "sha256":  "31ad185c26bbd9e829c6ee6f3294cd937e93ffb13dd67b4dc463ccae4873781e",
+                      "size":  458,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/stone_slab.png",
+                      "sha256":  "ce361cde8897ef98be0d911715aa15f8d9447a6fb0d44f64b26359350699a506",
+                      "size":  414,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/stone_slab_hot.png",
+                      "sha256":  "bcf27ec5c3ca68d481cbce44e47296157973eee3b8fc930238ad8c13bc454eca",
+                      "size":  405,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/items/e_texture.png",
+                      "sha256":  "d72c09f22add35e813047dd799e2fb999ee58ff9924768418628f3c79faaec33",
+                      "size":  317,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/items/finished_bronze.png",
+                      "sha256":  "be5020a0fbd649829ec96941cfc35fc1bd684011e747eca9a1fe28393001b754",
+                      "size":  3264,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/pack.mcmeta",
+                      "sha256":  "c1e948108139b48f05f8c8b7537f84e002c35ba0ff162c6a0879f52767f31a57",
+                      "size":  121,
+                      "executable":  false
+                  },
+                  {
                       "path":  "scripts/project.zs",
-                      "sha256":  "3e03b256574af57cc56dee2950bad074f5845b434a0a252c19717d1b4fe4cf4e",
-                      "size":  253,
+                      "sha256":  "df3c7008da9a3d6da5a31005645f119f28d08a043c197d4899a31d24b60ae3fc",
+                      "size":  256,
                       "executable":  false
                   },
                   {
@@ -2032,6 +2344,12 @@
                       "path":  "shaderpacks/Chocapic13_V4-High modified.zip.txt",
                       "sha256":  "98846bb50808259aae79514fa4c1dccbaa9e474832dd1fc2f2597898b94e5d5d",
                       "size":  156,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "THIRD_PARTY_MODS.txt",
+                      "sha256":  "039603928b0c6419f03012e6a55e69271220f48d4a847f038b07fd080db292af",
+                      "size":  762,
                       "executable":  false
                   }
               ]

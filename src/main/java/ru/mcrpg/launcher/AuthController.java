@@ -2,6 +2,7 @@ package ru.mcrpg.launcher;
 
 import java.io.IOException;
 import javafx.concurrent.Task;
+import javafx.scene.control.ContentDisplay;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -9,8 +10,12 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import ru.mcrpg.launcher.ui.LauncherIcons;
 
 public final class AuthController extends AbstractScreenController {
+
+    @FXML
+    private Label versionLabel;
 
     @FXML
     private TextField loginField;
@@ -32,7 +37,15 @@ public final class AuthController extends AbstractScreenController {
 
     @FXML
     private void initialize() {
+        configureChrome();
         rememberCheck.setSelected(true);
+    }
+
+    private void configureChrome() {
+        configureWindowButtons();
+        versionLabel.setText("Версия: " + LauncherBrand.displayVersion());
+        loginButton.setGraphic(LauncherIcons.icon("arrow-right", 20.0d, "#ffffff"));
+        loginButton.setContentDisplay(ContentDisplay.RIGHT);
     }
 
     @Override

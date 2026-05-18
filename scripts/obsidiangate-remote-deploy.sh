@@ -12,6 +12,7 @@ SERVER_MODS_DIR="${3:?server mods dir is required}"
 WEB_ROOT="${4:?web root is required}"
 SERVICE_NAME="${5:?service name is required}"
 SKIP_RESTART="${6:-0}"
+SERVER_ROOT="${7:-$(dirname "$SERVER_MODS_DIR")}"
 
 case "$STAGE_DIR" in
     /home/*) ;;
@@ -25,6 +26,14 @@ case "$SERVER_MODS_DIR" in
     /home/*) ;;
     *)
         echo "Server mods dir must be under /home: $SERVER_MODS_DIR" >&2
+        exit 2
+        ;;
+esac
+
+case "$SERVER_ROOT" in
+    /home/*) ;;
+    *)
+        echo "Server root must be under /home: $SERVER_ROOT" >&2
         exit 2
         ;;
 esac
@@ -53,7 +62,35 @@ if [ ! -f "$STAGE_DIR/$SERVER_JAR" ]; then
 fi
 
 install -d "$SERVER_MODS_DIR"
+
+if [ -d "$STAGE_DIR/server/mods" ]; then
+    find "$SERVER_MODS_DIR" -mindepth 1 -maxdepth 1 ! -name 'obsidiangate-forge-auth-server-*.jar' -exec rm -rf {} +
+    cp -a "$STAGE_DIR/server/mods/." "$SERVER_MODS_DIR/"
+fi
+
 install -m 644 "$STAGE_DIR/$SERVER_JAR" "$SERVER_MODS_DIR/$SERVER_JAR"
+
+if [ -d "$STAGE_DIR/server/config" ]; then
+    preserved_spawn_config="$(mktemp)"
+    if [ -f "$SERVER_ROOT/config/obsidiangate-spawn-protection.properties" ] && [ ! -f "$STAGE_DIR/server/config/obsidiangate-spawn-protection.properties" ]; then
+        cp "$SERVER_ROOT/config/obsidiangate-spawn-protection.properties" "$preserved_spawn_config"
+    else
+        rm -f "$preserved_spawn_config"
+    fi
+    rm -rf "$SERVER_ROOT/config"
+    install -d "$SERVER_ROOT/config"
+    cp -a "$STAGE_DIR/server/config/." "$SERVER_ROOT/config/"
+    if [ -f "$preserved_spawn_config" ]; then
+        install -m 644 "$preserved_spawn_config" "$SERVER_ROOT/config/obsidiangate-spawn-protection.properties"
+        rm -f "$preserved_spawn_config"
+    fi
+fi
+
+if [ -d "$STAGE_DIR/server/scripts" ]; then
+    rm -rf "$SERVER_ROOT/scripts"
+    install -d "$SERVER_ROOT/scripts"
+    cp -a "$STAGE_DIR/server/scripts/." "$SERVER_ROOT/scripts/"
+fi
 
 install -d "$WEB_ROOT"
 if command -v rsync >/dev/null 2>&1; then

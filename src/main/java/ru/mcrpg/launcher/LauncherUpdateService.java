@@ -93,7 +93,7 @@ final class LauncherUpdateService {
     }
 
     private static Path createRestartScript(Path updateFile, Path currentLauncherPath) throws IOException {
-        Path script = Files.createTempFile("obsidiangate-launcher-update-", isWindows() ? ".cmd" : ".sh");
+        Path script = Files.createTempFile("obsidiangate-launcher-update-", isWindows() ? ".ps1" : ".sh");
         String javaCommand = resolveJavaCommand();
         String content = isWindows()
             ? windowsScript(updateFile, currentLauncherPath, javaCommand)
@@ -105,22 +105,30 @@ final class LauncherUpdateService {
 
     private static void startUpdaterScript(Path script) throws IOException {
         ProcessBuilder builder = isWindows()
-            ? new ProcessBuilder("cmd.exe", "/c", "start", "", script.toString())
+            ? new ProcessBuilder(
+                "powershell.exe",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-WindowStyle",
+                "Hidden",
+                "-File",
+                script.toString()
+            )
             : new ProcessBuilder("sh", script.toString());
         builder.start();
     }
 
     private static String windowsScript(Path updateFile, Path currentLauncherPath, String javaCommand) {
-        return "@echo off\r\n"
-            + "setlocal\r\n"
-            + "set \"SRC=" + updateFile.toAbsolutePath() + "\"\r\n"
-            + "set \"DST=" + currentLauncherPath.toAbsolutePath() + "\"\r\n"
-            + "set \"JAVA=" + javaCommand + "\"\r\n"
-            + "timeout /t 2 /nobreak > nul\r\n"
-            + "copy /Y \"%SRC%\" \"%DST%\" > nul\r\n"
-            + "if errorlevel 1 exit /b 1\r\n"
-            + "start \"\" \"%JAVA%\" -jar \"%DST%\"\r\n"
-            + "del \"%~f0\"\r\n";
+        String targetDirectory = currentLauncherPath.toAbsolutePath().getParent().toString();
+        return "$ErrorActionPreference = 'Stop'\r\n"
+            + "$src = " + powerShellQuote(updateFile.toAbsolutePath().toString()) + "\r\n"
+            + "$dst = " + powerShellQuote(currentLauncherPath.toAbsolutePath().toString()) + "\r\n"
+            + "$java = " + powerShellQuote(javaCommand) + "\r\n"
+            + "$workdir = " + powerShellQuote(targetDirectory) + "\r\n"
+            + "Start-Sleep -Seconds 2\r\n"
+            + "Copy-Item -LiteralPath $src -Destination $dst -Force\r\n"
+            + "Start-Process -FilePath $java -ArgumentList @('-jar', $dst) -WorkingDirectory $workdir\r\n";
     }
 
     private static String unixScript(Path updateFile, Path currentLauncherPath, String javaCommand) {
@@ -217,6 +225,10 @@ final class LauncherUpdateService {
 
     private static String shellQuote(String value) {
         return "'" + value.replace("'", "'\"'\"'") + "'";
+    }
+
+    private static String powerShellQuote(String value) {
+        return "'" + value.replace("'", "''") + "'";
     }
 
     private static boolean isWindows() {

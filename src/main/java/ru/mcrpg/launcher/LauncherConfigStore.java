@@ -21,6 +21,7 @@ public final class LauncherConfigStore {
     private static final String KEY_AUTH_BASE_URL = "auth.base.url";
     private static final String KEY_SERVER_ID = "server.id";
     private static final String KEY_UPDATE_FILES_BEFORE_LAUNCH = "update.files.before.launch";
+    private static final String KEY_LAUNCHER_UPDATE_ENABLED = "launcher.update.enabled";
 
     private final Path configFile;
 
@@ -65,6 +66,10 @@ public final class LauncherConfigStore {
             properties.getProperty(KEY_UPDATE_FILES_BEFORE_LAUNCH),
             defaults.isUpdateFilesBeforeLaunch()
         ));
+        defaults.setLauncherUpdatesEnabled(parseBoolean(
+            properties.getProperty(KEY_LAUNCHER_UPDATE_ENABLED),
+            defaults.isLauncherUpdatesEnabled()
+        ));
         return LauncherDefaults.applyMissingValues(defaults);
     }
 
@@ -81,6 +86,7 @@ public final class LauncherConfigStore {
         properties.setProperty(KEY_AUTH_BASE_URL, config.getAuthBaseUrl());
         properties.setProperty(KEY_SERVER_ID, config.getServerId());
         properties.setProperty(KEY_UPDATE_FILES_BEFORE_LAUNCH, Boolean.toString(config.isUpdateFilesBeforeLaunch()));
+        properties.setProperty(KEY_LAUNCHER_UPDATE_ENABLED, Boolean.toString(config.isLauncherUpdatesEnabled()));
 
         Path parent = configFile.getParent();
         if (parent != null) {

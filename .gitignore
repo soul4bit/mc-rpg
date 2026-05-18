@@ -3,5 +3,5 @@ target/
 *.iml
 .vscode
 auth-api/.env
-ObsidianGate_JavaFX_Pack/
 dist/
+tmp/

@@ -45,15 +45,23 @@ class AuthApiIntegrationTest {
                     """))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.account.username").value("Arcanist42"))
+            .andExpect(jsonPath("$.account.avatar").isNotEmpty())
+            .andExpect(jsonPath("$.account.avatarUrl").isNotEmpty())
             .andReturn());
 
         String accessToken = registration.path("accessToken").asText();
         String refreshToken = registration.path("refreshToken").asText();
+        String avatar = registration.path("account").path("avatar").asText();
 
         mockMvc.perform(get("/me")
                 .header("Authorization", "Bearer " + accessToken))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.email").value("arcanist42@example.com"));
+            .andExpect(jsonPath("$.email").value("arcanist42@example.com"))
+            .andExpect(jsonPath("$.avatar").value(avatar));
+
+        mockMvc.perform(get("/avatars/" + avatar))
+            .andExpect(status().isOk())
+            .andExpect(result -> assertTrue(result.getResponse().getContentAsByteArray().length > 0));
 
         JsonNode refreshed = parse(mockMvc.perform(post("/auth/refresh")
                 .contentType(MediaType.APPLICATION_JSON)

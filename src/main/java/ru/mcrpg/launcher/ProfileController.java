@@ -1,17 +1,79 @@
 package ru.mcrpg.launcher;
 
+import java.awt.Desktop;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import ru.mcrpg.launcher.ui.AvatarImages;
+import ru.mcrpg.launcher.ui.LauncherIcons;
 
 public final class ProfileController extends AbstractScreenController {
+
+    private static final DateTimeFormatter SESSION_TIME_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+        .withZone(ZoneId.systemDefault());
+
+    @FXML
+    private Label versionLabel;
+
+    @FXML
+    private Button homeNavButton;
+
+    @FXML
+    private Button settingsNavButton;
+
+    @FXML
+    private Button logoutButton;
+
+    @FXML
+    private Button editProfileButton;
+
+    @FXML
+    private Button switchAccountButton;
+
+    @FXML
+    private Button openGameFolderButton;
+
+    @FXML
+    private Button securityDetailsButton;
+
+    @FXML
+    private Label sidebarProfileNameLabel;
+
+    @FXML
+    private ImageView sidebarProfileAvatarView;
+
+    @FXML
+    private Label sidebarProfileStatusLabel;
 
     @FXML
     private Label profileNameLabel;
 
     @FXML
-    private Label profileRoleLabel;
+    private ImageView profileAvatarView;
+
+    @FXML
+    private Label profileRoleBadgeLabel;
+
+    @FXML
+    private Label profileStatusLabel;
+
+    @FXML
+    private Label profileWelcomeLabel;
+
+    @FXML
+    private Label accountUsernameLabel;
+
+    @FXML
+    private Label accountRoleLabel;
 
     @FXML
     private Label profileEmailLabel;
@@ -20,13 +82,36 @@ public final class ProfileController extends AbstractScreenController {
     private Label accountIdLabel;
 
     @FXML
-    private Label launcherPathLabel;
-
-    @FXML
-    private Label launcherServerIdLabel;
+    private Label sessionExpiresLabel;
 
     @FXML
     private Label statusLabel;
+
+    @FXML
+    private Label accountInfoIconLabel;
+
+    @FXML
+    private Label usernameIconLabel;
+
+    @FXML
+    private Label roleIconLabel;
+
+    @FXML
+    private Label emailIconLabel;
+
+    @FXML
+    private Label accountIdIconLabel;
+
+    @FXML
+    private Label quickActionsIconLabel;
+
+    @FXML
+    private Label securityIconLabel;
+
+    @FXML
+    private void initialize() {
+        configureChrome();
+    }
 
     @Override
     protected void onContextBound(LauncherContext context) {
@@ -45,9 +130,67 @@ public final class ProfileController extends AbstractScreenController {
 
     @FXML
     private void onLogout() {
+        logoutAndOpenAuth();
+    }
+
+    @FXML
+    private void onSwitchAccount() {
+        logoutAndOpenAuth();
+    }
+
+    @FXML
+    private void onOpenGameFolder() {
+        try {
+            String configuredDirectory = state().getConfig().getGameDirectory();
+            Path gameDirectory = Paths.get(valueOrFallback(configuredDirectory, LauncherDefaults.defaultGameDirectory()))
+                .toAbsolutePath()
+                .normalize();
+            Files.createDirectories(gameDirectory);
+            openDesktopPath(gameDirectory);
+            statusLabel.setText("Открыта папка игры: " + gameDirectory);
+        } catch (Exception exception) {
+            showError("Не удалось открыть папку игры: " + exception.getMessage());
+        }
+    }
+
+    @FXML
+    private void onEditProfile() {
+        statusLabel.setText("Редактирование профиля пока не подключено.");
+    }
+
+    @FXML
+    private void onShowSecurityDetails() {
+        statusLabel.setText("Сессия защищена access/refresh token. Пароль в лаунчере не хранится.");
+    }
+
+    @FXML
+    private void openSettings() {
+        openLauncherConfigLocation();
+    }
+
+    private void logoutAndOpenAuth() {
         context().getAuthService().logoutQuietly(state().getConfig(), state().getSession());
         state().setSession(null);
         router().open(ScreenRouter.Screen.AUTH);
+    }
+
+    private void configureChrome() {
+        configureWindowButtons();
+        versionLabel.setText("Версия: " + LauncherBrand.displayVersion());
+        homeNavButton.setGraphic(LauncherIcons.icon("home", 18.0d, "#c9d1d9"));
+        settingsNavButton.setGraphic(LauncherIcons.icon("settings", 18.0d, "#c9d1d9"));
+        editProfileButton.setGraphic(LauncherIcons.icon("edit", 16.0d, "#f5f7fa"));
+        switchAccountButton.setGraphic(LauncherIcons.icon("users", 18.0d, "#c084fc"));
+        openGameFolderButton.setGraphic(LauncherIcons.icon("folder", 18.0d, "#c084fc"));
+        logoutButton.setGraphic(LauncherIcons.icon("logout", 18.0d, "#fb7185"));
+        securityDetailsButton.setGraphic(LauncherIcons.icon("external", 15.0d, "#d8b4fe"));
+        accountInfoIconLabel.setGraphic(LauncherIcons.icon("info", 18.0d, "#c084fc"));
+        usernameIconLabel.setGraphic(LauncherIcons.icon("profile", 16.0d, "#c084fc"));
+        roleIconLabel.setGraphic(LauncherIcons.icon("crown", 16.0d, "#c084fc"));
+        emailIconLabel.setGraphic(LauncherIcons.icon("mail", 16.0d, "#c084fc"));
+        accountIdIconLabel.setGraphic(LauncherIcons.icon("id-card", 16.0d, "#c084fc"));
+        quickActionsIconLabel.setGraphic(LauncherIcons.icon("bolt", 18.0d, "#c084fc"));
+        securityIconLabel.setGraphic(LauncherIcons.icon("shield", 28.0d, "#c084fc"));
     }
 
     private void refreshProfileAsync() {
@@ -80,12 +223,25 @@ public final class ProfileController extends AbstractScreenController {
     }
 
     private void renderAccount(AuthAccount account) {
+        String roleLabel = resolveRoleLabel(account.getRole());
+        String roleCode = resolveRoleCodeLabel(account.getRole());
+        String accountStatus = resolveAccountStatusLabel(account.getStatus());
+
+        profileAvatarView.setImage(AvatarImages.forAccount(account));
         profileNameLabel.setText(account.getUsername());
-        profileRoleLabel.setText(account.getRole().isEmpty() ? "Игрок" : account.getRole());
-        profileEmailLabel.setText(account.getEmail().isEmpty() ? "Email не указан" : account.getEmail());
-        accountIdLabel.setText(account.getId());
-        launcherPathLabel.setText(state().getConfig().getGameDirectory());
-        launcherServerIdLabel.setText(state().getConfig().getServerId());
+        profileRoleBadgeLabel.setText(roleLabel + " / " + roleCode);
+        profileStatusLabel.setText(accountStatus);
+        profileWelcomeLabel.setText("Добро пожаловать на ObsidianGate");
+
+        sidebarProfileNameLabel.setText(account.getUsername());
+        sidebarProfileAvatarView.setImage(AvatarImages.forAccount(account));
+        sidebarProfileStatusLabel.setText(accountStatus);
+
+        accountUsernameLabel.setText(account.getUsername());
+        accountRoleLabel.setText(roleLabel);
+        profileEmailLabel.setText(valueOrFallback(account.getEmail(), "Email не указан"));
+        accountIdLabel.setText(valueOrFallback(account.getId(), "—"));
+        sessionExpiresLabel.setText("Сессия активна до " + SESSION_TIME_FORMAT.format(state().getSession().getExpiresAt()));
     }
 
     private boolean handleExpiredSession(Throwable error) {
@@ -100,4 +256,75 @@ public final class ProfileController extends AbstractScreenController {
         return true;
     }
 
+    private static void openDesktopPath(Path target) throws IOException {
+        if (!Desktop.isDesktopSupported()) {
+            throw new IOException("Desktop integration is not supported.");
+        }
+        Desktop desktop = Desktop.getDesktop();
+        if (!desktop.isSupported(Desktop.Action.OPEN)) {
+            throw new IOException("Opening files is not supported.");
+        }
+        desktop.open(target.toFile());
+    }
+
+    private static String resolveRoleLabel(String role) {
+        if (!hasText(role)) {
+            return "Игрок";
+        }
+        String normalized = role.trim().toLowerCase(Locale.ROOT);
+        if ("admin".equals(normalized) || "administrator".equals(normalized)) {
+            return "Администратор";
+        }
+        if ("moderator".equals(normalized)) {
+            return "Модератор";
+        }
+        if ("vip".equals(normalized)) {
+            return "VIP";
+        }
+        if ("player".equals(normalized)) {
+            return "Игрок";
+        }
+        return Character.toUpperCase(normalized.charAt(0)) + normalized.substring(1);
+    }
+
+    private static String resolveRoleCodeLabel(String role) {
+        if (!hasText(role)) {
+            return "Player";
+        }
+        String normalized = role.trim().toLowerCase(Locale.ROOT);
+        if ("admin".equals(normalized) || "administrator".equals(normalized)) {
+            return "Admin";
+        }
+        if ("moderator".equals(normalized)) {
+            return "Moderator";
+        }
+        if ("vip".equals(normalized)) {
+            return "VIP";
+        }
+        if ("player".equals(normalized)) {
+            return "Player";
+        }
+        return Character.toUpperCase(normalized.charAt(0)) + normalized.substring(1);
+    }
+
+    private static String resolveAccountStatusLabel(String status) {
+        if (!hasText(status) || "active".equalsIgnoreCase(status.trim())) {
+            return "В сети";
+        }
+        if ("inactive".equalsIgnoreCase(status.trim())) {
+            return "Неактивен";
+        }
+        if ("banned".equalsIgnoreCase(status.trim())) {
+            return "Заблокирован";
+        }
+        return status.trim();
+    }
+
+    private static String valueOrFallback(String value, String fallback) {
+        return hasText(value) ? value.trim() : fallback;
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
 }

@@ -4,6 +4,7 @@ param(
     [string]$Target = "minecraft@192.168.1.103",
     [string]$RemoteHome = "/home/minecraft",
     [string]$RemoteStageDir = "/home/minecraft/obsidiangate-deploy",
+    [string]$RemoteServerRoot = "/home/minecraft/mc-rpg",
     [string]$RemoteServerModsDir = "/home/minecraft/mc-rpg/mods",
     [string]$RemoteWebRoot = "/var/www/mc-rpg",
     [string]$ServiceName = "mc-rpg.service",
@@ -34,6 +35,7 @@ $distFullPath = Resolve-InputPath $DistDir
 $metadataPath = Join-Path $distFullPath "modpack-release.json"
 $manifestPath = Join-Path $distFullPath "manifest.json"
 $clientDirPath = Join-Path $distFullPath "client"
+$serverDirPath = Join-Path $distFullPath "server"
 $launcherDirPath = Join-Path $distFullPath "launcher"
 
 if (-not (Test-Path $metadataPath)) {
@@ -46,6 +48,11 @@ foreach ($command in @("scp", "ssh")) {
 
 $metadata = Get-Content $metadataPath -Raw | ConvertFrom-Json
 $serverFileName = $metadata.artifacts.server.fileName
+$launcherUpdateFileName = if ($metadata.launcherUpdate -and $metadata.launcherUpdate.fileName) {
+    [string]$metadata.launcherUpdate.fileName
+} else {
+    "obsidian-gate-launcher.jar"
+}
 $serverJarPath = Join-Path $distFullPath $serverFileName
 
 $requiredPaths = @($serverJarPath, $manifestPath, $clientDirPath)
@@ -94,6 +101,9 @@ Invoke-External -Command "ssh" -Arguments @(
 
 Write-Host "==> Uploading modpack release to $Target" -ForegroundColor Cyan
 $uploadPaths = @($clientDirPath, $serverJarPath, $manifestPath)
+if (Test-Path $serverDirPath) {
+    $uploadPaths += $serverDirPath
+}
 if (Test-Path $launcherDirPath) {
     $uploadPaths += $launcherDirPath
 }
@@ -111,7 +121,31 @@ if ($LegacyPromptSudo) {
     $remoteCommands.Add("set -e")
     $remoteCommands.Add("sudo -v")
     $remoteCommands.Add("mkdir -p '$RemoteServerModsDir'")
+    $remoteCommands.Add("if [ -d '$RemoteStageDir/server/mods' ]; then")
+    $remoteCommands.Add("  find '$RemoteServerModsDir' -mindepth 1 -maxdepth 1 ! -name 'obsidiangate-forge-auth-server-*.jar' -exec rm -rf {} +")
+    $remoteCommands.Add("  cp -a '$RemoteStageDir/server/mods/.' '$RemoteServerModsDir/'")
+    $remoteCommands.Add("fi")
     $remoteCommands.Add("install -m 644 '$RemoteStageDir/$serverFileName' '$RemoteServerModsDir/$serverFileName'")
+    $remoteCommands.Add("if [ -d '$RemoteStageDir/server/config' ]; then")
+    $remoteCommands.Add("  preserved_spawn_config=`$(mktemp)")
+    $remoteCommands.Add("  if [ -f '$RemoteServerRoot/config/obsidiangate-spawn-protection.properties' ] && [ ! -f '$RemoteStageDir/server/config/obsidiangate-spawn-protection.properties' ]; then")
+    $remoteCommands.Add("    cp '$RemoteServerRoot/config/obsidiangate-spawn-protection.properties' `"`$preserved_spawn_config`"")
+    $remoteCommands.Add("  else")
+    $remoteCommands.Add("    rm -f `"`$preserved_spawn_config`"")
+    $remoteCommands.Add("  fi")
+    $remoteCommands.Add("  rm -rf '$RemoteServerRoot/config'")
+    $remoteCommands.Add("  mkdir -p '$RemoteServerRoot/config'")
+    $remoteCommands.Add("  cp -a '$RemoteStageDir/server/config/.' '$RemoteServerRoot/config/'")
+    $remoteCommands.Add("  if [ -f `"`$preserved_spawn_config`" ]; then")
+    $remoteCommands.Add("    install -m 644 `"`$preserved_spawn_config`" '$RemoteServerRoot/config/obsidiangate-spawn-protection.properties'")
+    $remoteCommands.Add("    rm -f `"`$preserved_spawn_config`"")
+    $remoteCommands.Add("  fi")
+    $remoteCommands.Add("fi")
+    $remoteCommands.Add("if [ -d '$RemoteStageDir/server/scripts' ]; then")
+    $remoteCommands.Add("  rm -rf '$RemoteServerRoot/scripts'")
+    $remoteCommands.Add("  mkdir -p '$RemoteServerRoot/scripts'")
+    $remoteCommands.Add("  cp -a '$RemoteStageDir/server/scripts/.' '$RemoteServerRoot/scripts/'")
+    $remoteCommands.Add("fi")
     $remoteCommands.Add("sudo mkdir -p '$RemoteWebRoot'")
     $remoteCommands.Add("if command -v rsync >/dev/null 2>&1; then")
     $remoteCommands.Add("  sudo mkdir -p '$RemoteWebRoot/client'")
@@ -136,7 +170,7 @@ if ($LegacyPromptSudo) {
     $remoteScript = $remoteCommands -join "`n"
 } else {
     $skipRestartFlag = if ($SkipRestart) { "1" } else { "0" }
-    $remoteScript = "sudo -n '$RemoteDeployCommand' '$RemoteStageDir' '$serverFileName' '$RemoteServerModsDir' '$RemoteWebRoot' '$ServiceName' '$skipRestartFlag'"
+    $remoteScript = "sudo -n '$RemoteDeployCommand' '$RemoteStageDir' '$serverFileName' '$RemoteServerModsDir' '$RemoteWebRoot' '$ServiceName' '$skipRestartFlag' '$RemoteServerRoot'"
 }
 
 Invoke-External -Command "ssh" -Arguments @(
@@ -146,6 +180,31 @@ Invoke-External -Command "ssh" -Arguments @(
         $remoteScript
     )
 ) -Action "Install modpack web files and restart service"
+
+if (Test-Path $launcherDirPath) {
+    Write-Host "==> Verifying launcher update artifact in web root" -ForegroundColor Cyan
+    $remoteLauncherVerifyScript = @"
+set -e
+if [ -d '$RemoteStageDir/launcher' ]; then
+  if mkdir -p '$RemoteWebRoot/launcher' 2>/dev/null && cp -a '$RemoteStageDir/launcher/.' '$RemoteWebRoot/launcher/' 2>/dev/null; then
+    :
+  else
+    sudo mkdir -p '$RemoteWebRoot/launcher'
+    sudo cp -a '$RemoteStageDir/launcher/.' '$RemoteWebRoot/launcher/'
+  fi
+fi
+test -f '$RemoteWebRoot/launcher/$launcherUpdateFileName'
+sha256sum '$RemoteWebRoot/launcher/$launcherUpdateFileName'
+"@
+
+    Invoke-External -Command "ssh" -Arguments @(
+        $sshTtyArgs +
+        @(
+            $Target,
+            $remoteLauncherVerifyScript
+        )
+    ) -Action "Verify launcher update artifact"
+}
 
 Write-Host ""
 Write-Host "Modpack deploy complete for $Target" -ForegroundColor Green

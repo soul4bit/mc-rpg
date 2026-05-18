@@ -25,7 +25,7 @@ class ModpackSyncServiceTest {
     @Test
     void syncDownloadsFilesAndAppliesManifestLauncherSettings() throws Exception {
         Path sourceDirectory = Files.createDirectories(tempDirectory.resolve("source"));
-        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2864.jar", "forge-client");
+        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2847.jar", "forge-client");
         Path modJar = writeFile(sourceDirectory, "mods/examplemod.jar", "example-mod");
         Path configFile = writeFile(sourceDirectory, "config/rpg.cfg", "difficulty=hard");
 
@@ -45,13 +45,13 @@ class ModpackSyncServiceTest {
         ModpackSyncService service = new ModpackSyncService(new ModpackManifestClient());
         ModpackSyncResult result = service.sync(config, logLines::add);
 
-        assertTrue(Files.exists(tempDirectory.resolve("client/forge-1.12.2-14.23.5.2864.jar")));
+        assertTrue(Files.exists(tempDirectory.resolve("client/forge-1.12.2-14.23.5.2847.jar")));
         assertTrue(Files.exists(tempDirectory.resolve("client/mods/examplemod.jar")));
         assertTrue(Files.exists(tempDirectory.resolve("client/config/rpg.cfg")));
         assertEquals(LauncherConfig.DEFAULT_SERVER_HOST, result.getResolvedConfig().getServerHost());
         assertEquals(25565, result.getResolvedConfig().getServerPort());
         assertEquals(
-            "{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}",
+            "{java} -jar forge-1.12.2-14.23.5.2847.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}",
             result.getResolvedConfig().getLaunchTemplate()
         );
         assertEquals("http://" + LauncherConfig.DEFAULT_SERVER_HOST + ":8081", result.getResolvedConfig().getAuthBaseUrl());
@@ -103,7 +103,7 @@ class ModpackSyncServiceTest {
     @Test
     void previewReportsMissingAndOutdatedFilesWithoutDownloading() throws Exception {
         Path sourceDirectory = Files.createDirectories(tempDirectory.resolve("source"));
-        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2864.jar", "forge-client");
+        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2847.jar", "forge-client");
         Path modJar = writeFile(sourceDirectory, "mods/examplemod.jar", "example-mod");
         Path configFile = writeFile(sourceDirectory, "config/rpg.cfg", "difficulty=hard");
 
@@ -114,7 +114,7 @@ class ModpackSyncServiceTest {
         );
 
         Path clientDirectory = Files.createDirectories(tempDirectory.resolve("client"));
-        Files.copy(forgeJar, clientDirectory.resolve("forge-1.12.2-14.23.5.2864.jar"));
+        Files.copy(forgeJar, clientDirectory.resolve("forge-1.12.2-14.23.5.2847.jar"));
         writeFile(clientDirectory, "mods/examplemod.jar", "stale-value");
 
         LauncherConfig config = LauncherConfig.defaults();
@@ -129,7 +129,7 @@ class ModpackSyncServiceTest {
         assertEquals(Files.size(modJar) + Files.size(configFile), previewResult.getDownloadBytes());
         assertFalse(Files.exists(clientDirectory.resolve("config/rpg.cfg")));
 
-        ModpackSyncPreviewEntry forgeEntry = findPreviewEntry(previewResult, "forge-1.12.2-14.23.5.2864.jar");
+        ModpackSyncPreviewEntry forgeEntry = findPreviewEntry(previewResult, "forge-1.12.2-14.23.5.2847.jar");
         assertEquals(ModpackSyncPreviewEntry.State.REUSED, forgeEntry.getState());
         assertEquals("up-to-date", forgeEntry.getReason());
 
@@ -174,7 +174,7 @@ class ModpackSyncServiceTest {
     @Test
     void previewAppliesManifestLauncherSettingsToResolvedConfig() throws Exception {
         Path sourceDirectory = Files.createDirectories(tempDirectory.resolve("source"));
-        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2864.jar", "forge-client");
+        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2847.jar", "forge-client");
         Path modJar = writeFile(sourceDirectory, "mods/examplemod.jar", "example-mod");
         Path configFile = writeFile(sourceDirectory, "config/rpg.cfg", "difficulty=hard");
 
@@ -205,7 +205,7 @@ class ModpackSyncServiceTest {
         String javaPath = "windows".equals(platform.getOs()) ? "bin/java.exe" : "bin/java";
 
         Path sourceDirectory = Files.createDirectories(tempDirectory.resolve("source"));
-        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2864.jar", "forge-client");
+        Path forgeJar = writeFile(sourceDirectory, "forge-1.12.2-14.23.5.2847.jar", "forge-client");
         Path runtimeArchive = sourceDirectory.resolve("runtime/windows-x64/jre8.zip");
         createRuntimeArchive(runtimeArchive, javaPath, "portable-java");
 
@@ -318,9 +318,9 @@ class ModpackSyncServiceTest {
 
         assertTrue(Files.exists(clientDirectory.resolve("mods/examplemod.jar")));
         assertTrue(Files.exists(clientDirectory.resolve("versions/1.12.2/1.12.2.jar")));
-        assertTrue(Files.exists(clientDirectory.resolve("versions/1.12.2-forge-14.23.5.2864/1.12.2-forge-14.23.5.2864.json")));
+        assertTrue(Files.exists(clientDirectory.resolve("versions/1.12.2-forge-14.23.5.2847/1.12.2-forge-14.23.5.2847.json")));
         assertTrue(Files.exists(
-            clientDirectory.resolve("libraries/net/minecraftforge/forge/1.12.2-14.23.5.2864/forge-1.12.2-14.23.5.2864.jar")
+            clientDirectory.resolve("libraries/net/minecraftforge/forge/1.12.2-14.23.5.2847/forge-1.12.2-14.23.5.2847.jar")
         ));
         assertTrue(Files.exists(clientDirectory.resolve("libraries/com/example/base-lib/1.0/base-lib-1.0.jar")));
         assertTrue(Files.exists(clientDirectory.resolve("libraries/com/example/forge-lib/1.0/forge-lib-1.0.jar")));
@@ -347,6 +347,102 @@ class ModpackSyncServiceTest {
         assertTrue(command.contains("25565"));
     }
 
+    @Test
+    void syncBootstrapsLegacyForgeInstallerFromInstallProfile() throws Exception {
+        PlatformInfo platform = PlatformInfo.current();
+        String mojangOs = toMojangOs(platform);
+        String nativeClassifier = "natives-" + mojangOs;
+
+        Path modpackSource = Files.createDirectories(tempDirectory.resolve("legacy-modpack-source"));
+        Path modJar = writeFile(modpackSource, "mods/examplemod.jar", "example-mod");
+
+        Path officialSource = Files.createDirectories(tempDirectory.resolve("legacy-official"));
+        Path clientJar = writeFile(officialSource, "downloads/client.jar", "client-jar");
+        Path baseLibrary = writeFile(officialSource, "downloads/base-lib.jar", "base-library");
+        Path forgeLibrary = writeFile(officialSource, "forge-1.12.2-14.23.5.2847-universal.jar", "forge-library");
+        Path legacyLibrary = writeFile(officialSource, "com/example/legacy-lib/1.0/legacy-lib-1.0.jar", "legacy-library");
+        Path loggingConfig = writeFile(officialSource, "downloads/client-1.12.xml", "<Configuration/>");
+        Path nativeLibrary = officialSource.resolve("downloads/native-lib-" + nativeClassifier + ".jar");
+        createNativeArchive(nativeLibrary, "native/example.bin", "native-library");
+
+        Path assetPayload = writeFile(officialSource, "downloads/asset-payload.bin", "asset-payload");
+        String assetHash = ChecksumUtils.sha1(assetPayload);
+        Path assetObject = officialSource.resolve("assets-objects/" + assetHash.substring(0, 2) + "/" + assetHash);
+        Files.createDirectories(assetObject.getParent());
+        Files.copy(assetPayload, assetObject);
+
+        Path assetIndex = officialSource.resolve("downloads/1.12-assets.json");
+        Files.write(
+            assetIndex,
+            ("{\n"
+                + "  \"objects\": {\n"
+                + "    \"minecraft/sounds/test.ogg\": {\n"
+                + "      \"hash\": \"" + assetHash + "\",\n"
+                + "      \"size\": " + Files.size(assetObject) + "\n"
+                + "    }\n"
+                + "  }\n"
+                + "}\n").getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path baseVersionJson = officialSource.resolve("1.12.2.json");
+        Files.write(
+            baseVersionJson,
+            buildBaseVersionJson(
+                clientJar,
+                assetIndex,
+                loggingConfig,
+                baseLibrary,
+                nativeLibrary,
+                nativeClassifier,
+                mojangOs
+            ).getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path versionManifest = officialSource.resolve("version_manifest_v2.json");
+        Files.write(
+            versionManifest,
+            ("{\n"
+                + "  \"versions\": [\n"
+                + "    {\n"
+                + "      \"id\": \"1.12.2\",\n"
+                + "      \"url\": \"" + baseVersionJson.toUri().toURL().toString() + "\"\n"
+                + "    }\n"
+                + "  ]\n"
+                + "}\n").getBytes(StandardCharsets.UTF_8)
+        );
+
+        Path forgeInstaller = officialSource.resolve("legacy-forge-installer.jar");
+        createLegacyForgeInstaller(forgeInstaller, forgeLibrary, legacyLibrary, officialSource.toUri().toURL().toString());
+
+        Path manifest = tempDirectory.resolve("legacy-manifest.json");
+        Files.write(
+            manifest,
+            buildManifestWithOfficialBootstrap(modpackSource, modJar, versionManifest, forgeInstaller, officialSource)
+                .getBytes(StandardCharsets.UTF_8)
+        );
+
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setManifestUrl(manifest.toUri().toURL().toString());
+        Path clientDirectory = tempDirectory.resolve("legacy-client");
+        config.setGameDirectory(clientDirectory.toString());
+        config.setLaunchTemplate("");
+
+        ModpackSyncService service = new ModpackSyncService(new ModpackManifestClient());
+        ModpackSyncResult result = service.sync(config, null);
+
+        Path versionJson = clientDirectory.resolve("versions/1.12.2-forge-14.23.5.2847/1.12.2-forge-14.23.5.2847.json");
+        assertTrue(Files.exists(versionJson));
+        String installedVersionJson = new String(Files.readAllBytes(versionJson), StandardCharsets.UTF_8);
+        assertTrue(installedVersionJson.contains("1.12.2-forge-14.23.5.2847"));
+        assertFalse(installedVersionJson.contains("1.12.2-forge1.12.2-14.23.5.2847"));
+        assertTrue(Files.exists(
+            clientDirectory.resolve("libraries/net/minecraftforge/forge/1.12.2-14.23.5.2847/forge-1.12.2-14.23.5.2847.jar")
+        ));
+        assertTrue(Files.exists(clientDirectory.resolve("libraries/com/example/legacy-lib/1.0/legacy-lib-1.0.jar")));
+        assertFalse(Files.exists(clientDirectory.resolve("libraries/com/example/server-only/1.0/server-only-1.0.jar")));
+        assertTrue(result.getResolvedConfig().getLaunchTemplate().contains("14.23.5.2847"));
+    }
+
     private static String buildManifest(Path sourceDirectory, Path forgeJar, Path modJar, Path configFile) throws IOException {
         return "{\n"
             + "  \"schemaVersion\": 1,\n"
@@ -359,10 +455,10 @@ class ModpackSyncServiceTest {
             + "    \"authBaseUrl\": \"http://" + LauncherConfig.DEFAULT_SERVER_HOST + ":8081\",\n"
             + "    \"serverId\": \"obsidiangate-main\",\n"
             + "    \"workingDirectory\": \".\",\n"
-            + "    \"launchTemplate\": \"{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}\"\n"
+            + "    \"launchTemplate\": \"{java} -jar forge-1.12.2-14.23.5.2847.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}\"\n"
             + "  },\n"
             + "  \"files\": [\n"
-            + fileJson("forge-1.12.2-14.23.5.2864.jar", forgeJar) + ",\n"
+            + fileJson("forge-1.12.2-14.23.5.2847.jar", forgeJar) + ",\n"
             + fileJson("mods/examplemod.jar", modJar) + ",\n"
             + fileJson("config/rpg.cfg", configFile) + "\n"
             + "  ]\n"
@@ -385,7 +481,7 @@ class ModpackSyncServiceTest {
             + "    \"serverHost\": \"" + LauncherConfig.DEFAULT_SERVER_HOST + "\",\n"
             + "    \"serverPort\": 25565,\n"
             + "    \"workingDirectory\": \".\",\n"
-            + "    \"launchTemplate\": \"{java} -jar forge-1.12.2-14.23.5.2864.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}\"\n"
+            + "    \"launchTemplate\": \"{java} -jar forge-1.12.2-14.23.5.2847.jar --username {username} --gameDir {gameDir} --server {serverHost} --port {serverPort}\"\n"
             + "  },\n"
             + "  \"runtime\": {\n"
             + "    \"packages\": [\n"
@@ -401,7 +497,7 @@ class ModpackSyncServiceTest {
             + "    ]\n"
             + "  },\n"
             + "  \"files\": [\n"
-            + fileJson("forge-1.12.2-14.23.5.2864.jar", forgeJar) + "\n"
+            + fileJson("forge-1.12.2-14.23.5.2847.jar", forgeJar) + "\n"
             + "  ]\n"
             + "}\n";
     }
@@ -426,7 +522,7 @@ class ModpackSyncServiceTest {
             + "  },\n"
             + "  \"minecraft\": {\n"
             + "    \"version\": \"1.12.2\",\n"
-            + "    \"forgeVersion\": \"14.23.5.2864\",\n"
+            + "    \"forgeVersion\": \"14.23.5.2847\",\n"
             + "    \"versionManifestUrl\": \"" + versionManifest.toUri().toURL().toString() + "\",\n"
             + "    \"forgeInstallerUrl\": \"" + forgeInstaller.toUri().toURL().toString() + "\",\n"
             + "    \"assetBaseUrl\": \"" + officialSource.resolve("assets-objects").toUri().toURL().toString() + "\"\n"
@@ -543,15 +639,15 @@ class ModpackSyncServiceTest {
 
         byte[] forgeBytes = Files.readAllBytes(forgeLibrary);
         String versionJson = "{\n"
-            + "  \"id\": \"1.12.2-forge-14.23.5.2864\",\n"
+            + "  \"id\": \"1.12.2-forge-14.23.5.2847\",\n"
             + "  \"mainClass\": \"net.minecraft.launchwrapper.Launch\",\n"
             + "  \"minecraftArguments\": \"--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userType ${user_type} --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge\",\n"
             + "  \"libraries\": [\n"
             + "    {\n"
-            + "      \"name\": \"net.minecraftforge:forge:1.12.2-14.23.5.2864\",\n"
+            + "      \"name\": \"net.minecraftforge:forge:1.12.2-14.23.5.2847\",\n"
             + "      \"downloads\": {\n"
             + "        \"artifact\": {\n"
-            + "          \"path\": \"net/minecraftforge/forge/1.12.2-14.23.5.2864/forge-1.12.2-14.23.5.2864.jar\",\n"
+            + "          \"path\": \"net/minecraftforge/forge/1.12.2-14.23.5.2847/forge-1.12.2-14.23.5.2847.jar\",\n"
             + "          \"sha1\": \"" + ChecksumUtils.sha1(forgeLibrary) + "\",\n"
             + "          \"size\": " + Files.size(forgeLibrary) + "\n"
             + "        }\n"
@@ -580,10 +676,64 @@ class ModpackSyncServiceTest {
             addZipDirectory(outputStream, "maven/net/");
             addZipDirectory(outputStream, "maven/net/minecraftforge/");
             addZipDirectory(outputStream, "maven/net/minecraftforge/forge/");
-            addZipDirectory(outputStream, "maven/net/minecraftforge/forge/1.12.2-14.23.5.2864/");
+            addZipDirectory(outputStream, "maven/net/minecraftforge/forge/1.12.2-14.23.5.2847/");
             outputStream.putNextEntry(new ZipEntry(
-                "maven/net/minecraftforge/forge/1.12.2-14.23.5.2864/forge-1.12.2-14.23.5.2864.jar"
+                "maven/net/minecraftforge/forge/1.12.2-14.23.5.2847/forge-1.12.2-14.23.5.2847.jar"
             ));
+            outputStream.write(forgeBytes);
+            outputStream.closeEntry();
+        }
+    }
+
+    private static void createLegacyForgeInstaller(
+        Path archive,
+        Path forgeLibrary,
+        Path legacyLibrary,
+        String legacyLibraryBaseUrl
+    ) throws IOException {
+        Path parent = archive.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        byte[] forgeBytes = Files.readAllBytes(forgeLibrary);
+        String installProfile = "{\n"
+            + "  \"install\": {\n"
+            + "    \"target\": \"1.12.2-forge1.12.2-14.23.5.2847\",\n"
+            + "    \"path\": \"net.minecraftforge:forge:1.12.2-14.23.5.2847\",\n"
+            + "    \"filePath\": \"forge-1.12.2-14.23.5.2847-universal.jar\"\n"
+            + "  },\n"
+            + "  \"versionInfo\": {\n"
+            + "    \"id\": \"1.12.2-forge1.12.2-14.23.5.2847\",\n"
+            + "    \"mainClass\": \"net.minecraft.launchwrapper.Launch\",\n"
+            + "    \"minecraftArguments\": \"--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userType ${user_type} --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker --versionType Forge\",\n"
+            + "    \"libraries\": [\n"
+            + "      {\n"
+            + "        \"name\": \"net.minecraftforge:forge:1.12.2-14.23.5.2847\"\n"
+            + "      },\n"
+            + "      {\n"
+            + "        \"name\": \"com.example:legacy-lib:1.0\",\n"
+            + "        \"url\": \"" + legacyLibraryBaseUrl + "\",\n"
+            + "        \"checksums\": [\"" + ChecksumUtils.sha1(legacyLibrary) + "\"],\n"
+            + "        \"clientreq\": true,\n"
+            + "        \"serverreq\": true\n"
+            + "      },\n"
+            + "      {\n"
+            + "        \"name\": \"com.example:server-only:1.0\",\n"
+            + "        \"url\": \"" + legacyLibraryBaseUrl + "\",\n"
+            + "        \"clientreq\": false,\n"
+            + "        \"serverreq\": true\n"
+            + "      }\n"
+            + "    ]\n"
+            + "  }\n"
+            + "}\n";
+
+        try (ZipOutputStream outputStream = new ZipOutputStream(Files.newOutputStream(archive))) {
+            outputStream.putNextEntry(new ZipEntry("install_profile.json"));
+            outputStream.write(installProfile.getBytes(StandardCharsets.UTF_8));
+            outputStream.closeEntry();
+
+            outputStream.putNextEntry(new ZipEntry("forge-1.12.2-14.23.5.2847-universal.jar"));
             outputStream.write(forgeBytes);
             outputStream.closeEntry();
         }

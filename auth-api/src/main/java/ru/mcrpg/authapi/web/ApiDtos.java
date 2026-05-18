@@ -74,7 +74,9 @@ record AccountResponse(
     String username,
     String email,
     String role,
-    String status
+    String status,
+    String avatar,
+    String avatarUrl
 ) {
 }
 
