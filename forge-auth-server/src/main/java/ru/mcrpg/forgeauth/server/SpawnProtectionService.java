@@ -42,7 +42,7 @@ final class SpawnProtectionService {
             return;
         }
         Object player = invokeZeroArgIfPresent(event, "getPlayer");
-        if (canBypass(player)) {
+        if (canBypass(player, snapshot)) {
             return;
         }
         cancel(event);
@@ -56,7 +56,7 @@ final class SpawnProtectionService {
             return;
         }
         Object player = invokeZeroArgIfPresent(event, "getPlayer");
-        if (canBypass(player)) {
+        if (canBypass(player, snapshot)) {
             return;
         }
         cancel(event);
@@ -70,7 +70,7 @@ final class SpawnProtectionService {
             return;
         }
         Object entity = invokeZeroArgIfPresent(event, "getEntity");
-        if (canBypass(entity)) {
+        if (canBypass(entity, snapshot)) {
             return;
         }
         cancel(event);
@@ -83,7 +83,7 @@ final class SpawnProtectionService {
             return;
         }
         Object player = invokeZeroArgIfPresent(event, "getEntityPlayer", "getEntity");
-        if (canBypass(player)) {
+        if (canBypass(player, snapshot)) {
             return;
         }
         cancel(event);
@@ -142,24 +142,39 @@ final class SpawnProtectionService {
     synchronized void load() {
         config = loadConfig();
         logger.info(String.format(
-            "Spawn protection loaded. enabled=%s radius=%d protectBlocks=%s denyHostileSpawns=%s denyExplosions=%s",
+            "Spawn protection loaded. enabled=%s radius=%d protectBlocks=%s denyHostileSpawns=%s denyExplosions=%s allowOperatorBypass=%s",
             config.enabled,
             config.radius,
             config.protectBlocks,
             config.denyHostileSpawns,
-            config.denyExplosions
+            config.denyExplosions,
+            config.allowOperatorBypass
         ));
     }
 
     synchronized void setEnabled(boolean enabled) {
         Config current = config();
-        config = new Config(enabled, current.radius, current.protectBlocks, current.denyHostileSpawns, current.denyExplosions);
+        config = new Config(
+            enabled,
+            current.radius,
+            current.protectBlocks,
+            current.denyHostileSpawns,
+            current.denyExplosions,
+            current.allowOperatorBypass
+        );
         save(config);
     }
 
     synchronized void setRadius(int radius) {
         Config current = config();
-        config = new Config(current.enabled, clampRadius(radius), current.protectBlocks, current.denyHostileSpawns, current.denyExplosions);
+        config = new Config(
+            current.enabled,
+            clampRadius(radius),
+            current.protectBlocks,
+            current.denyHostileSpawns,
+            current.denyExplosions,
+            current.allowOperatorBypass
+        );
         save(config);
     }
 
@@ -187,10 +202,11 @@ final class SpawnProtectionService {
             clampRadius(readInt(properties, "radius", DEFAULT_RADIUS)),
             readBoolean(properties, "protectBlocks", true),
             readBoolean(properties, "denyHostileSpawns", true),
-            readBoolean(properties, "denyExplosions", true)
+            readBoolean(properties, "denyExplosions", true),
+            readBoolean(properties, "allowOperatorBypass", false)
         );
 
-        if (!Files.exists(CONFIG_PATH)) {
+        if (!Files.exists(CONFIG_PATH) || !properties.containsKey("allowOperatorBypass")) {
             save(loaded);
         }
         return loaded;
@@ -203,6 +219,7 @@ final class SpawnProtectionService {
         properties.setProperty("protectBlocks", Boolean.toString(value.protectBlocks));
         properties.setProperty("denyHostileSpawns", Boolean.toString(value.denyHostileSpawns));
         properties.setProperty("denyExplosions", Boolean.toString(value.denyExplosions));
+        properties.setProperty("allowOperatorBypass", Boolean.toString(value.allowOperatorBypass));
 
         try {
             Files.createDirectories(CONFIG_PATH.getParent());
@@ -248,8 +265,8 @@ final class SpawnProtectionService {
         return Math.abs(x - spawnX) <= radius && Math.abs(z - spawnZ) <= radius;
     }
 
-    private boolean canBypass(Object entity) {
-        if (entity == null) {
+    private boolean canBypass(Object entity, Config snapshot) {
+        if (entity == null || !snapshot.allowOperatorBypass) {
             return false;
         }
         Object result = invokeIfPresent(entity, new Object[] { Integer.valueOf(2), "spawnprotect" }, "canUseCommand", "func_70003_b");
@@ -423,17 +440,26 @@ final class SpawnProtectionService {
         final boolean protectBlocks;
         final boolean denyHostileSpawns;
         final boolean denyExplosions;
+        final boolean allowOperatorBypass;
 
-        private Config(boolean enabled, int radius, boolean protectBlocks, boolean denyHostileSpawns, boolean denyExplosions) {
+        private Config(
+            boolean enabled,
+            int radius,
+            boolean protectBlocks,
+            boolean denyHostileSpawns,
+            boolean denyExplosions,
+            boolean allowOperatorBypass
+        ) {
             this.enabled = enabled;
             this.radius = radius;
             this.protectBlocks = protectBlocks;
             this.denyHostileSpawns = denyHostileSpawns;
             this.denyExplosions = denyExplosions;
+            this.allowOperatorBypass = allowOperatorBypass;
         }
 
         private static Config defaults() {
-            return new Config(true, DEFAULT_RADIUS, true, true, true);
+            return new Config(true, DEFAULT_RADIUS, true, true, true, false);
         }
     }
 }

@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.18-ru-chat-protect",
+    "version":  "2026.05.18-strict-spawn-protect",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -12,9 +12,9 @@
                      "launchTemplate":  ""
                  },
     "launcherUpdate":  {
-                           "version":  "2026.05.18-ru-chat-protect",
+                           "version":  "2026.05.18-strict-spawn-protect",
                            "url":  "client/launcher/obsidian-gate-launcher.jar",
-                           "sha256":  "4dcfecae59522e0850629b2190c7afcc6ee17593c02b1a2d1adbbeab7ddfb7f2",
+                           "sha256":  "3c11e95583f097056092a459fa8de1a9219ac7f9e8c54917b9ff72cf20e87836",
                            "size":  15605650,
                            "required":  false,
                            "artifactVersion":  "0.1.4-test",
@@ -1106,8 +1106,8 @@
                   },
                   {
                       "path":  "config/obsidiangate-spawn-protection.properties",
-                      "sha256":  "42fe3fdba2ef4151c51e59672386f5f0f83d095789817b451f6f5c6569edb4c7",
-                      "size":  176,
+                      "sha256":  "29b1159c19499fab318c13d90369d088633df0291982ae3a785860d4ec6026e9",
+                      "size":  202,
                       "executable":  false
                   },
                   {
@@ -1928,7 +1928,7 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "7a67621e0c06ebbc5dfdde2b4314a0a0308f48363916112f1dcf248eecc7547e",
+                      "sha256":  "63fd01d52b50713db379645052615ede51ca9900f2b69f039ab096793e739bcd",
                       "size":  28989,
                       "executable":  false
                   },

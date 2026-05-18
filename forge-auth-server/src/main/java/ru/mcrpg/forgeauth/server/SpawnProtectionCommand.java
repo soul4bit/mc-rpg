@@ -126,12 +126,13 @@ final class SpawnProtectionCommand {
         private void sendInfo(Object sender) {
             SpawnProtectionService.Config config = service.config();
             ServerChat.info(sender, String.format(
-                "Защита спавна: %s, радиус %s, блоки %s, мобы %s, взрывы %s.",
+                "Защита спавна: %s, радиус %s, блоки %s, мобы %s, взрывы %s, обход OP %s.",
                 ServerChat.value(enabledText(config.enabled)),
                 ServerChat.value(config.radius),
                 ServerChat.value(enabledText(config.protectBlocks)),
                 ServerChat.value(enabledText(config.denyHostileSpawns)),
-                ServerChat.value(enabledText(config.denyExplosions))
+                ServerChat.value(enabledText(config.denyExplosions)),
+                ServerChat.value(enabledText(config.allowOperatorBypass))
             ));
         }
     }
