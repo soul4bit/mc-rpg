@@ -38,3 +38,6 @@ Official page: https://www.curseforge.com/minecraft/mc-mods/spark-unforged
 
 Mixin 0.7-0.8 Compatibility
 Official page: https://www.curseforge.com/minecraft/mc-mods/mixin-0-7-0-8-compatibility
+
+WorldEdit
+Official page: https://www.curseforge.com/minecraft/mc-mods/worldedit

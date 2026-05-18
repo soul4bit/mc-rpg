@@ -85,6 +85,7 @@ $serverModPaths = @(
     "mods/ToughAsNails-1.12.2-3.1.0.139-universal.jar",
     "mods/UndergroundBiomesConstructs-1.12-1.3.7.jar",
     "mods/Waystones_1.12.2-4.1.0.jar",
+    "mods/worldedit-forge-mc1.12.2-6.1.10-dist.jar",
     "mods/memory_repo/blusunrize/ImmersiveEngineering-core/0.12-92/ImmersiveEngineering-core-0.12-92.jar",
     "mods/memory_repo/net/dark_roleplay/core_modules/drpcmblueprints/1.12.2-1.2.3/drpcmblueprints-1.12.2-1.2.3.jar",
     "mods/memory_repo/net/dark_roleplay/core_modules/drpcmguis/1.12.2-0.0.1-SNAPSHOT/drpcmguis-1.12.2-0.0.1-SNAPSHOT-20181125.100253.jar",

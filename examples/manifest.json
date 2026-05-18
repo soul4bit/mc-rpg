@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.18.14",
+    "version":  "2026.05.18.15",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -12,9 +12,9 @@
                      "launchTemplate":  ""
                  },
     "launcherUpdate":  {
-                           "version":  "2026.05.18.14",
+                           "version":  "2026.05.18.15",
                            "url":  "client/launcher/obsidian-gate-launcher.jar",
-                           "sha256":  "565ff6db3be779fadcb8b4d76355dd0f54659fb00a43e43d1bb09fa9594f4cba",
+                           "sha256":  "b337a45fdebc0f5287b7d66b1366349f25b7f7d999ebf98230c9c79704dd35ec",
                            "size":  15605650,
                            "required":  false,
                            "artifactVersion":  "0.1.4-test",
@@ -1928,7 +1928,7 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "0e2da47159e3f53e25ea36edd9de3eb318638e74be50db260383f7a79c1a2f6b",
+                      "sha256":  "d8f3272399146f1b473982269f7e173a11c20c48e4151b0844bd0560462f2c69",
                       "size":  28989,
                       "executable":  false
                   },
@@ -2062,6 +2062,12 @@
                       "path":  "mods/Waystones_1.12.2-4.1.0.jar",
                       "sha256":  "5e79f329154d9a6225130f2b29dbcb0f603e2e622637e39ca566f8179b02ca15",
                       "size":  178994,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/worldedit-forge-mc1.12.2-6.1.10-dist.jar",
+                      "sha256":  "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75",
+                      "size":  1479535,
                       "executable":  false
                   },
                   {
@@ -2372,8 +2378,8 @@
                   },
                   {
                       "path":  "THIRD_PARTY_MODS.txt",
-                      "sha256":  "caa2717add144a88ede328c197dac6cd4a89709bbb4a30b5353d4799bea0fec0",
-                      "size":  1157,
+                      "sha256":  "cf1ece57b72d7c61d64da8af4677342a6bb75fc6341d70878470c45857853cba",
+                      "size":  1238,
                       "executable":  false
                   }
               ]
