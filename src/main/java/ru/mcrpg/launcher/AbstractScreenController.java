@@ -76,7 +76,7 @@ public abstract class AbstractScreenController implements LauncherContextAware {
             Path configFile = context().getConfigStore().getConfigFile().toAbsolutePath().normalize();
             Path target = Files.exists(configFile) ? configFile : configFile.getParent();
             if (target == null) {
-                throw new IOException("Config path is not available.");
+                throw new IOException("Путь к настройкам недоступен.");
             }
             openDesktopPath(target);
         } catch (Exception exception) {
@@ -112,16 +112,16 @@ public abstract class AbstractScreenController implements LauncherContextAware {
     }
 
     private static String resolveMessage(String message) {
-        return message == null || message.trim().isEmpty() ? "Unknown launcher state." : message.trim();
+        return message == null || message.trim().isEmpty() ? "Неизвестное состояние лаунчера." : message.trim();
     }
 
     private static void openDesktopPath(Path target) throws IOException {
         if (!Desktop.isDesktopSupported()) {
-            throw new IOException("Desktop integration is not supported.");
+            throw new IOException("Открытие через рабочий стол не поддерживается.");
         }
         Desktop desktop = Desktop.getDesktop();
         if (!desktop.isSupported(Desktop.Action.OPEN)) {
-            throw new IOException("Opening files is not supported.");
+            throw new IOException("Открытие файлов не поддерживается.");
         }
         desktop.open(target.toFile());
     }

@@ -68,7 +68,7 @@ public final class ModpackManifestClient {
 
     private static void validate(ModpackManifest manifest) {
         if (manifest == null) {
-            throw new IllegalArgumentException("manifest.json is empty.");
+            throw new IllegalArgumentException("manifest.json пустой.");
         }
         if (manifest.getSchemaVersion() != 1) {
             throw new IllegalArgumentException(

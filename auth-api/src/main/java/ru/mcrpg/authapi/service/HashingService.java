@@ -18,7 +18,7 @@ public class HashingService {
             }
             return builder.toString();
         } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalStateException("SHA-256 is unavailable.", exception);
+            throw new IllegalStateException("SHA-256 недоступен.", exception);
         }
     }
 }

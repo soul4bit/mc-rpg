@@ -135,8 +135,8 @@
                                                 <Label fx:id="profileNameLabel" styleClass="profile-hero-name" text="Игрок"/>
                                                 <HBox alignment="CENTER_LEFT" spacing="14.0">
                                                     <children>
-                                                        <Label fx:id="profileRoleBadgeLabel" styleClass="profile-role-badge"
-                                                               text="Игрок / Player"/>
+                                                <Label fx:id="profileRoleBadgeLabel" styleClass="profile-role-badge"
+                                                       text="Игрок"/>
                                                         <HBox alignment="CENTER_LEFT" spacing="7.0">
                                                             <children>
                                                                 <Region styleClass="profile-online-dot"/>

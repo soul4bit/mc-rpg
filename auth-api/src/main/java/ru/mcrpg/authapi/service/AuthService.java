@@ -47,10 +47,10 @@ public class AuthService {
         String normalizedEmail = normalizeEmail(email);
 
         if (accountRepository.existsByUsernameIgnoreCase(normalizedUsername)) {
-            throw ApiException.conflict("username_taken", "Username is already taken.");
+            throw ApiException.conflict("username_taken", "Этот ник уже занят.");
         }
         if (accountRepository.existsByEmailIgnoreCase(normalizedEmail)) {
-            throw ApiException.conflict("email_taken", "Email is already in use.");
+            throw ApiException.conflict("email_taken", "Этот email уже используется.");
         }
 
         AccountEntity account = new AccountEntity();
@@ -68,13 +68,13 @@ public class AuthService {
     public AuthSessionResult login(String login, String password, String deviceName, String userAgent) {
         String normalizedLogin = normalizeLogin(login);
         AccountEntity account = accountRepository.findByUsernameIgnoreCaseOrEmailIgnoreCase(normalizedLogin, normalizedLogin)
-            .orElseThrow(() -> ApiException.unauthorized("invalid_credentials", "Invalid username, email, or password."));
+            .orElseThrow(() -> ApiException.unauthorized("invalid_credentials", "Неверный ник, email или пароль."));
 
         if (!passwordEncoder.matches(password, account.getPasswordHash())) {
-            throw ApiException.unauthorized("invalid_credentials", "Invalid username, email, or password.");
+            throw ApiException.unauthorized("invalid_credentials", "Неверный ник, email или пароль.");
         }
         if (!DEFAULT_STATUS.equalsIgnoreCase(account.getStatus())) {
-            throw ApiException.forbidden("account_inactive", "Account is not active.");
+            throw ApiException.forbidden("account_inactive", "Аккаунт отключен.");
         }
 
         return createSession(account, deviceName, userAgent);
@@ -82,19 +82,19 @@ public class AuthService {
 
     @Transactional
     public AuthSessionResult refresh(String refreshToken) {
-        LauncherSessionEntity session = launcherSessionRepository.findFirstByRefreshTokenHash(hashingService.sha256(requireText(refreshToken, "Refresh token is required.")))
-            .orElseThrow(() -> ApiException.unauthorized("invalid_refresh_token", "Refresh token is invalid."));
+        LauncherSessionEntity session = launcherSessionRepository.findFirstByRefreshTokenHash(hashingService.sha256(requireText(refreshToken, "Нужен refresh token.")))
+            .orElseThrow(() -> ApiException.unauthorized("invalid_refresh_token", "Refresh token недействителен."));
 
         if (session.getRevokedAt() != null) {
-            throw ApiException.unauthorized("invalid_refresh_token", "Refresh token has already been revoked.");
+            throw ApiException.unauthorized("invalid_refresh_token", "Refresh token уже отозван.");
         }
         if (session.getExpiresAt().isBefore(Instant.now())) {
-            throw ApiException.unauthorized("invalid_refresh_token", "Refresh token has expired.");
+            throw ApiException.unauthorized("invalid_refresh_token", "Refresh token истек.");
         }
 
         AccountEntity account = session.getAccount();
         if (!DEFAULT_STATUS.equalsIgnoreCase(account.getStatus())) {
-            throw ApiException.forbidden("account_inactive", "Account is not active.");
+            throw ApiException.forbidden("account_inactive", "Аккаунт отключен.");
         }
 
         String newRefreshToken = randomTokenService.nextToken(48);
@@ -108,7 +108,7 @@ public class AuthService {
 
     @Transactional
     public void logout(String refreshToken) {
-        String normalized = requireText(refreshToken, "Refresh token is required.");
+        String normalized = requireText(refreshToken, "Нужен refresh token.");
         launcherSessionRepository.findFirstByRefreshTokenHash(hashingService.sha256(normalized))
             .ifPresent(session -> {
                 if (session.getRevokedAt() == null) {
@@ -122,7 +122,7 @@ public class AuthService {
     public AccountEntity updateEmail(AccountEntity account, String newEmail) {
         String normalizedEmail = normalizeEmail(newEmail);
         if (!account.getEmail().equalsIgnoreCase(normalizedEmail) && accountRepository.existsByEmailIgnoreCase(normalizedEmail)) {
-            throw ApiException.conflict("email_taken", "Email is already in use.");
+            throw ApiException.conflict("email_taken", "Этот email уже используется.");
         }
         account.setEmail(normalizedEmail);
         return accountRepository.save(account);
@@ -148,23 +148,23 @@ public class AuthService {
     }
 
     private static String normalizeUsername(String raw) {
-        String normalized = requireText(raw, "Username is required.");
+        String normalized = requireText(raw, "Укажи ник.");
         if (!normalized.matches("^[A-Za-z0-9_]{3,16}$")) {
-            throw ApiException.badRequest("invalid_username", "Username must match [A-Za-z0-9_]{3,16}.");
+            throw ApiException.badRequest("invalid_username", "Ник должен содержать 3-16 символов: A-Z, a-z, 0-9 или _.");
         }
         return normalized;
     }
 
     private static String normalizeEmail(String raw) {
-        String normalized = requireText(raw, "Email is required.").toLowerCase(java.util.Locale.ROOT);
+        String normalized = requireText(raw, "Укажи email.").toLowerCase(java.util.Locale.ROOT);
         if (normalized.length() > 255) {
-            throw ApiException.badRequest("invalid_email", "Email is too long.");
+            throw ApiException.badRequest("invalid_email", "Email слишком длинный.");
         }
         return normalized;
     }
 
     private static String normalizeLogin(String raw) {
-        return requireText(raw, "Login is required.");
+        return requireText(raw, "Укажи логин.");
     }
 
     private static String normalizeOptional(String raw, int maxLength) {

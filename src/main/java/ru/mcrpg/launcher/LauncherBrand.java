@@ -8,7 +8,7 @@ public final class LauncherBrand {
 
     public static final String APP_NAME = "ObsidianGate Launcher";
     public static final String APP_TITLE = "ObsidianGate";
-    public static final String APP_SUBTITLE = "Launcher for RPG";
+    public static final String APP_SUBTITLE = "Лаунчер RPG-сервера";
 
     private LauncherBrand() {
     }

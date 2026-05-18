@@ -57,8 +57,8 @@ public final class MinecraftBootstrapService {
             return null;
         }
 
-        String minecraftVersion = requireText(settings.getVersion(), "Minecraft version is missing in manifest.");
-        String forgeVersion = requireText(settings.getForgeVersion(), "Forge version is missing in manifest.");
+        String minecraftVersion = requireText(settings.getVersion(), "В manifest не указана версия Minecraft.");
+        String forgeVersion = requireText(settings.getForgeVersion(), "В manifest не указана версия Forge.");
         String forgeVersionId = minecraftVersion + "-forge-" + forgeVersion;
 
         Path versionsDirectory = Files.createDirectories(gameDirectory.resolve("versions"));
@@ -87,7 +87,7 @@ public final class MinecraftBootstrapService {
             gameDirectory.resolve("versions").resolve(minecraftVersion).resolve(minecraftVersion + ".jar"),
             baseVersion.downloads == null ? null : baseVersion.downloads.client,
             logSink,
-            "Minecraft client"
+            "Клиент Minecraft"
         );
 
         List<Library> mergedLibraries = mergeLibraries(baseVersion, forgeInstallData.versionMetadata);
@@ -106,7 +106,7 @@ public final class MinecraftBootstrapService {
                 if (isForgeLibrary(library)) {
                     verifyExistingFile(artifactPath, artifactDownload);
                 } else {
-                    ensureFileDownloaded(artifactPath, artifactDownload, logSink, "Library " + library.name);
+                    ensureFileDownloaded(artifactPath, artifactDownload, logSink, "Библиотека " + library.name);
                 }
                 classpathEntries.put(artifactPath.toString(), artifactPath);
             }
@@ -114,7 +114,7 @@ public final class MinecraftBootstrapService {
             Download nativeDownload = resolveNativeDownload(library, platform);
             if (nativeDownload != null) {
                 Path nativeArchive = librariesDirectory.resolve(toSystemPath(nativeDownload.path)).normalize();
-                ensureFileDownloaded(nativeArchive, nativeDownload, logSink, "Native " + library.name);
+                ensureFileDownloaded(nativeArchive, nativeDownload, logSink, "Native-библиотека " + library.name);
                 nativeLibraries.add(new NativeLibrary(nativeArchive, library.extract == null
                     ? Collections.<String>emptyList()
                     : library.extract.exclude));
@@ -140,7 +140,7 @@ public final class MinecraftBootstrapService {
             nativesDirectory
         );
 
-        log(logSink, "Official Minecraft bootstrap prepared: " + forgeVersionId);
+        log(logSink, "Официальный bootstrap Minecraft подготовлен: " + forgeVersionId);
         return new MinecraftBootstrapResult(launchTemplate, gameDirectory.toString());
     }
 
@@ -152,7 +152,7 @@ public final class MinecraftBootstrapService {
         String versionManifestUrl = hasText(settings.getVersionManifestUrl())
             ? settings.getVersionManifestUrl().trim()
             : DEFAULT_VERSION_MANIFEST_URL;
-        log(logSink, "Loading Minecraft version manifest: " + versionManifestUrl);
+        log(logSink, "Загружаем manifest версий Minecraft: " + versionManifestUrl);
 
         VersionManifest versionManifest = readJson(new URL(versionManifestUrl), VersionManifest.class);
         VersionReference versionReference = null;
@@ -165,7 +165,7 @@ public final class MinecraftBootstrapService {
             }
         }
         if (versionReference == null || !hasText(versionReference.url)) {
-            throw new IllegalArgumentException("Minecraft version not found in official manifest: " + minecraftVersion);
+            throw new IllegalArgumentException("Версия Minecraft не найдена в официальном manifest: " + minecraftVersion);
         }
         return readJson(new URL(versionReference.url), VersionMetadata.class);
     }
@@ -201,7 +201,7 @@ public final class MinecraftBootstrapService {
             : defaultForgeInstallerUrl(minecraftVersion, forgeVersion);
         Path installerDirectory = Files.createDirectories(cacheDirectory.resolve("forge"));
         Path installerFile = installerDirectory.resolve("forge-" + forgeVersionId + "-installer.jar");
-        downloadIfNeeded(new URL(installerUrl), installerFile, null, null, logSink, "Forge installer");
+        downloadIfNeeded(new URL(installerUrl), installerFile, null, null, logSink, "Установщик Forge");
 
         return extractForgeInstaller(installerFile, versionJsonPath, librariesDirectory, forgeVersionId, logSink);
     }
@@ -228,7 +228,7 @@ public final class MinecraftBootstrapService {
                     LegacyInstallProfile.class
                 );
                 if (installProfile.versionInfo == null) {
-                    throw new IOException("Forge installer does not contain version metadata.");
+                    throw new IOException("Forge installer не содержит метаданные версии.");
                 }
 
                 versionMetadata = installProfile.versionInfo;
@@ -237,30 +237,30 @@ public final class MinecraftBootstrapService {
 
                 Download legacyForgeArtifact = findForgeArtifact(versionMetadata);
                 if (legacyForgeArtifact == null || !hasText(legacyForgeArtifact.path)) {
-                    throw new IOException("Forge installer does not describe runtime forge artifact.");
+                    throw new IOException("Forge installer не описывает runtime artifact Forge.");
                 }
 
                 String legacyArtifactEntry = installProfile.install == null ? "" : installProfile.install.filePath;
                 forgeArtifactBytes = readRequiredEntry(
                     zipFile,
-                    requireText(legacyArtifactEntry, "Forge installer does not contain a runtime artifact path.")
+                    requireText(legacyArtifactEntry, "Forge installer не содержит путь к runtime artifact.")
                 );
 
                 Path legacyForgeArtifactPath = librariesDirectory.resolve(toSystemPath(legacyForgeArtifact.path)).normalize();
                 writeJson(versionJsonPath, versionMetadata);
                 writeBytes(legacyForgeArtifactPath, forgeArtifactBytes);
                 verifyExistingFile(legacyForgeArtifactPath, legacyForgeArtifact);
-                log(logSink, "Forge metadata installed: " + forgeVersionId);
+                log(logSink, "Метаданные Forge установлены: " + forgeVersionId);
                 return new ForgeInstallData(versionMetadata, versionJsonPath, legacyForgeArtifactPath);
             }
 
             if (!forgeVersionId.equals(versionMetadata.id)) {
-                throw new IOException("Unexpected Forge version id in installer: " + versionMetadata.id);
+                throw new IOException("Неожиданный Forge version id в installer: " + versionMetadata.id);
             }
 
             Download forgeArtifact = findForgeArtifact(versionMetadata);
             if (forgeArtifact == null || !hasText(forgeArtifact.path)) {
-                throw new IOException("Forge installer does not describe runtime forge artifact.");
+                throw new IOException("Forge installer не описывает runtime artifact Forge.");
             }
 
             String installerArtifactEntry = "maven/" + forgeArtifact.path.replace('\\', '/');
@@ -269,7 +269,7 @@ public final class MinecraftBootstrapService {
             writeBytes(versionJsonPath, versionBytes);
             writeBytes(forgeArtifactPath, forgeArtifactBytes);
             verifyExistingFile(forgeArtifactPath, forgeArtifact);
-            log(logSink, "Forge metadata installed: " + forgeVersionId);
+            log(logSink, "Метаданные Forge установлены: " + forgeVersionId);
             return new ForgeInstallData(versionMetadata, versionJsonPath, forgeArtifactPath);
         }
     }
@@ -318,7 +318,7 @@ public final class MinecraftBootstrapService {
     private static String mavenArtifactPath(String name) {
         String[] parts = name.split(":");
         if (parts.length < 3) {
-            throw new IllegalArgumentException("Unsupported Maven coordinate: " + name);
+            throw new IllegalArgumentException("Неподдерживаемая Maven-координата: " + name);
         }
 
         String groupPath = parts[0].replace('.', '/');
@@ -351,19 +351,19 @@ public final class MinecraftBootstrapService {
 
     private static void verifyExistingFile(Path target, String expectedSha1, Long expectedSize) throws IOException {
         if (!Files.isRegularFile(target)) {
-            throw new IOException("Missing required file: " + target);
+            throw new IOException("Не найден обязательный файл: " + target);
         }
         if (expectedSize != null && expectedSize.longValue() >= 0L) {
             long actualSize = Files.size(target);
             if (actualSize != expectedSize.longValue()) {
-                throw new IOException("Size mismatch for " + target + ". Expected " + expectedSize + ", got " + actualSize + ".");
+                throw new IOException("Размер не совпал для " + target + ". Ожидалось " + expectedSize + ", получено " + actualSize + ".");
             }
         }
         if (hasText(expectedSha1)) {
             String actualSha1 = ChecksumUtils.sha1(target);
             if (!actualSha1.equalsIgnoreCase(expectedSha1.trim())) {
                 throw new IOException(
-                    "SHA-1 mismatch for " + target + ". Expected " + expectedSha1 + ", got " + actualSha1 + "."
+                    "SHA-1 не совпал для " + target + ". Ожидалось " + expectedSha1 + ", получено " + actualSha1 + "."
                 );
             }
         }
@@ -379,7 +379,7 @@ public final class MinecraftBootstrapService {
     ) throws IOException {
         if (Files.isRegularFile(target)) {
             if (matchesExistingFile(target, expectedSha1, expectedSize)) {
-                log(logSink, "Reused: " + target.getFileName());
+                log(logSink, "Переиспользовано: " + target.getFileName());
                 return;
             }
             Files.deleteIfExists(target);
@@ -391,7 +391,7 @@ public final class MinecraftBootstrapService {
         }
         Path tempFile = Files.createTempFile(parent == null ? target.toAbsolutePath().getParent() : parent, "download-", ".part");
         try {
-            log(logSink, "Downloading " + label + ": " + url);
+            log(logSink, "Скачиваем " + label + ": " + url);
             download(url, tempFile);
             verifyExistingFile(tempFile, expectedSha1, expectedSize);
             Files.move(tempFile, target, StandardCopyOption.REPLACE_EXISTING);
@@ -406,12 +406,12 @@ public final class MinecraftBootstrapService {
         ModpackSyncService.LogSink logSink
     ) throws IOException {
         if (assetIndex == null) {
-            throw new IllegalArgumentException("Minecraft asset index metadata is missing.");
+            throw new IllegalArgumentException("Не найдены метаданные asset index Minecraft.");
         }
-        String assetIndexId = requireText(assetIndex.id, "Minecraft asset index id is missing.");
-        String assetIndexUrl = requireText(assetIndex.url, "Minecraft asset index URL is missing.");
+        String assetIndexId = requireText(assetIndex.id, "Не указан id asset index Minecraft.");
+        String assetIndexUrl = requireText(assetIndex.url, "Не указан URL asset index Minecraft.");
         Path target = assetsDirectory.resolve("indexes").resolve(assetIndexId + ".json");
-        downloadIfNeeded(new URL(assetIndexUrl), target, assetIndex.sha1, assetIndex.size, logSink, "Asset index " + assetIndexId);
+        downloadIfNeeded(new URL(assetIndexUrl), target, assetIndex.sha1, assetIndex.size, logSink, "Индекс ресурсов " + assetIndexId);
         return target;
     }
 
@@ -427,11 +427,11 @@ public final class MinecraftBootstrapService {
 
         String baseUrl = hasText(settings.getAssetBaseUrl()) ? settings.getAssetBaseUrl().trim() : DEFAULT_ASSET_BASE_URL;
         URL assetsBaseUrl = new URL(baseUrl.endsWith("/") ? baseUrl : baseUrl + "/");
-        log(logSink, "Asset objects: " + assetIndex.objects.size());
+        log(logSink, "Asset-объектов: " + assetIndex.objects.size());
 
         for (Map.Entry<String, AssetObject> entry : assetIndex.objects.entrySet()) {
             AssetObject assetObject = entry.getValue();
-            String hash = requireText(assetObject.hash, "Asset hash is missing for " + entry.getKey() + ".");
+            String hash = requireText(assetObject.hash, "Не указан hash asset для " + entry.getKey() + ".");
             String relativePath = hash.substring(0, 2) + "/" + hash;
             Path target = assetsDirectory.resolve("objects").resolve(toSystemPath(relativePath));
             downloadIfNeeded(
@@ -440,7 +440,7 @@ public final class MinecraftBootstrapService {
                 hash,
                 assetObject.size,
                 logSink,
-                "Asset " + entry.getKey()
+                "Ресурс " + entry.getKey()
             );
         }
     }
@@ -456,7 +456,7 @@ public final class MinecraftBootstrapService {
 
         Download file = logging.client.file;
         Path target = assetsDirectory.resolve("log_configs").resolve(file.id);
-        downloadIfNeeded(new URL(requireText(file.url, "Logging config URL is missing.")), target, file.sha1, file.size, logSink, "Logging config");
+        downloadIfNeeded(new URL(requireText(file.url, "Не указан URL конфига логирования.")), target, file.sha1, file.size, logSink, "Конфиг логирования");
         return target;
     }
 
@@ -482,7 +482,7 @@ public final class MinecraftBootstrapService {
                 properties.load(inputStream);
             }
             if (fingerprint.equals(properties.getProperty("fingerprint", ""))) {
-                log(logSink, "Reused native libraries: " + nativesDirectory);
+                log(logSink, "Переиспользованы native-библиотеки: " + nativesDirectory);
                 return nativesDirectory;
             }
         }
@@ -501,9 +501,9 @@ public final class MinecraftBootstrapService {
             StandardOpenOption.TRUNCATE_EXISTING,
             StandardOpenOption.WRITE
         )) {
-            properties.store(outputStream, "Extracted native libraries");
+            properties.store(outputStream, "Извлеченные native-библиотеки");
         }
-        log(logSink, "Native libraries extracted: " + nativesDirectory);
+        log(logSink, "Native-библиотеки извлечены: " + nativesDirectory);
         return nativesDirectory;
     }
 
@@ -516,10 +516,10 @@ public final class MinecraftBootstrapService {
         Path loggingConfigFile,
         Path nativesDirectory
     ) {
-        String mainClass = requireText(forgeVersion.mainClass, "Forge mainClass is missing.");
+        String mainClass = requireText(forgeVersion.mainClass, "Не указан Forge mainClass.");
         String minecraftArguments = requireText(
             forgeVersion.minecraftArguments,
-            "Forge minecraftArguments are missing. Only legacy 1.12-style launch metadata is supported."
+            "Не указаны Forge minecraftArguments. Поддерживаются только legacy-метаданные запуска в стиле 1.12."
         );
 
         List<String> tokens = new ArrayList<String>();
@@ -542,7 +542,7 @@ public final class MinecraftBootstrapService {
         replacements.put("version_name", forgeVersionId);
         replacements.put("game_directory", "{gameDir}");
         replacements.put("assets_root", toTemplatePath(assetsDirectory));
-        replacements.put("assets_index_name", requireText(baseVersion.assetIndex.id, "Asset index id is missing."));
+        replacements.put("assets_index_name", requireText(baseVersion.assetIndex.id, "Не указан id asset index."));
         replacements.put("auth_uuid", "{uuid}");
         replacements.put("auth_access_token", "{accessToken}");
         replacements.put("user_type", "{userType}");
@@ -568,7 +568,7 @@ public final class MinecraftBootstrapService {
             String name = matcher.group(1);
             String replacement = replacements.get(name);
             if (replacement == null) {
-                throw new IllegalArgumentException("Unsupported Minecraft launch placeholder: ${" + name + "}");
+                throw new IllegalArgumentException("Неподдерживаемый placeholder запуска Minecraft: ${" + name + "}");
             }
             matcher.appendReplacement(builder, Matcher.quoteReplacement(replacement));
         }
@@ -831,7 +831,7 @@ public final class MinecraftBootstrapService {
     private static byte[] readRequiredEntry(ZipFile zipFile, String entryName) throws IOException {
         ZipEntry entry = zipFile.getEntry(entryName);
         if (entry == null) {
-            throw new IOException("Missing entry in archive: " + entryName);
+            throw new IOException("В архиве нет записи: " + entryName);
         }
 
         return readEntry(zipFile, entry);
@@ -856,7 +856,7 @@ public final class MinecraftBootstrapService {
     private static Path resolveInside(Path root, String entryName) {
         Path resolved = root.resolve(entryName).normalize();
         if (!resolved.startsWith(root)) {
-            throw new IllegalArgumentException("Archive entry escapes target directory: " + entryName);
+            throw new IllegalArgumentException("Запись архива выходит за пределы целевой папки: " + entryName);
         }
         return resolved;
     }

@@ -35,11 +35,11 @@ final class KitService {
             try (InputStream input = Files.newInputStream(claimsPath)) {
                 claims.load(input);
             } catch (IOException exception) {
-                logger.log(Level.WARNING, "Failed to read kit claims. Starting with an empty claim store.", exception);
+                logger.log(Level.WARNING, "Не удалось прочитать выдачи китов. Запускаем пустое хранилище.", exception);
             }
         }
         loaded = true;
-        logger.info(String.format("Kit claims loaded from %s. entries=%d", claimsPath, claims.size()));
+        logger.info(String.format("Выдачи китов загружены из %s. Записей=%d", claimsPath, claims.size()));
     }
 
     synchronized boolean hasClaimedStart(String playerId) {
@@ -66,16 +66,16 @@ final class KitService {
                 Files.createDirectories(parent);
             }
             try (OutputStream output = Files.newOutputStream(claimsPath)) {
-                claims.store(output, "ObsidianGate one-time kit claims.");
+                claims.store(output, "Одноразовые выдачи китов ObsidianGate.");
             }
         } catch (IOException exception) {
-            throw new IllegalStateException("Failed to save kit claims.", exception);
+            throw new IllegalStateException("Не удалось сохранить выдачи китов.", exception);
         }
     }
 
     private static String startKitKey(String playerId) {
         if (playerId == null || playerId.trim().isEmpty()) {
-            throw new IllegalArgumentException("playerId must not be blank.");
+            throw new IllegalArgumentException("playerId не должен быть пустым.");
         }
         return START_KIT_PREFIX + playerId.trim().toLowerCase();
     }

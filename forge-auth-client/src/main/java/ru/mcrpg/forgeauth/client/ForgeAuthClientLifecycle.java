@@ -43,11 +43,11 @@ final class ForgeAuthClientLifecycle {
             pendingSessionPath = sessionFiles.resolveFromSystemProperty();
             LauncherSession session = sessionFiles.read(pendingSessionPath);
             if (session.isExpired(Instant.now())) {
-                logger.warning("Launcher session ticket already expired. Ticket will not be sent.");
+                logger.warning("Ticket сессии лаунчера уже истек. Отправка отменена.");
                 return;
             }
             if (!session.hasTickets()) {
-                logger.warning("Launcher session has no remaining reconnect tickets. Ticket will not be sent.");
+                logger.warning("В сессии лаунчера не осталось ticket для переподключения. Отправка отменена.");
                 return;
             }
 
@@ -55,13 +55,13 @@ final class ForgeAuthClientLifecycle {
             pendingSend = true;
             ticksUntilSend = 20;
             logger.info(String.format(
-                "Launcher session loaded for %s. Waiting for network handshake before sending ticket proof.",
+                "Сессия лаунчера загружена для %s. Ждем сетевое рукопожатие перед отправкой ticket proof.",
                 session.getUsername()
             ));
         } catch (IOException exception) {
-            logger.warning("No launcher session file available: " + exception.getMessage());
+            logger.warning("Файл сессии лаунчера недоступен: " + exception.getMessage());
         } catch (RuntimeException exception) {
-            logger.log(Level.SEVERE, "Failed to prepare launcher session proof.", exception);
+            logger.log(Level.SEVERE, "Не удалось подготовить proof сессии лаунчера.", exception);
         }
     }
 
@@ -84,7 +84,7 @@ final class ForgeAuthClientLifecycle {
 
         GameTicketProof proof = pendingSession.toTicketProof();
         if (!proof.isComplete()) {
-            logger.warning("Launcher session is missing ticket proof data. Ticket will not be sent.");
+            logger.warning("В сессии лаунчера не хватает данных ticket proof. Отправка отменена.");
             pendingSend = false;
             return;
         }
@@ -94,7 +94,7 @@ final class ForgeAuthClientLifecycle {
         alreadySent = true;
         pendingSend = false;
         logger.info(String.format(
-            "Sent launcher ticket proof for %s to the server channel.",
+            "Ticket proof лаунчера для %s отправлен в серверный канал.",
             pendingSession.getUsername()
         ));
     }
@@ -116,7 +116,7 @@ final class ForgeAuthClientLifecycle {
         try {
             sessionFiles.write(pendingSessionPath, pendingSession.consumeTicket());
         } catch (IOException exception) {
-            logger.log(Level.WARNING, "Failed to persist remaining reconnect tickets.", exception);
+            logger.log(Level.WARNING, "Не удалось сохранить оставшиеся ticket переподключения.", exception);
         }
     }
 }

@@ -55,11 +55,11 @@ public class JwtService {
 
             String tokenType = claims.get(TOKEN_TYPE_CLAIM, String.class);
             if (!TOKEN_TYPE_ACCESS.equals(tokenType)) {
-                throw ApiException.unauthorized("invalid_token", "Unsupported token type.");
+                throw ApiException.unauthorized("invalid_token", "Неподдерживаемый тип token.");
             }
             return UUID.fromString(claims.getSubject());
         } catch (IllegalArgumentException | JwtException exception) {
-            throw ApiException.unauthorized("invalid_token", "Access token is invalid or expired.");
+            throw ApiException.unauthorized("invalid_token", "Access token недействителен или истек.");
         }
     }
 

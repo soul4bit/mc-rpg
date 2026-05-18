@@ -15,17 +15,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-final class SpawnProtectionService {
+public final class SpawnProtectionService {
 
     private static final Path CONFIG_PATH = Paths.get("config", "obsidiangate-spawn-protection.properties");
     private static final int DEFAULT_RADIUS = 96;
     private static final int MAX_RADIUS = 2048;
     private static final String HOSTILE_MARKER_CLASS = "net.minecraft.entity.monster.IMob";
+    static final String CENTER_MODE_WORLDSPAWN = "worldspawn";
+    static final String CENTER_MODE_FIXED = "fixed";
 
     private final Logger logger;
     private volatile Config config;
@@ -35,10 +39,10 @@ final class SpawnProtectionService {
         this.config = Config.defaults();
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         Config snapshot = config();
-        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(event)) {
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(event, snapshot)) {
             return;
         }
         Object player = invokeZeroArgIfPresent(event, "getPlayer");
@@ -46,13 +50,45 @@ final class SpawnProtectionService {
             return;
         }
         cancel(event);
+        event.setExpToDrop(0);
         ServerChat.error(player, "Спавн защищён: ломать блоки здесь нельзя.");
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onPlayerLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+        Config snapshot = config();
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(event, snapshot)) {
+            return;
+        }
+        Object player = invokeZeroArgIfPresent(event, "getEntityPlayer", "getEntity");
+        if (canBypass(player, snapshot)) {
+            return;
+        }
+        denyInteraction(event);
+        cancel(event);
+        ServerChat.error(player, "Спавн защищён: ломать блоки здесь нельзя.");
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
+        Config snapshot = config();
+        Object player = invokeZeroArgIfPresent(event, "getEntityPlayer", "getEntity");
+        Object world = readFieldIfPresent(player, "world", "field_70170_p");
+        Object pos = invokeZeroArgIfPresent(event, "getPos");
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(world, pos, snapshot)) {
+            return;
+        }
+        if (canBypass(player, snapshot)) {
+            return;
+        }
+        invokeIfPresent(event, new Object[] { Float.valueOf(0.0F) }, "setNewSpeed");
+        cancel(event);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBlockPlace(BlockEvent.PlaceEvent event) {
         Config snapshot = config();
-        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(event)) {
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(event, snapshot)) {
             return;
         }
         Object player = invokeZeroArgIfPresent(event, "getPlayer");
@@ -63,10 +99,10 @@ final class SpawnProtectionService {
         ServerChat.error(player, "Спавн защищён: ставить блоки здесь нельзя.");
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEntityBlockPlace(BlockEvent.EntityPlaceEvent event) {
         Config snapshot = config();
-        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(event)) {
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(event, snapshot)) {
             return;
         }
         Object entity = invokeZeroArgIfPresent(event, "getEntity");
@@ -76,16 +112,17 @@ final class SpawnProtectionService {
         cancel(event);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Config snapshot = config();
-        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(event)) {
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(event, snapshot)) {
             return;
         }
         Object player = invokeZeroArgIfPresent(event, "getEntityPlayer", "getEntity");
         if (canBypass(player, snapshot)) {
             return;
         }
+        denyInteraction(event);
         cancel(event);
         ServerChat.error(player, "Спавн защищён: взаимодействие с этим блоком закрыто.");
     }
@@ -99,7 +136,7 @@ final class SpawnProtectionService {
         Object world = invokeZeroArgIfPresent(event, "getWorld");
         double x = readDouble(event, "getX");
         double z = readDouble(event, "getZ");
-        if (isProtected(world, x, z, snapshot.radius)) {
+        if (isProtected(world, x, z, snapshot)) {
             event.setResult(Result.DENY);
         }
     }
@@ -114,7 +151,7 @@ final class SpawnProtectionService {
         Object explosion = invokeZeroArgIfPresent(event, "getExplosion");
         double x = readExplosionCoordinate(explosion, 0, "explosionX", "field_77284_b");
         double z = readExplosionCoordinate(explosion, 2, "explosionZ", "field_77285_d");
-        if (isProtected(world, x, z, snapshot.radius)) {
+        if (isProtected(world, x, z, snapshot)) {
             cancel(event);
         }
     }
@@ -133,7 +170,7 @@ final class SpawnProtectionService {
         Iterator<?> iterator = ((List<?>) affectedBlocks).iterator();
         while (iterator.hasNext()) {
             Object pos = iterator.next();
-            if (isProtected(world, pos, snapshot.radius)) {
+            if (isProtected(world, pos, snapshot)) {
                 iterator.remove();
             }
         }
@@ -142,7 +179,7 @@ final class SpawnProtectionService {
     synchronized void load() {
         config = loadConfig();
         logger.info(String.format(
-            "Spawn protection loaded. enabled=%s radius=%d protectBlocks=%s denyHostileSpawns=%s denyExplosions=%s allowOperatorBypass=%s",
+            "Защита спавна загружена. enabled=%s radius=%d protectBlocks=%s denyHostileSpawns=%s denyExplosions=%s allowOperatorBypass=%s",
             config.enabled,
             config.radius,
             config.protectBlocks,
@@ -157,6 +194,10 @@ final class SpawnProtectionService {
         config = new Config(
             enabled,
             current.radius,
+            current.centerMode,
+            current.dimension,
+            current.centerX,
+            current.centerZ,
             current.protectBlocks,
             current.denyHostileSpawns,
             current.denyExplosions,
@@ -170,6 +211,44 @@ final class SpawnProtectionService {
         config = new Config(
             current.enabled,
             clampRadius(radius),
+            current.centerMode,
+            current.dimension,
+            current.centerX,
+            current.centerZ,
+            current.protectBlocks,
+            current.denyHostileSpawns,
+            current.denyExplosions,
+            current.allowOperatorBypass
+        );
+        save(config);
+    }
+
+    synchronized void setFixedCenter(int dimension, double centerX, double centerZ) {
+        Config current = config();
+        config = new Config(
+            current.enabled,
+            current.radius,
+            CENTER_MODE_FIXED,
+            dimension,
+            centerX,
+            centerZ,
+            current.protectBlocks,
+            current.denyHostileSpawns,
+            current.denyExplosions,
+            current.allowOperatorBypass
+        );
+        save(config);
+    }
+
+    synchronized void useWorldSpawnCenter() {
+        Config current = config();
+        config = new Config(
+            current.enabled,
+            current.radius,
+            CENTER_MODE_WORLDSPAWN,
+            current.dimension,
+            current.centerX,
+            current.centerZ,
             current.protectBlocks,
             current.denyHostileSpawns,
             current.denyExplosions,
@@ -193,20 +272,24 @@ final class SpawnProtectionService {
             try (InputStream input = Files.newInputStream(CONFIG_PATH)) {
                 properties.load(input);
             } catch (IOException exception) {
-                logger.log(Level.WARNING, "Failed to read spawn protection config. Using defaults.", exception);
+                logger.log(Level.WARNING, "Не удалось прочитать конфиг защиты спавна. Используем значения по умолчанию.", exception);
             }
         }
 
         Config loaded = new Config(
             readBoolean(properties, "enabled", true),
             clampRadius(readInt(properties, "radius", DEFAULT_RADIUS)),
+            readCenterMode(properties),
+            readInt(properties, "dimension", 0),
+            readDouble(properties, "centerX", 0.0D),
+            readDouble(properties, "centerZ", 0.0D),
             readBoolean(properties, "protectBlocks", true),
             readBoolean(properties, "denyHostileSpawns", true),
             readBoolean(properties, "denyExplosions", true),
             readBoolean(properties, "allowOperatorBypass", false)
         );
 
-        if (!Files.exists(CONFIG_PATH) || !properties.containsKey("allowOperatorBypass")) {
+        if (!Files.exists(CONFIG_PATH) || !properties.containsKey("allowOperatorBypass") || !properties.containsKey("centerMode")) {
             save(loaded);
         }
         return loaded;
@@ -216,6 +299,10 @@ final class SpawnProtectionService {
         Properties properties = new Properties();
         properties.setProperty("enabled", Boolean.toString(value.enabled));
         properties.setProperty("radius", Integer.toString(value.radius));
+        properties.setProperty("centerMode", value.centerMode);
+        properties.setProperty("dimension", Integer.toString(value.dimension));
+        properties.setProperty("centerX", Double.toString(value.centerX));
+        properties.setProperty("centerZ", Double.toString(value.centerZ));
         properties.setProperty("protectBlocks", Boolean.toString(value.protectBlocks));
         properties.setProperty("denyHostileSpawns", Boolean.toString(value.denyHostileSpawns));
         properties.setProperty("denyExplosions", Boolean.toString(value.denyExplosions));
@@ -224,45 +311,56 @@ final class SpawnProtectionService {
         try {
             Files.createDirectories(CONFIG_PATH.getParent());
             try (OutputStream output = Files.newOutputStream(CONFIG_PATH)) {
-                properties.store(output, "ObsidianGate spawn protection. Region is centered on the overworld /setworldspawn point.");
+                properties.store(output, "Защита спавна ObsidianGate. Регион центрируется по точке /setworldspawn в overworld.");
             }
         } catch (IOException exception) {
-            logger.log(Level.WARNING, "Failed to write spawn protection config.", exception);
+            logger.log(Level.WARNING, "Не удалось записать конфиг защиты спавна.", exception);
         }
     }
 
-    private boolean isProtected(Object event) {
+    private boolean isProtected(Object event, Config snapshot) {
         Object world = invokeZeroArgIfPresent(event, "getWorld");
         Object pos = invokeZeroArgIfPresent(event, "getPos");
-        return isProtected(world, pos, config().radius);
+        return isProtected(world, pos, snapshot);
     }
 
-    private boolean isProtected(Object world, Object pos, int radius) {
-        if (world == null || pos == null || dimension(world) != 0) {
+    private boolean isProtected(Object world, Object pos, Config snapshot) {
+        if (world == null || pos == null || dimension(world) != snapshot.dimension) {
             return false;
         }
-        Object spawn = invokeZeroArgIfPresent(world, "getSpawnPoint", "func_175694_M");
-        if (spawn == null) {
+        Center center = protectedCenter(world, snapshot);
+        if (center == null) {
             return false;
         }
         double x = readBlockCoordinate(pos, "getX", "func_177958_n");
         double z = readBlockCoordinate(pos, "getZ", "func_177952_p");
-        double spawnX = readBlockCoordinate(spawn, "getX", "func_177958_n");
-        double spawnZ = readBlockCoordinate(spawn, "getZ", "func_177952_p");
-        return Math.abs(x - spawnX) <= radius && Math.abs(z - spawnZ) <= radius;
+        return Math.abs(x - center.x) <= snapshot.radius && Math.abs(z - center.z) <= snapshot.radius;
     }
 
-    private boolean isProtected(Object world, double x, double z, int radius) {
-        if (world == null || dimension(world) != 0) {
+    private boolean isProtected(Object world, double x, double z, Config snapshot) {
+        if (world == null || dimension(world) != snapshot.dimension) {
             return false;
         }
+        Center center = protectedCenter(world, snapshot);
+        if (center == null) {
+            return false;
+        }
+        return Math.abs(x - center.x) <= snapshot.radius && Math.abs(z - center.z) <= snapshot.radius;
+    }
+
+    private Center protectedCenter(Object world, Config snapshot) {
+        if (CENTER_MODE_FIXED.equals(snapshot.centerMode)) {
+            return new Center(snapshot.centerX, snapshot.centerZ);
+        }
+
         Object spawn = invokeZeroArgIfPresent(world, "getSpawnPoint", "func_175694_M");
         if (spawn == null) {
-            return false;
+            return null;
         }
-        double spawnX = readBlockCoordinate(spawn, "getX", "func_177958_n");
-        double spawnZ = readBlockCoordinate(spawn, "getZ", "func_177952_p");
-        return Math.abs(x - spawnX) <= radius && Math.abs(z - spawnZ) <= radius;
+        return new Center(
+            readBlockCoordinate(spawn, "getX", "func_177958_n"),
+            readBlockCoordinate(spawn, "getZ", "func_177952_p")
+        );
     }
 
     private boolean canBypass(Object entity, Config snapshot) {
@@ -292,6 +390,11 @@ final class SpawnProtectionService {
 
     private static void cancel(Object event) {
         invokeIfPresent(event, new Object[] { Boolean.TRUE }, "setCanceled");
+    }
+
+    private static void denyInteraction(Object event) {
+        invokeIfPresent(event, new Object[] { Result.DENY }, "setUseBlock");
+        invokeIfPresent(event, new Object[] { Result.DENY }, "setUseItem");
     }
 
     private static double readDouble(Object target, String methodName) {
@@ -340,7 +443,7 @@ final class SpawnProtectionService {
                         method.setAccessible(true);
                         return method.invoke(target, safeArgs);
                     } catch (ReflectiveOperationException exception) {
-                        throw new IllegalStateException("Failed to invoke " + method.getName() + ".", exception);
+                        throw new IllegalStateException("Не удалось вызвать " + method.getName() + ".", exception);
                     }
                 }
             }
@@ -430,6 +533,23 @@ final class SpawnProtectionService {
         }
     }
 
+    private static double readDouble(Properties properties, String key, double fallback) {
+        String value = properties.getProperty(key);
+        if (value == null) {
+            return fallback;
+        }
+        try {
+            return Double.parseDouble(value.trim());
+        } catch (NumberFormatException ignored) {
+            return fallback;
+        }
+    }
+
+    private static String readCenterMode(Properties properties) {
+        String value = properties.getProperty("centerMode", CENTER_MODE_WORLDSPAWN).trim().toLowerCase();
+        return CENTER_MODE_FIXED.equals(value) ? CENTER_MODE_FIXED : CENTER_MODE_WORLDSPAWN;
+    }
+
     private static int clampRadius(int radius) {
         return Math.max(0, Math.min(MAX_RADIUS, radius));
     }
@@ -437,6 +557,10 @@ final class SpawnProtectionService {
     static final class Config {
         final boolean enabled;
         final int radius;
+        final String centerMode;
+        final int dimension;
+        final double centerX;
+        final double centerZ;
         final boolean protectBlocks;
         final boolean denyHostileSpawns;
         final boolean denyExplosions;
@@ -445,6 +569,10 @@ final class SpawnProtectionService {
         private Config(
             boolean enabled,
             int radius,
+            String centerMode,
+            int dimension,
+            double centerX,
+            double centerZ,
             boolean protectBlocks,
             boolean denyHostileSpawns,
             boolean denyExplosions,
@@ -452,6 +580,10 @@ final class SpawnProtectionService {
         ) {
             this.enabled = enabled;
             this.radius = radius;
+            this.centerMode = centerMode;
+            this.dimension = dimension;
+            this.centerX = centerX;
+            this.centerZ = centerZ;
             this.protectBlocks = protectBlocks;
             this.denyHostileSpawns = denyHostileSpawns;
             this.denyExplosions = denyExplosions;
@@ -459,7 +591,17 @@ final class SpawnProtectionService {
         }
 
         private static Config defaults() {
-            return new Config(true, DEFAULT_RADIUS, true, true, true, false);
+            return new Config(true, DEFAULT_RADIUS, CENTER_MODE_WORLDSPAWN, 0, 0.0D, 0.0D, true, true, true, false);
+        }
+    }
+
+    private static final class Center {
+        private final double x;
+        private final double z;
+
+        private Center(double x, double z) {
+            this.x = x;
+            this.z = z;
         }
     }
 }

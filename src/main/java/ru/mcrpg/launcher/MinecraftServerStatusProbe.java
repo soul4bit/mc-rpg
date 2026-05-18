@@ -40,13 +40,13 @@ public final class MinecraftServerStatusProbe {
             int responseLength = readVarInt(inputStream);
             byte[] responsePayload = inputStream.readNBytes(responseLength);
             if (responsePayload.length != responseLength) {
-                throw new IOException("Minecraft status response is truncated.");
+                throw new IOException("Ответ статуса Minecraft обрезан.");
             }
 
             DataInputStream responseStream = new DataInputStream(new java.io.ByteArrayInputStream(responsePayload));
             int responsePacketId = readVarInt(responseStream);
             if (responsePacketId != 0) {
-                throw new IOException("Unexpected Minecraft status packet: " + responsePacketId);
+                throw new IOException("Неожиданный пакет статуса Minecraft: " + responsePacketId);
             }
 
             JsonNode statusNode = OBJECT_MAPPER.readTree(readString(responseStream));
@@ -62,13 +62,13 @@ public final class MinecraftServerStatusProbe {
             int pongLength = readVarInt(inputStream);
             byte[] pongPayload = inputStream.readNBytes(pongLength);
             if (pongPayload.length != pongLength) {
-                throw new IOException("Minecraft pong response is truncated.");
+                throw new IOException("Ответ pong Minecraft обрезан.");
             }
 
             DataInputStream pongStream = new DataInputStream(new java.io.ByteArrayInputStream(pongPayload));
             int pongPacketId = readVarInt(pongStream);
             if (pongPacketId != 1) {
-                throw new IOException("Unexpected Minecraft pong packet: " + pongPacketId);
+                throw new IOException("Неожиданный пакет pong Minecraft: " + pongPacketId);
             }
             pongStream.readLong();
 
@@ -99,7 +99,7 @@ public final class MinecraftServerStatusProbe {
         int length = readVarInt(inputStream);
         byte[] bytes = inputStream.readNBytes(length);
         if (bytes.length != length) {
-            throw new IOException("Minecraft status string is truncated.");
+            throw new IOException("Строка статуса Minecraft обрезана.");
         }
         return new String(bytes, StandardCharsets.UTF_8);
     }
@@ -125,7 +125,7 @@ public final class MinecraftServerStatusProbe {
             result |= (currentByte & 0x7F) << position;
             position += 7;
             if (position > 35) {
-                throw new IOException("Minecraft VarInt is too large.");
+                throw new IOException("Minecraft VarInt слишком большой.");
             }
         } while ((currentByte & 0x80) != 0);
         return result;

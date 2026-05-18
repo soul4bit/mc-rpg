@@ -28,6 +28,7 @@ public final class ForgeAuthServerMod {
     private static final Logger LOGGER = Logger.getLogger(MOD_NAME);
     private static final ForgeAuthServerLifecycle LIFECYCLE = new ForgeAuthServerLifecycle(LOGGER);
     private static final SpawnProtectionService SPAWN_PROTECTION = new SpawnProtectionService(LOGGER);
+    private static final ItemCleanupService ITEM_CLEANUP = new ItemCleanupService(LOGGER);
     private static final KitService KIT_SERVICE = new KitService(LOGGER);
 
     static ForgeAuthServerLifecycle getLifecycle() {
@@ -39,22 +40,24 @@ public final class ForgeAuthServerMod {
         SimpleNetworkWrapper channel = NetworkRegistry.INSTANCE.newSimpleChannel(NETWORK_CHANNEL);
         channel.registerMessage(AuthTicketMessageHandler.class, AuthTicketMessage.class, 0, net.minecraftforge.fml.relauncher.Side.SERVER);
         SPAWN_PROTECTION.load();
+        ITEM_CLEANUP.load();
         KIT_SERVICE.load();
         MinecraftForge.EVENT_BUS.register(LIFECYCLE);
         MinecraftForge.EVENT_BUS.register(SPAWN_PROTECTION);
+        MinecraftForge.EVENT_BUS.register(ITEM_CLEANUP);
 
         AuthServerConfig config = AuthServerConfig.fromSystem();
         if (config.isReady()) {
             LOGGER.info(String.format(
-                "Forge auth server initialized. Auth base URL=%s serverId=%s grace=%ss",
+                "Forge auth server инициализирован. Auth base URL=%s serverId=%s grace=%ss",
                 config.getAuthBaseUrl(),
                 config.getServerId(),
                 config.getGraceSeconds()
             ));
         } else {
             LOGGER.warning(
-                "Forge auth server initialized without auth configuration. " +
-                "Set -D" + AuthServerConfig.AUTH_BASE_URL_PROPERTY + " and -D" + AuthServerConfig.SERVER_ID_PROPERTY + "."
+                "Forge auth server инициализирован без настройки авторизации. " +
+                "Укажи -D" + AuthServerConfig.AUTH_BASE_URL_PROPERTY + " и -D" + AuthServerConfig.SERVER_ID_PROPERTY + "."
             );
         }
     }
@@ -62,6 +65,8 @@ public final class ForgeAuthServerMod {
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         SpawnCommand.register(event);
+        WaypointTeleportCommand.register(event);
+        CallCommand.register(event);
         KitCommand.register(event, KIT_SERVICE);
         SpawnProtectionCommand.register(event, SPAWN_PROTECTION);
     }

@@ -29,7 +29,7 @@ public final class SessionFileWriter {
     }
 
     public Path write(LauncherConfig config, List<GameTicket> tickets) throws IOException {
-        Path gameDirectory = Paths.get(requireText(config.getGameDirectory(), "Game directory is not configured."));
+        Path gameDirectory = Paths.get(requireText(config.getGameDirectory(), "Папка игры не настроена."));
         Path sessionFile = gameDirectory.resolve(".obsidiangate").resolve("session.json").toAbsolutePath().normalize();
         Files.createDirectories(sessionFile.getParent());
 
@@ -66,11 +66,11 @@ public final class SessionFileWriter {
 
     private static List<GameTicket> requireTickets(List<GameTicket> tickets) {
         if (tickets == null || tickets.isEmpty()) {
-            throw new IllegalArgumentException("At least one game ticket is required.");
+            throw new IllegalArgumentException("Нужен хотя бы один игровой ticket.");
         }
         for (GameTicket ticket : tickets) {
             if (ticket == null) {
-                throw new IllegalArgumentException("Game ticket list contains a null entry.");
+                throw new IllegalArgumentException("Список игровых ticket содержит пустую запись.");
             }
         }
         return tickets;
@@ -80,7 +80,7 @@ public final class SessionFileWriter {
         if (!firstTicket.getUsername().equals(currentTicket.getUsername())
             || !firstTicket.getUuid().equals(currentTicket.getUuid())
             || !firstTicket.getServerId().equals(currentTicket.getServerId())) {
-            throw new IllegalArgumentException("Reconnect tickets must belong to the same player and server.");
+            throw new IllegalArgumentException("Билеты переподключения должны принадлежать одному игроку и серверу.");
         }
     }
 }

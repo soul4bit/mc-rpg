@@ -52,7 +52,7 @@ public final class ScreenRouter {
                 stage.show();
             }
         } catch (IOException exception) {
-            throw new IllegalStateException("Failed to open screen " + screen.name() + ".", exception);
+            throw new IllegalStateException("Не удалось открыть экран " + screen.name() + ".", exception);
         }
     }
 }

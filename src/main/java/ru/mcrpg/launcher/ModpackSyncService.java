@@ -36,8 +36,8 @@ public final class ModpackSyncService {
     }
 
     public ModpackSyncPreviewResult preview(LauncherConfig baseConfig, LogSink logSink) throws IOException {
-        PreparedSyncContext prepared = prepareSync(baseConfig, logSink, "Preview manifest");
-        log(logSink, "Preview files in manifest: " + prepared.manifest.getFiles().size());
+        PreparedSyncContext prepared = prepareSync(baseConfig, logSink, "Предпросмотр manifest");
+        log(logSink, "Файлов в manifest для предпросмотра: " + prepared.manifest.getFiles().size());
 
         int downloadFiles = 0;
         int reusedFiles = 0;
@@ -59,9 +59,9 @@ public final class ModpackSyncService {
 
         log(
             logSink,
-            "Preview complete. Need sync: " + downloadFiles
-                + ", up to date: " + reusedFiles
-                + ", bytes to download: " + downloadBytes
+            "Предпросмотр завершен. Нужно синхронизировать: " + downloadFiles
+                + ", актуальны: " + reusedFiles
+                + ", байт к скачиванию: " + downloadBytes
         );
 
         return new ModpackSyncPreviewResult(
@@ -75,14 +75,14 @@ public final class ModpackSyncService {
     }
 
     public ModpackSyncResult sync(LauncherConfig baseConfig, LogSink logSink) throws IOException {
-        PreparedSyncContext prepared = prepareSync(baseConfig, logSink, "Loading manifest");
+        PreparedSyncContext prepared = prepareSync(baseConfig, logSink, "Загружаем manifest");
         LauncherConfig resolvedConfig = prepared.resolvedConfig;
         LoadedManifest loadedManifest = prepared.loadedManifest;
         ModpackManifest manifest = prepared.manifest;
         Path gameDirectory = prepared.gameDirectory;
 
-        log(logSink, "Manifest version: " + valueOrFallback(manifest.getVersion(), "unknown"));
-        log(logSink, "Files in manifest: " + manifest.getFiles().size());
+        log(logSink, "Версия manifest: " + valueOrFallback(manifest.getVersion(), "неизвестно"));
+        log(logSink, "Файлов в manifest: " + manifest.getFiles().size());
 
         int downloadedFiles = 0;
         int reusedFiles = 0;
@@ -119,9 +119,9 @@ public final class ModpackSyncService {
 
         log(
             logSink,
-            "Sync completed. Downloaded: " + downloadedFiles
-                + ", reused: " + reusedFiles
-                + ", bytes: " + downloadedBytes
+            "Синхронизация завершена. Скачано: " + downloadedFiles
+                + ", переиспользовано: " + reusedFiles
+                + ", байт: " + downloadedBytes
         );
 
         return new ModpackSyncResult(resolvedConfig, manifest, downloadedFiles, reusedFiles, downloadedBytes);
@@ -151,12 +151,12 @@ public final class ModpackSyncService {
         Path target = inspection.getTarget();
 
         if (inspection.isReused()) {
-            log(logSink, "Up to date: " + file.getPath());
+            log(logSink, "Актуально: " + file.getPath());
             return FileSyncOutcome.reused();
         }
 
         URL downloadUrl = resolveDownloadUrl(loadedManifest, manifest, file);
-        log(logSink, "Download: " + file.getPath() + " <- " + downloadUrl);
+        log(logSink, "Скачиваем: " + file.getPath() + " <- " + downloadUrl);
 
         Path parent = target.getParent();
         if (parent != null) {
@@ -282,7 +282,7 @@ public final class ModpackSyncService {
     }
 
     private static Path resolveManifestWorkingDirectory(Path gameDirectory, String workingDirectory) {
-        Path path = Paths.get(requireText(workingDirectory, "Working directory in manifest is empty."));
+        Path path = Paths.get(requireText(workingDirectory, "workingDirectory в manifest пустой."));
         if (path.isAbsolute()) {
             throw new IllegalArgumentException("workingDirectory в manifest должен быть относительным.");
         }

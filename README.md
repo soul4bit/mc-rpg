@@ -25,7 +25,7 @@
 
 Сейчас в UI есть:
 
-- главный экран со статусом сервера, manifest и кнопками `Sync Files` / `Launch`
+- главный экран со статусом сервера, manifest и кнопками `Предпросмотр` / `Играть`
 - экран аккаунта
 - экран `Моды` со списком `manifest.files[]` и runtime packages
 - экран `Настройки` для локального конфига лаунчера
@@ -262,10 +262,10 @@ update.files.before.launch=true
 ## Ключевые файлы проекта
 
 - `src/main/java/ru/mcrpg/launcher/LauncherShellApplication.java` — запуск JavaFX-окна
-- `src/main/java/ru/mcrpg/launcher/LauncherShellController.java` — основной UI и действия `Sync/Launch`
+- `src/main/java/ru/mcrpg/launcher/LauncherShellController.java` — основной UI и действия синхронизации/запуска
 - `src/main/java/ru/mcrpg/launcher/ModpackManifestClient.java` — загрузка `manifest.json`
 - `src/main/java/ru/mcrpg/launcher/ModpackSyncService.java` — синхронизация файлов
-- `src/main/java/ru/mcrpg/launcher/LaunchCommandBuilder.java` — сборка launch-команды
+- `src/main/java/ru/mcrpg/launcher/LaunchCommandBuilder.java` — сборка команды запуска
 - `src/main/java/ru/mcrpg/launcher/SessionFileWriter.java` — запись `.obsidiangate/session.json`
 - `src/main/java/ru/mcrpg/launcher/MinecraftBootstrapService.java` — официальный bootstrap Minecraft/Forge
 - `src/main/java/ru/mcrpg/launcher/RuntimeSyncService.java` — portable Java runtime

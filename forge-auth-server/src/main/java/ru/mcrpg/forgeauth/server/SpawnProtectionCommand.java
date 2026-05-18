@@ -25,7 +25,7 @@ final class SpawnProtectionCommand {
             Method registerMethod = event.getClass().getMethod("registerServerCommand", commandType);
             registerMethod.invoke(event, command);
         } catch (ReflectiveOperationException exception) {
-            throw new IllegalStateException("Unable to register /spawnprotect command.", exception);
+            throw new IllegalStateException("Не удалось зарегистрировать команду /spawnprotect.", exception);
         }
     }
 
@@ -43,7 +43,7 @@ final class SpawnProtectionCommand {
                 return COMMAND_NAME;
             }
             if ("getUsage".equals(name) || "func_71518_a".equals(name)) {
-                return "/" + COMMAND_NAME + " <info|on|off|radius|reload>";
+                return "/" + COMMAND_NAME + " <info|on|off|radius|center|worldspawn|reload>";
             }
             if ("getAliases".equals(name) || "func_71514_a".equals(name)) {
                 return Collections.emptyList();
@@ -106,6 +106,27 @@ final class SpawnProtectionCommand {
                 sendInfo(sender);
                 return;
             }
+            if ("center".equals(action)) {
+                Object player = TeleportSupport.resolvePlayer(sender);
+                if (player == null) {
+                    ServerChat.error(sender, "Команду " + ServerChat.command("/" + COMMAND_NAME + " center") + " может использовать только игрок.");
+                    return;
+                }
+                service.setFixedCenter(
+                    TeleportSupport.playerDimension(player),
+                    Math.floor(TeleportSupport.playerX(player)),
+                    Math.floor(TeleportSupport.playerZ(player))
+                );
+                ServerChat.success(sender, "Центр защиты спавна установлен в текущей позиции.");
+                sendInfo(sender);
+                return;
+            }
+            if ("worldspawn".equals(action)) {
+                service.useWorldSpawnCenter();
+                ServerChat.success(sender, "Центр защиты спавна снова берётся из /setworldspawn.");
+                sendInfo(sender);
+                return;
+            }
             if ("radius".equals(action)) {
                 if (args.length < 2) {
                     ServerChat.warning(sender, "Использование: " + ServerChat.command("/" + COMMAND_NAME + " radius <блоки>"));
@@ -120,15 +141,19 @@ final class SpawnProtectionCommand {
                 }
                 return;
             }
-            ServerChat.warning(sender, "Использование: " + ServerChat.command("/" + COMMAND_NAME + " <info|on|off|radius|reload>"));
+            ServerChat.warning(sender, "Использование: " + ServerChat.command("/" + COMMAND_NAME + " <info|on|off|radius|center|worldspawn|reload>"));
         }
 
         private void sendInfo(Object sender) {
             SpawnProtectionService.Config config = service.config();
             ServerChat.info(sender, String.format(
-                "Защита спавна: %s, радиус %s, блоки %s, мобы %s, взрывы %s, обход OP %s.",
+                "Защита спавна: %s, радиус %s, центр %s dim %s (%s, %s), блоки %s, мобы %s, взрывы %s, обход OP %s.",
                 ServerChat.value(enabledText(config.enabled)),
                 ServerChat.value(config.radius),
+                ServerChat.value(config.centerMode),
+                ServerChat.value(config.dimension),
+                ServerChat.value(Integer.valueOf((int) Math.floor(config.centerX))),
+                ServerChat.value(Integer.valueOf((int) Math.floor(config.centerZ))),
                 ServerChat.value(enabledText(config.protectBlocks)),
                 ServerChat.value(enabledText(config.denyHostileSpawns)),
                 ServerChat.value(enabledText(config.denyExplosions)),
@@ -174,7 +199,7 @@ final class SpawnProtectionCommand {
                         method.setAccessible(true);
                         return method.invoke(target, safeArgs);
                     } catch (ReflectiveOperationException exception) {
-                        throw new IllegalStateException("Failed to invoke " + method.getName() + ".", exception);
+                        throw new IllegalStateException("Не удалось вызвать " + method.getName() + ".", exception);
                     }
                 }
             }

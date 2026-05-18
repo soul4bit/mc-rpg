@@ -46,15 +46,15 @@ final class LauncherUpdateService {
 
     void installAndRestart(LauncherUpdateCandidate candidate, LogSink logSink) throws IOException {
         if (candidate == null) {
-            throw new IllegalArgumentException("Launcher update is not available.");
+            throw new IllegalArgumentException("Обновление лаунчера недоступно.");
         }
         if (!candidate.isInstallSupported()) {
-            throw new IOException("Auto-update is available only when launcher is running from a jar file.");
+            throw new IOException("Автообновление доступно только при запуске лаунчера из jar-файла.");
         }
 
         Path updateFile = downloadUpdate(candidate, logSink);
         Path script = createRestartScript(updateFile, candidate.getCurrentLauncherPath());
-        log(logSink, "Starting launcher updater script: " + script);
+        log(logSink, "Запускаем скрипт обновления лаунчера: " + script);
         startUpdaterScript(script);
     }
 
@@ -68,7 +68,7 @@ final class LauncherUpdateService {
 
         Path fileName = Paths.get(candidate.getCurrentLauncherPath().getFileName().toString());
         Path target = updatesDirectory.resolve(fileName).normalize();
-        log(logSink, "Downloading launcher update " + candidate.getVersion() + " from " + candidate.getDownloadUrl());
+        log(logSink, "Скачиваем обновление лаунчера " + candidate.getVersion() + " из " + candidate.getDownloadUrl());
         DownloadUtils.download(candidate.getDownloadUrl(), target, LAUNCHER_DOWNLOAD_READ_TIMEOUT_MS);
         verifyUpdateFile(target, candidate);
         return target;
@@ -79,7 +79,8 @@ final class LauncherUpdateService {
             long actualSize = Files.size(updateFile);
             if (actualSize != candidate.getSize().longValue()) {
                 throw new IOException(
-                    "Launcher update size mismatch. Expected " + candidate.getSize() + ", got " + actualSize + "."
+                    "Размер обновления лаунчера не совпал. Ожидалось " + candidate.getSize()
+                        + ", получено " + actualSize + "."
                 );
             }
         }
@@ -87,7 +88,8 @@ final class LauncherUpdateService {
         String actualSha256 = ChecksumUtils.sha256(updateFile);
         if (!actualSha256.equalsIgnoreCase(candidate.getSha256())) {
             throw new IOException(
-                "Launcher update SHA-256 mismatch. Expected " + candidate.getSha256() + ", got " + actualSha256 + "."
+                "SHA-256 обновления лаунчера не совпал. Ожидалось " + candidate.getSha256()
+                    + ", получено " + actualSha256 + "."
             );
         }
     }

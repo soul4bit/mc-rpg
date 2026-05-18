@@ -46,7 +46,7 @@ final class MinecraftPlayerBridge {
 
     private static Object readField(Object target, String... candidates) {
         if (target == null) {
-            throw new IllegalArgumentException("Target object is required.");
+            throw new IllegalArgumentException("Целевой объект обязателен.");
         }
 
         for (String candidate : candidates) {
@@ -62,12 +62,12 @@ final class MinecraftPlayerBridge {
             }
         }
 
-        throw new IllegalStateException("Unable to read expected field from " + target.getClass().getName());
+        throw new IllegalStateException("Не удалось прочитать ожидаемое поле из " + target.getClass().getName());
     }
 
     private static Object invokeZeroArg(Object target, String... candidates) {
         if (target == null) {
-            throw new IllegalArgumentException("Target object is required.");
+            throw new IllegalArgumentException("Целевой объект обязателен.");
         }
 
         for (String candidate : candidates) {
@@ -86,12 +86,12 @@ final class MinecraftPlayerBridge {
             }
         }
 
-        throw new IllegalStateException("Unable to resolve player accessor on " + target.getClass().getName());
+        throw new IllegalStateException("Не удалось найти accessor игрока в " + target.getClass().getName());
     }
 
     private static void invokeSingleArg(Object target, Object argument, String... candidates) {
         if (target == null) {
-            throw new IllegalArgumentException("Target object is required.");
+            throw new IllegalArgumentException("Целевой объект обязателен.");
         }
 
         Class<?> type = target.getClass();
@@ -103,14 +103,14 @@ final class MinecraftPlayerBridge {
                         method.invoke(target, argument);
                         return;
                     } catch (ReflectiveOperationException exception) {
-                        throw new IllegalStateException("Failed to invoke disconnect on " + target.getClass().getName(), exception);
+                        throw new IllegalStateException("Не удалось вызвать disconnect у " + target.getClass().getName(), exception);
                     }
                 }
             }
             type = type.getSuperclass();
         }
 
-        throw new IllegalStateException("Unable to find disconnect method on " + target.getClass().getName());
+        throw new IllegalStateException("Не удалось найти метод disconnect у " + target.getClass().getName());
     }
 
     private static boolean matches(Method method, Object argument, String... candidates) {
@@ -133,7 +133,7 @@ final class MinecraftPlayerBridge {
                 Constructor<?> constructor = componentClass.getConstructor(String.class);
                 return constructor.newInstance(message);
             } catch (ReflectiveOperationException exception) {
-                throw new IllegalStateException("Unable to construct TextComponentString.", exception);
+                throw new IllegalStateException("Не удалось создать TextComponentString.", exception);
             }
         }
     }

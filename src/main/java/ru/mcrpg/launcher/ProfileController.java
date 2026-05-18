@@ -229,7 +229,7 @@ public final class ProfileController extends AbstractScreenController {
 
         profileAvatarView.setImage(AvatarImages.forAccount(account));
         profileNameLabel.setText(account.getUsername());
-        profileRoleBadgeLabel.setText(roleLabel + " / " + roleCode);
+        profileRoleBadgeLabel.setText(roleLabel.equals(roleCode) ? roleLabel : roleLabel + " / " + roleCode);
         profileStatusLabel.setText(accountStatus);
         profileWelcomeLabel.setText("Добро пожаловать на ObsidianGate");
 
@@ -258,11 +258,11 @@ public final class ProfileController extends AbstractScreenController {
 
     private static void openDesktopPath(Path target) throws IOException {
         if (!Desktop.isDesktopSupported()) {
-            throw new IOException("Desktop integration is not supported.");
+            throw new IOException("Открытие через рабочий стол не поддерживается.");
         }
         Desktop desktop = Desktop.getDesktop();
         if (!desktop.isSupported(Desktop.Action.OPEN)) {
-            throw new IOException("Opening files is not supported.");
+            throw new IOException("Открытие файлов не поддерживается.");
         }
         desktop.open(target.toFile());
     }
@@ -289,20 +289,20 @@ public final class ProfileController extends AbstractScreenController {
 
     private static String resolveRoleCodeLabel(String role) {
         if (!hasText(role)) {
-            return "Player";
+            return "Игрок";
         }
         String normalized = role.trim().toLowerCase(Locale.ROOT);
         if ("admin".equals(normalized) || "administrator".equals(normalized)) {
-            return "Admin";
+            return "Админ";
         }
         if ("moderator".equals(normalized)) {
-            return "Moderator";
+            return "Модератор";
         }
         if ("vip".equals(normalized)) {
             return "VIP";
         }
         if ("player".equals(normalized)) {
-            return "Player";
+            return "Игрок";
         }
         return Character.toUpperCase(normalized.charAt(0)) + normalized.substring(1);
     }

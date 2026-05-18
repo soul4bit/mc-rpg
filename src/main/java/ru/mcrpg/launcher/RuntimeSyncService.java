@@ -34,12 +34,12 @@ public final class RuntimeSyncService {
         Path installDirectory = resolveInstallDirectory(gameDirectory, runtimePackage);
         Path javaExecutable = resolveJavaExecutable(installDirectory, runtimePackage);
         if (isInstalled(installDirectory, javaExecutable, runtimePackage)) {
-            log(logSink, "Portable Java already installed: " + javaExecutable);
+            log(logSink, "Портативная Java уже установлена: " + javaExecutable);
             return new RuntimeResolution(runtimePackage, javaExecutable);
         }
 
         URL downloadUrl = resolveDownloadUrl(loadedManifest, manifest, runtimePackage.getUrl());
-        log(logSink, "Downloading runtime: " + downloadUrl);
+        log(logSink, "Скачиваем runtime Java: " + downloadUrl);
 
         Path parent = installDirectory.getParent();
         if (parent != null) {
@@ -55,7 +55,7 @@ public final class RuntimeSyncService {
 
             Path extractedJava = resolveJavaExecutable(tempInstallDirectory, runtimePackage);
             if (!Files.isRegularFile(extractedJava)) {
-                throw new IOException("Runtime archive does not contain java executable: " + runtimePackage.getJavaPath());
+                throw new IOException("Архив runtime не содержит исполняемый файл Java: " + runtimePackage.getJavaPath());
             }
 
             deleteRecursively(installDirectory);
@@ -64,7 +64,7 @@ public final class RuntimeSyncService {
             javaExecutable = resolveJavaExecutable(installDirectory, runtimePackage);
             javaExecutable.toFile().setExecutable(true, false);
             writeMarker(installDirectory, runtimePackage);
-            log(logSink, "Portable Java installed: " + javaExecutable);
+            log(logSink, "Портативная Java установлена: " + javaExecutable);
             return new RuntimeResolution(runtimePackage, javaExecutable);
         } finally {
             Files.deleteIfExists(archiveFile);
@@ -90,7 +90,7 @@ public final class RuntimeSyncService {
         }
 
         throw new IllegalArgumentException(
-            "No runtime package for platform " + platform.getOs() + "/" + platform.getArch() + "."
+            "Для платформы " + platform.getOs() + "/" + platform.getArch() + " не найден пакет runtime."
         );
     }
 
@@ -104,10 +104,10 @@ public final class RuntimeSyncService {
     }
 
     private static void validatePackage(RuntimePackage runtimePackage) {
-        requireText(runtimePackage.getUrl(), "Runtime package url is missing.");
-        requireText(runtimePackage.getSha256(), "Runtime package sha256 is missing.");
-        requireText(runtimePackage.getExtractDir(), "Runtime package extractDir is missing.");
-        requireText(runtimePackage.getJavaPath(), "Runtime package javaPath is missing.");
+        requireText(runtimePackage.getUrl(), "В runtime-пакете не указан url.");
+        requireText(runtimePackage.getSha256(), "В runtime-пакете не указан sha256.");
+        requireText(runtimePackage.getExtractDir(), "В runtime-пакете не указан extractDir.");
+        requireText(runtimePackage.getJavaPath(), "В runtime-пакете не указан javaPath.");
     }
 
     private static boolean isInstalled(Path installDirectory, Path javaExecutable, RuntimePackage runtimePackage)
@@ -142,7 +142,7 @@ public final class RuntimeSyncService {
             StandardOpenOption.TRUNCATE_EXISTING,
             StandardOpenOption.WRITE
         )) {
-            properties.store(outputStream, "Installed portable runtime");
+            properties.store(outputStream, "Установленный портативный runtime");
         }
     }
 
@@ -151,7 +151,7 @@ public final class RuntimeSyncService {
         return DownloadUrlResolver.resolve(
             loadedManifest.getSourceUrl(),
             manifest.getBaseUrl(),
-            requireText(rawUrl, "Runtime package url is missing.")
+            requireText(rawUrl, "В runtime-пакете не указан url.")
         );
     }
 
@@ -160,7 +160,8 @@ public final class RuntimeSyncService {
             long actualSize = Files.size(archiveFile);
             if (actualSize != runtimePackage.getSize().longValue()) {
                 throw new IOException(
-                    "Runtime archive size mismatch. Expected " + runtimePackage.getSize() + ", got " + actualSize + "."
+                    "Размер архива runtime не совпал. Ожидалось " + runtimePackage.getSize()
+                        + ", получено " + actualSize + "."
                 );
             }
         }
@@ -168,8 +169,8 @@ public final class RuntimeSyncService {
         String actualSha256 = ChecksumUtils.sha256(archiveFile);
         if (!actualSha256.equalsIgnoreCase(runtimePackage.getSha256())) {
             throw new IOException(
-                "Runtime archive SHA-256 mismatch. Expected " + runtimePackage.getSha256()
-                    + ", got " + actualSha256 + "."
+                "SHA-256 архива runtime не совпал. Ожидалось " + runtimePackage.getSha256()
+                    + ", получено " + actualSha256 + "."
             );
         }
     }
@@ -204,7 +205,7 @@ public final class RuntimeSyncService {
         String normalized = entryName.replace('\\', '/');
         Path resolved = targetDirectory.resolve(normalized).normalize();
         if (!resolved.startsWith(targetDirectory)) {
-            throw new IllegalArgumentException("Runtime archive contains invalid path: " + entryName);
+            throw new IllegalArgumentException("Архив runtime содержит некорректный путь: " + entryName);
         }
         return resolved;
     }
@@ -214,25 +215,25 @@ public final class RuntimeSyncService {
     }
 
     private static Path resolveInstallDirectory(Path gameDirectory, RuntimePackage runtimePackage) {
-        Path relative = Paths.get(requireText(runtimePackage.getExtractDir(), "Runtime package extractDir is missing."));
+        Path relative = Paths.get(requireText(runtimePackage.getExtractDir(), "В runtime-пакете не указан extractDir."));
         if (relative.isAbsolute()) {
-            throw new IllegalArgumentException("Runtime extractDir must be relative.");
+            throw new IllegalArgumentException("runtime extractDir должен быть относительным.");
         }
         Path resolved = gameDirectory.resolve(relative).normalize();
         if (!resolved.startsWith(gameDirectory)) {
-            throw new IllegalArgumentException("Runtime extractDir escapes game directory.");
+            throw new IllegalArgumentException("runtime extractDir выходит за пределы папки игры.");
         }
         return resolved;
     }
 
     private static Path resolveJavaExecutable(Path installDirectory, RuntimePackage runtimePackage) {
-        Path relative = Paths.get(requireText(runtimePackage.getJavaPath(), "Runtime package javaPath is missing."));
+        Path relative = Paths.get(requireText(runtimePackage.getJavaPath(), "В runtime-пакете не указан javaPath."));
         if (relative.isAbsolute()) {
-            throw new IllegalArgumentException("Runtime javaPath must be relative.");
+            throw new IllegalArgumentException("runtime javaPath должен быть относительным.");
         }
         Path resolved = installDirectory.resolve(relative).normalize();
         if (!resolved.startsWith(installDirectory)) {
-            throw new IllegalArgumentException("Runtime javaPath escapes runtime directory.");
+            throw new IllegalArgumentException("runtime javaPath выходит за пределы папки runtime.");
         }
         return resolved;
     }

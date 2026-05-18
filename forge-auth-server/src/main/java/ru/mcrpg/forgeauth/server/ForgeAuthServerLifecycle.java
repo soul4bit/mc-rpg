@@ -22,7 +22,7 @@ import ru.mcrpg.gameauth.TicketVerificationResult;
 
 final class ForgeAuthServerLifecycle {
 
-    private static final String DISCONNECT_MESSAGE = "Authentication via the ObsidianGate launcher is required.";
+    private static final String DISCONNECT_MESSAGE = "Для входа нужен лаунчер ObsidianGate.";
 
     private final Logger logger;
     private final AuthServerConfig config;
@@ -69,13 +69,13 @@ final class ForgeAuthServerLifecycle {
         Object player = playerBridge.extractPlayerFromEvent(event);
         String username = playerBridge.extractUsername(player);
         if (username.isEmpty()) {
-            logger.warning("Joined player without a readable username. Launcher auth timeout cannot be tracked.");
+            logger.warning("Игрок вошел без читаемого ника. Таймаут авторизации через лаунчер нельзя отследить.");
             return;
         }
 
         authStates.put(normalizeKey(username), new PlayerAuthState(player, username, Instant.now()));
         logger.info(String.format(
-            "Player %s joined. Waiting up to %d seconds for launcher auth proof.",
+            "Игрок %s вошел. Ждем подтверждение авторизации лаунчера до %d секунд.",
             username,
             config.getGraceSeconds()
         ));
@@ -113,7 +113,7 @@ final class ForgeAuthServerLifecycle {
             }
             long elapsedSeconds = Duration.between(state.connectedAt, now).getSeconds();
             if (elapsedSeconds >= config.getGraceSeconds()) {
-                failAndDisconnect(state.username, "No launcher ticket was received in time.");
+                failAndDisconnect(state.username, "Лаунчер не прислал ticket вовремя.");
             }
         }
     }
@@ -122,7 +122,7 @@ final class ForgeAuthServerLifecycle {
         Object player = playerBridge.extractPlayerFromMessageContext(ctx);
         String username = playerBridge.extractUsername(player);
         if (username.isEmpty()) {
-            logger.warning("Received launcher auth packet from a player with unreadable username.");
+            logger.warning("Получен пакет авторизации лаунчера от игрока с нечитаемым ником.");
             return;
         }
 
@@ -131,27 +131,27 @@ final class ForgeAuthServerLifecycle {
         state.player = player;
 
         if (!config.isReady()) {
-            failAndDisconnect(username, "Server auth bridge is not configured.");
+            failAndDisconnect(username, "Серверная авторизация не настроена.");
             return;
         }
 
         if (!message.isComplete()) {
-            failAndDisconnect(username, "Launcher ticket packet is incomplete.");
+            failAndDisconnect(username, "Пакет launcher ticket неполный.");
             return;
         }
 
         if (!config.acceptsServerId(message.getServerId())) {
-            failAndDisconnect(username, "Launcher ticket targeted a different server id.");
+            failAndDisconnect(username, "Launcher ticket выдан для другого serverId.");
             return;
         }
 
         if (state.verified) {
-            logger.info(String.format("Ignoring duplicate launcher auth packet from %s.", username));
+            logger.info(String.format("Повторный пакет авторизации лаунчера от %s пропущен.", username));
             return;
         }
 
         if (state.verificationInFlight) {
-            logger.info(String.format("Ignoring concurrent launcher auth packet from %s.", username));
+            logger.info(String.format("Параллельный пакет авторизации лаунчера от %s пропущен.", username));
             return;
         }
 
@@ -174,11 +174,11 @@ final class ForgeAuthServerLifecycle {
             );
             mainThreadActions.add(() -> applyVerificationResult(key, expectedUsername, result));
         } catch (IOException exception) {
-            logger.log(Level.WARNING, "Launcher ticket verification request failed for " + expectedUsername + ".", exception);
-            mainThreadActions.add(() -> failAndDisconnect(expectedUsername, "Auth API verification request failed."));
+            logger.log(Level.WARNING, "Запрос проверки launcher ticket не удался для " + expectedUsername + ".", exception);
+            mainThreadActions.add(() -> failAndDisconnect(expectedUsername, "Auth API не проверил launcher ticket."));
         } catch (RuntimeException exception) {
-            logger.log(Level.WARNING, "Unexpected launcher auth verification failure for " + expectedUsername + ".", exception);
-            mainThreadActions.add(() -> failAndDisconnect(expectedUsername, "Unexpected launcher auth verification failure."));
+            logger.log(Level.WARNING, "Неожиданная ошибка проверки авторизации лаунчера для " + expectedUsername + ".", exception);
+            mainThreadActions.add(() -> failAndDisconnect(expectedUsername, "Неожиданная ошибка проверки авторизации лаунчера."));
         }
     }
 
@@ -190,18 +190,18 @@ final class ForgeAuthServerLifecycle {
 
         state.verificationInFlight = false;
         if (!result.isValid()) {
-            failAndDisconnect(expectedUsername, "Ticket rejected: " + normalizeReason(result.getReason()));
+            failAndDisconnect(expectedUsername, "Ticket отклонен: " + normalizeReason(result.getReason()));
             return;
         }
 
         if (!expectedUsername.equalsIgnoreCase(result.getUsername())) {
-            failAndDisconnect(expectedUsername, "Ticket belongs to another username.");
+            failAndDisconnect(expectedUsername, "Ticket принадлежит другому нику.");
             return;
         }
 
         state.verified = true;
         logger.info(String.format(
-            "Launcher auth accepted for %s. Role=%s accountId=%s",
+            "Авторизация лаунчера принята для %s. Роль=%s accountId=%s",
             expectedUsername,
             result.getRole(),
             result.getAccountId()
@@ -216,11 +216,11 @@ final class ForgeAuthServerLifecycle {
         }
 
         state.verificationInFlight = false;
-        logger.warning(String.format("Disconnecting %s: %s", state.username, reason));
+        logger.warning(String.format("Отключаем %s: %s", state.username, reason));
         try {
-            playerBridge.disconnectPlayer(state.player, DISCONNECT_MESSAGE);
+            playerBridge.disconnectPlayer(state.player, DISCONNECT_MESSAGE + " Причина: " + reason);
         } catch (RuntimeException exception) {
-            logger.log(Level.WARNING, "Failed to disconnect unauthenticated player " + state.username + ".", exception);
+            logger.log(Level.WARNING, "Не удалось отключить неавторизованного игрока " + state.username + ".", exception);
         }
     }
 
@@ -230,7 +230,25 @@ final class ForgeAuthServerLifecycle {
 
     private static String normalizeReason(String reason) {
         String normalized = reason == null ? "" : reason.trim();
-        return normalized.isEmpty() ? "unknown_reason" : normalized;
+        if (normalized.isEmpty()) {
+            return "неизвестная причина";
+        }
+        if ("invalid".equalsIgnoreCase(normalized)) {
+            return "ticket недействителен";
+        }
+        if ("used".equalsIgnoreCase(normalized)) {
+            return "ticket уже использован";
+        }
+        if ("expired".equalsIgnoreCase(normalized)) {
+            return "ticket истек";
+        }
+        if ("server_mismatch".equalsIgnoreCase(normalized)) {
+            return "ticket выдан для другого сервера";
+        }
+        if ("account_inactive".equalsIgnoreCase(normalized)) {
+            return "аккаунт отключен";
+        }
+        return normalized;
     }
 
     private static ExecutorService newSingleThreadExecutor() {

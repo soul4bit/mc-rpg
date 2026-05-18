@@ -8,7 +8,7 @@ public final class AuthClientException extends IOException {
     private final String errorCode;
 
     public AuthClientException(int statusCode, String errorCode, String message) {
-        super(message == null || message.trim().isEmpty() ? "Authentication request failed." : message.trim());
+        super(message == null || message.trim().isEmpty() ? "Запрос авторизации не удался." : message.trim());
         this.statusCode = statusCode;
         this.errorCode = errorCode == null ? "" : errorCode.trim();
     }

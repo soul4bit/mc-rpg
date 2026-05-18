@@ -70,23 +70,25 @@ final class DownloadUtils {
         if (hasText(responseMessage)) {
             message.append(" ").append(responseMessage.trim());
         }
-        message.append(" while downloading ").append(downloadUrl);
+        message.append(" при загрузке ").append(downloadUrl);
         throw new IOException(message.toString());
     }
 
     private static IOException enrichDownloadFailure(URL downloadUrl, IOException exception) {
         String message = exception.getMessage();
         if (!hasText(message)) {
-            return new IOException("Failed to download " + downloadUrl + ".", exception);
+            return new IOException("Не удалось скачать " + downloadUrl + ".", exception);
         }
 
         String normalizedMessage = message.trim().toLowerCase(Locale.ROOT);
         String normalizedUrl = downloadUrl.toString().toLowerCase(Locale.ROOT);
-        if (normalizedMessage.contains(normalizedUrl) || normalizedMessage.startsWith("failed to download ")) {
+        if (normalizedMessage.contains(normalizedUrl)
+            || normalizedMessage.startsWith("failed to download ")
+            || normalizedMessage.startsWith("не удалось скачать ")) {
             return exception;
         }
 
-        return new IOException("Failed to download " + downloadUrl + ": " + message.trim(), exception);
+        return new IOException("Не удалось скачать " + downloadUrl + ": " + message.trim(), exception);
     }
 
     private static boolean hasText(String value) {

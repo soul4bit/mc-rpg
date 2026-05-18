@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.18-strict-spawn-protect",
+    "version":  "2026.05.18-1853",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -12,10 +12,10 @@
                      "launchTemplate":  ""
                  },
     "launcherUpdate":  {
-                           "version":  "2026.05.18-strict-spawn-protect",
+                           "version":  "2026.05.18-1853",
                            "url":  "client/launcher/obsidian-gate-launcher.jar",
-                           "sha256":  "3c11e95583f097056092a459fa8de1a9219ac7f9e8c54917b9ff72cf20e87836",
-                           "size":  15605650,
+                           "sha256":  "6694f6e69a322e61e7238ba81e316f78cbf0fab72c73be63ec2727c96ca1b889",
+                           "size":  15607453,
                            "required":  false,
                            "artifactVersion":  "0.1.4-test",
                            "fileName":  "obsidian-gate-launcher.jar"
@@ -1106,8 +1106,8 @@
                   },
                   {
                       "path":  "config/obsidiangate-spawn-protection.properties",
-                      "sha256":  "29b1159c19499fab318c13d90369d088633df0291982ae3a785860d4ec6026e9",
-                      "size":  202,
+                      "sha256":  "266b81054d0a440a09077001faba66c830f9c43efceefb8b568030310051654a",
+                      "size":  261,
                       "executable":  false
                   },
                   {
@@ -1124,7 +1124,7 @@
                   },
                   {
                       "path":  "config/primal/primal.cfg",
-                      "sha256":  "fbf49434d80dd5270043f34bb38bd68cc346c48de80361b99c24660056c4e401",
+                      "sha256":  "6aaf6e9c30b2c9b01880bb9f0b9c1a4796362e924b429afcffd70c983e7be9af",
                       "size":  63868,
                       "executable":  false
                   },
@@ -1208,7 +1208,7 @@
                   },
                   {
                       "path":  "config/toughasnails/gameplay.cfg",
-                      "sha256":  "fa7089694916eb5de4a8b29998a588b14cb0629b336981b1ef4dc8738b06c3e6",
+                      "sha256":  "20dacddef3a6098f4ce2e06d01de9c1fedcbc73776162cc777e5f71b8f5b46f1",
                       "size":  963,
                       "executable":  false
                   },
@@ -1579,6 +1579,12 @@
                       "executable":  false
                   },
                   {
+                      "path":  "defaultconfigs/xaero/minimap/xaerominimap.txt",
+                      "sha256":  "0c309c4ba959df678e1bac6ce7f47064f47df51a89680a988def7e65880df201",
+                      "size":  114,
+                      "executable":  false
+                  },
+                  {
                       "path":  "mods/[___MixinCompat-1.1-1.12.2___].jar",
                       "sha256":  "84bf7e2d3debebde099310052b662fc83779947df32f0b2284c6de998e58b353",
                       "size":  867021,
@@ -1928,8 +1934,8 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "63fd01d52b50713db379645052615ede51ca9900f2b69f039ab096793e739bcd",
-                      "size":  28989,
+                      "sha256":  "6195650a7cc4fff4229e161107dfae6fc2dfa83730d176a5d66326beb977af3e",
+                      "size":  29319,
                       "executable":  false
                   },
                   {

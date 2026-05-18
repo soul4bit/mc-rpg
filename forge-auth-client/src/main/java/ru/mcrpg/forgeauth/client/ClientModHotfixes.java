@@ -31,11 +31,11 @@ final class ClientModHotfixes {
             if (!eggColorFlag.getBoolean(null)) {
                 eggColorFlag.setBoolean(null, true);
                 logger.warning(
-                    "Applied Animania egg color hotfix. Dynamic Animania spawn egg colors are disabled to avoid a known client crash on join."
+                    "Применен hotfix цвета яиц Animania. Динамические цвета spawn egg Animania отключены, чтобы избежать известного краша клиента при входе."
                 );
             }
         } catch (ReflectiveOperationException | LinkageError exception) {
-            logger.log(Level.WARNING, "Failed to apply Animania egg color hotfix.", exception);
+            logger.log(Level.WARNING, "Не удалось применить hotfix цвета яиц Animania.", exception);
         }
     }
 }

@@ -127,7 +127,7 @@ public final class AuthApiClient {
             return null;
         }
         if (body.isEmpty()) {
-            throw new IOException("Auth API returned an empty response for " + uri + ".");
+            throw new IOException("Auth API вернул пустой ответ для " + uri + ".");
         }
         return objectMapper.readValue(body, responseType);
     }
@@ -137,13 +137,13 @@ public final class AuthApiClient {
             return httpClient.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            throw new IOException("Auth request was interrupted.", exception);
+            throw new IOException("Запрос авторизации был прерван.", exception);
         }
     }
 
     private AuthClientException decodeError(int statusCode, String body) {
         String errorCode = "request_failed";
-        String message = "Authentication request failed.";
+        String message = "Запрос авторизации не удался.";
 
         if (!body.isEmpty()) {
             try {
@@ -163,7 +163,7 @@ public final class AuthApiClient {
     }
 
     private static URI resolveUri(String baseUrl, String path) throws IOException {
-        String normalizedBase = requireText(baseUrl, "Auth API base URL is not configured.");
+        String normalizedBase = requireText(baseUrl, "Базовый URL Auth API не настроен.");
         String normalizedPath = path == null ? "" : path.trim();
         String separator = normalizedBase.endsWith("/") || normalizedPath.startsWith("/") ? "" : "/";
         String resolved = normalizedBase.endsWith("/") && normalizedPath.startsWith("/")
@@ -172,7 +172,7 @@ public final class AuthApiClient {
         try {
             return new URI(resolved);
         } catch (URISyntaxException exception) {
-            throw new IOException("Invalid auth API URL: " + resolved, exception);
+            throw new IOException("Некорректный URL Auth API: " + resolved, exception);
         }
     }
 

@@ -25,7 +25,7 @@ public class ApiExceptionHandler {
         HttpServletRequest request
     ) {
         FieldError fieldError = exception.getBindingResult().getFieldError();
-        String message = fieldError == null ? "Request body is invalid." : fieldError.getField() + ": " + fieldError.getDefaultMessage();
+        String message = fieldError == null ? "Тело запроса некорректно." : fieldError.getField() + ": " + fieldError.getDefaultMessage();
         return buildResponse(HttpStatus.BAD_REQUEST, "validation_error", message, request.getRequestURI());
     }
 
@@ -34,7 +34,7 @@ public class ApiExceptionHandler {
         return buildResponse(
             HttpStatus.INTERNAL_SERVER_ERROR,
             "internal_error",
-            "Unexpected server error.",
+            "Неожиданная ошибка сервера.",
             request.getRequestURI()
         );
     }

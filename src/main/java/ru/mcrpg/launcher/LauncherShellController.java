@@ -244,7 +244,7 @@ public final class LauncherShellController extends AbstractScreenController {
         currentConfig = LauncherDefaults.applyMissingValues(state().getConfig().copy());
         applyConfigToView(currentConfig);
         applyProfileState();
-        appendLog("Launcher view loaded.");
+        appendLog("Главный экран лаунчера загружен.");
     }
 
     @FXML
@@ -262,10 +262,10 @@ public final class LauncherShellController extends AbstractScreenController {
             Path configFile = context().getConfigStore().getConfigFile().toAbsolutePath().normalize();
             Path target = Files.exists(configFile) ? configFile : configFile.getParent();
             if (target == null) {
-                throw new IOException("Config path is not available.");
+                throw new IOException("Путь к настройкам недоступен.");
             }
             openDesktopPath(target);
-            appendLog("Opened launcher config location: " + target);
+            appendLog("Открыта папка настроек лаунчера: " + target);
         } catch (Exception exception) {
             showLauncherError("Не удалось открыть настройки лаунчера: " + exception.getMessage());
         }
@@ -275,7 +275,7 @@ public final class LauncherShellController extends AbstractScreenController {
         try {
             String location = deriveManifestDirectory(buildCurrentConfig().getManifestUrl());
             openExternalLocation(location);
-            appendLog("Opened launcher source: " + location);
+            appendLog("Открыт источник сборки: " + location);
         } catch (Exception exception) {
             showLauncherError("Не удалось открыть источник сборки: " + exception.getMessage());
         }
@@ -289,7 +289,7 @@ public final class LauncherShellController extends AbstractScreenController {
 
         configureWindowButtons();
         brandLogoLabel.setText(LauncherBrand.APP_TITLE);
-        sidebarVersionLabel.setText("Launcher " + LauncherBrand.displayVersion());
+        sidebarVersionLabel.setText("Лаунчер " + LauncherBrand.displayVersion());
         applyIcons();
 
         previewButton.setOnAction(event -> previewSyncChanges());
@@ -402,14 +402,14 @@ public final class LauncherShellController extends AbstractScreenController {
         LauncherConfig config;
         try {
             config = buildCurrentConfig();
-            requireText(config.getManifestUrl(), "Set manifest URL in the launcher config before syncing.");
+            requireText(config.getManifestUrl(), "Укажи URL manifest.json в настройках лаунчера перед синхронизацией.");
             persistConfig(config, false);
         } catch (Exception exception) {
             showLauncherError(exception.getMessage());
             return;
         }
 
-        appendLog("Sync requested.");
+        appendLog("Запрошена синхронизация.");
         runTask(LauncherAction.SYNC_ONLY, config);
     }
 
@@ -417,17 +417,17 @@ public final class LauncherShellController extends AbstractScreenController {
         LauncherConfig config;
         try {
             config = buildCurrentConfig();
-            requireText(config.getManifestUrl(), "Set manifest URL in the launcher config before previewing sync.");
+            requireText(config.getManifestUrl(), "Укажи URL manifest.json в настройках лаунчера перед предпросмотром.");
         } catch (Exception exception) {
             showLauncherError(exception.getMessage());
             return;
         }
 
-        appendLog("Sync preview requested.");
+        appendLog("Запрошен предпросмотр синхронизации.");
         long requestId = syncPreviewSequence.incrementAndGet();
         setBusy(true);
         applyPreviewLoadingState();
-        updateProgressState(true, "Проверяем локальные файлы", "PREVIEW", ProgressBar.INDETERMINATE_PROGRESS);
+        updateProgressState(true, "Проверяем локальные файлы", "ПРОСМОТР", ProgressBar.INDETERMINATE_PROGRESS);
 
         Task<ModpackSyncPreviewResult> task = new Task<ModpackSyncPreviewResult>() {
             @Override
@@ -454,9 +454,9 @@ public final class LauncherShellController extends AbstractScreenController {
             syncBytesLabel.setText("Предпросмотр не построен.");
             setPreviewSummary("Не удалось сравнить локальные файлы с manifest.files[].");
             setPreviewChanges(
-                createPreviewEmptyState(exception == null ? "Preview failed." : exception.getMessage())
+                createPreviewEmptyState(exception == null ? "Предпросмотр не удался." : exception.getMessage())
             );
-            showLauncherError(exception == null ? "Preview failed." : exception.getMessage());
+            showLauncherError(exception == null ? "Предпросмотр не удался." : exception.getMessage());
         });
 
         Thread thread = new Thread(task, "launcher-shell-preview");
@@ -481,7 +481,7 @@ public final class LauncherShellController extends AbstractScreenController {
         }
 
         if (shouldSyncBeforeLaunch(config)) {
-            appendLog("Auto update is enabled. Files will sync before launch.");
+            appendLog("Автообновление включено: файлы будут синхронизированы перед запуском.");
         }
 
         runTask(LauncherAction.SYNC_AND_LAUNCH, config);
@@ -499,13 +499,13 @@ public final class LauncherShellController extends AbstractScreenController {
         LauncherConfig config;
         try {
             config = buildCurrentConfig();
-            requireText(config.getManifestUrl(), "Set manifest URL in the launcher config before checking updates.");
+            requireText(config.getManifestUrl(), "Укажи URL manifest.json в настройках лаунчера перед проверкой обновлений.");
         } catch (Exception exception) {
             showLauncherError(exception.getMessage());
             return;
         }
 
-        appendLog("Launcher update check requested.");
+        appendLog("Запрошена проверка обновления лаунчера.");
         applyLauncherUpdateFooterChecking();
         refreshEndpointPreviewAsync(config);
     }
@@ -513,19 +513,19 @@ public final class LauncherShellController extends AbstractScreenController {
     private void updateLauncher() {
         LauncherUpdateCandidate update = availableLauncherUpdate;
         if (update == null) {
-            showLauncherError("Launcher update is not available.");
+            showLauncherError("Обновление лаунчера недоступно.");
             return;
         }
         if (!update.isInstallSupported()) {
-            showLauncherError("Auto-update works only when launcher is running from a jar file.");
+            showLauncherError("Автообновление работает только при запуске лаунчера из jar-файла.");
             return;
         }
 
         setBusy(true);
         launcherUpdateButton.setDisable(true);
-        updateProgressState(true, "Скачиваем обновление лаунчера", "UPDATE", ProgressBar.INDETERMINATE_PROGRESS);
+        updateProgressState(true, "Скачиваем обновление лаунчера", "ОБНОВЛЕНИЕ", ProgressBar.INDETERMINATE_PROGRESS);
         syncFileLabel.setText("После установки лаунчер перезапустится автоматически.");
-        appendLog("Launcher update requested: " + update.getVersion() + ".");
+        appendLog("Запрошено обновление лаунчера: " + update.getVersion() + ".");
 
         Task<Void> task = new Task<Void>() {
             @Override
@@ -536,7 +536,7 @@ public final class LauncherShellController extends AbstractScreenController {
         };
 
         task.setOnSucceeded(event -> {
-            appendLog("Launcher update downloaded. Exiting for restart.");
+            appendLog("Обновление лаунчера скачано. Перезапускаемся.");
             Platform.exit();
             System.exit(0);
         });
@@ -588,7 +588,8 @@ public final class LauncherShellController extends AbstractScreenController {
                     Path sessionFile = context().getSessionFileWriter().write(effectiveConfig, reconnectTickets);
                     effectiveConfig.setUsername(effectiveSession.getAccount().getUsername());
                     appendLogAsync(
-                        "Prepared " + reconnectTickets.size() + " launcher reconnect tickets for " + gameTicket.getUsername() + "."
+                        "Подготовлено билетов переподключения: " + reconnectTickets.size()
+                            + " для " + gameTicket.getUsername() + "."
                     );
                     command = commandBuilder.build(
                         effectiveConfig,
@@ -602,16 +603,16 @@ public final class LauncherShellController extends AbstractScreenController {
 
                     try {
                         serverListWriter.upsert(effectiveConfig);
-                        appendLogAsync("Saved Minecraft server entry: " + effectiveConfig.getServerHost() + ":" + effectiveConfig.getServerPort());
+                        appendLogAsync("Сохранена запись сервера Minecraft: " + effectiveConfig.getServerHost() + ":" + effectiveConfig.getServerPort());
                     } catch (IOException | IllegalArgumentException exception) {
-                        appendLogAsync("Minecraft server list update skipped: " + exception.getMessage());
+                        appendLogAsync("Список серверов Minecraft не обновлен: " + exception.getMessage());
                     }
 
                     ensureRequiredResourcePack(effectiveConfig);
                     Path workingDirectory = resolveWorkingDirectory(effectiveConfig);
-                    appendLogAsync("Launch command: " + commandBuilder.preview(command));
+                    appendLogAsync("Команда запуска: " + commandBuilder.preview(command));
                     if (workingDirectory != null) {
-                        appendLogAsync("Working directory: " + workingDirectory.toAbsolutePath());
+                        appendLogAsync("Рабочая папка: " + workingDirectory.toAbsolutePath());
                     }
 
                     exitCode = Integer.valueOf(runProcess(command, workingDirectory));
@@ -641,10 +642,10 @@ public final class LauncherShellController extends AbstractScreenController {
                 }
 
                 if (result.exitCode != null) {
-                    appendLog("Client process exited with code " + result.exitCode + ".");
+                    appendLog("Клиент завершился с кодом " + result.exitCode + ".");
                 }
             } catch (IOException exception) {
-                showLauncherError("Failed to save launcher state: " + exception.getMessage());
+                showLauncherError("Не удалось сохранить состояние лаунчера: " + exception.getMessage());
             }
         });
 
@@ -656,7 +657,7 @@ public final class LauncherShellController extends AbstractScreenController {
             }
             updateProgressState(false, "Операция завершилась ошибкой", "ОШИБКА", 0.0d);
             syncBytesLabel.setText("Подробности смотрите в журнале лаунчера.");
-            showLauncherError(exception == null ? "Unknown launcher error." : exception.getMessage());
+            showLauncherError(exception == null ? "Неизвестная ошибка лаунчера." : exception.getMessage());
         });
 
         task.setOnCancelled(event -> {
@@ -701,12 +702,12 @@ public final class LauncherShellController extends AbstractScreenController {
         updateModpackSizeValue(formatManifestSize(previewResult.getManifest()));
 
         if (downloadFiles <= 0) {
-            updateProgressState(false, "Локальные файлы актуальны", "PREVIEW", 0.0d);
+            updateProgressState(false, "Локальные файлы актуальны", "ПРОСМОТР", 0.0d);
             syncFileLabel.setText("Все manifest.files[] уже совпадают с локальной сборкой.");
             syncBytesLabel.setText("К скачиванию 0 B");
             setPreviewSummary(
                 "Manifest " + manifestVersion + ": все " + totalFiles
-                    + " файлов актуальны. Preview сравнивает только manifest.files[]."
+                    + " файлов актуальны. Предпросмотр сравнивает только manifest.files[]."
             );
             setPreviewChanges(
                 createPreviewEmptyState("Изменений не найдено. Синхронизация скачает 0 файлов.")
@@ -714,12 +715,12 @@ public final class LauncherShellController extends AbstractScreenController {
             return;
         }
 
-        updateProgressState(false, "Нужна синхронизация", "PREVIEW", 0.0d);
+        updateProgressState(false, "Нужна синхронизация", "ПРОСМОТР", 0.0d);
         syncFileLabel.setText("Найдено " + downloadFiles + " файлов для обновления до запуска.");
         syncBytesLabel.setText("К скачиванию " + formatBytes(previewResult.getDownloadBytes()));
         setPreviewSummary(
             "Manifest " + manifestVersion + ": " + downloadFiles + " из " + totalFiles
-                + " файлов требуют sync, актуальны " + reusedFiles + "."
+                + " файлов требуют синхронизации, актуальны " + reusedFiles + "."
         );
         renderPreviewChanges(previewResult.getEntries(), downloadFiles);
     }
@@ -727,7 +728,7 @@ public final class LauncherShellController extends AbstractScreenController {
     private void applyPreviewFromSyncResult(ModpackSyncResult syncResult) {
         setPreviewSummary(
             "Manifest " + resolveManifestVersion(syncResult.getManifest())
-                + ": sync завершен, локальная копия должна совпадать с manifest.files[]."
+                + ": синхронизация завершена, локальная копия должна совпадать с manifest.files[]."
         );
         setPreviewChanges(
             createPreviewEmptyState("Последняя синхронизация завершена. Для перепроверки запустите предпросмотр снова.")
@@ -737,14 +738,14 @@ public final class LauncherShellController extends AbstractScreenController {
     private void applyPreviewLoadingState() {
         setPreviewSummary("Проверяем sha256 локальных файлов и сравниваем их с manifest.files[].");
         setPreviewChanges(
-            createPreviewEmptyState("Сканируем game directory и строим список изменений...")
+            createPreviewEmptyState("Сканируем папку игры и строим список изменений...")
         );
     }
 
     private void resetPreviewState() {
         setPreviewSummary("Предпросмотр ещё не запускался.");
         setPreviewChanges(
-            createPreviewEmptyState("Нажмите «Предпросмотр», чтобы заранее увидеть изменения перед sync.")
+            createPreviewEmptyState("Нажмите «Предпросмотр», чтобы заранее увидеть изменения перед синхронизацией.")
         );
     }
 
@@ -811,12 +812,12 @@ public final class LauncherShellController extends AbstractScreenController {
         reasonLabel.getStyleClass().add("sync-preview-detail");
         reasonLabel.setWrapText(true);
 
-        Label targetLabel = new Label("Target: " + normalizeText(entry.getTargetPath()));
+        Label targetLabel = new Label("Куда: " + normalizeText(entry.getTargetPath()));
         targetLabel.getStyleClass().add("sync-preview-detail");
         targetLabel.setWrapText(true);
 
         HBox metaRow = new HBox(14.0);
-        metaRow.getChildren().add(createPreviewMeta("SIZE", formatBytes(entry.getSize() == null ? 0L : entry.getSize().longValue())));
+        metaRow.getChildren().add(createPreviewMeta("РАЗМЕР", formatBytes(entry.getSize() == null ? 0L : entry.getSize().longValue())));
         metaRow.getChildren().add(createPreviewMeta("SHA", shortenHash(entry.getSha256())));
 
         card.getChildren().addAll(titleRow, reasonLabel, targetLabel, metaRow);
@@ -927,7 +928,7 @@ public final class LauncherShellController extends AbstractScreenController {
                 : "Доступно обновление лаунчера"
         );
         launcherUpdateDescriptionLabel.setText(
-            "Текущая версия: " + valueOrFallback(update.getCurrentVersion(), "unknown")
+            "Текущая версия: " + valueOrFallback(update.getCurrentVersion(), "неизвестна")
                 + ". Новая версия: " + update.getVersion() + "."
         );
         launcherUpdateButton.setDisable(!update.isInstallSupported());
@@ -956,7 +957,7 @@ public final class LauncherShellController extends AbstractScreenController {
     }
 
     private void applyLauncherUpdateFooterUpToDate() {
-        applyLauncherUpdateFooter("Launcher актуален", "check-circle", "#22c55e");
+        applyLauncherUpdateFooter("Лаунчер актуален", "check-circle", "#22c55e");
     }
 
     private void applyLauncherUpdateFooterAvailable(LauncherUpdateCandidate update) {
@@ -1040,7 +1041,7 @@ public final class LauncherShellController extends AbstractScreenController {
                 updateServerPresence("Оффлайн", "offline");
                 updateOnlinePlayersValue(DASHBOARD_UNKNOWN);
                 updateServerDetailValues(DASHBOARD_UNKNOWN, DASHBOARD_UNKNOWN);
-                appendLog("No response from " + route + ".");
+                appendLog("Нет ответа от " + route + ".");
             });
         }, "launcher-shell-presence");
 
@@ -1131,10 +1132,10 @@ public final class LauncherShellController extends AbstractScreenController {
         try {
             Path gameDirectory = resolveGameDirectory(config);
             if (MinecraftResourcePackOptions.ensureEnabled(gameDirectory, REQUIRED_RESOURCE_PACK)) {
-                appendLogAsync("Enabled required resource pack: " + REQUIRED_RESOURCE_PACK);
+                appendLogAsync("Обязательный ресурс-пак включен: " + REQUIRED_RESOURCE_PACK);
             }
         } catch (IOException | IllegalArgumentException exception) {
-            appendLogAsync("Required resource pack setup skipped: " + exception.getMessage());
+            appendLogAsync("Настройка обязательного ресурс-пака пропущена: " + exception.getMessage());
         }
     }
 
@@ -1148,25 +1149,25 @@ public final class LauncherShellController extends AbstractScreenController {
 
     private void openDesktopPath(Path target) throws IOException {
         if (!Desktop.isDesktopSupported()) {
-            throw new IOException("Desktop integration is not supported.");
+            throw new IOException("Открытие через рабочий стол не поддерживается.");
         }
         Desktop desktop = Desktop.getDesktop();
         if (!desktop.isSupported(Desktop.Action.OPEN)) {
-            throw new IOException("Opening files is not supported.");
+            throw new IOException("Открытие файлов не поддерживается.");
         }
         desktop.open(target.toFile());
     }
 
     private void openExternalLocation(String location) throws Exception {
         if (!hasText(location)) {
-            throw new IOException("Location is not configured.");
+            throw new IOException("Адрес не настроен.");
         }
         if (!Desktop.isDesktopSupported()) {
-            throw new IOException("Desktop integration is not supported.");
+            throw new IOException("Открытие через рабочий стол не поддерживается.");
         }
         Desktop desktop = Desktop.getDesktop();
         if (!desktop.isSupported(Desktop.Action.BROWSE)) {
-            throw new IOException("Opening links is not supported.");
+            throw new IOException("Открытие ссылок не поддерживается.");
         }
         desktop.browse(new URI(location.trim()));
     }
@@ -1273,7 +1274,7 @@ public final class LauncherShellController extends AbstractScreenController {
     }
 
     private void showLauncherError(String message) {
-        appendLog("Error: " + message);
+        appendLog("Ошибка: " + message);
         showError(message);
     }
 
@@ -1289,7 +1290,7 @@ public final class LauncherShellController extends AbstractScreenController {
         if (normalized.contains("connection refused")) {
             return "Сервер обновлений отклонил соединение.";
         }
-        return "Проверьте manifest launcherUpdate и доступность файла лаунчера.";
+        return "Проверьте launcherUpdate в manifest и доступность файла лаунчера.";
     }
 
     private String resolveLauncherUpdateFailureMessage(Throwable exception, LauncherUpdateCandidate update) {
@@ -1330,7 +1331,7 @@ public final class LauncherShellController extends AbstractScreenController {
         updateProgressState(false, "Требуется повторный вход", "СЕССИЯ", 0.0d);
         syncFileLabel.setText(message);
         syncBytesLabel.setText("Сохраненная сессия сброшена. Авторизуйтесь снова.");
-        appendLog("Saved session expired. Redirecting to login.");
+        appendLog("Сохраненная сессия истекла. Открываем вход.");
         router().open(ScreenRouter.Screen.AUTH);
         return true;
     }
@@ -1343,7 +1344,7 @@ public final class LauncherShellController extends AbstractScreenController {
                 return null;
             }
             if (!Files.isDirectory(gameDirectory)) {
-                throw new IllegalArgumentException("Game directory was not found: " + gameDirectory);
+                throw new IllegalArgumentException("Папка игры не найдена: " + gameDirectory);
             }
             return gameDirectory;
         }
@@ -1357,7 +1358,7 @@ public final class LauncherShellController extends AbstractScreenController {
         }
 
         if (!Files.isDirectory(workingDirectory)) {
-            throw new IllegalArgumentException("Working directory was not found: " + workingDirectory);
+            throw new IllegalArgumentException("Рабочая папка не найдена: " + workingDirectory);
         }
         return workingDirectory;
     }
@@ -1375,7 +1376,7 @@ public final class LauncherShellController extends AbstractScreenController {
 
     private static String deriveManifestDirectory(String manifestUrl) {
         if (!hasText(manifestUrl)) {
-            return "Manifest URL is not configured.";
+            return "URL manifest не настроен.";
         }
         String resolved = manifestUrl.trim();
         int separator = resolved.lastIndexOf('/');
@@ -1476,32 +1477,32 @@ public final class LauncherShellController extends AbstractScreenController {
 
     private static String resolvePreviewCategory(String path) {
         if (!hasText(path)) {
-            return "file";
+            return "файл";
         }
         String normalized = path.trim().replace('\\', '/').toLowerCase(Locale.ROOT);
         if (normalized.startsWith("mods/")) {
-            return "mod";
+            return "мод";
         }
         if (normalized.startsWith("config/")) {
-            return "config";
+            return "конфиг";
         }
         if (normalized.startsWith("resourcepacks/")) {
-            return "assets";
+            return "ресурсы";
         }
-        return "file";
+        return "файл";
     }
 
     private static String resolvePreviewReasonLabel(String reason) {
         if ("missing".equals(reason)) {
-            return "missing";
+            return "нет";
         }
         if ("sha256-mismatch".equals(reason)) {
-            return "replace";
+            return "замена";
         }
         if ("size-mismatch".equals(reason)) {
-            return "replace";
+            return "замена";
         }
-        return "ready";
+        return "готово";
     }
 
     private static String resolvePreviewReasonText(String reason) {

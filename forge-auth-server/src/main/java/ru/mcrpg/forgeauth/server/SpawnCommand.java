@@ -27,7 +27,7 @@ final class SpawnCommand {
             Method registerMethod = event.getClass().getMethod("registerServerCommand", commandType);
             registerMethod.invoke(event, command);
         } catch (ReflectiveOperationException exception) {
-            throw new IllegalStateException("Unable to register /spawn command.", exception);
+            throw new IllegalStateException("Не удалось зарегистрировать команду /spawn.", exception);
         }
     }
 
@@ -185,13 +185,13 @@ final class SpawnCommand {
             return;
         }
 
-        throw new IllegalStateException("Missing teleport method.");
+        throw new IllegalStateException("Не найден метод телепортации.");
     }
 
     private static double readBlockCoordinate(Object blockPos, String deobfuscatedName, String srgName) {
         Object value = invokeZeroArg(blockPos, deobfuscatedName, srgName);
         if (!(value instanceof Number)) {
-            throw new IllegalStateException("BlockPos coordinate is not numeric.");
+            throw new IllegalStateException("Координата BlockPos не является числом.");
         }
         return ((Number) value).doubleValue();
     }
@@ -199,7 +199,7 @@ final class SpawnCommand {
     private static Object invokeZeroArg(Object target, String... methodNames) {
         Object value = invokeZeroArgIfPresent(target, methodNames);
         if (value == null) {
-            throw new IllegalStateException("Missing method " + String.join("/", methodNames) + ".");
+            throw new IllegalStateException("Не найден метод " + String.join("/", methodNames) + ".");
         }
         return value;
     }
@@ -211,7 +211,7 @@ final class SpawnCommand {
     private static Object invoke(Object target, Object[] args, String... methodNames) {
         Object value = invokeIfPresent(target, args, methodNames);
         if (value == null) {
-            throw new IllegalStateException("Missing method " + String.join("/", methodNames) + ".");
+            throw new IllegalStateException("Не найден метод " + String.join("/", methodNames) + ".");
         }
         return value;
     }
@@ -229,7 +229,7 @@ final class SpawnCommand {
                         method.setAccessible(true);
                         return method.invoke(target, safeArgs);
                     } catch (ReflectiveOperationException exception) {
-                        throw new IllegalStateException("Failed to invoke " + method.getName() + ".", exception);
+                        throw new IllegalStateException("Не удалось вызвать " + method.getName() + ".", exception);
                     }
                 }
             }
@@ -252,7 +252,7 @@ final class SpawnCommand {
                         method.invoke(target, safeArgs);
                         return true;
                     } catch (ReflectiveOperationException exception) {
-                        throw new IllegalStateException("Failed to invoke " + method.getName() + ".", exception);
+                        throw new IllegalStateException("Не удалось вызвать " + method.getName() + ".", exception);
                     }
                 }
             }
@@ -331,7 +331,7 @@ final class SpawnCommand {
             field.setAccessible(true);
             return field.get(target);
         } catch (ReflectiveOperationException exception) {
-            throw new IllegalStateException("Failed to read field " + field.getName() + ".", exception);
+            throw new IllegalStateException("Не удалось прочитать поле " + field.getName() + ".", exception);
         }
     }
 
@@ -362,7 +362,7 @@ final class SpawnCommand {
             field.setAccessible(true);
             field.set(target, value);
         } catch (ReflectiveOperationException exception) {
-            throw new IllegalStateException("Failed to set field " + field.getName() + ".", exception);
+            throw new IllegalStateException("Не удалось записать поле " + field.getName() + ".", exception);
         }
     }
 

@@ -19,7 +19,7 @@ final class DownloadUrlResolver {
     }
 
     static URL resolve(URL baseUrl, String rawUrl) throws IOException {
-        String value = requireText(rawUrl, "Download URL is missing.");
+        String value = requireText(rawUrl, "URL загрузки не указан.");
         if (looksAbsoluteUrl(value)) {
             return new URL(value);
         }
@@ -27,7 +27,7 @@ final class DownloadUrlResolver {
     }
 
     static String encodeRelativePath(String rawPath) {
-        String normalizedPath = requireText(rawPath, "Download path is missing.").replace('\\', '/');
+        String normalizedPath = requireText(rawPath, "Путь загрузки не указан.").replace('\\', '/');
         String[] segments = normalizedPath.split("/", -1);
         StringBuilder encoded = new StringBuilder();
         for (int index = 0; index < segments.length; index++) {

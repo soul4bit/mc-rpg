@@ -9,7 +9,7 @@ import java.time.Instant;
 
 record RegisterRequest(
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z0-9_]{3,16}$", message = "must match [A-Za-z0-9_]{3,16}")
+    @Pattern(regexp = "^[A-Za-z0-9_]{3,16}$", message = "ник должен содержать 3-16 символов: A-Z, a-z, 0-9 или _")
     String username,
     @NotBlank
     @Email

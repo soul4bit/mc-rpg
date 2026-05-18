@@ -2,7 +2,7 @@
   {
     "modid": "obsidiangateauthclient",
     "name": "ObsidianGate Auth Client",
-    "description": "Client-side launcher ticket bridge for ObsidianGate.",
+    "description": "Клиентский мост launcher ticket для ObsidianGate.",
     "version": "${project.version}",
     "mcversion": "1.12.2",
     "url": "https://github.com/soul4bit/ObsidianGate",

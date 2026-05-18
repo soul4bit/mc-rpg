@@ -40,10 +40,10 @@ public final class MinecraftServerListWriter {
 
     public void upsert(LauncherConfig config) throws IOException {
         if (config == null) {
-            throw new IllegalArgumentException("Launcher config is not available.");
+            throw new IllegalArgumentException("Конфиг лаунчера недоступен.");
         }
 
-        Path gameDirectory = Paths.get(requireText(config.getGameDirectory(), "Game directory is not configured."))
+        Path gameDirectory = Paths.get(requireText(config.getGameDirectory(), "Папка игры не настроена."))
             .toAbsolutePath()
             .normalize();
         Files.createDirectories(gameDirectory);
@@ -84,10 +84,10 @@ public final class MinecraftServerListWriter {
     }
 
     private static String resolveAddress(LauncherConfig config) {
-        String host = requireText(config.getServerHost(), "Server host is not configured.");
+        String host = requireText(config.getServerHost(), "Хост сервера не настроен.");
         int port = config.getServerPort();
         if (port < 1 || port > 65535) {
-            throw new IllegalArgumentException("Server port is out of range: " + port);
+            throw new IllegalArgumentException("Порт сервера вне допустимого диапазона: " + port);
         }
         return host + ":" + port;
     }
@@ -142,7 +142,7 @@ public final class MinecraftServerListWriter {
             try (DataInputStream input = new DataInputStream(new BufferedInputStream(payloadInput))) {
                 byte type = readType(input);
                 if (type != TAG_COMPOUND) {
-                    throw new IOException("servers.dat root tag is not a compound.");
+                    throw new IOException("Корневой tag servers.dat не является compound.");
                 }
                 input.readUTF();
                 return readCompound(input);
@@ -200,7 +200,7 @@ public final class MinecraftServerListWriter {
             case TAG_LONG_ARRAY:
                 return new LongArrayTag(readLongArray(input));
             default:
-                throw new IOException("Unsupported NBT tag type: " + type);
+                throw new IOException("Неподдерживаемый тип NBT tag: " + type);
         }
     }
 
@@ -243,7 +243,7 @@ public final class MinecraftServerListWriter {
                 writeLongArray(((LongArrayTag) tag).getValue(), output);
                 return;
             default:
-                throw new IOException("Unsupported NBT tag type: " + tag.typeId());
+                throw new IOException("Неподдерживаемый тип NBT tag: " + tag.typeId());
         }
     }
 
@@ -272,7 +272,7 @@ public final class MinecraftServerListWriter {
         byte elementType = readType(input);
         int length = input.readInt();
         if (length < 0) {
-            throw new IOException("Negative NBT list length.");
+            throw new IOException("Отрицательная длина NBT list.");
         }
 
         List<Tag> values = new ArrayList<Tag>(length);
@@ -293,7 +293,7 @@ public final class MinecraftServerListWriter {
     private static byte[] readByteArray(DataInputStream input) throws IOException {
         int length = input.readInt();
         if (length < 0) {
-            throw new IOException("Negative NBT byte array length.");
+            throw new IOException("Отрицательная длина NBT byte array.");
         }
         byte[] value = new byte[length];
         input.readFully(value);
@@ -308,7 +308,7 @@ public final class MinecraftServerListWriter {
     private static int[] readIntArray(DataInputStream input) throws IOException {
         int length = input.readInt();
         if (length < 0) {
-            throw new IOException("Negative NBT int array length.");
+            throw new IOException("Отрицательная длина NBT int array.");
         }
         int[] value = new int[length];
         for (int index = 0; index < length; index++) {
@@ -327,7 +327,7 @@ public final class MinecraftServerListWriter {
     private static long[] readLongArray(DataInputStream input) throws IOException {
         int length = input.readInt();
         if (length < 0) {
-            throw new IOException("Negative NBT long array length.");
+            throw new IOException("Отрицательная длина NBT long array.");
         }
         long[] value = new long[length];
         for (int index = 0; index < length; index++) {
@@ -526,13 +526,13 @@ public final class MinecraftServerListWriter {
 
         private void add(int index, Tag value) {
             if (value == null) {
-                throw new IllegalArgumentException("NBT list value is required.");
+                throw new IllegalArgumentException("Значение NBT list обязательно.");
             }
             if (values.isEmpty() && elementType == TAG_END) {
                 elementType = value.typeId();
             }
             if (elementType != value.typeId()) {
-                throw new IllegalArgumentException("NBT list element type mismatch.");
+                throw new IllegalArgumentException("Тип элемента NBT list не совпадает.");
             }
             values.add(index, value);
         }
@@ -569,7 +569,7 @@ public final class MinecraftServerListWriter {
 
         private void put(String name, Tag value) {
             if (name == null || value == null) {
-                throw new IllegalArgumentException("NBT compound entry is incomplete.");
+                throw new IllegalArgumentException("Запись NBT compound неполная.");
             }
             entries.put(name, value);
         }

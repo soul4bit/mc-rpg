@@ -31,7 +31,7 @@ final class KitCommand {
             Method registerMethod = event.getClass().getMethod("registerServerCommand", commandType);
             registerMethod.invoke(event, command);
         } catch (ReflectiveOperationException exception) {
-            throw new IllegalStateException("Unable to register /kit command.", exception);
+            throw new IllegalStateException("Не удалось зарегистрировать команду /kit.", exception);
         }
     }
 
@@ -151,12 +151,12 @@ final class KitCommand {
             Class<?> stackType = Class.forName("net.minecraft.item.ItemStack");
             Object item = invokeStatic(itemType, new Object[] { itemId }, "getByNameOrId", "func_111206_d");
             if (item == null) {
-                throw new IllegalStateException("Unknown item: " + itemId);
+                throw new IllegalStateException("Неизвестный предмет: " + itemId);
             }
             Constructor<?> constructor = stackType.getConstructor(itemType, Integer.TYPE);
             return constructor.newInstance(item, Integer.valueOf(count));
         } catch (ReflectiveOperationException exception) {
-            throw new IllegalStateException("Unable to create item stack " + itemId + ".", exception);
+            throw new IllegalStateException("Не удалось создать stack предмета " + itemId + ".", exception);
         }
     }
 
@@ -177,17 +177,17 @@ final class KitCommand {
 
             invokeRequiredMethod(stack, new Object[] { "display", display }, "setTagInfo", "func_77983_a");
             if (!nbtBaseType.isInstance(display)) {
-                throw new IllegalStateException("Display tag is not an NBT tag.");
+                throw new IllegalStateException("Display tag не является NBT tag.");
             }
         } catch (ReflectiveOperationException exception) {
-            throw new IllegalStateException("Unable to add kit item signature.", exception);
+            throw new IllegalStateException("Не удалось добавить подпись предмета из кита.", exception);
         }
     }
 
     private static int giveItems(Object player, List<Object> items) {
         Object inventory = readFieldIfPresent(player, "inventory", "field_71071_by");
         if (inventory == null) {
-            throw new IllegalStateException("Player inventory is unavailable.");
+            throw new IllegalStateException("Инвентарь игрока недоступен.");
         }
 
         int dropped = 0;
@@ -197,7 +197,7 @@ final class KitCommand {
                 continue;
             }
             if (!dropItem(player, stack)) {
-                throw new IllegalStateException("Player inventory is full and item dropping is unavailable.");
+                throw new IllegalStateException("Инвентарь игрока заполнен, а выбросить предмет рядом не удалось.");
             }
             dropped++;
         }
@@ -262,14 +262,14 @@ final class KitCommand {
     private static Object invokeStatic(Class<?> type, Object[] args, String... methodNames) {
         Object result = invokeIfPresent(type, null, args, methodNames);
         if (result == null) {
-            throw new IllegalStateException("Missing method " + String.join("/", methodNames) + ".");
+            throw new IllegalStateException("Не найден метод " + String.join("/", methodNames) + ".");
         }
         return result;
     }
 
     private static void invokeRequiredMethod(Object target, Object[] args, String... methodNames) {
         if (!invokeMethodIfPresent(target, args, methodNames)) {
-            throw new IllegalStateException("Missing method " + String.join("/", methodNames) + ".");
+            throw new IllegalStateException("Не найден метод " + String.join("/", methodNames) + ".");
         }
     }
 
@@ -290,7 +290,7 @@ final class KitCommand {
                         method.setAccessible(true);
                         return method.invoke(target, safeArgs);
                     } catch (ReflectiveOperationException exception) {
-                        throw new IllegalStateException("Failed to invoke " + method.getName() + ".", exception);
+                        throw new IllegalStateException("Не удалось вызвать " + method.getName() + ".", exception);
                     }
                 }
             }
@@ -313,7 +313,7 @@ final class KitCommand {
                         method.invoke(target, safeArgs);
                         return true;
                     } catch (ReflectiveOperationException exception) {
-                        throw new IllegalStateException("Failed to invoke " + method.getName() + ".", exception);
+                        throw new IllegalStateException("Не удалось вызвать " + method.getName() + ".", exception);
                     }
                 }
             }

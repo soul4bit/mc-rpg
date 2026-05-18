@@ -1,0 +1,2 @@
+defaultWaypointTPCommandFormat:/wptp {x} {y} {z}
+defaultWaypointTPCommandRotationFormat:/wptp {x} {y} {z} {yaw} ~

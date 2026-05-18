@@ -94,7 +94,7 @@ public final class LauncherConfigStore {
         }
 
         try (OutputStream outputStream = Files.newOutputStream(configFile)) {
-            properties.store(outputStream, "ObsidianGate launcher settings");
+            properties.store(outputStream, "Настройки лаунчера ObsidianGate");
         }
     }
 

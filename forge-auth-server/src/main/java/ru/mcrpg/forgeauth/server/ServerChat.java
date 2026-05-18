@@ -66,7 +66,7 @@ final class ServerChat {
                         method.setAccessible(true);
                         return method.invoke(target, safeArgs);
                     } catch (ReflectiveOperationException exception) {
-                        throw new IllegalStateException("Failed to invoke " + method.getName() + ".", exception);
+                        throw new IllegalStateException("Не удалось вызвать " + method.getName() + ".", exception);
                     }
                 }
             }

@@ -21,20 +21,20 @@ public class RequestAuthService {
         String token = extractBearerToken(authorizationHeader);
         UUID accountId = jwtService.parseAccessToken(token);
         AccountEntity account = accountRepository.findById(accountId)
-            .orElseThrow(() -> ApiException.unauthorized("invalid_token", "Account was not found for the access token."));
+            .orElseThrow(() -> ApiException.unauthorized("invalid_token", "Аккаунт для access token не найден."));
         if (!"active".equalsIgnoreCase(account.getStatus())) {
-            throw ApiException.forbidden("account_inactive", "Account is not active.");
+            throw ApiException.forbidden("account_inactive", "Аккаунт отключен.");
         }
         return account;
     }
 
     private static String extractBearerToken(String authorizationHeader) {
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw ApiException.unauthorized("missing_token", "Bearer access token is required.");
+            throw ApiException.unauthorized("missing_token", "Нужен авторизационный token Bearer.");
         }
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         if (token.isEmpty()) {
-            throw ApiException.unauthorized("missing_token", "Bearer access token is required.");
+            throw ApiException.unauthorized("missing_token", "Нужен авторизационный token Bearer.");
         }
         return token;
     }

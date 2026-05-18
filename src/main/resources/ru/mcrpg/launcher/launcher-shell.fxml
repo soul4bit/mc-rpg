@@ -93,7 +93,7 @@
                     </padding>
                     <children>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="sidebarVersionLabel" styleClass="top-meta" text="Launcher"/>
+                        <Label fx:id="sidebarVersionLabel" styleClass="top-meta" text="Лаунчер"/>
                         <Button fx:id="minimizeWindowButton" mnemonicParsing="false" onAction="#minimizeWindow"
                                 styleClass="window-button" text="_"/>
                         <Button fx:id="maximizeWindowButton" mnemonicParsing="false" onAction="#toggleMaximizeWindow"
@@ -385,7 +385,7 @@
                             <children>
                                 <Label fx:id="launcherUpdateStatusIconLabel" styleClass="launcher-footer-status-icon"/>
                                 <Label fx:id="launcherUpdateStatusLabel" styleClass="launcher-footer-status-text"
-                                       text="Launcher актуален"/>
+                                       text="Лаунчер актуален"/>
                             </children>
                         </HBox>
                         <Region HBox.hgrow="ALWAYS"/>
