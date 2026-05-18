@@ -157,31 +157,35 @@ final class SpawnCommand {
 
     private static void teleport(Object player, double x, double y, double z, float yaw, float pitch) {
         Object connection = readFieldIfPresent(player, "connection", "field_71135_a");
-        if (connection != null && invokeIfPresent(connection, new Object[] {
+        if (connection != null && invokeMethodIfPresent(connection, new Object[] {
             Double.valueOf(x),
             Double.valueOf(y),
             Double.valueOf(z),
             Float.valueOf(yaw),
             Float.valueOf(pitch)
-        }, "setPlayerLocation", "func_147364_a") != null) {
+        }, "setPlayerLocation", "func_147364_a")) {
             return;
         }
 
-        if (invokeIfPresent(player, new Object[] {
+        if (invokeMethodIfPresent(player, new Object[] {
             Double.valueOf(x),
             Double.valueOf(y),
             Double.valueOf(z)
-        }, "setPositionAndUpdate", "func_70634_a") != null) {
+        }, "setPositionAndUpdate", "func_70634_a")) {
             return;
         }
 
-        invoke(player, new Object[] {
+        if (invokeMethodIfPresent(player, new Object[] {
             Double.valueOf(x),
             Double.valueOf(y),
             Double.valueOf(z),
             Float.valueOf(yaw),
             Float.valueOf(pitch)
-        }, "setLocationAndAngles", "func_70080_a");
+        }, "setLocationAndAngles", "func_70080_a")) {
+            return;
+        }
+
+        throw new IllegalStateException("Missing teleport method.");
     }
 
     private static double readBlockCoordinate(Object blockPos, String deobfuscatedName, String srgName) {
@@ -242,6 +246,29 @@ final class SpawnCommand {
             type = type.getSuperclass();
         }
         return null;
+    }
+
+    private static boolean invokeMethodIfPresent(Object target, Object[] args, String... methodNames) {
+        if (target == null) {
+            return false;
+        }
+        Object[] safeArgs = args == null ? new Object[0] : args;
+        Class<?> type = target.getClass();
+        while (type != null) {
+            for (Method method : type.getDeclaredMethods()) {
+                if (methodMatches(method, safeArgs, methodNames)) {
+                    try {
+                        method.setAccessible(true);
+                        method.invoke(target, safeArgs);
+                        return true;
+                    } catch (ReflectiveOperationException exception) {
+                        throw new IllegalStateException("Failed to invoke " + method.getName() + ".", exception);
+                    }
+                }
+            }
+            type = type.getSuperclass();
+        }
+        return false;
     }
 
     private static boolean methodMatches(Method method, Object[] args, String... methodNames) {
