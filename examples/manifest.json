@@ -2065,12 +2065,6 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/worldedit-forge-mc1.12.2-6.1.10-dist.jar",
-                      "sha256":  "cd4768ded9e2b527e3fc093fdf4ce07f058187de7961bdc0d7fa821c1b756f75",
-                      "size":  1479535,
-                      "executable":  false
-                  },
-                  {
                       "path":  "mods/xaerolib-forge-1.12.2-1.1.0.jar",
                       "sha256":  "777127ce764ec4ea096ba5245609994de4c6290db2b5cf7d41d3ce17a6662767",
                       "size":  597314,
