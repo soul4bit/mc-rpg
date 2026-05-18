@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.18.11",
+    "version":  "2026.05.18.14",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -12,10 +12,10 @@
                      "launchTemplate":  ""
                  },
     "launcherUpdate":  {
-                           "version":  "2026.05.18.2",
+                           "version":  "2026.05.18.14",
                            "url":  "client/launcher/obsidian-gate-launcher.jar",
-                           "sha256":  "c24494c6a7e47f1292cd85bc7484b63145dae37b653ea4a4eda71674c1789959",
-                           "size":  15605811,
+                           "sha256":  "565ff6db3be779fadcb8b4d76355dd0f54659fb00a43e43d1bb09fa9594f4cba",
+                           "size":  15605650,
                            "required":  false,
                            "artifactVersion":  "0.1.4-test",
                            "fileName":  "obsidian-gate-launcher.jar"
@@ -1579,6 +1579,12 @@
                       "executable":  false
                   },
                   {
+                      "path":  "mods/[___MixinCompat-1.1-1.12.2___].jar",
+                      "sha256":  "84bf7e2d3debebde099310052b662fc83779947df32f0b2284c6de998e58b353",
+                      "size":  867021,
+                      "executable":  false
+                  },
+                  {
                       "path":  "mods/animania-1.12.2-1.7.3.jar",
                       "sha256":  "87e248a3cf00cde9ef0eec876eb1d3d5f576cd92b4c6a0eebc7b82b69f28d76a",
                       "size":  8923896,
@@ -1630,6 +1636,18 @@
                       "path":  "mods/bookworm-1.12.2-2.3.0.jar",
                       "sha256":  "dbceef277e1fa58d0a01ae090e9889b50b6be62c8087f83d55ea10e92511848e",
                       "size":  232686,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/CarbonConfig-1.12.2-1.2.4.jar",
+                      "sha256":  "54af9fd35de2a315eb0c9facbdc27ddbefc31af32544d778aad7db092768d757",
+                      "size":  1176455,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/Chunk-Pregenerator-1.12.2-4.4.9.1.jar",
+                      "sha256":  "6575841b8198e7cb293ac59dd09b25d71007b11afad7c48f2809e3654533bda1",
+                      "size":  799153,
                       "executable":  false
                   },
                   {
@@ -1910,7 +1928,7 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "8f3a45548588d3fc3fb07b5ae01d72003ddf99238be5c543971695beabdb6a7d",
+                      "sha256":  "0e2da47159e3f53e25ea36edd9de3eb318638e74be50db260383f7a79c1a2f6b",
                       "size":  28989,
                       "executable":  false
                   },
@@ -1966,6 +1984,12 @@
                       "path":  "mods/SoundFilters-0.12_for_1.12.jar",
                       "sha256":  "bba03ad5a0121b2075d50b789563c4897076d59a67b3e79e9e7acde98cb2312b",
                       "size":  43161,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/spark-unforged-1.11.140-forge.jar",
+                      "sha256":  "4c66e72dd11d8b5b4c43bca24dffbdd8fe52054ca03907b92505cdf1eda38914",
+                      "size":  3771370,
                       "executable":  false
                   },
                   {
@@ -2348,8 +2372,8 @@
                   },
                   {
                       "path":  "THIRD_PARTY_MODS.txt",
-                      "sha256":  "039603928b0c6419f03012e6a55e69271220f48d4a847f038b07fd080db292af",
-                      "size":  762,
+                      "sha256":  "caa2717add144a88ede328c197dac6cd4a89709bbb4a30b5353d4799bea0fec0",
+                      "size":  1157,
                       "executable":  false
                   }
               ]

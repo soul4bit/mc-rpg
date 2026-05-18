@@ -26,3 +26,15 @@ Official page: https://www.curseforge.com/minecraft/mc-mods/roguelike-dungeons
 
 The Twilight Forest
 Official page: https://www.curseforge.com/minecraft/mc-mods/the-twilight-forest
+
+Chunk-Pregenerator
+Official page: https://www.curseforge.com/minecraft/mc-mods/chunkpregenerator
+
+Carbon Config
+Official page: https://www.curseforge.com/minecraft/mc-mods/carbon-config
+
+Spark Unforged
+Official page: https://www.curseforge.com/minecraft/mc-mods/spark-unforged
+
+Mixin 0.7-0.8 Compatibility
+Official page: https://www.curseforge.com/minecraft/mc-mods/mixin-0-7-0-8-compatibility

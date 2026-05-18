@@ -37,6 +37,7 @@ $modpackMetadataPath = Join-Path $distFullPath "modpack-release.json"
 $distServerRoot = Join-Path $distFullPath "server"
 
 $serverModPaths = @(
+    "mods/[___MixinCompat-1.1-1.12.2___].jar",
     "mods/animania-1.12.2-1.7.3.jar",
     "mods/antiqueatlas-1.12.2-4.6.3.jar",
     "mods/AtlasExtras-1.12.2-1.7.jar",
@@ -46,7 +47,9 @@ $serverModPaths = @(
     "mods/BiblioCraft[v2.4.5][MC1.12.2].jar",
     "mods/BiomesOPlenty_1.12.2_7.0.1.2444_universal.jar",
     "mods/bookworm-1.12.2-2.3.0.jar",
+    "mods/CarbonConfig-1.12.2-1.2.4.jar",
     "mods/Clumps-3.1.2.jar",
+    "mods/Chunk-Pregenerator-1.12.2-4.4.9.1.jar",
     "mods/CraftStudioAPI-universal-1.0.1.95-mc1.12-alpha.jar",
     "mods/crafttweaker2-1.12-4.1.20.jar",
     "mods/DenseMetals-1.12.2-2.0.0.30.jar",
@@ -72,6 +75,7 @@ $serverModPaths = @(
     "mods/savemystronghold-1.12.2-1.0.0.jar",
     "mods/SeedDrop-1.2.1-1.12.jar",
     "mods/SereneSeasons_1.12.2_1.2.18_universal.jar",
+    "mods/spark-unforged-1.11.140-forge.jar",
     "mods/stackable-1.12.2-1.3.3.jar",
     "mods/streams-1.12-0.4.8.jar",
     "mods/TeaStory-3.3.3-B32.404-1.12.2.jar",

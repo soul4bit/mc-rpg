@@ -90,14 +90,14 @@ function Invoke-External {
     }
 }
 
-Write-Host "==> Creating remote staging directory" -ForegroundColor Cyan
+Write-Host "==> Preparing remote staging directory" -ForegroundColor Cyan
 Invoke-External -Command "ssh" -Arguments @(
     $sshTtyArgs +
     @(
         $Target,
-        "mkdir -p '$RemoteStageDir'"
+        "rm -rf '$RemoteStageDir/client' '$RemoteStageDir/server' '$RemoteStageDir/launcher' '$RemoteStageDir/manifest.json'; mkdir -p '$RemoteStageDir'"
     )
-) -Action "Create remote staging directory"
+) -Action "Prepare remote staging directory"
 
 Write-Host "==> Uploading modpack release to $Target" -ForegroundColor Cyan
 $uploadPaths = @($clientDirPath, $serverJarPath, $manifestPath)
