@@ -28,6 +28,7 @@ public final class ForgeAuthServerMod {
     private static final Logger LOGGER = Logger.getLogger(MOD_NAME);
     private static final ForgeAuthServerLifecycle LIFECYCLE = new ForgeAuthServerLifecycle(LOGGER);
     private static final SpawnProtectionService SPAWN_PROTECTION = new SpawnProtectionService(LOGGER);
+    private static final KitService KIT_SERVICE = new KitService(LOGGER);
 
     static ForgeAuthServerLifecycle getLifecycle() {
         return LIFECYCLE;
@@ -38,6 +39,7 @@ public final class ForgeAuthServerMod {
         SimpleNetworkWrapper channel = NetworkRegistry.INSTANCE.newSimpleChannel(NETWORK_CHANNEL);
         channel.registerMessage(AuthTicketMessageHandler.class, AuthTicketMessage.class, 0, net.minecraftforge.fml.relauncher.Side.SERVER);
         SPAWN_PROTECTION.load();
+        KIT_SERVICE.load();
         MinecraftForge.EVENT_BUS.register(LIFECYCLE);
         MinecraftForge.EVENT_BUS.register(SPAWN_PROTECTION);
 
@@ -60,6 +62,7 @@ public final class ForgeAuthServerMod {
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         SpawnCommand.register(event);
+        KitCommand.register(event, KIT_SERVICE);
         SpawnProtectionCommand.register(event, SPAWN_PROTECTION);
     }
 

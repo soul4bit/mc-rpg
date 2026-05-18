@@ -1,5 +1,22 @@
 # ObsidianGate Forge Auth Server
 
+## Server commands
+
+- `/spawn` teleports a player to the overworld spawn point.
+- `/spawnprotect <info|on|off|radius|reload>` controls spawn protection around `/setworldspawn`.
+- `/kit start` gives the one-time starter kit.
+
+Starter kit contents:
+
+- signed leather armor set
+- stone sword
+- stone axe
+- stone pickaxe
+- stone shovel
+- 32 cooked beef
+
+One-time kit claims are stored in `obsidiangate/kit-claims.properties` under the server root. This file is outside `config/` so modpack deploys do not reset claimed kits.
+
 Серверный Forge 1.12.2-мод для проверки launcher-auth.
 
 ## Что делает мод

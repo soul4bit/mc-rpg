@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.18.15",
+    "version":  "2026.05.18-kit-start",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -12,9 +12,9 @@
                      "launchTemplate":  ""
                  },
     "launcherUpdate":  {
-                           "version":  "2026.05.18.15",
+                           "version":  "2026.05.18-kit-start",
                            "url":  "client/launcher/obsidian-gate-launcher.jar",
-                           "sha256":  "b337a45fdebc0f5287b7d66b1366349f25b7f7d999ebf98230c9c79704dd35ec",
+                           "sha256":  "81e1500c6aa9c3c264edb22145a212f8df15ed2fdd77b16f7f70f265fff96b35",
                            "size":  15605650,
                            "required":  false,
                            "artifactVersion":  "0.1.4-test",
@@ -1106,7 +1106,7 @@
                   },
                   {
                       "path":  "config/obsidiangate-spawn-protection.properties",
-                      "sha256":  "9c7b8b958874d058c76e2e01c8b8b298a00c28fc839e4ebc8351c9caf8b16039",
+                      "sha256":  "42fe3fdba2ef4151c51e59672386f5f0f83d095789817b451f6f5c6569edb4c7",
                       "size":  176,
                       "executable":  false
                   },
@@ -1928,7 +1928,7 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "d8f3272399146f1b473982269f7e173a11c20c48e4151b0844bd0560462f2c69",
+                      "sha256":  "c0e08efdc3b2d01adf5909d33705e6da7459aef74ee09663fe84959272a241a8",
                       "size":  28989,
                       "executable":  false
                   },
@@ -2372,8 +2372,8 @@
                   },
                   {
                       "path":  "THIRD_PARTY_MODS.txt",
-                      "sha256":  "cf1ece57b72d7c61d64da8af4677342a6bb75fc6341d70878470c45857853cba",
-                      "size":  1238,
+                      "sha256":  "caa2717add144a88ede328c197dac6cd4a89709bbb4a30b5353d4799bea0fec0",
+                      "size":  1157,
                       "executable":  false
                   }
               ]
