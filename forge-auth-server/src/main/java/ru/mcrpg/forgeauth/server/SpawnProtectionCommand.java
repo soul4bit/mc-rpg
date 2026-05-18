@@ -78,7 +78,7 @@ final class SpawnProtectionCommand {
 
         private void execute(Object sender, Object arguments) {
             if (!canUse(sender)) {
-                sendMessage(sender, "You do not have permission to use /" + COMMAND_NAME + ".");
+                ServerChat.error(sender, "Недостаточно прав для команды " + ServerChat.command("/" + COMMAND_NAME) + ".");
                 return;
             }
 
@@ -90,48 +90,48 @@ final class SpawnProtectionCommand {
             }
             if ("on".equals(action)) {
                 service.setEnabled(true);
-                sendMessage(sender, "Spawn protection enabled.");
+                ServerChat.success(sender, "Защита спавна включена.");
                 sendInfo(sender);
                 return;
             }
             if ("off".equals(action)) {
                 service.setEnabled(false);
-                sendMessage(sender, "Spawn protection disabled.");
+                ServerChat.warning(sender, "Защита спавна выключена.");
                 sendInfo(sender);
                 return;
             }
             if ("reload".equals(action)) {
                 service.load();
-                sendMessage(sender, "Spawn protection config reloaded.");
+                ServerChat.success(sender, "Конфиг защиты спавна перезагружен.");
                 sendInfo(sender);
                 return;
             }
             if ("radius".equals(action)) {
                 if (args.length < 2) {
-                    sendMessage(sender, "Usage: /" + COMMAND_NAME + " radius <blocks>");
+                    ServerChat.warning(sender, "Использование: " + ServerChat.command("/" + COMMAND_NAME + " radius <блоки>"));
                     return;
                 }
                 try {
                     service.setRadius(Integer.parseInt(args[1]));
-                    sendMessage(sender, "Spawn protection radius updated.");
+                    ServerChat.success(sender, "Радиус защиты спавна обновлён.");
                     sendInfo(sender);
                 } catch (NumberFormatException ignored) {
-                    sendMessage(sender, "Radius must be a number.");
+                    ServerChat.error(sender, "Радиус должен быть числом.");
                 }
                 return;
             }
-            sendMessage(sender, "Usage: /" + COMMAND_NAME + " <info|on|off|radius|reload>");
+            ServerChat.warning(sender, "Использование: " + ServerChat.command("/" + COMMAND_NAME + " <info|on|off|radius|reload>"));
         }
 
         private void sendInfo(Object sender) {
             SpawnProtectionService.Config config = service.config();
-            sendMessage(sender, String.format(
-                "Spawn protection: enabled=%s radius=%d blocks=%s hostileSpawns=%s explosions=%s",
-                config.enabled,
-                config.radius,
-                config.protectBlocks,
-                config.denyHostileSpawns,
-                config.denyExplosions
+            ServerChat.info(sender, String.format(
+                "Защита спавна: %s, радиус %s, блоки %s, мобы %s, взрывы %s.",
+                ServerChat.value(enabledText(config.enabled)),
+                ServerChat.value(config.radius),
+                ServerChat.value(enabledText(config.protectBlocks)),
+                ServerChat.value(enabledText(config.denyHostileSpawns)),
+                ServerChat.value(enabledText(config.denyExplosions))
             ));
         }
     }
@@ -152,14 +152,8 @@ final class SpawnProtectionCommand {
         return otherName == null ? 1 : COMMAND_NAME.compareTo(otherName.toString());
     }
 
-    private static void sendMessage(Object sender, String message) {
-        try {
-            Object textComponent = Class.forName("net.minecraft.util.text.TextComponentString")
-                .getConstructor(String.class)
-                .newInstance(message);
-            invokeIfPresent(sender, new Object[] { textComponent }, "sendMessage", "func_145747_a");
-        } catch (ReflectiveOperationException ignored) {
-        }
+    private static String enabledText(boolean value) {
+        return value ? "вкл" : "выкл";
     }
 
     private static Object invokeZeroArgIfPresent(Object target, String... methodNames) {

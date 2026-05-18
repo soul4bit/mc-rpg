@@ -14,6 +14,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -45,7 +46,7 @@ final class SpawnProtectionService {
             return;
         }
         cancel(event);
-        sendMessage(player, "Spawn is protected.");
+        ServerChat.error(player, "Спавн защищён: ломать блоки здесь нельзя.");
     }
 
     @SubscribeEvent
@@ -59,7 +60,7 @@ final class SpawnProtectionService {
             return;
         }
         cancel(event);
-        sendMessage(player, "Spawn is protected.");
+        ServerChat.error(player, "Спавн защищён: ставить блоки здесь нельзя.");
     }
 
     @SubscribeEvent
@@ -73,6 +74,20 @@ final class SpawnProtectionService {
             return;
         }
         cancel(event);
+    }
+
+    @SubscribeEvent
+    public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        Config snapshot = config();
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(event)) {
+            return;
+        }
+        Object player = invokeZeroArgIfPresent(event, "getEntityPlayer", "getEntity");
+        if (canBypass(player)) {
+            return;
+        }
+        cancel(event);
+        ServerChat.error(player, "Спавн защищён: взаимодействие с этим блоком закрыто.");
     }
 
     @SubscribeEvent
@@ -289,19 +304,6 @@ final class SpawnProtectionService {
     private static double readBlockCoordinate(Object blockPos, String deobfuscatedName, String srgName) {
         Object value = invokeZeroArgIfPresent(blockPos, deobfuscatedName, srgName);
         return value instanceof Number ? ((Number) value).doubleValue() : 0.0D;
-    }
-
-    private static void sendMessage(Object sender, String message) {
-        if (sender == null) {
-            return;
-        }
-        try {
-            Object textComponent = Class.forName("net.minecraft.util.text.TextComponentString")
-                .getConstructor(String.class)
-                .newInstance(message);
-            invokeIfPresent(sender, new Object[] { textComponent }, "sendMessage", "func_145747_a");
-        } catch (ReflectiveOperationException ignored) {
-        }
     }
 
     private static Object invokeZeroArgIfPresent(Object target, String... methodNames) {

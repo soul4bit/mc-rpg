@@ -94,20 +94,20 @@ final class KitCommand {
     private static void execute(Object sender, Object arguments, KitService service) {
         Object player = resolvePlayer(sender);
         if (player == null) {
-            sendMessage(sender, "Only players can use /kit.");
+            ServerChat.error(sender, "Команду " + ServerChat.command("/kit") + " может использовать только игрок.");
             return;
         }
 
         String[] args = arguments instanceof String[] ? (String[]) arguments : new String[0];
         if (args.length != 1 || !"start".equalsIgnoreCase(args[0])) {
-            sendMessage(sender, "Usage: /kit start");
+            ServerChat.warning(sender, "Использование: " + ServerChat.command("/kit start"));
             return;
         }
 
         String playerId = playerId(player);
         String playerName = playerName(player);
         if (service.hasClaimedStart(playerId)) {
-            sendMessage(player, "You have already claimed the start kit.");
+            ServerChat.warning(player, "Стартовый набор уже был получен на этом аккаунте.");
             return;
         }
 
@@ -116,21 +116,21 @@ final class KitCommand {
             service.recordStartClaim(playerId, playerName);
             int dropped = giveItems(player, kitItems);
             if (dropped > 0) {
-                sendMessage(player, "Start kit received. Some items were dropped because your inventory was full.");
+                ServerChat.warning(player, "Стартовый набор выдан, но часть предметов выпала рядом: инвентарь заполнен.");
             } else {
-                sendMessage(player, "Start kit received.");
+                ServerChat.success(player, "Стартовый набор выдан.");
             }
         } catch (RuntimeException exception) {
-            sendMessage(player, "Could not give start kit: " + exception.getMessage());
+            ServerChat.error(player, "Не удалось выдать стартовый набор: " + exception.getMessage());
         }
     }
 
     private static List<Object> createStartKit() {
         List<Object> items = new ArrayList<Object>();
-        items.add(namedStack("minecraft:leather_helmet", 1, "Kit Start Leather Cap"));
-        items.add(namedStack("minecraft:leather_chestplate", 1, "Kit Start Leather Tunic"));
-        items.add(namedStack("minecraft:leather_leggings", 1, "Kit Start Leather Pants"));
-        items.add(namedStack("minecraft:leather_boots", 1, "Kit Start Leather Boots"));
+        items.add(namedStack("minecraft:leather_helmet", 1, "\u00A76Кит Старт: кожаный шлем"));
+        items.add(namedStack("minecraft:leather_chestplate", 1, "\u00A76Кит Старт: кожаная куртка"));
+        items.add(namedStack("minecraft:leather_leggings", 1, "\u00A76Кит Старт: кожаные штаны"));
+        items.add(namedStack("minecraft:leather_boots", 1, "\u00A76Кит Старт: кожаные ботинки"));
         items.add(itemStack("minecraft:stone_sword", 1));
         items.add(itemStack("minecraft:stone_axe", 1));
         items.add(itemStack("minecraft:stone_pickaxe", 1));
@@ -141,7 +141,7 @@ final class KitCommand {
 
     private static Object namedStack(String itemId, int count, String displayName) {
         Object stack = itemStack(itemId, count);
-        applyDisplay(stack, displayName, "ObsidianGate starter kit");
+        applyDisplay(stack, displayName, "\u00A77ObsidianGate | одноразовый стартовый набор");
         return stack;
     }
 
@@ -253,16 +253,6 @@ final class KitCommand {
         }
         Object otherName = invokeZeroArgIfPresent(other, "getName", "func_71517_b");
         return otherName == null ? 1 : COMMAND_NAME.compareTo(otherName.toString());
-    }
-
-    private static void sendMessage(Object sender, String message) {
-        try {
-            Object textComponent = Class.forName("net.minecraft.util.text.TextComponentString")
-                .getConstructor(String.class)
-                .newInstance(message);
-            invokeIfPresent(sender, new Object[] { textComponent }, "sendMessage", "func_145747_a");
-        } catch (ReflectiveOperationException ignored) {
-        }
     }
 
     private static Object invokeZeroArgIfPresent(Object target, String... methodNames) {

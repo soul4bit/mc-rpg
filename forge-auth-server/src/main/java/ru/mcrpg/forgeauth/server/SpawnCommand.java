@@ -88,14 +88,14 @@ final class SpawnCommand {
     private static void execute(Object server, Object sender) {
         Object player = resolvePlayer(sender);
         if (player == null) {
-            sendMessage(sender, "Only players can use /spawn.");
+            ServerChat.error(sender, "Команду " + ServerChat.command("/spawn") + " может использовать только игрок.");
             return;
         }
 
         try {
             Object spawnWorld = invoke(server, new Object[] { Integer.valueOf(0) }, "getWorld", "func_71218_a");
             if (spawnWorld == null) {
-                sendMessage(sender, "Overworld is not loaded.");
+                ServerChat.error(sender, "Обычный мир ещё не загружен.");
                 return;
             }
 
@@ -126,9 +126,9 @@ final class SpawnCommand {
             setDoubleField(player, 0.0D, "motionX", "field_70159_w");
             setDoubleField(player, 0.0D, "motionY", "field_70181_x");
             setDoubleField(player, 0.0D, "motionZ", "field_70179_y");
-            sendMessage(player, "Teleported to spawn.");
+            ServerChat.success(player, "Вы телепортированы на спавн.");
         } catch (RuntimeException exception) {
-            sendMessage(sender, "Could not teleport to spawn: " + exception.getMessage());
+            ServerChat.error(sender, "Не удалось телепортировать на спавн: " + exception.getMessage());
         }
     }
 
@@ -194,16 +194,6 @@ final class SpawnCommand {
             throw new IllegalStateException("BlockPos coordinate is not numeric.");
         }
         return ((Number) value).doubleValue();
-    }
-
-    private static void sendMessage(Object sender, String message) {
-        try {
-            Object textComponent = Class.forName("net.minecraft.util.text.TextComponentString")
-                .getConstructor(String.class)
-                .newInstance(message);
-            invokeIfPresent(sender, new Object[] { textComponent }, "sendMessage", "func_145747_a");
-        } catch (ReflectiveOperationException ignored) {
-        }
     }
 
     private static Object invokeZeroArg(Object target, String... methodNames) {
