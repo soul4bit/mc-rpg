@@ -15,28 +15,40 @@ import ru.mcrpg.gameauth.LauncherSessionFiles;
 
 final class ForgeAuthClientLifecycle {
 
-    private final SimpleNetworkWrapper channel;
+    private static final int INITIAL_SEND_DELAY_TICKS = 0;
+    private static final int SEND_RETRY_INTERVAL_TICKS = 20;
+    private static final int MAX_SEND_ATTEMPTS = 5;
+
+    private final TicketSender ticketSender;
     private final Logger logger;
     private final LauncherSessionFiles sessionFiles;
 
     private LauncherSession pendingSession;
     private Path pendingSessionPath;
+    private GameTicketProof pendingProof;
     private boolean pendingSend;
-    private boolean alreadySent;
+    private boolean currentTicketConsumed;
+    private int sendAttempts;
     private int ticksUntilSend;
 
     ForgeAuthClientLifecycle(SimpleNetworkWrapper channel, Logger logger) {
-        this.channel = channel;
+        this(new NetworkTicketSender(channel), logger, new LauncherSessionFiles());
+    }
+
+    ForgeAuthClientLifecycle(TicketSender ticketSender, Logger logger, LauncherSessionFiles sessionFiles) {
+        this.ticketSender = ticketSender;
         this.logger = logger;
-        this.sessionFiles = new LauncherSessionFiles();
+        this.sessionFiles = sessionFiles;
     }
 
     @SubscribeEvent
     public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event) {
         pendingSession = null;
         pendingSessionPath = null;
+        pendingProof = null;
         pendingSend = false;
-        alreadySent = false;
+        currentTicketConsumed = false;
+        sendAttempts = 0;
         ticksUntilSend = 0;
 
         try {
@@ -51,11 +63,18 @@ final class ForgeAuthClientLifecycle {
                 return;
             }
 
+            GameTicketProof proof = session.toTicketProof();
+            if (!proof.isComplete()) {
+                logger.warning("В сессии лаунчера не хватает данных ticket proof. Отправка отменена.");
+                return;
+            }
+
             pendingSession = session;
+            pendingProof = proof;
             pendingSend = true;
-            ticksUntilSend = 20;
+            ticksUntilSend = INITIAL_SEND_DELAY_TICKS;
             logger.info(String.format(
-                "Сессия лаунчера загружена для %s. Ждем сетевое рукопожатие перед отправкой ticket proof.",
+                "Сессия лаунчера загружена для %s. Отправляем ticket proof с повторными попытками.",
                 session.getUsername()
             ));
         } catch (IOException exception) {
@@ -67,11 +86,19 @@ final class ForgeAuthClientLifecycle {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || !pendingSend || alreadySent) {
+        if (event.phase != TickEvent.Phase.END) {
             return;
         }
 
-        if (pendingSession == null) {
+        runClientEndTick();
+    }
+
+    void runClientEndTick() {
+        if (!pendingSend) {
+            return;
+        }
+
+        if (pendingSession == null || pendingProof == null) {
             pendingSend = false;
             ticksUntilSend = 0;
             return;
@@ -82,30 +109,53 @@ final class ForgeAuthClientLifecycle {
             return;
         }
 
-        GameTicketProof proof = pendingSession.toTicketProof();
-        if (!proof.isComplete()) {
-            logger.warning("В сессии лаунчера не хватает данных ticket proof. Отправка отменена.");
+        if (sendAttempts >= MAX_SEND_ATTEMPTS) {
             pendingSend = false;
             return;
         }
 
-        channel.sendToServer(new AuthTicketMessage(proof));
-        consumeCurrentTicket();
-        alreadySent = true;
-        pendingSend = false;
+        sendAttempts++;
+        try {
+            ticketSender.send(new AuthTicketMessage(pendingProof));
+        } catch (RuntimeException exception) {
+            logger.log(Level.WARNING, "Не удалось отправить launcher ticket proof. Попытка " + sendAttempts + ".", exception);
+            scheduleRetryOrStop();
+            return;
+        }
+
+        if (!currentTicketConsumed) {
+            consumeCurrentTicket();
+            currentTicketConsumed = true;
+        }
+
         logger.info(String.format(
-            "Ticket proof лаунчера для %s отправлен в серверный канал.",
-            pendingSession.getUsername()
+            "Ticket proof лаунчера для %s отправлен в серверный канал. Попытка %d/%d.",
+            pendingSession.getUsername(),
+            sendAttempts,
+            MAX_SEND_ATTEMPTS
         ));
+        scheduleRetryOrStop();
     }
 
     @SubscribeEvent
     public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         pendingSession = null;
         pendingSessionPath = null;
+        pendingProof = null;
         pendingSend = false;
-        alreadySent = false;
+        currentTicketConsumed = false;
+        sendAttempts = 0;
         ticksUntilSend = 0;
+    }
+
+    private void scheduleRetryOrStop() {
+        if (sendAttempts >= MAX_SEND_ATTEMPTS) {
+            pendingSend = false;
+            ticksUntilSend = 0;
+            return;
+        }
+
+        ticksUntilSend = SEND_RETRY_INTERVAL_TICKS;
     }
 
     private void consumeCurrentTicket() {
@@ -117,6 +167,23 @@ final class ForgeAuthClientLifecycle {
             sessionFiles.write(pendingSessionPath, pendingSession.consumeTicket());
         } catch (IOException exception) {
             logger.log(Level.WARNING, "Не удалось сохранить оставшиеся ticket переподключения.", exception);
+        }
+    }
+
+    interface TicketSender {
+        void send(AuthTicketMessage message);
+    }
+
+    private static final class NetworkTicketSender implements TicketSender {
+        private final SimpleNetworkWrapper channel;
+
+        private NetworkTicketSender(SimpleNetworkWrapper channel) {
+            this.channel = channel;
+        }
+
+        @Override
+        public void send(AuthTicketMessage message) {
+            channel.sendToServer(message);
         }
     }
 }

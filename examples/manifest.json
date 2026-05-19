@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.18-1853",
+    "version":  "2026.05.19",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -12,9 +12,9 @@
                      "launchTemplate":  ""
                  },
     "launcherUpdate":  {
-                           "version":  "2026.05.18-1853",
+                           "version":  "2026.05.19",
                            "url":  "client/launcher/obsidian-gate-launcher.jar",
-                           "sha256":  "6694f6e69a322e61e7238ba81e316f78cbf0fab72c73be63ec2727c96ca1b889",
+                           "sha256":  "030afbb5517e4a2e6af73f870eff1741a30f2647907fd7ff353b777573fa7e55",
                            "size":  15607453,
                            "required":  false,
                            "artifactVersion":  "0.1.4-test",
@@ -1105,6 +1105,12 @@
                       "executable":  false
                   },
                   {
+                      "path":  "config/obsidiangate-item-cleanup.properties",
+                      "sha256":  "29b6b4317301f6f604d12898b81e766a100780936f3f06b7216f435dee5d9b8a",
+                      "size":  54,
+                      "executable":  false
+                  },
+                  {
                       "path":  "config/obsidiangate-spawn-protection.properties",
                       "sha256":  "266b81054d0a440a09077001faba66c830f9c43efceefb8b568030310051654a",
                       "size":  261,
@@ -1585,6 +1591,12 @@
                       "executable":  false
                   },
                   {
+                      "path":  "defaultconfigs/xaero/world-map/profiles/default.cfg",
+                      "sha256":  "ebac7fcca543fe54b775638658676393ac4350f71ba348b369cb67f4543b54a9",
+                      "size":  298,
+                      "executable":  false
+                  },
+                  {
                       "path":  "mods/[___MixinCompat-1.1-1.12.2___].jar",
                       "sha256":  "84bf7e2d3debebde099310052b662fc83779947df32f0b2284c6de998e58b353",
                       "size":  867021,
@@ -1934,8 +1946,8 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "6195650a7cc4fff4229e161107dfae6fc2dfa83730d176a5d66326beb977af3e",
-                      "size":  29319,
+                      "sha256":  "35a56b712329d8acecdebcf5daac362f9a480caf102e6257799a466c88688f7e",
+                      "size":  31606,
                       "executable":  false
                   },
                   {

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 final class WaypointTeleportCommand {
 
     private static final String COMMAND_NAME = "wptp";
+    private static final String SUBJECT = "Телепорт по метке";
     private static final List<String> ALIASES = Collections.unmodifiableList(Arrays.asList("waypointtp", "xatp"));
 
     private WaypointTeleportCommand() {
@@ -76,20 +77,20 @@ final class WaypointTeleportCommand {
     private static void execute(Object sender, Object arguments) {
         Object player = TeleportSupport.resolvePlayer(sender);
         if (player == null) {
-            ServerChat.error(sender, "Команду " + ServerChat.command("/" + COMMAND_NAME) + " может использовать только игрок.");
+            ServerChat.status(sender, ServerChat.Tone.ERROR, SUBJECT, "команду " + ServerChat.command("/" + COMMAND_NAME) + " может использовать только игрок.");
             return;
         }
 
         String[] args = arguments instanceof String[] ? (String[]) arguments : new String[0];
         if (args.length < 3 || args.length > 5) {
-            ServerChat.warning(player, "Использование: " + ServerChat.command(usage()));
+            ServerChat.usage(player, usage());
             return;
         }
 
         try {
-            double x = parseCoordinate(args[0], "x");
-            double y = parseCoordinate(args[1], "y");
-            double z = parseCoordinate(args[2], "z");
+            double x = parseCoordinate(args[0], "x", TeleportSupport.playerX(player));
+            double y = parseCoordinate(args[1], "y", TeleportSupport.playerY(player));
+            double z = parseCoordinate(args[2], "z", TeleportSupport.playerZ(player));
             validatePosition(x, y, z);
 
             float yaw = args.length >= 4 ? parseRotation(args[3], "yaw", TeleportSupport.playerYaw(player)) : TeleportSupport.playerYaw(player);
@@ -97,15 +98,21 @@ final class WaypointTeleportCommand {
             pitch = clampPitch(pitch);
 
             TeleportSupport.teleport(player, x, y, z, yaw, pitch);
-            ServerChat.success(player, "Телепорт к чекпоинту выполнен.");
+            ServerChat.status(player, ServerChat.Tone.SUCCESS, SUBJECT, "выполнен.");
         } catch (IllegalArgumentException exception) {
-            ServerChat.warning(player, exception.getMessage());
+            ServerChat.status(player, ServerChat.Tone.WARNING, SUBJECT, exception.getMessage());
         } catch (RuntimeException exception) {
-            ServerChat.error(player, "Не удалось телепортироваться к чекпоинту: " + exception.getMessage());
+            ServerChat.status(player, ServerChat.Tone.ERROR, SUBJECT, "не удалось выполнить: " + exception.getMessage());
         }
     }
 
-    private static double parseCoordinate(String rawValue, String name) {
+    private static double parseCoordinate(String rawValue, String name, double fallback) {
+        if ("~".equals(rawValue)) {
+            return fallback;
+        }
+        if (rawValue != null && rawValue.startsWith("~")) {
+            return parseCoordinateOffset(rawValue.substring(1), name, fallback);
+        }
         try {
             double value = Double.parseDouble(rawValue);
             if (!TeleportSupport.isFinite(value)) {
@@ -115,6 +122,14 @@ final class WaypointTeleportCommand {
         } catch (NumberFormatException exception) {
             throw new IllegalArgumentException("Координата " + name + " должна быть числом.");
         }
+    }
+
+    private static double parseCoordinateOffset(String rawOffset, String name, double fallback) {
+        double value = fallback + parseCoordinate(rawOffset, name, 0.0D);
+        if (!TeleportSupport.isFinite(value)) {
+            parseCoordinate(String.valueOf(value), name, 0.0D);
+        }
+        return value;
     }
 
     private static float parseRotation(String rawValue, String name, float fallback) {

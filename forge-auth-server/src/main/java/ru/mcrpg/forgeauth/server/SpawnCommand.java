@@ -115,10 +115,7 @@ final class SpawnCommand {
             invokeZeroArgIfPresent(player, "dismountRidingEntity", "func_184210_p");
 
             if (readIntField(player, 0, "dimension", "field_71093_bK") != 0) {
-                Object transferredPlayer = invokeIfPresent(player, new Object[] { Integer.valueOf(0) }, "changeDimension", "func_184204_a");
-                if (transferredPlayer != null) {
-                    player = transferredPlayer;
-                }
+                player = TeleportSupport.changeDimension(player, 0, x, y, z, yaw, pitch);
             }
 
             teleport(player, x, y, z, yaw, pitch);

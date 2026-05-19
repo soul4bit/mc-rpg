@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 final class CallCommand {
 
     private static final String COMMAND_NAME = "call";
+    private static final String SUBJECT = "Телепорт";
     private static final List<String> ALIASES = Collections.unmodifiableList(Arrays.asList("tpa", "tpask"));
     private static final long REQUEST_TTL_MILLIS = TimeUnit.SECONDS.toMillis(120L);
     private static final ConcurrentMap<String, TeleportRequest> REQUESTS =
@@ -85,7 +86,7 @@ final class CallCommand {
     private static void execute(Object server, Object sender, Object arguments) {
         Object player = TeleportSupport.resolvePlayer(sender);
         if (player == null) {
-            ServerChat.error(sender, "Команду " + ServerChat.command("/" + COMMAND_NAME) + " может использовать только игрок.");
+            ServerChat.status(sender, ServerChat.Tone.ERROR, SUBJECT, "команду " + ServerChat.command("/" + COMMAND_NAME) + " может использовать только игрок.");
             return;
         }
 
@@ -93,7 +94,7 @@ final class CallCommand {
 
         String[] args = arguments instanceof String[] ? (String[]) arguments : new String[0];
         if (args.length == 0) {
-            ServerChat.warning(player, "Использование: " + ServerChat.command(usage()));
+            ServerChat.usage(player, usage());
             return;
         }
 
@@ -112,7 +113,7 @@ final class CallCommand {
         }
         if ("here".equals(action)) {
             if (args.length != 2) {
-                ServerChat.warning(player, "Использование: " + ServerChat.command("/" + COMMAND_NAME + " here <игрок>"));
+                ServerChat.usage(player, "/" + COMMAND_NAME + " here <игрок>");
                 return;
             }
             sendRequest(server, player, args[1], TeleportDirection.TARGET_TO_REQUESTER);
@@ -124,20 +125,20 @@ final class CallCommand {
             return;
         }
 
-        ServerChat.warning(player, "Использование: " + ServerChat.command(usage()));
+        ServerChat.usage(player, usage());
     }
 
     private static void sendRequest(Object server, Object requester, String targetName, TeleportDirection direction) {
         Object target = TeleportSupport.findOnlinePlayer(server, targetName);
         if (target == null) {
-            ServerChat.warning(requester, "Игрок " + ServerChat.value(targetName) + " не найден онлайн.");
+            ServerChat.status(requester, ServerChat.Tone.WARNING, SUBJECT, "игрок " + ServerChat.value(targetName) + " не найден онлайн.");
             return;
         }
 
         String requesterName = TeleportSupport.playerName(requester);
         String resolvedTargetName = TeleportSupport.playerName(target);
         if (normalize(requesterName).equals(normalize(resolvedTargetName))) {
-            ServerChat.warning(requester, "Нельзя отправить запрос самому себе.");
+            ServerChat.status(requester, ServerChat.Tone.WARNING, SUBJECT, "нельзя отправить запрос самому себе.");
             return;
         }
 
@@ -150,22 +151,32 @@ final class CallCommand {
         REQUESTS.put(request.key(), request);
 
         if (direction == TeleportDirection.TO_TARGET) {
-            ServerChat.success(requester, "Запрос на телепорт к " + ServerChat.value(resolvedTargetName) + " отправлен.");
-            ServerChat.info(
+            ServerChat.status(
+                requester,
+                ServerChat.Tone.SUCCESS,
+                SUBJECT,
+                "запрос к " + ServerChat.value(resolvedTargetName) + " отправлен."
+            );
+            ServerChat.acceptDeny(
                 target,
-                ServerChat.value(requesterName) + " просит телепорт к вам. " +
-                ServerChat.command("/call accept " + requesterName) + " или " +
-                ServerChat.command("/call deny " + requesterName) + "."
+                ServerChat.value(requesterName) + " просит телепорт к вам.",
+                "/call accept " + requesterName,
+                "/call deny " + requesterName
             );
             return;
         }
 
-        ServerChat.success(requester, "Запрос телепортировать " + ServerChat.value(resolvedTargetName) + " к вам отправлен.");
-        ServerChat.info(
+        ServerChat.status(
+            requester,
+            ServerChat.Tone.SUCCESS,
+            SUBJECT,
+            "запрос телепортировать " + ServerChat.value(resolvedTargetName) + " к вам отправлен."
+        );
+        ServerChat.acceptDeny(
             target,
-            ServerChat.value(requesterName) + " зовёт вас к себе. " +
-            ServerChat.command("/call accept " + requesterName) + " или " +
-            ServerChat.command("/call deny " + requesterName) + "."
+            ServerChat.value(requesterName) + " зовёт вас к себе.",
+            "/call accept " + requesterName,
+            "/call deny " + requesterName
         );
     }
 
@@ -178,30 +189,30 @@ final class CallCommand {
 
         TeleportRequest request = selection.request;
         if (!REQUESTS.remove(request.key(), request)) {
-            ServerChat.warning(target, "Запрос уже недоступен.");
+            ServerChat.status(target, ServerChat.Tone.WARNING, SUBJECT, "запрос уже недоступен.");
             return;
         }
 
         Object requester = TeleportSupport.findOnlinePlayer(server, request.requesterName);
         if (requester == null) {
-            ServerChat.warning(target, "Игрок " + ServerChat.value(request.requesterName) + " уже не онлайн.");
+            ServerChat.status(target, ServerChat.Tone.WARNING, SUBJECT, "игрок " + ServerChat.value(request.requesterName) + " уже не онлайн.");
             return;
         }
 
         try {
             if (request.direction == TeleportDirection.TO_TARGET) {
                 Object moved = TeleportSupport.teleportToPlayer(requester, target);
-                ServerChat.success(moved, "Игрок " + ServerChat.value(TeleportSupport.playerName(target)) + " принял запрос. Телепорт выполнен.");
-                ServerChat.success(target, "Вы приняли запрос от " + ServerChat.value(TeleportSupport.playerName(moved)) + ".");
+                ServerChat.status(moved, ServerChat.Tone.SUCCESS, SUBJECT, "игрок " + ServerChat.value(TeleportSupport.playerName(target)) + " принял запрос. Телепорт выполнен.");
+                ServerChat.status(target, ServerChat.Tone.SUCCESS, SUBJECT, "вы приняли запрос от " + ServerChat.value(TeleportSupport.playerName(moved)) + ".");
                 return;
             }
 
             Object moved = TeleportSupport.teleportToPlayer(target, requester);
-            ServerChat.success(moved, "Вы приняли запрос и телепортированы к " + ServerChat.value(TeleportSupport.playerName(requester)) + ".");
-            ServerChat.success(requester, "Игрок " + ServerChat.value(TeleportSupport.playerName(moved)) + " принял ваш запрос.");
+            ServerChat.status(moved, ServerChat.Tone.SUCCESS, SUBJECT, "вы приняли запрос и телепортированы к " + ServerChat.value(TeleportSupport.playerName(requester)) + ".");
+            ServerChat.status(requester, ServerChat.Tone.SUCCESS, SUBJECT, "игрок " + ServerChat.value(TeleportSupport.playerName(moved)) + " принял ваш запрос.");
         } catch (RuntimeException exception) {
-            ServerChat.error(target, "Не удалось выполнить телепорт: " + exception.getMessage());
-            ServerChat.error(requester, "Не удалось выполнить телепорт: " + exception.getMessage());
+            ServerChat.status(target, ServerChat.Tone.ERROR, SUBJECT, "не удалось выполнить телепорт: " + exception.getMessage());
+            ServerChat.status(requester, ServerChat.Tone.ERROR, SUBJECT, "не удалось выполнить телепорт: " + exception.getMessage());
         }
     }
 
@@ -214,11 +225,11 @@ final class CallCommand {
 
         TeleportRequest request = selection.request;
         REQUESTS.remove(request.key(), request);
-        ServerChat.warning(target, "Запрос от " + ServerChat.value(request.requesterName) + " отклонён.");
+        ServerChat.status(target, ServerChat.Tone.WARNING, SUBJECT, "запрос от " + ServerChat.value(request.requesterName) + " отклонён.");
 
         Object requester = TeleportSupport.findOnlinePlayer(server, request.requesterName);
         if (requester != null) {
-            ServerChat.warning(requester, "Игрок " + ServerChat.value(TeleportSupport.playerName(target)) + " отклонил запрос телепорта.");
+            ServerChat.status(requester, ServerChat.Tone.WARNING, SUBJECT, "игрок " + ServerChat.value(TeleportSupport.playerName(target)) + " отклонил запрос.");
         }
     }
 
@@ -240,15 +251,15 @@ final class CallCommand {
         }
 
         if (removed.isEmpty()) {
-            ServerChat.warning(requester, "Активных исходящих запросов нет.");
+            ServerChat.status(requester, ServerChat.Tone.WARNING, SUBJECT, "активных исходящих запросов нет.");
             return;
         }
 
-        ServerChat.success(requester, "Отменено запросов: " + ServerChat.value(Integer.valueOf(removed.size())) + ".");
+        ServerChat.status(requester, ServerChat.Tone.SUCCESS, SUBJECT, "отменено запросов: " + ServerChat.value(Integer.valueOf(removed.size())) + ".");
         for (TeleportRequest request : removed) {
             Object target = TeleportSupport.findOnlinePlayer(server, request.targetName);
             if (target != null) {
-                ServerChat.warning(target, "Игрок " + ServerChat.value(TeleportSupport.playerName(requester)) + " отменил запрос телепорта.");
+                ServerChat.status(target, ServerChat.Tone.WARNING, SUBJECT, "игрок " + ServerChat.value(TeleportSupport.playerName(requester)) + " отменил запрос.");
             }
         }
     }
@@ -271,10 +282,10 @@ final class CallCommand {
         }
 
         if (matches.isEmpty()) {
-            return PendingSelection.message("Активных входящих запросов нет.");
+            return PendingSelection.message(ServerChat.statusText(SUBJECT, "активных входящих запросов нет."));
         }
         if (matches.size() > 1) {
-            return PendingSelection.message("Несколько запросов. Укажите ник: " + requesterList(matches) + ".");
+            return PendingSelection.message(ServerChat.statusText(SUBJECT, "несколько запросов. Укажите ник: " + requesterList(matches) + "."));
         }
         return PendingSelection.ready(matches.get(0));
     }

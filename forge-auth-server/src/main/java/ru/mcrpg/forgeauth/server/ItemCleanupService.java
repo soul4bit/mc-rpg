@@ -16,6 +16,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.function.Supplier;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -30,6 +31,7 @@ public final class ItemCleanupService {
 
     private final Logger logger;
     private final Path configPath;
+    private final Supplier<Object> serverSupplier;
     private final Set<Integer> warnedSeconds = new HashSet<>();
     private volatile Config config;
     private int ticksUntilSecond;
@@ -40,8 +42,13 @@ public final class ItemCleanupService {
     }
 
     ItemCleanupService(Logger logger, Path configPath) {
+        this(logger, configPath, ItemCleanupService::minecraftServer);
+    }
+
+    ItemCleanupService(Logger logger, Path configPath, Supplier<Object> serverSupplier) {
         this.logger = logger;
         this.configPath = configPath;
+        this.serverSupplier = serverSupplier;
         this.config = Config.defaults();
         this.ticksUntilSecond = TICKS_PER_SECOND;
         this.secondsUntilCleanup = this.config.intervalSeconds;
@@ -66,6 +73,10 @@ public final class ItemCleanupService {
             return;
         }
 
+        runServerEndTick();
+    }
+
+    synchronized void runServerEndTick() {
         Config snapshot = config;
         if (!snapshot.enabled) {
             return;
@@ -81,14 +92,14 @@ public final class ItemCleanupService {
 
         if (secondsUntilCleanup > 0 && snapshot.warningSeconds.contains(Integer.valueOf(secondsUntilCleanup))) {
             if (warnedSeconds.add(Integer.valueOf(secondsUntilCleanup))) {
-                broadcast(formatWarning(secondsUntilCleanup));
+                broadcastCountdown("Очистка предметов", secondsUntilCleanup);
             }
             return;
         }
 
         if (secondsUntilCleanup <= 0) {
             int removed = cleanupDroppedItems();
-            broadcast("Очистка предметов завершена. Удалено: " + removed + ".");
+            broadcastStatus("Очистка предметов", "завершена. Удалено: " + removed + ".");
             logger.info("Очистка предметов завершена. Удалено EntityItem=" + removed);
             secondsUntilCleanup = snapshot.intervalSeconds;
             warnedSeconds.clear();
@@ -128,7 +139,10 @@ public final class ItemCleanupService {
         properties.setProperty("warningSeconds", joinIntegers(value.warningSeconds));
 
         try {
-            Files.createDirectories(configPath.getParent());
+            Path parent = configPath.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
             try (OutputStream output = Files.newOutputStream(configPath)) {
                 properties.store(output, "ObsidianGate dropped item cleanup.");
             }
@@ -138,7 +152,7 @@ public final class ItemCleanupService {
     }
 
     private int cleanupDroppedItems() {
-        Object server = minecraftServer();
+        Object server = serverSupplier.get();
         int removed = 0;
         for (Object world : loadedWorlds(server)) {
             Object entities = readFieldIfPresent(world, "loadedEntityList", "field_72996_f");
@@ -155,24 +169,32 @@ public final class ItemCleanupService {
         return removed;
     }
 
-    private void broadcast(String message) {
+    private void broadcastStatus(String subject, String detail) {
+        String message = ServerChat.statusText(subject, detail);
         logger.info(message);
-        Object server = minecraftServer();
+        Object server = serverSupplier.get();
         Object playerList = invokeZeroArgIfPresent(server, "getPlayerList", "func_184103_al");
         Object players = invokeZeroArgIfPresent(playerList, "getPlayers", "func_181057_v");
         if (!(players instanceof Iterable<?>)) {
             return;
         }
         for (Object player : (Iterable<?>) players) {
-            ServerChat.info(player, message);
+            ServerChat.status(player, subject, detail);
         }
     }
 
-    private static String formatWarning(int seconds) {
-        if (seconds == 60) {
-            return "Очистка предметов через 1 минуту.";
+    private void broadcastCountdown(String subject, int seconds) {
+        String message = ServerChat.countdownText(subject, seconds);
+        logger.info(message);
+        Object server = serverSupplier.get();
+        Object playerList = invokeZeroArgIfPresent(server, "getPlayerList", "func_184103_al");
+        Object players = invokeZeroArgIfPresent(playerList, "getPlayers", "func_181057_v");
+        if (!(players instanceof Iterable<?>)) {
+            return;
         }
-        return "Очистка предметов через " + seconds + " секунд.";
+        for (Object player : (Iterable<?>) players) {
+            ServerChat.countdown(player, subject, seconds);
+        }
     }
 
     private static Object minecraftServer() {

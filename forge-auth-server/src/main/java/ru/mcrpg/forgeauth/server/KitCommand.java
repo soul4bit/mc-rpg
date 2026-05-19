@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 final class KitCommand {
 
     private static final String COMMAND_NAME = "kit";
+    private static final String SUBJECT = "Стартовый набор";
     private static final String PLAYER_CLASS_NAME = "net.minecraft.entity.player.EntityPlayerMP";
 
     private KitCommand() {
@@ -94,20 +95,20 @@ final class KitCommand {
     private static void execute(Object sender, Object arguments, KitService service) {
         Object player = resolvePlayer(sender);
         if (player == null) {
-            ServerChat.error(sender, "Команду " + ServerChat.command("/kit") + " может использовать только игрок.");
+            ServerChat.status(sender, ServerChat.Tone.ERROR, SUBJECT, "команду " + ServerChat.command("/kit") + " может использовать только игрок.");
             return;
         }
 
         String[] args = arguments instanceof String[] ? (String[]) arguments : new String[0];
         if (args.length != 1 || !"start".equalsIgnoreCase(args[0])) {
-            ServerChat.warning(sender, "Использование: " + ServerChat.command("/kit start"));
+            ServerChat.usage(sender, "/kit start");
             return;
         }
 
         String playerId = playerId(player);
         String playerName = playerName(player);
         if (service.hasClaimedStart(playerId)) {
-            ServerChat.warning(player, "Стартовый набор уже был получен на этом аккаунте.");
+            ServerChat.status(player, ServerChat.Tone.WARNING, SUBJECT, "уже был получен на этом аккаунте.");
             return;
         }
 
@@ -116,12 +117,12 @@ final class KitCommand {
             service.recordStartClaim(playerId, playerName);
             int dropped = giveItems(player, kitItems);
             if (dropped > 0) {
-                ServerChat.warning(player, "Стартовый набор выдан, но часть предметов выпала рядом: инвентарь заполнен.");
+                ServerChat.status(player, ServerChat.Tone.WARNING, SUBJECT, "выдан, но часть предметов выпала рядом: инвентарь заполнен.");
             } else {
-                ServerChat.success(player, "Стартовый набор выдан.");
+                ServerChat.status(player, ServerChat.Tone.SUCCESS, SUBJECT, "выдан.");
             }
         } catch (RuntimeException exception) {
-            ServerChat.error(player, "Не удалось выдать стартовый набор: " + exception.getMessage());
+            ServerChat.status(player, ServerChat.Tone.ERROR, SUBJECT, "не удалось выдать: " + exception.getMessage());
         }
     }
 

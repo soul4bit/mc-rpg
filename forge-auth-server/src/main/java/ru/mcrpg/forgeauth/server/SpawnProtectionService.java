@@ -28,6 +28,7 @@ public final class SpawnProtectionService {
     private static final int DEFAULT_RADIUS = 96;
     private static final int MAX_RADIUS = 2048;
     private static final String HOSTILE_MARKER_CLASS = "net.minecraft.entity.monster.IMob";
+    private static final String SUBJECT = "Защита спавна";
     static final String CENTER_MODE_WORLDSPAWN = "worldspawn";
     static final String CENTER_MODE_FIXED = "fixed";
 
@@ -51,7 +52,7 @@ public final class SpawnProtectionService {
         }
         cancel(event);
         event.setExpToDrop(0);
-        ServerChat.error(player, "Спавн защищён: ломать блоки здесь нельзя.");
+        ServerChat.status(player, ServerChat.Tone.ERROR, SUBJECT, "ломать блоки здесь нельзя.");
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -66,7 +67,7 @@ public final class SpawnProtectionService {
         }
         denyInteraction(event);
         cancel(event);
-        ServerChat.error(player, "Спавн защищён: ломать блоки здесь нельзя.");
+        ServerChat.status(player, ServerChat.Tone.ERROR, SUBJECT, "ломать блоки здесь нельзя.");
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -96,7 +97,7 @@ public final class SpawnProtectionService {
             return;
         }
         cancel(event);
-        ServerChat.error(player, "Спавн защищён: ставить блоки здесь нельзя.");
+        ServerChat.status(player, ServerChat.Tone.ERROR, SUBJECT, "ставить блоки здесь нельзя.");
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -124,7 +125,7 @@ public final class SpawnProtectionService {
         }
         denyInteraction(event);
         cancel(event);
-        ServerChat.error(player, "Спавн защищён: взаимодействие с этим блоком закрыто.");
+        ServerChat.status(player, ServerChat.Tone.ERROR, SUBJECT, "взаимодействие с этим блоком закрыто.");
     }
 
     @SubscribeEvent

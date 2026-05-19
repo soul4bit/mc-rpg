@@ -66,14 +66,30 @@ final class ForgeAuthServerLifecycle {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        Object player = playerBridge.extractPlayerFromEvent(event);
+        trackPlayerLogin(playerBridge.extractPlayerFromEvent(event));
+    }
+
+    void trackPlayerLogin(Object player) {
         String username = playerBridge.extractUsername(player);
         if (username.isEmpty()) {
             logger.warning("Игрок вошел без читаемого ника. Таймаут авторизации через лаунчер нельзя отследить.");
             return;
         }
 
-        authStates.put(normalizeKey(username), new PlayerAuthState(player, username, Instant.now()));
+        String key = normalizeKey(username);
+        PlayerAuthState existing = authStates.get(key);
+        if (existing != null) {
+            existing.player = player;
+            logger.info(String.format(
+                "Player %s logged in. Preserving existing launcher auth state: verified=%s inFlight=%s.",
+                username,
+                existing.verified,
+                existing.verificationInFlight
+            ));
+            return;
+        }
+
+        authStates.put(key, new PlayerAuthState(player, username, Instant.now()));
         logger.info(String.format(
             "Игрок %s вошел. Ждем подтверждение авторизации лаунчера до %d секунд.",
             username,
@@ -96,6 +112,10 @@ final class ForgeAuthServerLifecycle {
             return;
         }
 
+        runServerEndTick();
+    }
+
+    void runServerEndTick() {
         Runnable action;
         while ((action = mainThreadActions.poll()) != null) {
             action.run();
@@ -111,6 +131,9 @@ final class ForgeAuthServerLifecycle {
             if (state.verified) {
                 continue;
             }
+            if (state.verificationInFlight) {
+                continue;
+            }
             long elapsedSeconds = Duration.between(state.connectedAt, now).getSeconds();
             if (elapsedSeconds >= config.getGraceSeconds()) {
                 failAndDisconnect(state.username, "Лаунчер не прислал ticket вовремя.");
@@ -119,8 +142,15 @@ final class ForgeAuthServerLifecycle {
     }
 
     void onTicketMessage(AuthTicketMessage message, Object ctx) {
-        Object player = playerBridge.extractPlayerFromMessageContext(ctx);
-        String username = playerBridge.extractUsername(player);
+        Object player;
+        String username;
+        try {
+            player = playerBridge.extractPlayerFromMessageContext(ctx);
+            username = playerBridge.extractUsername(player);
+        } catch (RuntimeException exception) {
+            logger.log(Level.WARNING, "Could not resolve player from launcher auth packet.", exception);
+            return;
+        }
         if (username.isEmpty()) {
             logger.warning("Получен пакет авторизации лаунчера от игрока с нечитаемым ником.");
             return;

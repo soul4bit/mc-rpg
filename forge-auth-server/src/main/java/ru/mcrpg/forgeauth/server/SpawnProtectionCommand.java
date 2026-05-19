@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 final class SpawnProtectionCommand {
 
     private static final String COMMAND_NAME = "spawnprotect";
+    private static final String SUBJECT = "Защита спавна";
 
     private SpawnProtectionCommand() {
     }
@@ -78,7 +79,7 @@ final class SpawnProtectionCommand {
 
         private void execute(Object sender, Object arguments) {
             if (!canUse(sender)) {
-                ServerChat.error(sender, "Недостаточно прав для команды " + ServerChat.command("/" + COMMAND_NAME) + ".");
+                ServerChat.status(sender, ServerChat.Tone.ERROR, SUBJECT, "недостаточно прав для команды " + ServerChat.command("/" + COMMAND_NAME) + ".");
                 return;
             }
 
@@ -90,26 +91,26 @@ final class SpawnProtectionCommand {
             }
             if ("on".equals(action)) {
                 service.setEnabled(true);
-                ServerChat.success(sender, "Защита спавна включена.");
+                ServerChat.status(sender, ServerChat.Tone.SUCCESS, SUBJECT, "включена.");
                 sendInfo(sender);
                 return;
             }
             if ("off".equals(action)) {
                 service.setEnabled(false);
-                ServerChat.warning(sender, "Защита спавна выключена.");
+                ServerChat.status(sender, ServerChat.Tone.WARNING, SUBJECT, "выключена.");
                 sendInfo(sender);
                 return;
             }
             if ("reload".equals(action)) {
                 service.load();
-                ServerChat.success(sender, "Конфиг защиты спавна перезагружен.");
+                ServerChat.status(sender, ServerChat.Tone.SUCCESS, SUBJECT, "конфиг перезагружен.");
                 sendInfo(sender);
                 return;
             }
             if ("center".equals(action)) {
                 Object player = TeleportSupport.resolvePlayer(sender);
                 if (player == null) {
-                    ServerChat.error(sender, "Команду " + ServerChat.command("/" + COMMAND_NAME + " center") + " может использовать только игрок.");
+                    ServerChat.status(sender, ServerChat.Tone.ERROR, SUBJECT, "команду " + ServerChat.command("/" + COMMAND_NAME + " center") + " может использовать только игрок.");
                     return;
                 }
                 service.setFixedCenter(
@@ -117,37 +118,37 @@ final class SpawnProtectionCommand {
                     Math.floor(TeleportSupport.playerX(player)),
                     Math.floor(TeleportSupport.playerZ(player))
                 );
-                ServerChat.success(sender, "Центр защиты спавна установлен в текущей позиции.");
+                ServerChat.status(sender, ServerChat.Tone.SUCCESS, SUBJECT, "центр установлен в текущей позиции.");
                 sendInfo(sender);
                 return;
             }
             if ("worldspawn".equals(action)) {
                 service.useWorldSpawnCenter();
-                ServerChat.success(sender, "Центр защиты спавна снова берётся из /setworldspawn.");
+                ServerChat.status(sender, ServerChat.Tone.SUCCESS, SUBJECT, "центр снова берётся из /setworldspawn.");
                 sendInfo(sender);
                 return;
             }
             if ("radius".equals(action)) {
                 if (args.length < 2) {
-                    ServerChat.warning(sender, "Использование: " + ServerChat.command("/" + COMMAND_NAME + " radius <блоки>"));
+                    ServerChat.usage(sender, "/" + COMMAND_NAME + " radius <блоки>");
                     return;
                 }
                 try {
                     service.setRadius(Integer.parseInt(args[1]));
-                    ServerChat.success(sender, "Радиус защиты спавна обновлён.");
+                    ServerChat.status(sender, ServerChat.Tone.SUCCESS, SUBJECT, "радиус обновлён.");
                     sendInfo(sender);
                 } catch (NumberFormatException ignored) {
-                    ServerChat.error(sender, "Радиус должен быть числом.");
+                    ServerChat.status(sender, ServerChat.Tone.ERROR, SUBJECT, "радиус должен быть числом.");
                 }
                 return;
             }
-            ServerChat.warning(sender, "Использование: " + ServerChat.command("/" + COMMAND_NAME + " <info|on|off|radius|center|worldspawn|reload>"));
+            ServerChat.usage(sender, "/" + COMMAND_NAME + " <info|on|off|radius|center|worldspawn|reload>");
         }
 
         private void sendInfo(Object sender) {
             SpawnProtectionService.Config config = service.config();
-            ServerChat.info(sender, String.format(
-                "Защита спавна: %s, радиус %s, центр %s dim %s (%s, %s), блоки %s, мобы %s, взрывы %s, обход OP %s.",
+            ServerChat.status(sender, SUBJECT, String.format(
+                "%s, радиус %s, центр %s dim %s (%s, %s), блоки %s, мобы %s, взрывы %s, обход OP %s.",
                 ServerChat.value(enabledText(config.enabled)),
                 ServerChat.value(config.radius),
                 ServerChat.value(config.centerMode),

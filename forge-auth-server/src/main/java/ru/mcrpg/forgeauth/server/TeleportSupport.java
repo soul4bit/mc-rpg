@@ -1,7 +1,9 @@
 package ru.mcrpg.forgeauth.server;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -131,27 +133,73 @@ final class TeleportSupport {
         invokeZeroArgIfPresent(currentPlayer, "dismountRidingEntity", "func_184210_p");
 
         int destinationDimension = playerDimension(destinationPlayer);
+        double destinationX = playerX(destinationPlayer);
+        double destinationY = playerY(destinationPlayer);
+        double destinationZ = playerZ(destinationPlayer);
+        float destinationYaw = playerYaw(destinationPlayer);
+        float destinationPitch = playerPitch(destinationPlayer);
         if (playerDimension(currentPlayer) != destinationDimension) {
-            Object transferredPlayer = invokeIfPresent(
+            currentPlayer = changeDimension(
                 currentPlayer,
-                new Object[] { Integer.valueOf(destinationDimension) },
-                "changeDimension",
-                "func_184204_a"
+                destinationDimension,
+                destinationX,
+                destinationY,
+                destinationZ,
+                destinationYaw,
+                destinationPitch
             );
-            if (transferredPlayer != null) {
-                currentPlayer = transferredPlayer;
-            }
         }
 
         teleport(
             currentPlayer,
-            playerX(destinationPlayer),
-            playerY(destinationPlayer),
-            playerZ(destinationPlayer),
-            playerYaw(destinationPlayer),
-            playerPitch(destinationPlayer)
+            destinationX,
+            destinationY,
+            destinationZ,
+            destinationYaw,
+            destinationPitch
         );
         return currentPlayer;
+    }
+
+    static Object changeDimension(Object player, int destinationDimension, double x, double y, double z, float yaw, float pitch) {
+        if (player == null) {
+            throw new IllegalArgumentException("Игрок для телепортации не найден.");
+        }
+        if (playerDimension(player) == destinationDimension) {
+            return player;
+        }
+
+        invokeZeroArgIfPresent(player, "dismountRidingEntity", "func_184210_p");
+
+        Object forgeTeleporter = forgeTeleporter(x, y, z, yaw, pitch);
+        if (forgeTeleporter != null) {
+            Object transferredPlayer = invokeIfPresent(
+                player,
+                new Object[] { Integer.valueOf(destinationDimension), forgeTeleporter },
+                "changeDimension"
+            );
+            if (transferredPlayer != null) {
+                return transferredPlayer;
+            }
+            if (playerDimension(player) == destinationDimension) {
+                return player;
+            }
+        }
+
+        Object transferredPlayer = invokeIfPresent(
+            player,
+            new Object[] { Integer.valueOf(destinationDimension) },
+            "changeDimension",
+            "func_184204_a"
+        );
+        if (transferredPlayer != null) {
+            return transferredPlayer;
+        }
+        if (playerDimension(player) == destinationDimension) {
+            return player;
+        }
+
+        throw new IllegalStateException("Не удалось сменить измерение игрока.");
     }
 
     static void teleport(Object player, double x, double y, double z, float yaw, float pitch) {
@@ -205,6 +253,64 @@ final class TeleportSupport {
         return !Double.isNaN(value) && !Double.isInfinite(value);
     }
 
+    private static Object forgeTeleporter(final double x, final double y, final double z, final float yaw, final float pitch) {
+        try {
+            Class<?> teleporterType = Class.forName("net.minecraftforge.common.util.ITeleporter");
+            return Proxy.newProxyInstance(
+                teleporterType.getClassLoader(),
+                new Class<?>[] { teleporterType },
+                (proxy, method, args) -> {
+                    String name = method.getName();
+                    if ("placeEntity".equals(name)) {
+                        Object entity = args != null && args.length > 1 ? args[1] : null;
+                        if (entity != null) {
+                            placeEntity(entity, x, y, z, yaw, pitch);
+                        }
+                        return null;
+                    }
+                    if ("isVanilla".equals(name)) {
+                        return Boolean.FALSE;
+                    }
+                    if ("toString".equals(name)) {
+                        return "ObsidianGateTeleporter";
+                    }
+                    if ("hashCode".equals(name)) {
+                        return Integer.valueOf(System.identityHashCode(proxy));
+                    }
+                    if ("equals".equals(name)) {
+                        return Boolean.valueOf(proxy == (args == null || args.length == 0 ? null : args[0]));
+                    }
+                    return defaultValue(method.getReturnType());
+                }
+            );
+        } catch (ClassNotFoundException | LinkageError exception) {
+            return null;
+        }
+    }
+
+    private static void placeEntity(Object entity, double x, double y, double z, float yaw, float pitch) {
+        if (invokeMethodIfPresent(entity, new Object[] {
+            Double.valueOf(x),
+            Double.valueOf(y),
+            Double.valueOf(z),
+            Float.valueOf(yaw),
+            Float.valueOf(pitch)
+        }, "setLocationAndAngles", "func_70080_a")) {
+            resetMotion(entity);
+            return;
+        }
+
+        if (invokeMethodIfPresent(entity, new Object[] {
+            Double.valueOf(x),
+            Double.valueOf(y),
+            Double.valueOf(z)
+        }, "setPositionAndUpdate", "func_70634_a")) {
+            setFloatField(entity, yaw, "rotationYaw", "field_70177_z");
+            setFloatField(entity, pitch, "rotationPitch", "field_70125_A");
+            resetMotion(entity);
+        }
+    }
+
     private static List<Object> onlinePlayers(Object playerList) {
         if (playerList == null) {
             return Collections.emptyList();
@@ -241,7 +347,7 @@ final class TeleportSupport {
                         method.setAccessible(true);
                         return method.invoke(target, safeArgs);
                     } catch (ReflectiveOperationException exception) {
-                        throw new IllegalStateException("Не удалось вызвать " + method.getName() + ".", exception);
+                        throw invocationFailure(method, exception);
                     }
                 }
             }
@@ -264,13 +370,29 @@ final class TeleportSupport {
                         method.invoke(target, safeArgs);
                         return true;
                     } catch (ReflectiveOperationException exception) {
-                        throw new IllegalStateException("Не удалось вызвать " + method.getName() + ".", exception);
+                        throw invocationFailure(method, exception);
                     }
                 }
             }
             type = type.getSuperclass();
         }
         return false;
+    }
+
+    private static IllegalStateException invocationFailure(Method method, ReflectiveOperationException exception) {
+        Throwable cause = exception;
+        if (exception instanceof InvocationTargetException) {
+            Throwable targetCause = ((InvocationTargetException) exception).getTargetException();
+            if (targetCause != null) {
+                cause = targetCause;
+            }
+        }
+
+        String detail = cause.getMessage();
+        if (detail == null || detail.trim().isEmpty()) {
+            detail = cause.getClass().getSimpleName();
+        }
+        return new IllegalStateException("Не удалось вызвать " + method.getName() + ": " + detail + ".", cause);
     }
 
     private static boolean methodMatches(Method method, Object[] args, String... methodNames) {
@@ -396,6 +518,37 @@ final class TeleportSupport {
                 }
             }
             current = current.getSuperclass();
+        }
+        return null;
+    }
+
+    private static Object defaultValue(Class<?> type) {
+        if (type == Void.TYPE) {
+            return null;
+        }
+        if (type == Boolean.TYPE) {
+            return Boolean.FALSE;
+        }
+        if (type == Integer.TYPE) {
+            return Integer.valueOf(0);
+        }
+        if (type == Float.TYPE) {
+            return Float.valueOf(0.0F);
+        }
+        if (type == Double.TYPE) {
+            return Double.valueOf(0.0D);
+        }
+        if (type == Long.TYPE) {
+            return Long.valueOf(0L);
+        }
+        if (type == Short.TYPE) {
+            return Short.valueOf((short) 0);
+        }
+        if (type == Byte.TYPE) {
+            return Byte.valueOf((byte) 0);
+        }
+        if (type == Character.TYPE) {
+            return Character.valueOf('\0');
         }
         return null;
     }
