@@ -54,10 +54,10 @@ public final class SpawnProtectionService {
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         Config snapshot = config();
         BlockPosition position = blockPosition(invokeZeroArgIfPresent(event, "getPos"));
-        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedEvent(event, position, snapshot)) {
+        Object player = invokeZeroArgIfPresent(event, "getPlayer");
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedEvent(event, position, player, snapshot)) {
             return;
         }
-        Object player = invokeZeroArgIfPresent(event, "getPlayer");
         if (canBypass(player, snapshot)) {
             return;
         }
@@ -71,10 +71,10 @@ public final class SpawnProtectionService {
     public void onPlayerLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
         Config snapshot = config();
         BlockPosition position = blockPosition(invokeZeroArgIfPresent(event, "getPos"));
-        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedEvent(event, position, snapshot)) {
+        Object player = invokeZeroArgIfPresent(event, "getEntityPlayer", "getEntity");
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedEvent(event, position, player, snapshot)) {
             return;
         }
-        Object player = invokeZeroArgIfPresent(event, "getEntityPlayer", "getEntity");
         if (canBypass(player, snapshot)) {
             return;
         }
@@ -89,7 +89,7 @@ public final class SpawnProtectionService {
         Object player = invokeZeroArgIfPresent(event, "getEntityPlayer", "getEntity");
         Object world = readFieldIfPresent(player, "world", "field_70170_p", "l");
         BlockPosition position = blockPosition(invokeZeroArgIfPresent(event, "getPos"));
-        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtected(world, position, snapshot)) {
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedPosition(world, position, player, snapshot)) {
             return;
         }
         if (canBypass(player, snapshot)) {
@@ -103,10 +103,10 @@ public final class SpawnProtectionService {
     public void onBlockPlace(BlockEvent.PlaceEvent event) {
         Config snapshot = config();
         BlockPosition position = blockPosition(invokeZeroArgIfPresent(event, "getPos"));
-        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedEvent(event, position, snapshot)) {
+        Object player = invokeZeroArgIfPresent(event, "getPlayer");
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedEvent(event, position, player, snapshot)) {
             return;
         }
-        Object player = invokeZeroArgIfPresent(event, "getPlayer");
         if (canBypass(player, snapshot)) {
             return;
         }
@@ -118,10 +118,10 @@ public final class SpawnProtectionService {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEntityBlockPlace(BlockEvent.EntityPlaceEvent event) {
         Config snapshot = config();
-        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedEvent(event, blockPosition(invokeZeroArgIfPresent(event, "getPos")), snapshot)) {
+        Object entity = invokeZeroArgIfPresent(event, "getEntity");
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedEvent(event, blockPosition(invokeZeroArgIfPresent(event, "getPos")), entity, snapshot)) {
             return;
         }
-        Object entity = invokeZeroArgIfPresent(event, "getEntity");
         if (canBypass(entity, snapshot)) {
             return;
         }
@@ -131,10 +131,10 @@ public final class SpawnProtectionService {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Config snapshot = config();
-        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedEvent(event, blockPosition(invokeZeroArgIfPresent(event, "getPos")), snapshot)) {
+        Object player = invokeZeroArgIfPresent(event, "getEntityPlayer", "getEntity");
+        if (!snapshot.enabled || !snapshot.protectBlocks || !isProtectedEvent(event, blockPosition(invokeZeroArgIfPresent(event, "getPos")), player, snapshot)) {
             return;
         }
-        Object player = invokeZeroArgIfPresent(event, "getEntityPlayer", "getEntity");
         if (canBypass(player, snapshot)) {
             return;
         }
@@ -338,8 +338,13 @@ public final class SpawnProtectionService {
     }
 
     boolean isProtectedPlayerPosition(Object player) {
-        Object world = readFieldIfPresent(player, "world", "field_70170_p", "l");
-        return isProtected(world, TeleportSupport.playerX(player), TeleportSupport.playerY(player), TeleportSupport.playerZ(player), config());
+        return isProtected(
+            TeleportSupport.playerDimension(player),
+            TeleportSupport.playerX(player),
+            TeleportSupport.playerY(player),
+            TeleportSupport.playerZ(player),
+            config()
+        );
     }
 
     boolean isProtectedBlockPosition(Object world, Object blockPos) {
@@ -347,10 +352,9 @@ public final class SpawnProtectionService {
     }
 
     String describePlayerPosition(Object player) {
-        Object world = readFieldIfPresent(player, "world", "field_70170_p", "l");
         return String.format(
             "dim=%d x=%d y=%d z=%d protected=%s",
-            Integer.valueOf(dimension(world)),
+            Integer.valueOf(TeleportSupport.playerDimension(player)),
             Integer.valueOf((int) Math.floor(TeleportSupport.playerX(player))),
             Integer.valueOf((int) Math.floor(TeleportSupport.playerY(player))),
             Integer.valueOf((int) Math.floor(TeleportSupport.playerZ(player))),
@@ -432,9 +436,22 @@ public final class SpawnProtectionService {
         }
     }
 
-    private boolean isProtectedEvent(Object event, BlockPosition position, Config snapshot) {
+    private boolean isProtectedEvent(Object event, BlockPosition position, Object actor, Config snapshot) {
         Object world = invokeZeroArgIfPresent(event, "getWorld");
-        return isProtected(world, position, snapshot);
+        return isProtectedPosition(world, position, actor, snapshot);
+    }
+
+    private boolean isProtectedPosition(Object world, BlockPosition position, Object actor, Config snapshot) {
+        if (isProtected(world, position, snapshot)) {
+            return true;
+        }
+        return actor != null && position != null && isProtected(
+            TeleportSupport.playerDimension(actor),
+            position.x,
+            position.y,
+            position.z,
+            snapshot
+        );
     }
 
     private boolean isProtected(Object world, BlockPosition position, Config snapshot) {
@@ -469,6 +486,19 @@ public final class SpawnProtectionService {
         }
         Center center = protectedCenter(world, snapshot);
         return center != null && Math.abs(x - center.x) <= snapshot.radius && Math.abs(z - center.z) <= snapshot.radius;
+    }
+
+    private static boolean isProtected(int dimension, double x, double y, double z, Config snapshot) {
+        if (dimension != snapshot.dimension) {
+            return false;
+        }
+        if (REGION_MODE_BOX.equals(snapshot.regionMode)) {
+            return isInsideBox(x, y, z, snapshot);
+        }
+        if (CENTER_MODE_FIXED.equals(snapshot.centerMode)) {
+            return Math.abs(x - snapshot.centerX) <= snapshot.radius && Math.abs(z - snapshot.centerZ) <= snapshot.radius;
+        }
+        return false;
     }
 
     private static boolean isInsideBox(double x, double y, double z, Config snapshot) {

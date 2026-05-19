@@ -53,6 +53,19 @@ class SpawnProtectionServiceTest {
         assertFalse(service.isProtectedBlockPosition(new FakeObfuscatedWorld(0), new FakeObfuscatedBlockPos(0, 90, 0)));
     }
 
+    @Test
+    void playerPositionProtectionDoesNotRequireReadableWorldField() throws Exception {
+        Path configPath = tempDirectory.resolve("obsidiangate-spawn-protection.properties");
+        SpawnProtectionService service = new SpawnProtectionService(Logger.getLogger("test"), configPath);
+        service.setBoxRegion(0, -1436.0D, 0.0D, 1009.0D, -1116.0D, 255.0D, 1329.0D);
+
+        FakeObfuscatedPlayer player = new FakeObfuscatedPlayer(0, -1276.0D, 66.0D, 1169.0D);
+
+        assertTrue(service.isProtectedPlayerPosition(player));
+        assertTrue(service.describePlayerPosition(player).contains("dim=0"));
+        assertTrue(service.describePlayerPosition(player).contains("protected=true"));
+    }
+
     static final class FakeWorld {
         public final FakeProvider provider;
 
@@ -138,6 +151,20 @@ class SpawnProtectionServiceTest {
 
         public int r() {
             return z;
+        }
+    }
+
+    static final class FakeObfuscatedPlayer {
+        public final int field_71093_bK;
+        public final double p;
+        public final double q;
+        public final double r;
+
+        FakeObfuscatedPlayer(int dimension, double x, double y, double z) {
+            this.field_71093_bK = dimension;
+            this.p = x;
+            this.q = y;
+            this.r = z;
         }
     }
 }
