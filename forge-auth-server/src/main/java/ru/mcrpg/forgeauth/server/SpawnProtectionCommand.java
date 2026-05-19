@@ -44,7 +44,7 @@ final class SpawnProtectionCommand {
                 return COMMAND_NAME;
             }
             if ("getUsage".equals(name) || "func_71518_a".equals(name)) {
-                return "/" + COMMAND_NAME + " <info|on|off|radius|center|worldspawn|reload>";
+                return "/" + COMMAND_NAME + " <info|on|off|radius|center|worldspawn|region|reload>";
             }
             if ("getAliases".equals(name) || "func_71514_a".equals(name)) {
                 return Collections.emptyList();
@@ -128,6 +128,10 @@ final class SpawnProtectionCommand {
                 sendInfo(sender);
                 return;
             }
+            if ("region".equals(action)) {
+                setRegion(sender, args);
+                return;
+            }
             if ("radius".equals(action)) {
                 if (args.length < 2) {
                     ServerChat.usage(sender, "/" + COMMAND_NAME + " radius <блоки>");
@@ -142,11 +146,29 @@ final class SpawnProtectionCommand {
                 }
                 return;
             }
-            ServerChat.usage(sender, "/" + COMMAND_NAME + " <info|on|off|radius|center|worldspawn|reload>");
+            ServerChat.usage(sender, "/" + COMMAND_NAME + " <info|on|off|radius|center|worldspawn|region|reload>");
         }
 
         private void sendInfo(Object sender) {
             SpawnProtectionService.Config config = service.config();
+            if (SpawnProtectionService.REGION_MODE_BOX.equals(config.regionMode)) {
+                ServerChat.status(sender, SUBJECT, String.format(
+                    "%s, приват dim %s [%s,%s,%s]..[%s,%s,%s], блоки %s, мобы %s, взрывы %s, обход OP %s.",
+                    ServerChat.value(enabledText(config.enabled)),
+                    ServerChat.value(config.dimension),
+                    ServerChat.value(Integer.valueOf((int) Math.floor(config.minX))),
+                    ServerChat.value(Integer.valueOf((int) Math.floor(config.minY))),
+                    ServerChat.value(Integer.valueOf((int) Math.floor(config.minZ))),
+                    ServerChat.value(Integer.valueOf((int) Math.floor(config.maxX))),
+                    ServerChat.value(Integer.valueOf((int) Math.floor(config.maxY))),
+                    ServerChat.value(Integer.valueOf((int) Math.floor(config.maxZ))),
+                    ServerChat.value(enabledText(config.protectBlocks)),
+                    ServerChat.value(enabledText(config.denyHostileSpawns)),
+                    ServerChat.value(enabledText(config.denyExplosions)),
+                    ServerChat.value(enabledText(config.allowOperatorBypass))
+                ));
+                return;
+            }
             ServerChat.status(sender, SUBJECT, String.format(
                 "%s, радиус %s, центр %s dim %s (%s, %s), блоки %s, мобы %s, взрывы %s, обход OP %s.",
                 ServerChat.value(enabledText(config.enabled)),
@@ -160,6 +182,62 @@ final class SpawnProtectionCommand {
                 ServerChat.value(enabledText(config.denyExplosions)),
                 ServerChat.value(enabledText(config.allowOperatorBypass))
             ));
+        }
+
+        private void setRegion(Object sender, String[] args) {
+            if (args.length >= 3 && "here".equals(args[1].trim().toLowerCase())) {
+                Object player = TeleportSupport.resolvePlayer(sender);
+                if (player == null) {
+                    ServerChat.status(sender, ServerChat.Tone.ERROR, SUBJECT, "команду " + ServerChat.command("/" + COMMAND_NAME + " region here <радиус>") + " может использовать только игрок.");
+                    return;
+                }
+                try {
+                    int radius = Integer.parseInt(args[2]);
+                    int dimension = TeleportSupport.playerDimension(player);
+                    double centerX = Math.floor(TeleportSupport.playerX(player));
+                    double centerZ = Math.floor(TeleportSupport.playerZ(player));
+                    service.setBoxRegion(
+                        dimension,
+                        centerX - radius,
+                        0.0D,
+                        centerZ - radius,
+                        centerX + radius,
+                        255.0D,
+                        centerZ + radius
+                    );
+                    ServerChat.status(sender, ServerChat.Tone.SUCCESS, SUBJECT, "приват создан вокруг текущей позиции.");
+                    sendInfo(sender);
+                } catch (NumberFormatException ignored) {
+                    ServerChat.status(sender, ServerChat.Tone.ERROR, SUBJECT, "радиус должен быть числом.");
+                }
+                return;
+            }
+
+            if (args.length < 7) {
+                ServerChat.usage(sender, "/" + COMMAND_NAME + " region here <радиус>");
+                ServerChat.usage(sender, "/" + COMMAND_NAME + " region <x1> <y1> <z1> <x2> <y2> <z2> [dim]");
+                return;
+            }
+
+            try {
+                double x1 = Double.parseDouble(args[1]);
+                double y1 = Double.parseDouble(args[2]);
+                double z1 = Double.parseDouble(args[3]);
+                double x2 = Double.parseDouble(args[4]);
+                double y2 = Double.parseDouble(args[5]);
+                double z2 = Double.parseDouble(args[6]);
+                int dimension = args.length >= 8 ? Integer.parseInt(args[7]) : dimensionFromSender(sender);
+                service.setBoxRegion(dimension, x1, y1, z1, x2, y2, z2);
+                ServerChat.status(sender, ServerChat.Tone.SUCCESS, SUBJECT, "приват региона обновлён.");
+                sendInfo(sender);
+            } catch (NumberFormatException ignored) {
+                ServerChat.status(sender, ServerChat.Tone.ERROR, SUBJECT, "координаты региона должны быть числами.");
+            }
+        }
+
+        private int dimensionFromSender(Object sender) {
+            Object player = TeleportSupport.resolvePlayer(sender);
+            return player == null ? 0 : TeleportSupport.playerDimension(player);
         }
     }
 

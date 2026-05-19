@@ -14,7 +14,7 @@
     "launcherUpdate":  {
                            "version":  "2026.05.19",
                            "url":  "client/launcher/obsidian-gate-launcher.jar",
-                           "sha256":  "030afbb5517e4a2e6af73f870eff1741a30f2647907fd7ff353b777573fa7e55",
+                           "sha256":  "60fae1d7197927a026c85e805cb29c8f76a8cc46844a8c2189315beb796712cf",
                            "size":  15607453,
                            "required":  false,
                            "artifactVersion":  "0.1.4-test",
@@ -1112,8 +1112,8 @@
                   },
                   {
                       "path":  "config/obsidiangate-spawn-protection.properties",
-                      "sha256":  "266b81054d0a440a09077001faba66c830f9c43efceefb8b568030310051654a",
-                      "size":  261,
+                      "sha256":  "ff495edc71cb3c86e2ce245b7a2a06a700433bdec91e5ad609bdf88a203506ec",
+                      "size":  345,
                       "executable":  false
                   },
                   {
@@ -1946,7 +1946,7 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "35a56b712329d8acecdebcf5daac362f9a480caf102e6257799a466c88688f7e",
+                      "sha256":  "ee48dfff16bf45fd408eb75c02d15fa31daec24a365ac2ee9a174e2af7c3783e",
                       "size":  31606,
                       "executable":  false
                   },

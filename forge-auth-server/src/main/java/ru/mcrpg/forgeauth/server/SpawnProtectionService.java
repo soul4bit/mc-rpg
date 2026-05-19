@@ -27,16 +27,26 @@ public final class SpawnProtectionService {
     private static final Path CONFIG_PATH = Paths.get("config", "obsidiangate-spawn-protection.properties");
     private static final int DEFAULT_RADIUS = 96;
     private static final int MAX_RADIUS = 2048;
+    private static final double MIN_REGION_Y = 0.0D;
+    private static final double MAX_REGION_Y = 255.0D;
     private static final String HOSTILE_MARKER_CLASS = "net.minecraft.entity.monster.IMob";
     private static final String SUBJECT = "Защита спавна";
     static final String CENTER_MODE_WORLDSPAWN = "worldspawn";
     static final String CENTER_MODE_FIXED = "fixed";
+    static final String REGION_MODE_RADIUS = "radius";
+    static final String REGION_MODE_BOX = "box";
 
     private final Logger logger;
+    private final Path configPath;
     private volatile Config config;
 
     SpawnProtectionService(Logger logger) {
+        this(logger, CONFIG_PATH);
+    }
+
+    SpawnProtectionService(Logger logger, Path configPath) {
         this.logger = logger;
+        this.configPath = configPath;
         this.config = Config.defaults();
     }
 
@@ -136,8 +146,9 @@ public final class SpawnProtectionService {
         }
         Object world = invokeZeroArgIfPresent(event, "getWorld");
         double x = readDouble(event, "getX");
+        double y = readDouble(event, "getY");
         double z = readDouble(event, "getZ");
-        if (isProtected(world, x, z, snapshot)) {
+        if (isProtected(world, x, y, z, snapshot)) {
             event.setResult(Result.DENY);
         }
     }
@@ -151,8 +162,9 @@ public final class SpawnProtectionService {
         Object world = invokeZeroArgIfPresent(event, "getWorld");
         Object explosion = invokeZeroArgIfPresent(event, "getExplosion");
         double x = readExplosionCoordinate(explosion, 0, "explosionX", "field_77284_b");
+        double y = readExplosionCoordinate(explosion, 1, "explosionY", "field_77286_c");
         double z = readExplosionCoordinate(explosion, 2, "explosionZ", "field_77285_d");
-        if (isProtected(world, x, z, snapshot)) {
+        if (isProtected(world, x, y, z, snapshot)) {
             cancel(event);
         }
     }
@@ -180,8 +192,9 @@ public final class SpawnProtectionService {
     synchronized void load() {
         config = loadConfig();
         logger.info(String.format(
-            "Защита спавна загружена. enabled=%s radius=%d protectBlocks=%s denyHostileSpawns=%s denyExplosions=%s allowOperatorBypass=%s",
+            "Защита спавна загружена. enabled=%s mode=%s radius=%d protectBlocks=%s denyHostileSpawns=%s denyExplosions=%s allowOperatorBypass=%s",
             config.enabled,
+            config.regionMode,
             config.radius,
             config.protectBlocks,
             config.denyHostileSpawns,
@@ -202,7 +215,14 @@ public final class SpawnProtectionService {
             current.protectBlocks,
             current.denyHostileSpawns,
             current.denyExplosions,
-            current.allowOperatorBypass
+            current.allowOperatorBypass,
+            current.regionMode,
+            current.minX,
+            current.minY,
+            current.minZ,
+            current.maxX,
+            current.maxY,
+            current.maxZ
         );
         save(config);
     }
@@ -219,7 +239,14 @@ public final class SpawnProtectionService {
             current.protectBlocks,
             current.denyHostileSpawns,
             current.denyExplosions,
-            current.allowOperatorBypass
+            current.allowOperatorBypass,
+            REGION_MODE_RADIUS,
+            current.minX,
+            current.minY,
+            current.minZ,
+            current.maxX,
+            current.maxY,
+            current.maxZ
         );
         save(config);
     }
@@ -236,7 +263,14 @@ public final class SpawnProtectionService {
             current.protectBlocks,
             current.denyHostileSpawns,
             current.denyExplosions,
-            current.allowOperatorBypass
+            current.allowOperatorBypass,
+            REGION_MODE_RADIUS,
+            current.minX,
+            current.minY,
+            current.minZ,
+            current.maxX,
+            current.maxY,
+            current.maxZ
         );
         save(config);
     }
@@ -253,7 +287,38 @@ public final class SpawnProtectionService {
             current.protectBlocks,
             current.denyHostileSpawns,
             current.denyExplosions,
-            current.allowOperatorBypass
+            current.allowOperatorBypass,
+            REGION_MODE_RADIUS,
+            current.minX,
+            current.minY,
+            current.minZ,
+            current.maxX,
+            current.maxY,
+            current.maxZ
+        );
+        save(config);
+    }
+
+    synchronized void setBoxRegion(int dimension, double x1, double y1, double z1, double x2, double y2, double z2) {
+        Config current = config();
+        config = new Config(
+            current.enabled,
+            current.radius,
+            current.centerMode,
+            dimension,
+            current.centerX,
+            current.centerZ,
+            current.protectBlocks,
+            current.denyHostileSpawns,
+            current.denyExplosions,
+            current.allowOperatorBypass,
+            REGION_MODE_BOX,
+            x1,
+            y1,
+            z1,
+            x2,
+            y2,
+            z2
         );
         save(config);
     }
@@ -269,8 +334,8 @@ public final class SpawnProtectionService {
 
     private Config loadConfig() {
         Properties properties = new Properties();
-        if (Files.exists(CONFIG_PATH)) {
-            try (InputStream input = Files.newInputStream(CONFIG_PATH)) {
+        if (Files.exists(configPath)) {
+            try (InputStream input = Files.newInputStream(configPath)) {
                 properties.load(input);
             } catch (IOException exception) {
                 logger.log(Level.WARNING, "Не удалось прочитать конфиг защиты спавна. Используем значения по умолчанию.", exception);
@@ -287,10 +352,22 @@ public final class SpawnProtectionService {
             readBoolean(properties, "protectBlocks", true),
             readBoolean(properties, "denyHostileSpawns", true),
             readBoolean(properties, "denyExplosions", true),
-            readBoolean(properties, "allowOperatorBypass", false)
+            readBoolean(properties, "allowOperatorBypass", false),
+            readRegionMode(properties),
+            readDouble(properties, "minX", -DEFAULT_RADIUS),
+            readDouble(properties, "minY", MIN_REGION_Y),
+            readDouble(properties, "minZ", -DEFAULT_RADIUS),
+            readDouble(properties, "maxX", DEFAULT_RADIUS),
+            readDouble(properties, "maxY", MAX_REGION_Y),
+            readDouble(properties, "maxZ", DEFAULT_RADIUS)
         );
 
-        if (!Files.exists(CONFIG_PATH) || !properties.containsKey("allowOperatorBypass") || !properties.containsKey("centerMode")) {
+        if (
+            !Files.exists(configPath)
+                || !properties.containsKey("allowOperatorBypass")
+                || !properties.containsKey("centerMode")
+                || !properties.containsKey("regionMode")
+        ) {
             save(loaded);
         }
         return loaded;
@@ -308,10 +385,20 @@ public final class SpawnProtectionService {
         properties.setProperty("denyHostileSpawns", Boolean.toString(value.denyHostileSpawns));
         properties.setProperty("denyExplosions", Boolean.toString(value.denyExplosions));
         properties.setProperty("allowOperatorBypass", Boolean.toString(value.allowOperatorBypass));
+        properties.setProperty("regionMode", value.regionMode);
+        properties.setProperty("minX", Double.toString(value.minX));
+        properties.setProperty("minY", Double.toString(value.minY));
+        properties.setProperty("minZ", Double.toString(value.minZ));
+        properties.setProperty("maxX", Double.toString(value.maxX));
+        properties.setProperty("maxY", Double.toString(value.maxY));
+        properties.setProperty("maxZ", Double.toString(value.maxZ));
 
         try {
-            Files.createDirectories(CONFIG_PATH.getParent());
-            try (OutputStream output = Files.newOutputStream(CONFIG_PATH)) {
+            Path parent = configPath.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
+            try (OutputStream output = Files.newOutputStream(configPath)) {
                 properties.store(output, "Защита спавна ObsidianGate. Регион центрируется по точке /setworldspawn в overworld.");
             }
         } catch (IOException exception) {
@@ -329,24 +416,44 @@ public final class SpawnProtectionService {
         if (world == null || pos == null || dimension(world) != snapshot.dimension) {
             return false;
         }
-        Center center = protectedCenter(world, snapshot);
-        if (center == null) {
-            return false;
-        }
         double x = readBlockCoordinate(pos, "getX", "func_177958_n");
+        double y = readBlockCoordinate(pos, "getY", "func_177956_o");
         double z = readBlockCoordinate(pos, "getZ", "func_177952_p");
-        return Math.abs(x - center.x) <= snapshot.radius && Math.abs(z - center.z) <= snapshot.radius;
+        if (REGION_MODE_BOX.equals(snapshot.regionMode)) {
+            return isInsideBox(x, y, z, snapshot);
+        }
+
+        Center center = protectedCenter(world, snapshot);
+        return center != null && Math.abs(x - center.x) <= snapshot.radius && Math.abs(z - center.z) <= snapshot.radius;
     }
 
     private boolean isProtected(Object world, double x, double z, Config snapshot) {
         if (world == null || dimension(world) != snapshot.dimension) {
             return false;
         }
+        if (REGION_MODE_BOX.equals(snapshot.regionMode)) {
+            return isInsideBox(x, Double.NaN, z, snapshot);
+        }
         Center center = protectedCenter(world, snapshot);
-        if (center == null) {
+        return center != null && Math.abs(x - center.x) <= snapshot.radius && Math.abs(z - center.z) <= snapshot.radius;
+    }
+
+    private boolean isProtected(Object world, double x, double y, double z, Config snapshot) {
+        if (world == null || dimension(world) != snapshot.dimension) {
             return false;
         }
-        return Math.abs(x - center.x) <= snapshot.radius && Math.abs(z - center.z) <= snapshot.radius;
+        if (REGION_MODE_BOX.equals(snapshot.regionMode)) {
+            return isInsideBox(x, y, z, snapshot);
+        }
+        Center center = protectedCenter(world, snapshot);
+        return center != null && Math.abs(x - center.x) <= snapshot.radius && Math.abs(z - center.z) <= snapshot.radius;
+    }
+
+    private static boolean isInsideBox(double x, double y, double z, Config snapshot) {
+        if (x < snapshot.minX || x > snapshot.maxX || z < snapshot.minZ || z > snapshot.maxZ) {
+            return false;
+        }
+        return Double.isNaN(y) || (y >= snapshot.minY && y <= snapshot.maxY);
     }
 
     private Center protectedCenter(Object world, Config snapshot) {
@@ -551,8 +658,17 @@ public final class SpawnProtectionService {
         return CENTER_MODE_FIXED.equals(value) ? CENTER_MODE_FIXED : CENTER_MODE_WORLDSPAWN;
     }
 
+    private static String readRegionMode(Properties properties) {
+        String value = properties.getProperty("regionMode", REGION_MODE_RADIUS).trim().toLowerCase();
+        return REGION_MODE_BOX.equals(value) ? REGION_MODE_BOX : REGION_MODE_RADIUS;
+    }
+
     private static int clampRadius(int radius) {
         return Math.max(0, Math.min(MAX_RADIUS, radius));
+    }
+
+    private static double clampRegionY(double y) {
+        return Math.max(MIN_REGION_Y, Math.min(MAX_REGION_Y, y));
     }
 
     static final class Config {
@@ -566,6 +682,13 @@ public final class SpawnProtectionService {
         final boolean denyHostileSpawns;
         final boolean denyExplosions;
         final boolean allowOperatorBypass;
+        final String regionMode;
+        final double minX;
+        final double minY;
+        final double minZ;
+        final double maxX;
+        final double maxY;
+        final double maxZ;
 
         private Config(
             boolean enabled,
@@ -579,6 +702,46 @@ public final class SpawnProtectionService {
             boolean denyExplosions,
             boolean allowOperatorBypass
         ) {
+            this(
+                enabled,
+                radius,
+                centerMode,
+                dimension,
+                centerX,
+                centerZ,
+                protectBlocks,
+                denyHostileSpawns,
+                denyExplosions,
+                allowOperatorBypass,
+                REGION_MODE_RADIUS,
+                -radius,
+                MIN_REGION_Y,
+                -radius,
+                radius,
+                MAX_REGION_Y,
+                radius
+            );
+        }
+
+        private Config(
+            boolean enabled,
+            int radius,
+            String centerMode,
+            int dimension,
+            double centerX,
+            double centerZ,
+            boolean protectBlocks,
+            boolean denyHostileSpawns,
+            boolean denyExplosions,
+            boolean allowOperatorBypass,
+            String regionMode,
+            double minX,
+            double minY,
+            double minZ,
+            double maxX,
+            double maxY,
+            double maxZ
+        ) {
             this.enabled = enabled;
             this.radius = radius;
             this.centerMode = centerMode;
@@ -589,6 +752,13 @@ public final class SpawnProtectionService {
             this.denyHostileSpawns = denyHostileSpawns;
             this.denyExplosions = denyExplosions;
             this.allowOperatorBypass = allowOperatorBypass;
+            this.regionMode = REGION_MODE_BOX.equals(regionMode) ? REGION_MODE_BOX : REGION_MODE_RADIUS;
+            this.minX = Math.min(minX, maxX);
+            this.minY = Math.min(clampRegionY(minY), clampRegionY(maxY));
+            this.minZ = Math.min(minZ, maxZ);
+            this.maxX = Math.max(minX, maxX);
+            this.maxY = Math.max(clampRegionY(minY), clampRegionY(maxY));
+            this.maxZ = Math.max(minZ, maxZ);
         }
 
         private static Config defaults() {

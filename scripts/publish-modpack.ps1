@@ -14,6 +14,7 @@ param(
     [string]$ServiceName = "mc-rpg.service",
     [string]$RemoteDeployCommand = "/usr/local/bin/obsidiangate-deploy",
     [switch]$LegacyPromptSudo,
+    [switch]$DisableRsync,
     [switch]$SkipConnectivityCheck,
     [switch]$SkipRestart
 )
@@ -71,6 +72,7 @@ if ($LASTEXITCODE -ne 0) {
     -ServiceName $ServiceName `
     -RemoteDeployCommand $RemoteDeployCommand `
     -LegacyPromptSudo:$LegacyPromptSudo `
+    -DisableRsync:$DisableRsync `
     -SkipRestart:$SkipRestart `
     -WhatIf:$WhatIfPreference
 
