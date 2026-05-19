@@ -2,12 +2,15 @@ package ru.mcrpg.launcher;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public final class ModpackSyncService {
 
@@ -117,6 +120,11 @@ public final class ModpackSyncService {
             }
         }
 
+        int removedFiles = cleanupObsoleteModEntries(gameDirectory, manifest, logSink);
+        if (removedFiles > 0) {
+            log(logSink, "Устаревших модов убрано: " + removedFiles);
+        }
+
         log(
             logSink,
             "Синхронизация завершена. Скачано: " + downloadedFiles
@@ -124,7 +132,7 @@ public final class ModpackSyncService {
                 + ", байт: " + downloadedBytes
         );
 
-        return new ModpackSyncResult(resolvedConfig, manifest, downloadedFiles, reusedFiles, downloadedBytes);
+        return new ModpackSyncResult(resolvedConfig, manifest, downloadedFiles, reusedFiles, removedFiles, downloadedBytes);
     }
 
     private PreparedSyncContext prepareSync(LauncherConfig baseConfig, LogSink logSink, String manifestLogPrefix)
@@ -245,6 +253,105 @@ public final class ModpackSyncService {
         throws IOException {
         String relativeUrl = hasText(file.getUrl()) ? file.getUrl().trim() : normalizeUrlPath(file.getPath());
         return DownloadUrlResolver.resolve(loadedManifest.getSourceUrl(), manifest.getBaseUrl(), relativeUrl);
+    }
+
+    private static int cleanupObsoleteModEntries(Path gameDirectory, ModpackManifest manifest, LogSink logSink)
+        throws IOException {
+        Path modsDirectory = gameDirectory.resolve("mods").normalize();
+        if (!modsDirectory.startsWith(gameDirectory)) {
+            throw new IllegalArgumentException("mods directory is outside game directory: " + modsDirectory);
+        }
+        if (!Files.isDirectory(modsDirectory)) {
+            return 0;
+        }
+
+        Set<String> expectedEntries = collectExpectedManagedEntries(manifest, "mods");
+        int removedFiles = 0;
+        Path backupDirectory = null;
+
+        try (DirectoryStream<Path> entries = Files.newDirectoryStream(modsDirectory)) {
+            for (Path entry : entries) {
+                Path fileName = entry.getFileName();
+                if (fileName == null || expectedEntries.contains(fileName.toString())) {
+                    continue;
+                }
+
+                if (backupDirectory == null) {
+                    backupDirectory = createObsoleteBackupDirectory(gameDirectory, manifest);
+                }
+
+                Path destination = uniqueDestination(backupDirectory, fileName.toString());
+                Files.move(entry, destination);
+                removedFiles++;
+                log(
+                    logSink,
+                    "Убран устаревший файл сборки: mods/" + fileName + " -> "
+                        + gameDirectory.relativize(destination).toString().replace('\\', '/')
+                );
+            }
+        }
+
+        return removedFiles;
+    }
+
+    private static Set<String> collectExpectedManagedEntries(ModpackManifest manifest, String rootName) {
+        Set<String> expectedEntries = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        String prefix = rootName + "/";
+
+        for (ModpackFile file : manifest.getFiles()) {
+            if (!hasText(file.getPath())) {
+                continue;
+            }
+
+            String normalizedPath = normalizeUrlPath(file.getPath());
+            if (!normalizedPath.regionMatches(true, 0, prefix, 0, prefix.length())) {
+                continue;
+            }
+
+            String remainder = normalizedPath.substring(prefix.length());
+            int slashIndex = remainder.indexOf('/');
+            String topLevelEntry = slashIndex >= 0 ? remainder.substring(0, slashIndex) : remainder;
+            if (hasText(topLevelEntry)) {
+                expectedEntries.add(topLevelEntry);
+            }
+        }
+
+        return expectedEntries;
+    }
+
+    private static Path createObsoleteBackupDirectory(Path gameDirectory, ModpackManifest manifest) throws IOException {
+        String manifestVersion = manifest == null ? "unknown" : valueOrFallback(manifest.getVersion(), "unknown");
+        String directoryName = sanitizePathSegment(manifestVersion) + "-" + System.currentTimeMillis();
+        Path backupDirectory = gameDirectory.resolve(".obsolete-mods").resolve(directoryName).normalize();
+        if (!backupDirectory.startsWith(gameDirectory)) {
+            throw new IllegalArgumentException("obsolete mods backup is outside game directory: " + backupDirectory);
+        }
+        Files.createDirectories(backupDirectory);
+        return backupDirectory;
+    }
+
+    private static Path uniqueDestination(Path backupDirectory, String fileName) {
+        Path destination = backupDirectory.resolve(fileName);
+        if (!Files.exists(destination)) {
+            return destination;
+        }
+
+        int dotIndex = fileName.lastIndexOf('.');
+        String baseName = dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
+        String extension = dotIndex > 0 ? fileName.substring(dotIndex) : "";
+        int counter = 1;
+        while (true) {
+            Path candidate = backupDirectory.resolve(baseName + "-" + counter + extension);
+            if (!Files.exists(candidate)) {
+                return candidate;
+            }
+            counter++;
+        }
+    }
+
+    private static String sanitizePathSegment(String value) {
+        String sanitized = valueOrFallback(value, "unknown").replaceAll("[^A-Za-z0-9._-]", "_");
+        return hasText(sanitized) ? sanitized : "unknown";
     }
 
     private static void applyManifestSettings(LauncherConfig config, ModpackManifest manifest, Path gameDirectory) {

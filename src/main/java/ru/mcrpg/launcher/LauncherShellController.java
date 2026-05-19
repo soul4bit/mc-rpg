@@ -1408,11 +1408,15 @@ public final class LauncherShellController extends AbstractScreenController {
     }
 
     private static String formatSyncSummary(ModpackSyncResult syncResult) {
-        return syncResult.getDownloadedFiles()
+        String summary = syncResult.getDownloadedFiles()
             + " загружено / "
             + syncResult.getReusedFiles()
             + " повторно использовано / "
             + formatMegabytes(syncResult.getDownloadedBytes());
+        if (syncResult.getRemovedFiles() > 0) {
+            summary += " / устаревших убрано: " + syncResult.getRemovedFiles();
+        }
+        return summary;
     }
 
     private static String formatMegabytes(long bytes) {

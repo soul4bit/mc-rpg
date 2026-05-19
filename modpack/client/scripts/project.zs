@@ -1,4 +1,2 @@
-recipes.addShaped(<primal:quern:0>,
-[[<minecraft:cobblestone>, <minecraft:cobblestone>, <minecraft:cobblestone>],
- [<minecraft:cobblestone>, <minecraft:cobblestone>, <minecraft:cobblestone>],
- [<minecraft:cobblestone>, null, <minecraft:cobblestone>]]);
+// ObsidianGate RPG modpack recipe overrides.
+// Keep this file as the single CraftTweaker entry point for future progression tweaks.

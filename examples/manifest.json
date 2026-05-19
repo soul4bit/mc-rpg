@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.19",
+    "version":  "2026.05.19.1",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -12,10 +12,10 @@
                      "launchTemplate":  ""
                  },
     "launcherUpdate":  {
-                           "version":  "2026.05.19",
+                           "version":  "2026.05.19.1",
                            "url":  "client/launcher/obsidian-gate-launcher.jar",
-                           "sha256":  "0c26ee996514dbe8b699e443bdc01553421ccde5eb37667c4b1083326ad87763",
-                           "size":  15607453,
+                           "sha256":  "6d5b78af50c3bc27eb91e21e0efbd3254dde48e04e10127c584d763607138851",
+                           "size":  15609690,
                            "required":  false,
                            "artifactVersion":  "0.1.4-test",
                            "fileName":  "obsidian-gate-launcher.jar"
@@ -42,60 +42,6 @@
                       "enabled":  true
                   },
     "files":  [
-                  {
-                      "path":  "config/animania.cfg",
-                      "sha256":  "f44cedf3b8538f07e351852707173a97c95744601b1a861042b221a65ee92ca0",
-                      "size":  23823,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/antiqueatlas/antiqueatlas.cfg",
-                      "sha256":  "5caab332b0ba70cbd33fdcb0c9f46266616a0b44e7124c7cef43f7c02d7854f8",
-                      "size":  4728,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/antiqueatlas/atlas_overlay.cfg",
-                      "sha256":  "92397aa4b5caa4cb321f5999df906baa646aafb75867b5cf6ffc6ee2f8e90dc3",
-                      "size":  3412,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/antiqueatlas/biome_textures.json",
-                      "sha256":  "997b1feaf2ffd8e690c4240f8d44981234094edc5d37c43197820e9bf6a29807",
-                      "size":  6157,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/antiqueatlas/markers.json",
-                      "sha256":  "c3c3512d623595b202ebbba90bda1c843fae396784ffd80628d674de0fe9bcdd",
-                      "size":  1844,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/antiqueatlas/texture_sets.json",
-                      "sha256":  "c92fad76623beceae72f6ec7dbe2d6d51b19a1f1aba90948f54f945493cb41da",
-                      "size":  154,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/antiqueatlas/tile_textures.json",
-                      "sha256":  "5706d365f7e9591f8c414d2d5a93fb025c49ec8d9524cf214369687b02b06f73",
-                      "size":  1077,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/antiqueatlas/tileids.json",
-                      "sha256":  "deb6b25f78b1a614a6f0fb1a044cc2e743034fe7efe5dc5dc47fd3c518efdb61",
-                      "size":  780,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/atlasextras.cfg",
-                      "sha256":  "82685040d94e8ca3c4b8d0a088da57231daa5f0fb99f563eb57eeb1558004848",
-                      "size":  2610,
-                      "executable":  false
-                  },
                   {
                       "path":  "config/betterfonts.cfg",
                       "sha256":  "f591d805f5bf2546fdd2bb6391d521bfab61c9cff07516b628ed11603ec042df",
@@ -757,60 +703,6 @@
                       "executable":  false
                   },
                   {
-                      "path":  "config/Dark Roleplay Core/Client.cfg",
-                      "sha256":  "e3ec417a5889c8808c2fa4206bd7fc70acab730828cc332aeb02217adae833b7",
-                      "size":  5164,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/Dark Roleplay Core/Dark Roleplay Core.cfg",
-                      "sha256":  "77f06000471ed026525f5af3d3b8b4af178fb33966fbbc0a37894402dbb148da",
-                      "size":  1650,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/Dark Roleplay Core/Debug.cfg",
-                      "sha256":  "45bb061ea3f24796ef9f8b7b8c966568fd2310e20a99b4451b687b074758eb3e",
-                      "size":  483,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/Dark Roleplay Core/Modules/Blueprints.cfg",
-                      "sha256":  "4d7bffdec4d506d25fd0d1454160677af26c2806e6caf9c3fc792682fc6e8a4f",
-                      "size":  2423,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/Dark Roleplay Core/Modules/Guis.cfg",
-                      "sha256":  "f8ae21e18ead5b881c2c71f9229ccf493e3fc863b10442bb7537738b467eca64",
-                      "size":  24,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/Dark Roleplay Core/Modules/Locks.cfg",
-                      "sha256":  "b561bcfc8a0a1c24e057c1ce770604b666c6d4957845b6c3f3109ac555a5c9b4",
-                      "size":  390,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/Dark Roleplay Core/Modules/MaARG.cfg",
-                      "sha256":  "67214664935952db392c6d000d35ce38551e454bac2034985d27d1ee7d915612",
-                      "size":  185,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/Dark Roleplay Medieval/Dark Roleplay Medieval.cfg",
-                      "sha256":  "b57f5863fa612b88e6d794b6ccda34dca6b27b1a1084392b42bd72a71c4e61f0",
-                      "size":  2178,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/densemetals.cfg",
-                      "sha256":  "5fb76875d3318b585855e93aff85e92c33d2507ec88d1e2262b48c6c96c6912f",
-                      "size":  9098,
-                      "executable":  false
-                  },
-                  {
                       "path":  "config/dynamictrees.cfg",
                       "sha256":  "fcbe8f95bcdedf7d225660c8d86eb52c6787492c22ec35ff0d045a88e8daf6f6",
                       "size":  4609,
@@ -847,198 +739,6 @@
                       "executable":  false
                   },
                   {
-                      "path":  "config/growthcraft/bees/bees.json",
-                      "sha256":  "fa9ebc7ee498e24eff59e7486311eb54e8c6991d8e5737910e29dbfb0c78cc25",
-                      "size":  270,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/bees/bees.json.default",
-                      "sha256":  "fa9ebc7ee498e24eff59e7486311eb54e8c6991d8e5737910e29dbfb0c78cc25",
-                      "size":  270,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/bees/flowers.json",
-                      "sha256":  "df842b4cc1fe537405f051bacabf41d7a77093879bd6eb035e7518f9963462da",
-                      "size":  442,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/bees/flowers.json.default",
-                      "sha256":  "df842b4cc1fe537405f051bacabf41d7a77093879bd6eb035e7518f9963462da",
-                      "size":  442,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/brewing.json",
-                      "sha256":  "9c0e435138788a36ae4232ef1c19875dff88ab8b1ade29d4699a6c95c7c60b7a",
-                      "size":  28579,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/brewing.json.default",
-                      "sha256":  "9c0e435138788a36ae4232ef1c19875dff88ab8b1ade29d4699a6c95c7c60b7a",
-                      "size":  28579,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/culturing.json",
-                      "sha256":  "b60402b81d6a5aab016ab8ccb2fea44d12084a00b15149648d1e0a7154396bcc",
-                      "size":  439,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/culturing.json.default",
-                      "sha256":  "b60402b81d6a5aab016ab8ccb2fea44d12084a00b15149648d1e0a7154396bcc",
-                      "size":  439,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/fermenting.json",
-                      "sha256":  "090a63b7410d81376bf5e6e5c7d8fd046fc01f48a89cd73ea3531420fd54c0df",
-                      "size":  97319,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/fermenting.json.default",
-                      "sha256":  "090a63b7410d81376bf5e6e5c7d8fd046fc01f48a89cd73ea3531420fd54c0df",
-                      "size":  97319,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/heatsources.json",
-                      "sha256":  "5f59d5b1e3e3cc25dada5464e3dc9def7eaec3ff2c7c57f3c5deaad7f896b658",
-                      "size":  722,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/heatsources.json.default",
-                      "sha256":  "5f59d5b1e3e3cc25dada5464e3dc9def7eaec3ff2c7c57f3c5deaad7f896b658",
-                      "size":  722,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/pressing.json",
-                      "sha256":  "f3536deb83c71f1ce4f1b6bf42a5201c2b2e99771376d14223626f0250d77d46",
-                      "size":  2277,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/pressing.json.default",
-                      "sha256":  "f3536deb83c71f1ce4f1b6bf42a5201c2b2e99771376d14223626f0250d77d46",
-                      "size":  2277,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/yeast.json",
-                      "sha256":  "ec2ac78ef178a684e3725599c0790be760755b4b34a9d8194fe173d9dd14cc31",
-                      "size":  2031,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/cellar/yeast.json.default",
-                      "sha256":  "ec2ac78ef178a684e3725599c0790be760755b4b34a9d8194fe173d9dd14cc31",
-                      "size":  2031,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/growthcraft-bamboo.cfg",
-                      "sha256":  "c33e6e4072b4d91ecbe16c14a20264dab520f03d41c29c393d03bd8b9d9895c0",
-                      "size":  237,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/growthcraft-bees.cfg",
-                      "sha256":  "73a15a9b3d1e6cb707514deeafb5f0c69e279a31fffdf25cf9aff39ca85a4591",
-                      "size":  1388,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/growthcraft-cellar.cfg",
-                      "sha256":  "5b87ef49bebed382fc59306800baa12e6639f8b84175320bd86fe944a42511e4",
-                      "size":  1936,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/growthcraft-core.cfg",
-                      "sha256":  "f8874506a003648296d030959a8a93ecd7afb82f375437ca6fae447d7b21df72",
-                      "size":  844,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/growthcraft-fistrap.cfg",
-                      "sha256":  "dfb4f362ee67923931c4d100937327fd1e8bc19178538f9c802c1abfa5a8d7ea",
-                      "size":  998,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/growthcraft-hops.cfg",
-                      "sha256":  "5d49e2c72c4e02e790262e9bfde99453f7a0198860cd9fd8e87808022aa0906a",
-                      "size":  522,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/growthcraft-milk.cfg",
-                      "sha256":  "78a764145074b5f4312db2cc54a91cdde1e294b23304f6c8fb7a4f25b3d46043",
-                      "size":  622,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/growthcraft-rice.cfg",
-                      "sha256":  "ff4a9ef01409940645d8ab301fe2dad69183be8c50584fc0138120b2859f2c42",
-                      "size":  1511,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/milk/churn_recipes.json",
-                      "sha256":  "23671a0ad913ac23b79a9f8f3bec38675d983525b0f841a44c25b3797ec6717c",
-                      "size":  513,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/growthcraft/milk/churn_recipes.json.default",
-                      "sha256":  "23671a0ad913ac23b79a9f8f3bec38675d983525b0f841a44c25b3797ec6717c",
-                      "size":  513,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/harvestcraft.cfg",
-                      "sha256":  "d5a34df47039897d33ab44af1144006c8164c04478594e01498753f6b5b3a5c1",
-                      "size":  14552,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/harvestcraft_fruittree.cfg",
-                      "sha256":  "18f44a238c897e12569291f7df72dd054e169ee3d0b5cf03dd7a94ed8714e0d1",
-                      "size":  66504,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/huds/real_time_clock.json",
-                      "sha256":  "7bd88200c158f0b6c8b2c208673eb171f2d0321d1982173715672ca90666ae4f",
-                      "size":  79,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/huds/timbered_clay_view.json",
-                      "sha256":  "8909236b872af139743e05b04210517853b930426954bf6ca8efffe9a47a382f",
-                      "size":  92,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/immersiveengineering.cfg",
-                      "sha256":  "252f0a716716bd10f957d5e62d4437b9096f9e800e974ac0b037e73af0fdc2a4",
-                      "size":  26163,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/immersivepetroleum.cfg",
-                      "sha256":  "ce0869c39645a87df66e2d88c569fe7c1eaaca1c2e53f51e281b4379696df2ce",
-                      "size":  2527,
-                      "executable":  false
-                  },
-                  {
                       "path":  "config/InvTweaks.cfg",
                       "sha256":  "3aa719e13178679783ece0988f7e85cf255362b1e782eecd71b5087c0ff3fb24",
                       "size":  746,
@@ -1054,12 +754,6 @@
                       "path":  "config/InvTweaksTree.txt",
                       "sha256":  "5dbafa1e67c70c79660a4da7a663fabfda69724ec352f79d5d4ab5e0323368e8",
                       "size":  62968,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/jaff.cfg",
-                      "sha256":  "4e9735c2069aac70bf02e926f3fd2ebe90f6afb06bcce401087c4ddc4d7b6173",
-                      "size":  1824,
                       "executable":  false
                   },
                   {
@@ -1093,12 +787,6 @@
                       "executable":  false
                   },
                   {
-                      "path":  "config/jepb.cfg",
-                      "sha256":  "c13151baeb9be6de261a7f41bf59b9424e1732869c05a0f32cc259d910784b0d",
-                      "size":  223,
-                      "executable":  false
-                  },
-                  {
                       "path":  "config/jeresources/jeresources.cfg",
                       "sha256":  "23735d0161fd5b81f3f29b8777e1e096d431c74014527101f8a3d0734620bb22",
                       "size":  1122,
@@ -1117,39 +805,9 @@
                       "executable":  false
                   },
                   {
-                      "path":  "config/optifine_1.12.2_hd_u_f5.jar",
-                      "sha256":  "fc70db439793b257228ad50dbb497dd50e33c3e08f7d0d6b2bba3a7d7c349619",
-                      "size":  2598821,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/primal/forgecraft.cfg",
-                      "sha256":  "3862f75a041f037a91d51b391e87e03677285b927868dff86a3872b2015a0635",
-                      "size":  160,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/primal/primal.cfg",
-                      "sha256":  "6aaf6e9c30b2c9b01880bb9f0b9c1a4796362e924b429afcffd70c983e7be9af",
-                      "size":  63868,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/quark.cfg",
-                      "sha256":  "7267e56ed0f9ba46b5e1ead124163de8a1d3fe8c9cc4077d83289b17a623b831",
-                      "size":  103858,
-                      "executable":  false
-                  },
-                  {
                       "path":  "config/randompatches.cfg",
                       "sha256":  "addc007e9292e343e9767fdfe874bba0b5de5825a15d27ec2d7ce6f9fb0741e7",
                       "size":  9417,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/SeedDrop.cfg",
-                      "sha256":  "ceb62fa21880b86fbfeea7474b743320c63b7694c47d650e0ea1215bd1ec1e12",
-                      "size":  1954,
                       "executable":  false
                   },
                   {
@@ -1160,8 +818,8 @@
                   },
                   {
                       "path":  "config/sereneseasons/cropfertility.cfg",
-                      "sha256":  "ae5cb9485c8be4c001e088d30d3cbb06a9511f50e78941b18a455e5ffd73bf29",
-                      "size":  14510,
+                      "sha256":  "e1a970b557e7de9f4360a483960e5ab7399e3ec2ae585746e3c4333faf30b691",
+                      "size":  2470,
                       "executable":  false
                   },
                   {
@@ -1180,366 +838,6 @@
                       "path":  "config/splash.properties",
                       "sha256":  "a3da383041c608be3ae441956a6388afed23822d504832333edb5d1c32fc7411",
                       "size":  375,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/stackable.cfg",
-                      "sha256":  "c1b0421b8b28177ea5d06a2de63e3be90527c5ae66a1090ab14ecf81f581a1df",
-                      "size":  1772,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/teastory.cfg",
-                      "sha256":  "3c6070dcbdaa9ba471f46b42306db19673e4fb7ea3e251991e2cb679843a9abf",
-                      "size":  4992,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/toughasnails/armor_temp_modifiers.json",
-                      "sha256":  "654377720adda18296c9fce91ed267ff5eb66a1b199c7d7534d58716eda44ae6",
-                      "size":  413,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/toughasnails/block_temperature.json",
-                      "sha256":  "52762e12bc55ed001cbe37664b688131854e99dd2961ca0d43e1bbaf7a5a40b3",
-                      "size":  737,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/toughasnails/drink_stats.json",
-                      "sha256":  "8fa2d9d64ff2e5e44102eb17ce750ae7f4f3b6206755a9879173678a244ff44b",
-                      "size":  154,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/toughasnails/gameplay.cfg",
-                      "sha256":  "20dacddef3a6098f4ce2e06d01de9c1fedcbc73776162cc777e5f71b8f5b46f1",
-                      "size":  963,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/toughasnails/material_temperature.json",
-                      "sha256":  "1421d61f7d986399994b0c959c1e491a22459385ef53dfa531271037af245b78",
-                      "size":  17,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/toughasnails/temperature.cfg",
-                      "sha256":  "94782955bce46e7ee243592d71c7be4ce7195c2eae19aecd5a22db325b990a36",
-                      "size":  3923,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes.cfg",
-                      "sha256":  "e262c9341c0357672818754aebb2bed8f1b6f452cd4b08221a728aa7aef26c95",
-                      "size":  6896,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/actuallyadditions.json",
-                      "sha256":  "c05a5ab584c99f46973c74439363403ab30cd8f6e1542816a2f1ee408982787e",
-                      "size":  237,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/aoa3.json",
-                      "sha256":  "ae406acc59a94e540c5c004872cfa12dcc7eaaa12ba12fdaa5ced1b8dbd2602a",
-                      "size":  1315,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/appliedenergistics2.json",
-                      "sha256":  "8c547c214c3e9eca1738ef006da1bbb42c5ecaa2ca2c59f174cbe05cd236f246",
-                      "size":  481,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/aromasdimensionalworld.json",
-                      "sha256":  "c47a0db1d902352d48817659859d21810f635f79454ddbdddb703dc12cab4c57",
-                      "size":  491,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/astralsorcery.json",
-                      "sha256":  "c38d83b1ec4bc71490946cbab4c03a42b906506fa11f56b20025e756a0c6c723",
-                      "size":  723,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/basemetals.json",
-                      "sha256":  "927dfe72b74ab049302d6c70976792af866bc25ecf05a50d60df53d7e8634df3",
-                      "size":  2267,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/baseminerals.json",
-                      "sha256":  "7023a1c9b4a1b8758e79c72a084dcfba3e28d21aa82e29bb5c5a9feb0e8b0f7c",
-                      "size":  1618,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/betterunderground.json",
-                      "sha256":  "6df488a41871efdfce7a92b0f37416c7d9cdf360fc835595293baba81d7edb93",
-                      "size":  235,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/biomesoplenty.json",
-                      "sha256":  "ea6e956829b72b3ea276d53dbc644fe16f6e39183a26782be39fab353f968bc0",
-                      "size":  1550,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/bluepower.json",
-                      "sha256":  "c0952b578d6032d9c82261eb62e710cb13c5e4d4138b4e509dce11c5ad2413e8",
-                      "size":  2064,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/byg.json",
-                      "sha256":  "1b3b1e15c84b5d430f3cd42c98f63a25ba2b7898fee8bbae3c56e77923538950",
-                      "size":  883,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/candyworld.json",
-                      "sha256":  "0acc8a05532cd0652274fdfc1961005ed168f4ed35146aea0e8dca1eb19f887c",
-                      "size":  238,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/communitymod.json",
-                      "sha256":  "aea8d28d415297dcc34151b787a39593ed4561bb242fd20d744132ea22bcdce2",
-                      "size":  475,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/curio.json",
-                      "sha256":  "8e8b458455a05e2d80654111a10fff4da184e98031d608fde162acf8b0653036",
-                      "size":  228,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/customideas.json",
-                      "sha256":  "76c6a94cee2baa02e451f606689b7492b851d8a0943cf42f922997fb82b26165",
-                      "size":  241,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/dartcraftreloaded.json",
-                      "sha256":  "33002d07998dfe97c88257a2b10d69d1934226c62d77de22cc9a86fc0e87a14e",
-                      "size":  244,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/densemetals.json",
-                      "sha256":  "a3b810edd09a7be0473ccd3f26e8dedb9460df387b55d87fc8ab87b6509c0441",
-                      "size":  4128,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/draconicevolution.json",
-                      "sha256":  "ea3345d01b52972aa61cfc603316f580aca0e4f95588b454505a8ce9178adaf1",
-                      "size":  249,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/enderore.json",
-                      "sha256":  "a075508581a10638db37704be9c1b09c0aff538d7b3ba75528e906fc54a9adaf",
-                      "size":  224,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/extremereactors.json",
-                      "sha256":  "525cdb8a388f11c59b0ce6906826d40c499c5802414e05e736e973466a7ccb1f",
-                      "size":  229,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/floricraft.json",
-                      "sha256":  "42e707c5e7e94465ae7a7073a5e44f7de80d541854130cbfbeb6ff76c467308c",
-                      "size":  230,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/forestry.json",
-                      "sha256":  "bbf1a479f2fbd6702caeb02556f3ef873855a1ea472636bf84674488d4c1e51b",
-                      "size":  676,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/geolosys.json",
-                      "sha256":  "302a0134a55977492dc5f48cd525382e5b4dcbbf692a93be2608bfe7963ba4dc",
-                      "size":  3920,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/grimpack.json",
-                      "sha256":  "f1db6be12f964f8df78f5110367db796a6f5252f2a4fe85804a7121fb96408e1",
-                      "size":  1125,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/growthcraft.json",
-                      "sha256":  "f669200213827bf921946cacd387a035313353521eb49f5c679b2cdd55a12d5b",
-                      "size":  232,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/ic2classic.json",
-                      "sha256":  "a871bbe2a9dd0518438f827dd150fe98456f229ca05bf97dd67a3dc86edb546b",
-                      "size":  942,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/immersiveengineering.json",
-                      "sha256":  "980cffbae2ec386b39ee3bb08f92a452852fff0fa1564adecac6992abcf4dc17",
-                      "size":  1399,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/industrialcraft.json",
-                      "sha256":  "402d8602974c9b4a6bce1e2385c4e952411124775d4c787439ddaed38de81962",
-                      "size":  878,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/matteroverdrivelegacy.json",
-                      "sha256":  "5318905ec81853fc162859fbf2ab64680f6130e18ae153f8181a48255f89978f",
-                      "size":  505,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/mekanism.json",
-                      "sha256":  "2e6b58ca518534916d7823f1a09911abca5151cd73d34c300f98bf4418d61cd2",
-                      "size":  656,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/metallurgy4.json",
-                      "sha256":  "df8d3f356698c3f485496936de4d3a6151ff5c8afb3984f0ef1891ba9cbdd30f",
-                      "size":  5826,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/minecraft.json",
-                      "sha256":  "3522479adf6e369300a3938e79c6c44d590ff16cd848b605c15ad4e526e51810",
-                      "size":  1560,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/modernmetals.json",
-                      "sha256":  "dc34eff108baead4a8a02f4ab129020c32f6beba9c33a876530251b22625cc37",
-                      "size":  3723,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/moglowstone.json",
-                      "sha256":  "7c786f26e32fa16e8ad0de52877ee34130365f40296cae29b276fdd52c7c9623",
-                      "size":  236,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/mubble.json",
-                      "sha256":  "40e045234242f38ba967260db802c3763c21646120c39ee31b786a8c11e90815",
-                      "size":  230,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/mysticalagriculture.json",
-                      "sha256":  "e3d2f72ad0eb9aedac3bc64cd18eeccd2cd68d086c4e61304275a6bc73c8c801",
-                      "size":  457,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/mysticalworld.json",
-                      "sha256":  "c9c06582e289078ed7e36fcec5e76088d712a11d21db35f36b198bf4687f335d",
-                      "size":  756,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/nuclearcraft.json",
-                      "sha256":  "e55cb996e1fdf11aa90516354fb934d325b36363aa137e2a5eef8a4ed4f7ded5",
-                      "size":  1805,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/poormetals.json",
-                      "sha256":  "7ec56b33500e9ec10fe91abaf7e59442d99d0a94ae02be4698d63247271cbf8b",
-                      "size":  6458,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/projectred.json",
-                      "sha256":  "032fc303b6d4a35503d0981c5f234a9d44b1587107779bd98b3d2fd84647c033",
-                      "size":  1639,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/pyrotech.json",
-                      "sha256":  "4d3d142d363d20141bbd238c324dcb309a4e1b432768f411663117c46f94d7ce",
-                      "size":  458,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/rftools.json",
-                      "sha256":  "8afa3611d6ac89f814efe5a0882bdc0477bd85bbe0862c441acee27f57bcfe15",
-                      "size":  244,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/scalinghealth.json",
-                      "sha256":  "d5e4e24a35124cdfdc9e6bbe6f1d581a8878ad7fff41ff29ac715be9a4fa71d9",
-                      "size":  240,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/starwars.json",
-                      "sha256":  "31c43c255af089eae7e63025dc241cf79519b9aa2b51d17db831239c9ed9c6bb",
-                      "size":  232,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/taiga.json",
-                      "sha256":  "8e47b9098797ee7c0e096fdec9ebd0fc95e1aba0f5e88768ddbeba25194830f1",
-                      "size":  445,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/techreborn.json",
-                      "sha256":  "863eb6411d43569bb870e5f5e25422c853d3d744f5486d383b8ff2376ceb25af",
-                      "size":  1526,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/thaumcraft.json",
-                      "sha256":  "3275edf9e6831e9c3411f51b2be7121241c51e401aa2581be6744a68f5b876be",
-                      "size":  694,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/thermalfoundation.json",
-                      "sha256":  "3cdda0ee9cc2c8dc66f5806e3b7d08e05221e52f884a3e2ca6be5285f6882fad",
-                      "size":  2810,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/treasure2.json",
-                      "sha256":  "d25b552fe051c1c9214bce21d0e0469b8c69b175384e2c26968c04cf31fcb8c1",
-                      "size":  461,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/wildnature.json",
-                      "sha256":  "94104f2e111e8e65306447083e48fb35156d3a9d837670e7eef12634977768d3",
-                      "size":  1160,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "config/undergroundbiomes/ores/worldsretold.json",
-                      "sha256":  "0f4887161f3d838b118cbf9d6d2f0abb65b46cda2d89e1e99bd7def8213a488f",
-                      "size":  242,
                       "executable":  false
                   },
                   {
@@ -1603,30 +901,6 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/animania-1.12.2-1.7.3.jar",
-                      "sha256":  "87e248a3cf00cde9ef0eec876eb1d3d5f576cd92b4c6a0eebc7b82b69f28d76a",
-                      "size":  8923896,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/antiqueatlas-1.12.2-4.6.3.jar",
-                      "sha256":  "ffd0b65060c1e8375b192acd34c7f71606fcd852bdd36b0f5e37f1c8b6536d1d",
-                      "size":  1239580,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/AtlasExtras-1.12.2-1.7.jar",
-                      "sha256":  "e2d13997acf802e8329743f68530c0976cdd9faba8f70744aea10e734ea867f2",
-                      "size":  58223,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/AutoRegLib-1.3-32.jar",
-                      "sha256":  "d8610a94da8f30815db4612b3291ecdcfd8204eaf1a4db8c5d0663c7b1191d91",
-                      "size":  108306,
-                      "executable":  false
-                  },
-                  {
                       "path":  "mods/Baubles-1.12-1.5.2.jar",
                       "sha256":  "b32010b2f2778aa1188585e7ead91ad46d4cb2c715f9c778a61848ba7fe51f8d",
                       "size":  108450,
@@ -1636,6 +910,18 @@
                       "path":  "mods/bettercaves-1.12.2-1.6.0.jar",
                       "sha256":  "cdfd2658a572b247164d65a1c6f2aa696d8320b5a54d68f14c31b2600da478b3",
                       "size":  408577,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/BetterQuesting-3.5.329.jar",
+                      "sha256":  "f7803b91d54b98eb54b3e2f12143866e68a46e3f963d51997d1a1195b8469ba7",
+                      "size":  1425671,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/bewitchment-1.12.2-0.0.22.65.jar",
+                      "sha256":  "ab9206e0f2ba092da007a0c89f82b7727862ed58d63ef431f1cd237307cc8218",
+                      "size":  4914477,
                       "executable":  false
                   },
                   {
@@ -1651,9 +937,9 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/bookworm-1.12.2-2.3.0.jar",
-                      "sha256":  "dbceef277e1fa58d0a01ae090e9889b50b6be62c8087f83d55ea10e92511848e",
-                      "size":  232686,
+                      "path":  "mods/Botania+r1.10-364.4.jar",
+                      "sha256":  "8962beb2c583720a83858f58bd6afc891185b50d868c712549a96b191339b52a",
+                      "size":  13817704,
                       "executable":  false
                   },
                   {
@@ -1675,39 +961,15 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/CraftStudioAPI-universal-1.0.1.95-mc1.12-alpha.jar",
-                      "sha256":  "3b611b599c2de6de4fded0cc65abb77f40e90cc5f4801d04c0bcdbb1af06e0d0",
-                      "size":  90465,
-                      "executable":  false
-                  },
-                  {
                       "path":  "mods/crafttweaker2-1.12-4.1.20.jar",
                       "sha256":  "f2176225db04fc95dce462e7ed45b2aac9c4c58f9887c9beba6f3a096543d389",
                       "size":  1363036,
                       "executable":  false
                   },
                   {
-                      "path":  "mods/DenseMetals-1.12.2-2.0.0.30.jar",
-                      "sha256":  "9d2670fcaf9eb349f898f7e844db8612963e8968b6e61bd34ee3df3b311ff358",
-                      "size":  156430,
-                      "executable":  false
-                  },
-                  {
                       "path":  "mods/DivineRPG-1.7.1.jar",
                       "sha256":  "6a220de5ccde3580f44e113d3e89ade6e9196a11799fc6c3c03fbfd5a520a491",
                       "size":  18732935,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/drpcore-1.12.2-0.4.8.jar",
-                      "sha256":  "3874e252a16d1176ad2706c5c9adc192e714548bc43f164ec272319ea18e40bc",
-                      "size":  1075472,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/drpmedieval-1.12.2-0.3.6.jar",
-                      "sha256":  "39303af6807d8f22168c14bdd773a8561a8646523b966d9e5f9e4408e39b1f29",
-                      "size":  5575065,
                       "executable":  false
                   },
                   {
@@ -1723,15 +985,9 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/DynamicTreesPHC-1.12.2-1.4.2.jar",
-                      "sha256":  "041f7dce4c3275bafaaba6e385a5b19f564d93d21a7f26ae0cd600333844351e",
-                      "size":  79147,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/farseek-1.12-2.5.jar",
-                      "sha256":  "27e9fae4b5d419a0f82798f541cb74c32119a601497712c35475d1cbca116a89",
-                      "size":  531566,
+                      "path":  "mods/Erebus-1.0.32.jar",
+                      "sha256":  "ccc51daa04378d1bd8f5a3a53d77836ac1059133ac844261540b868e9cf3ce0c",
+                      "size":  12365648,
                       "executable":  false
                   },
                   {
@@ -1741,33 +997,9 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/ForgeCraft-1.6.51.jar",
-                      "sha256":  "1d6170fdcb44d8144f72fae46a15177568acdcf23bebfe2f91379f50164814e6",
-                      "size":  1771809,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/growthcraft-1.12.2-4.1.3.200.jar",
-                      "sha256":  "1aee11e06ccfa7f79ff8fbb0e9c4454d039ca622e4e32f3369fedf6c01532cea",
-                      "size":  2386318,
-                      "executable":  false
-                  },
-                  {
                       "path":  "mods/Hwyla_1.8.26_B41_1.12.2.jar",
                       "sha256":  "e9ddecd4920ee9a57e11e4b43fb1dd395bbf37e276be726a99a2590272304124",
                       "size":  453778,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/ImmersiveEngineering-0.12-92.jar",
-                      "sha256":  "c5ccdd4892679317bfbe7c0018d5255db611ba2cebb88190493a19496cb5e19e",
-                      "size":  6802153,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/immersivepetroleum-1.12.2-1.1.9.jar",
-                      "sha256":  "6e6b7bcd22966ef6362eec013ef915521c22232f847c3153b57189b5a4011823",
-                      "size":  906018,
                       "executable":  false
                   },
                   {
@@ -1777,39 +1009,15 @@
                       "executable":  false
                   },
                   {
+                      "path":  "mods/ironchest-1.12.2-7.0.71.846.jar",
+                      "sha256":  "e11842abed0a51e3332e9054d1d7c12c8c7e773106ee5afa4ee4f299c55e669a",
+                      "size":  956692,
+                      "executable":  false
+                  },
+                  {
                       "path":  "mods/jei_1.12.2-4.15.0.291.jar",
                       "sha256":  "51e4410e1bfb30e3b31fa79bfa7e09a7a83f320d7c665767ee505a8d03b3fb90",
                       "size":  651473,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/jepb-1.12-1.2.1.jar",
-                      "sha256":  "1d4841af1f9988651f8174f0b1e90b5d8effa86f41490c987348f9e57527b01b",
-                      "size":  27195,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/jetif-1.12.2-1.5.1.jar",
-                      "sha256":  "90f7d2f739a51a9b2c029e635eb6ebfb0f2ca63f48a2183edd2022779e8b8216",
-                      "size":  28946,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/JustAFewFish-1.7_for_1.12.jar",
-                      "sha256":  "7ecfaaf0d407c694d87a111f1dbd62a29a9924c10c9141d072a5a57462d7a3f2",
-                      "size":  238863,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/just-enough-harvestcraft-1.12.2-1.7.0.jar",
-                      "sha256":  "937433a734154498d396114560e45bdac15e5d8a878767cb51926e8a00ce52ef",
-                      "size":  42287,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/JustEnoughPetroleum-0.1.jar",
-                      "sha256":  "26f60a6549f5167aa10e03a25f3180a310d4cb7f1521d6ee04fcb0db2fefd5e3",
-                      "size":  18945,
                       "executable":  false
                   },
                   {
@@ -1819,123 +1027,9 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/mcw_windows_1.0.0_mc1.12.2.jar",
-                      "sha256":  "e243520b4d1baa9a64817b904b5bd54edbfa9ee8713569f678e8f35202508704",
-                      "size":  124758,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/blusunrize/ImmersiveEngineering-core/0.12-92/ImmersiveEngineering-core-0.12-92.jar",
-                      "sha256":  "1af259e7b9626f34fc09604cf0980a8c68f8f255b9ad22f5a75a49b0da05e9be",
-                      "size":  7636,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/blusunrize/ImmersiveEngineering-core/0.12-92/ImmersiveEngineering-core-0.12-92.jar.meta",
-                      "sha256":  "fefe511cbb8ac5f44030d87ff81b4fd7c35750b6bf85c0783f7d392d5d89a0c8",
-                      "size":  747,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmblueprints/1.12.2-1.2.3/drpcmblueprints-1.12.2-1.2.3.jar",
-                      "sha256":  "634b3ab2ecdb719a9008d4b1ecbf85df20970312f584235d32a5e0d36af754e9",
-                      "size":  81126,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmblueprints/1.12.2-1.2.3/drpcmblueprints-1.12.2-1.2.3.jar.meta",
-                      "sha256":  "ab8d51e465698ca3d9616007467236cc17a288c62e0475f72fc736a7acc0b593",
-                      "size":  7804,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmguis/1.12.2-0.0.1-SNAPSHOT/drpcmguis-1.12.2-0.0.1-SNAPSHOT-20181125.100253.jar",
-                      "sha256":  "2cd47738d9b7cbee9fe8f81946b66070df39f0d04b1b43992dd801c557874729",
-                      "size":  266596,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmguis/1.12.2-0.0.1-SNAPSHOT/drpcmguis-1.12.2-0.0.1-SNAPSHOT-20181125.100253.jar.meta",
-                      "sha256":  "c763eb4aad5b0ebf930c3f158e1ff4c06a23e9201f34e702e3e9067bf708ba83",
-                      "size":  7118,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmguis/1.12.2-0.0.1-SNAPSHOT/maven-metadata.json",
-                      "sha256":  "89d19656d915b4ded42e79eec7caf14c2dd083486ab383151cbce55b328a5a1c",
-                      "size":  73,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmlocks/1.12.2-1.0.0-SNAPSHOT/drpcmlocks-1.12.2-1.0.0-SNAPSHOT-20181126.091203.jar",
-                      "sha256":  "427fae74203d74590d1b5a2ee1a4a5e6a4426c6aa28b4faf286c5b2f604ea918",
-                      "size":  181395,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmlocks/1.12.2-1.0.0-SNAPSHOT/drpcmlocks-1.12.2-1.0.0-SNAPSHOT-20181126.091203.jar.meta",
-                      "sha256":  "65f022e137fdfcc62e97b0338462c063a3b92506cde11af96b66769770a455ca",
-                      "size":  4247,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmlocks/1.12.2-1.0.0-SNAPSHOT/maven-metadata.json",
-                      "sha256":  "9d4e12413da5b7799ff22db7a008f98d95fd5d43ba5e7b0625a4d767ec2ffa9e",
-                      "size":  73,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmmaarg/1.12.2-0.10.0-SNAPSHOT/drpcmmaarg-1.12.2-0.10.0-SNAPSHOT-20181116.054036.jar",
-                      "sha256":  "4b75cf634672756fba0d254dbe82fa0f8b7102f1c01bfcf1d5a7582c84e7f999",
-                      "size":  94477,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmmaarg/1.12.2-0.10.0-SNAPSHOT/drpcmmaarg-1.12.2-0.10.0-SNAPSHOT-20181116.054036.jar.meta",
-                      "sha256":  "ef184ad25810cfab75cd63c593c4efb2b13e67fbd010a343deff0c2815ff5fd5",
-                      "size":  11653,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/core_modules/drpcmmaarg/1.12.2-0.10.0-SNAPSHOT/maven-metadata.json",
-                      "sha256":  "2508d1c41bb040fecbbb3875e533489592f49c57919926d9f348e4ae20cff5c8",
-                      "size":  73,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.2.4-SNAPSHOT/drplibrary-1.12.2-0.1.2.4-SNAPSHOT-20181116.032433.jar",
-                      "sha256":  "f228524edb0bcb82ffba654b6233a745d8cc03a87712df03bbdd32212b9d7971",
-                      "size":  166706,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.2.4-SNAPSHOT/drplibrary-1.12.2-0.1.2.4-SNAPSHOT-20181116.032433.jar.meta",
-                      "sha256":  "38d12c26e882c54db82e80be2cf7a291577d49024d37e3289f2d3aebd50370be",
-                      "size":  17743,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.2.4-SNAPSHOT/maven-metadata.json",
-                      "sha256":  "557e70dfa032ef0fe55f1e1dce92dcb69f2367e2b22b377f3ddf6fbc70861049",
-                      "size":  73,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.3-SNAPSHOT/drplibrary-1.12.2-0.1.3-SNAPSHOT-20190130.014240.jar",
-                      "sha256":  "43686fc036e91f933e2b0a7d4025d1809b13eaaa0fc9fc3efdaab164ae02ecf0",
-                      "size":  172662,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.3-SNAPSHOT/drplibrary-1.12.2-0.1.3-SNAPSHOT-20190130.014240.jar.meta",
-                      "sha256":  "def508b047b36f9396bafdf23a9f125c9280db05f8916028e26dabe8b9f4064d",
-                      "size":  18046,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/memory_repo/net/dark_roleplay/drplibrary/1.12.2-0.1.3-SNAPSHOT/maven-metadata.json",
-                      "sha256":  "5194b7403c476fe1ae367797182b108cc8ad8a28835a381e385f091df76320ce",
-                      "size":  73,
+                      "path":  "mods/Mantle-1.12-1.3.3.55.jar",
+                      "sha256":  "0975ad3ef3b8b35fe43461feabe44d406b5521b0a2f3d1965c8d2f6a59ad2e65",
+                      "size":  843486,
                       "executable":  false
                   },
                   {
@@ -1946,26 +1040,14 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "0d7be0cb19686f980d079afcc6576a198cf45e73b85423cf55b6286dddba45a8",
+                      "sha256":  "f824b7a4168a9a71a0791eaf06b8f7850742b3112ba738b4e50cf947bf8ed94c",
                       "size":  31606,
                       "executable":  false
                   },
                   {
-                      "path":  "mods/Pam\u0027s+HarvestCraft+1.12.2zg.jar",
-                      "sha256":  "9542e0863473b2cf61eff3fa7bdb9f096aaf7fc446c54750cbaa9db47a58f2fa",
-                      "size":  4912890,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/PrimalCore-1.12.2-0.6.105.jar",
-                      "sha256":  "d17a90a7eda1cdb7619e5538173af6b95116a49fcea674b66247e367e13efdd1",
-                      "size":  6017836,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/Quark-r1.6-178.jar",
-                      "sha256":  "03df598aa5092f4fbcca32b5935d200f00e828cf8d43df65f3e137e8657b496b",
-                      "size":  3901586,
+                      "path":  "mods/Patchouli-1.0-23.6.jar",
+                      "sha256":  "8fcceac75c71e0d041db734111200205d03431b7e8646f8209cf2c4de9afef7b",
+                      "size":  472464,
                       "executable":  false
                   },
                   {
@@ -1987,12 +1069,6 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/SeedDrop-1.2.1-1.12.jar",
-                      "sha256":  "662adf2f6ff423937f944616e0fabadb13655adb82c55e183ff60be40dcce5fe",
-                      "size":  6501,
-                      "executable":  false
-                  },
-                  {
                       "path":  "mods/SereneSeasons_1.12.2_1.2.18_universal.jar",
                       "sha256":  "f52033660557331cc4847337325fdab05b07df0ceaa851382cf46137286e243a",
                       "size":  185187,
@@ -2011,21 +1087,15 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/stackable-1.12.2-1.3.3.jar",
-                      "sha256":  "5a19de561ddc54f2efceac0c8b1b714f21a82d8200498aa5fb688b2d185c8452",
-                      "size":  89639,
+                      "path":  "mods/StandardExpansion-3.4.173.jar",
+                      "sha256":  "405211aef15d442f857f92c4f755f051396283d6e6fc2de818f4f693091e89f9",
+                      "size":  460454,
                       "executable":  false
                   },
                   {
-                      "path":  "mods/streams-1.12-0.4.8.jar",
-                      "sha256":  "ed4beaa1536ac5631c6fcb317f1ca9bbfab1e7b0dd3e0f1fbf7676983a27b79a",
-                      "size":  270338,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/TeaStory-3.3.3-B32.404-1.12.2.jar",
-                      "sha256":  "22b18d6cec62fbae2e6c88413552349c76dd2fdb226ea01af461d93b62cdeb78",
-                      "size":  1190185,
+                      "path":  "mods/TConstruct-1.12.2-2.13.0.183.jar",
+                      "sha256":  "707107f746ffc9d2bf35912953ae1ce780f7b7c4b7cf86b4821a1a151bcf9f6f",
+                      "size":  4023372,
                       "executable":  false
                   },
                   {
@@ -2035,15 +1105,21 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/thebirdwatchingmod-1.5.0.jar",
-                      "sha256":  "45105f4ec23f0398d74dbcc4aebf5435de2832145520825de8322c73664396ec",
-                      "size":  963488,
+                      "path":  "mods/ThaumicAugmentation-1.12.2-2.1.14.jar",
+                      "sha256":  "6af6851071a227dc48a634bb827c7679703f0825c0b2a697553e261036b13c00",
+                      "size":  8220792,
                       "executable":  false
                   },
                   {
-                      "path":  "mods/ToughAsNails-1.12.2-3.1.0.139-universal.jar",
-                      "sha256":  "039d1c1304e4f58d2c4b141a6d251a1d3f8f173f0a0d21efaa51c9f4a65abd61",
-                      "size":  354871,
+                      "path":  "mods/ThaumicInventoryScanning_1.12.2-2.0.10.jar",
+                      "sha256":  "2fa7286fe1ce1e95eb1ccf958cf6e07fca8beddc3d7de7986d390523c75f247c",
+                      "size":  17224,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/ThaumicJEI-1.12.2-1.7.0.jar",
+                      "sha256":  "df34181baa520fc3723c5a9a776e5ede1e550df55705cdb3bbeb9ed8675bc2fa",
+                      "size":  58100,
                       "executable":  false
                   },
                   {
@@ -2059,12 +1135,6 @@
                       "executable":  false
                   },
                   {
-                      "path":  "mods/UndergroundBiomesConstructs-1.12-1.3.7.jar",
-                      "sha256":  "56a28ba28e75dcd2211f6e4de06d2bdaaf288067ac5e3d76cdc6d7f5ff54f55d",
-                      "size":  1310157,
-                      "executable":  false
-                  },
-                  {
                       "path":  "mods/VanillaFix-1.0.10-150.jar",
                       "sha256":  "267bd0cd995d95ee55c4c201076525c529d0275a51ce1e43c247f0f9ba894fcc",
                       "size":  1025896,
@@ -2074,12 +1144,6 @@
                       "path":  "mods/Wawla_1.12.2_2.6.274.jar",
                       "sha256":  "677289b04c28334d66b1b942575c489ff077a6f2e5990b56758a8fcd17fa7cb9",
                       "size":  94120,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "mods/Waystones_1.12.2-4.1.0.jar",
-                      "sha256":  "5e79f329154d9a6225130f2b29dbcb0f603e2e622637e39ca566f8179b02ca15",
-                      "size":  178994,
                       "executable":  false
                   },
                   {
@@ -2119,261 +1183,9 @@
                       "executable":  false
                   },
                   {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpcmmaarg/textures/blocks/clean_planks/clean_planks_%wood%.png",
-                      "sha256":  "071c1afea8b6dbd9675ae99e3e3d1447549102c2b017802536167d3eacf439bd",
-                      "size":  402,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/models/item/anvil.json",
-                      "sha256":  "e27442fcd5446634e84e000b63bbf20b52664426d7b00bd13a400b28dcd4f8be",
-                      "size":  105,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/models/item/cauldron.json",
-                      "sha256":  "7b2934fe17e437740638c93918434b2ef34e4287609121e2142e2dd2d2f3ce65",
-                      "size":  108,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/models/item/hanging_cauldron.json",
-                      "sha256":  "17e66348d3f9a69cd1bc0220781cf6ac398f7f98990c68fa4c4cd991d64d585c",
-                      "size":  116,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/models/item/old_blocks/air.json",
-                      "sha256":  "d4d2bd8748840e318b8ee560c5c5b3354b7244a9c3ef929d60c01be163ea8db0",
-                      "size":  41,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/textures/blocks/.png",
-                      "sha256":  "ffba33faaa3d3fec27428586dcfbe17cb1442b4ef489d9d9865463384a03ad6a",
-                      "size":  255,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/textures/blocks/clean_planks/clean_planks_spruce.png",
-                      "sha256":  "071c1afea8b6dbd9675ae99e3e3d1447549102c2b017802536167d3eacf439bd",
-                      "size":  402,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/drpmedieval/textures/blocks/placeholder.png",
-                      "sha256":  "33251779843ee7a9a0139ab73c4affd45d1faa160dc0b58b34ce4c2f343ab023",
-                      "size":  1903,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/models/item/leatherhelmet.json",
-                      "sha256":  "83dba6557a4e75cb29309fa4aa359e0146d33399a72f12bd5caf23a5dae7bfd3",
-                      "size":  96,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/models/item/stonetongs_hotiron.json",
-                      "sha256":  "5714cd4e6e38533fc3086dcdb8fc0f5196303aca20b20757fe44ec17c58a5228",
-                      "size":  51,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/blocks/bronze_ingot_hot.png",
-                      "sha256":  "76b94b0256cda86bc7c0d942b13118404d7b05a46c2c5d9b1c7f83be7911273c",
-                      "size":  680,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/clean_cleaniron_ingot.png",
-                      "sha256":  "387a61f9dd4774d480f2c5585d64e014f3952b57a36a26ccd27011a7291ba738",
-                      "size":  601,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/clean_iron/0.0201.png",
-                      "sha256":  "2d6f57930eaf0a99977dd0b164dbcda8c19599f6fec03dc7b01d6e64acce51dd",
-                      "size":  827,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/clean_iron_ingot.png",
-                      "sha256":  "387a61f9dd4774d480f2c5585d64e014f3952b57a36a26ccd27011a7291ba738",
-                      "size":  601,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/copper/1.png",
-                      "sha256":  "76aeabef8454a43cad421ef5f7f6ceba5bdd0d2b1360fa8967dfb575b5fd787f",
-                      "size":  3246,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/finished_bronze_hot.png",
-                      "sha256":  "be5020a0fbd649829ec96941cfc35fc1bd684011e747eca9a1fe28393001b754",
-                      "size":  3264,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/finished_copper.png",
-                      "sha256":  "76aeabef8454a43cad421ef5f7f6ceba5bdd0d2b1360fa8967dfb575b5fd787f",
-                      "size":  3246,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/hot_bronze.png",
-                      "sha256":  "6a4a459c40435255da561f208a93874a3030f6b23c73b11246cd5c6870a0148a",
-                      "size":  787,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/iron_ingot.png",
-                      "sha256":  "1cc09bf9b5cda459fb88bd98b179d5273ce0ea50443afdd4d152514a58ee66c5",
-                      "size":  376,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/steel_ingot.png",
-                      "sha256":  "c8ef4299180340ff3db93381fa8b049128bb1189fce60716cd0aeec7263a93a7",
-                      "size":  562,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/forgecraft/textures/items/wootz_ingot.png",
-                      "sha256":  "b96191795501b9e7a929b38a2708e9a94f019f5a231f3223a06d2b4d3292b1ce",
-                      "size":  846,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/immersiveengineering/models/block/iesixsides.json",
-                      "sha256":  "161d1f936d98df26e0caeff573bab7fcc30804bd7330bf41027692c106566507",
-                      "size":  521,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/immersivepetroleum/models/item/metal_multiblock.json",
-                      "sha256":  "db8e2e4f7997373248e1823c425004bef395735d8a6b6263457d7393aa2ed31f",
-                      "size":  109,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/immersivepetroleum/models/item/stone_decoration.json",
-                      "sha256":  "658f375581865fcdf5f0c68f9c94532395c551bf6974a73ff6145a3b0dde34aa",
-                      "size":  118,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/blockstates/torch.json",
-                      "sha256":  "7fe5148d474ea9b99273520458fc52f001b4993965382704cfc0b7e00e569738",
-                      "size":  663,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/models/block/cube-all.json",
-                      "sha256":  "12e6675c5c97ec161dc7246e37faf8cb88c7d9845c00494c0af3172a5991da84",
-                      "size":  43,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/block/leaves_big_oak_bl.png",
-                      "sha256":  "1066faf89fed385057bf33bbc769c987d1a93b6b8d8630fb120409be2b2076ca",
-                      "size":  1625,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/1.png",
-                      "sha256":  "be5020a0fbd649829ec96941cfc35fc1bd684011e747eca9a1fe28393001b754",
-                      "size":  3264,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/anvil_base_top.png",
-                      "sha256":  "765a0b62fed2d40850b3993d6bae08cdc22fa3bc1ca40ea2e63932cdd86cdef2",
-                      "size":  701,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/checker_test.png",
-                      "sha256":  "cb40143045debad3b75dc779d4305024965b2325d652915b9a26ead9baadbf07",
-                      "size":  151,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/dirty_sand.png",
-                      "sha256":  "ee8b5c122638fd6f1d77ed2222c9fccbb97abe583829760bbddef22a11ac0b69",
-                      "size":  719,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/e_particle.png",
-                      "sha256":  "24057afa48698276dbabdc818fb071a8dc560512b75c3d72d4032ca82255b7bc",
-                      "size":  3175,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/e_texture.png",
-                      "sha256":  "24057afa48698276dbabdc818fb071a8dc560512b75c3d72d4032ca82255b7bc",
-                      "size":  3175,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/iron_ingot.png",
-                      "sha256":  "1cc09bf9b5cda459fb88bd98b179d5273ce0ea50443afdd4d152514a58ee66c5",
-                      "size":  376,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/iron_ingot_dark.png",
-                      "sha256":  "dda95686bcdcee9c1f9ad02a67cb69f9d8cdadf7cb0852f39a2ca1cfec55d39e",
-                      "size":  464,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/iron_ingot_hot.png",
-                      "sha256":  "7c3f634ba50f420eb5c389a9ad43b9a35436de18a5bcb41474e6d7bdc537c1ac",
-                      "size":  801,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/iron_ingot_light.png",
-                      "sha256":  "31ad185c26bbd9e829c6ee6f3294cd937e93ffb13dd67b4dc463ccae4873781e",
-                      "size":  458,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/stone_slab.png",
-                      "sha256":  "ce361cde8897ef98be0d911715aa15f8d9447a6fb0d44f64b26359350699a506",
-                      "size":  414,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/blocks/stone_slab_hot.png",
-                      "sha256":  "bcf27ec5c3ca68d481cbce44e47296157973eee3b8fc930238ad8c13bc454eca",
-                      "size":  405,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/items/e_texture.png",
-                      "sha256":  "d72c09f22add35e813047dd799e2fb999ee58ff9924768418628f3c79faaec33",
-                      "size":  317,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/assets/minecraft/textures/items/finished_bronze.png",
-                      "sha256":  "be5020a0fbd649829ec96941cfc35fc1bd684011e747eca9a1fe28393001b754",
-                      "size":  3264,
-                      "executable":  false
-                  },
-                  {
-                      "path":  "resourcepacks/ObsidianGate-Fixes-1.12.2/pack.mcmeta",
-                      "sha256":  "c1e948108139b48f05f8c8b7537f84e002c35ba0ff162c6a0879f52767f31a57",
-                      "size":  121,
-                      "executable":  false
-                  },
-                  {
                       "path":  "scripts/project.zs",
-                      "sha256":  "df3c7008da9a3d6da5a31005645f119f28d08a043c197d4899a31d24b60ae3fc",
-                      "size":  256,
+                      "sha256":  "8babfb196aa9474b1697c4af9aac77d1f616affa4e4929f23c4a112a9598aab2",
+                      "size":  134,
                       "executable":  false
                   },
                   {
@@ -2390,8 +1202,8 @@
                   },
                   {
                       "path":  "THIRD_PARTY_MODS.txt",
-                      "sha256":  "caa2717add144a88ede328c197dac6cd4a89709bbb4a30b5353d4799bea0fec0",
-                      "size":  1157,
+                      "sha256":  "764282b9450e16fa6789f80406073ab572a1335bb65ad9ce2ff04875ce872cd5",
+                      "size":  3939,
                       "executable":  false
                   }
               ]

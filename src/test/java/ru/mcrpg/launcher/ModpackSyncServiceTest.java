@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -65,6 +66,76 @@ class ModpackSyncServiceTest {
         ModpackSyncResult secondRun = service.sync(result.getResolvedConfig(), null);
         assertEquals(0, secondRun.getDownloadedFiles());
         assertEquals(3, secondRun.getReusedFiles());
+        assertEquals(0, secondRun.getRemovedFiles());
+    }
+
+    @Test
+    void syncMovesObsoleteModEntriesOutOfModsDirectory() throws Exception {
+        Path sourceDirectory = Files.createDirectories(tempDirectory.resolve("source"));
+        Path currentMod = writeFile(sourceDirectory, "mods/current.jar", "current-mod");
+
+        Path manifest = tempDirectory.resolve("manifest.json");
+        String manifestJson = "{\n"
+            + "  \"schemaVersion\": 1,\n"
+            + "  \"id\": \"mc-rpg\",\n"
+            + "  \"version\": \"2026.05.19\",\n"
+            + "  \"baseUrl\": \"" + sourceDirectory.toUri().toURL().toString() + "\",\n"
+            + "  \"files\": [\n"
+            + fileJson("mods/current.jar", currentMod) + "\n"
+            + "  ]\n"
+            + "}\n";
+        Files.write(manifest, manifestJson.getBytes(StandardCharsets.UTF_8));
+
+        Path clientDirectory = Files.createDirectories(tempDirectory.resolve("client"));
+        writeFile(clientDirectory, "mods/old.jar", "old-mod");
+        writeFile(clientDirectory, "mods/memory_repo/nested.jar", "nested-old-mod");
+        writeFile(clientDirectory, "config/local.cfg", "keep=true");
+
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setManifestUrl(manifest.toUri().toURL().toString());
+        config.setGameDirectory(clientDirectory.toString());
+
+        ModpackSyncResult result = new ModpackSyncService(new ModpackManifestClient()).sync(config, null);
+
+        assertTrue(Files.exists(clientDirectory.resolve("mods/current.jar")));
+        assertFalse(Files.exists(clientDirectory.resolve("mods/old.jar")));
+        assertFalse(Files.exists(clientDirectory.resolve("mods/memory_repo")));
+        assertTrue(Files.exists(clientDirectory.resolve("config/local.cfg")));
+        assertEquals(1, result.getDownloadedFiles());
+        assertEquals(2, result.getRemovedFiles());
+
+        Path backupDirectory = onlyChild(clientDirectory.resolve(".obsolete-mods"));
+        assertTrue(Files.exists(backupDirectory.resolve("old.jar")));
+        assertTrue(Files.exists(backupDirectory.resolve("memory_repo/nested.jar")));
+    }
+
+    @Test
+    void previewLeavesObsoleteModEntriesInPlace() throws Exception {
+        Path sourceDirectory = Files.createDirectories(tempDirectory.resolve("source"));
+        Path currentMod = writeFile(sourceDirectory, "mods/current.jar", "current-mod");
+
+        Path manifest = tempDirectory.resolve("manifest.json");
+        String manifestJson = "{\n"
+            + "  \"schemaVersion\": 1,\n"
+            + "  \"baseUrl\": \"" + sourceDirectory.toUri().toURL().toString() + "\",\n"
+            + "  \"files\": [\n"
+            + fileJson("mods/current.jar", currentMod) + "\n"
+            + "  ]\n"
+            + "}\n";
+        Files.write(manifest, manifestJson.getBytes(StandardCharsets.UTF_8));
+
+        Path clientDirectory = Files.createDirectories(tempDirectory.resolve("client"));
+        writeFile(clientDirectory, "mods/old.jar", "old-mod");
+
+        LauncherConfig config = LauncherConfig.defaults();
+        config.setManifestUrl(manifest.toUri().toURL().toString());
+        config.setGameDirectory(clientDirectory.toString());
+
+        ModpackSyncPreviewResult previewResult = new ModpackSyncService(new ModpackManifestClient()).preview(config, null);
+
+        assertEquals(1, previewResult.getDownloadFiles());
+        assertTrue(Files.exists(clientDirectory.resolve("mods/old.jar")));
+        assertFalse(Files.exists(clientDirectory.resolve(".obsolete-mods")));
     }
 
     @Test
@@ -620,6 +691,22 @@ class ModpackSyncServiceTest {
             }
         }
         throw new AssertionError("Preview entry was not found: " + path);
+    }
+
+    private static Path onlyChild(Path directory) throws IOException {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+            Path onlyChild = null;
+            for (Path child : stream) {
+                if (onlyChild != null) {
+                    throw new AssertionError("Expected one child in " + directory);
+                }
+                onlyChild = child;
+            }
+            if (onlyChild == null) {
+                throw new AssertionError("Expected child in " + directory);
+            }
+            return onlyChild;
+        }
     }
 
     private static Path writeFile(Path root, String relativePath, String content) throws IOException {

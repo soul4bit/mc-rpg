@@ -1,5 +1,128 @@
 Third-party mod credits
 
+Mixin 0.7-0.8 Compatibility
+Official page: https://www.curseforge.com/minecraft/mc-mods/mixin-0-7-0-8-compatibility
+
+Baubles
+Official page: https://www.curseforge.com/minecraft/mc-mods/baubles
+
+YUNG's Better Caves
+Official page: https://www.curseforge.com/minecraft/mc-mods/yungs-better-caves
+
+Better Questing
+Official page: https://www.curseforge.com/minecraft/mc-mods/better-questing
+
+Better Questing - Standard Expansion
+Official page: https://www.curseforge.com/minecraft/mc-mods/better-questing-standard-expansion
+
+Bewitchment (Legacy)
+Official page: https://www.curseforge.com/minecraft/mc-mods/bewitchment-legacy
+
+BiblioCraft
+Official page: https://www.curseforge.com/minecraft/mc-mods/bibliocraft
+
+Biomes O' Plenty
+Official page: https://www.curseforge.com/minecraft/mc-mods/biomes-o-plenty
+
+Botania
+Official page: https://modrinth.com/mod/botania
+
+Carbon Config
+Official page: https://www.curseforge.com/minecraft/mc-mods/carbon-config
+
+Chunk-Pregenerator
+Official page: https://www.curseforge.com/minecraft/mc-mods/chunkpregenerator
+
+Clumps
+Official page: https://www.curseforge.com/minecraft/mc-mods/clumps
+
+CraftTweaker
+Official page: https://www.curseforge.com/minecraft/mc-mods/crafttweaker
+
+DivineRPG
+Official page: https://www.curseforge.com/minecraft/mc-mods/official-divinerpg
+
+Dynamic Trees
+Official page: https://www.curseforge.com/minecraft/mc-mods/dynamictrees
+
+Dynamic Trees - Biomes O' Plenty
+Official page: https://www.curseforge.com/minecraft/mc-mods/dtbop
+
+The Erebus
+Official page: https://www.curseforge.com/minecraft/mc-mods/the-erebus
+
+FoamFix
+Official page: https://www.curseforge.com/minecraft/mc-mods/foamfix-optimization-mod
+
+Hwyla
+Official page: https://www.curseforge.com/minecraft/mc-mods/hwyla
+
+Inventory Tweaks
+Official page: https://www.curseforge.com/minecraft/mc-mods/inventory-tweaks
+
+Iron Chests
+Official page: https://www.curseforge.com/minecraft/mc-mods/iron-chests
+
+Just Enough Items
+Official page: https://www.curseforge.com/minecraft/mc-mods/jei
+
+Just Enough Resources
+Official page: https://www.curseforge.com/minecraft/mc-mods/just-enough-resources-jer
+
+Mantle
+Official page: https://modrinth.com/mod/mantle
+
+Mouse Tweaks
+Official page: https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks
+
+Patchouli
+Official page: https://modrinth.com/mod/patchouli
+
+RandomPatches
+Official page: https://www.curseforge.com/minecraft/mc-mods/randompatches
+
+Roguelike Dungeons
+Official page: https://www.curseforge.com/minecraft/mc-mods/roguelike-dungeons
+
+Save My Stronghold!
+Official page: https://www.curseforge.com/minecraft/mc-mods/save-my-stronghold
+
+Serene Seasons
+Official page: https://www.curseforge.com/minecraft/mc-mods/serene-seasons
+
+Sound Filters
+Official page: https://www.curseforge.com/minecraft/mc-mods/sound-filters
+
+Spark Unforged
+Official page: https://www.curseforge.com/minecraft/mc-mods/spark-unforged
+
+Tinkers' Construct
+Official page: https://modrinth.com/mod/tinkers-construct
+
+Thaumcraft
+Official page: https://www.curseforge.com/minecraft/mc-mods/thaumcraft
+
+Thaumic Augmentation
+Official page: https://www.curseforge.com/minecraft/mc-mods/thaumic-augmentation
+
+Thaumic Inventory Scanning
+Official page: https://www.curseforge.com/minecraft/mc-mods/thaumcraft-inventory-scanning
+
+Thaumic JEI
+Official page: https://modrinth.com/mod/thaumic-jei
+
+TrueType Font Replacement
+Official page: https://www.curseforge.com/minecraft/mc-mods/truetype-font-replacement
+
+The Twilight Forest
+Official page: https://www.curseforge.com/minecraft/mc-mods/the-twilight-forest
+
+VanillaFix
+Official page: https://www.curseforge.com/minecraft/mc-mods/vanillafix
+
+WAWLA
+Official page: https://www.curseforge.com/minecraft/mc-mods/wawla-what-are-we-looking-at
+
 Xaero's Minimap
 Official page: https://modrinth.com/mod/xaeros-minimap
 
@@ -8,33 +131,3 @@ Official page: https://modrinth.com/mod/xaeros-world-map
 
 XaeroLib
 Official page: https://modrinth.com/mod/xaerolib
-
-Waystones
-Official page: https://www.curseforge.com/minecraft/mc-mods/waystones
-
-Baubles
-Official page: https://www.curseforge.com/minecraft/mc-mods/baubles
-
-Thaumcraft
-Official page: https://www.curseforge.com/minecraft/mc-mods/thaumcraft
-
-DivineRPG
-Official page: https://www.curseforge.com/minecraft/mc-mods/official-divinerpg
-
-Roguelike Dungeons
-Official page: https://www.curseforge.com/minecraft/mc-mods/roguelike-dungeons
-
-The Twilight Forest
-Official page: https://www.curseforge.com/minecraft/mc-mods/the-twilight-forest
-
-Chunk-Pregenerator
-Official page: https://www.curseforge.com/minecraft/mc-mods/chunkpregenerator
-
-Carbon Config
-Official page: https://www.curseforge.com/minecraft/mc-mods/carbon-config
-
-Spark Unforged
-Official page: https://www.curseforge.com/minecraft/mc-mods/spark-unforged
-
-Mixin 0.7-0.8 Compatibility
-Official page: https://www.curseforge.com/minecraft/mc-mods/mixin-0-7-0-8-compatibility
