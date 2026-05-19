@@ -181,6 +181,15 @@ if ($useRsync) {
 
 Invoke-External -Command "scp" -Arguments (@("-r") + $uploadPaths + @("${Target}:$RemoteStageDir/")) -Action "Upload modpack release artifacts"
 
+Write-Host "==> Preserving mutable server-local configs" -ForegroundColor Cyan
+Invoke-External -Command "ssh" -Arguments @(
+    $sshTtyArgs +
+    @(
+        $Target,
+        "rm -rf '$RemoteStageDir/server/config'"
+    )
+) -Action "Remove mutable server-local config directory from staging"
+
 Write-Host "==> Installing modpack release on remote host" -ForegroundColor Cyan
 $remoteScript = $null
 
@@ -196,7 +205,7 @@ if ($LegacyPromptSudo) {
     $remoteCommands.Add("install -m 644 '$RemoteStageDir/$serverFileName' '$RemoteServerModsDir/$serverFileName'")
     $remoteCommands.Add("if [ -d '$RemoteStageDir/server/config' ]; then")
     $remoteCommands.Add("  preserved_spawn_config=`$(mktemp)")
-    $remoteCommands.Add("  if [ -f '$RemoteServerRoot/config/obsidiangate-spawn-protection.properties' ] && [ ! -f '$RemoteStageDir/server/config/obsidiangate-spawn-protection.properties' ]; then")
+    $remoteCommands.Add("  if [ -f '$RemoteServerRoot/config/obsidiangate-spawn-protection.properties' ]; then")
     $remoteCommands.Add("    cp '$RemoteServerRoot/config/obsidiangate-spawn-protection.properties' `"`$preserved_spawn_config`"")
     $remoteCommands.Add("  else")
     $remoteCommands.Add("    rm -f `"`$preserved_spawn_config`"")

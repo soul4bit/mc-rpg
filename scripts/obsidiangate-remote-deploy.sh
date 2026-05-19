@@ -72,7 +72,7 @@ install -m 644 "$STAGE_DIR/$SERVER_JAR" "$SERVER_MODS_DIR/$SERVER_JAR"
 
 if [ -d "$STAGE_DIR/server/config" ]; then
     preserved_spawn_config="$(mktemp)"
-    if [ -f "$SERVER_ROOT/config/obsidiangate-spawn-protection.properties" ] && [ ! -f "$STAGE_DIR/server/config/obsidiangate-spawn-protection.properties" ]; then
+    if [ -f "$SERVER_ROOT/config/obsidiangate-spawn-protection.properties" ]; then
         cp "$SERVER_ROOT/config/obsidiangate-spawn-protection.properties" "$preserved_spawn_config"
     else
         rm -f "$preserved_spawn_config"
