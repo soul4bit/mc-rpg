@@ -67,6 +67,7 @@ class ModpackSyncServiceTest {
         assertEquals(0, secondRun.getDownloadedFiles());
         assertEquals(3, secondRun.getReusedFiles());
         assertEquals(0, secondRun.getRemovedFiles());
+        assertTrue(Files.isRegularFile(tempDirectory.resolve("client/.launcher-cache/verified-files.json")));
     }
 
     @Test

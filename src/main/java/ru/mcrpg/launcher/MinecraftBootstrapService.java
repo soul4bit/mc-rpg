@@ -24,6 +24,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -53,6 +55,20 @@ public final class MinecraftBootstrapService {
         Path gameDirectory,
         ModpackSyncService.LogSink logSink
     ) throws IOException {
+        VerifiedFileCache verifiedFileCache = VerifiedFileCache.open(gameDirectory);
+        try {
+            return bootstrap(settings, gameDirectory, logSink, verifiedFileCache);
+        } finally {
+            saveCache(verifiedFileCache, logSink);
+        }
+    }
+
+    MinecraftBootstrapResult bootstrap(
+        MinecraftBootstrapSettings settings,
+        Path gameDirectory,
+        ModpackSyncService.LogSink logSink,
+        VerifiedFileCache verifiedFileCache
+    ) throws IOException {
         if (settings == null || !settings.isEnabled()) {
             return null;
         }
@@ -80,12 +96,14 @@ public final class MinecraftBootstrapService {
             versionsDirectory,
             librariesDirectory,
             cacheDirectory,
+            verifiedFileCache,
             logSink
         );
 
         Path clientJar = ensureFileDownloaded(
             gameDirectory.resolve("versions").resolve(minecraftVersion).resolve(minecraftVersion + ".jar"),
             baseVersion.downloads == null ? null : baseVersion.downloads.client,
+            verifiedFileCache,
             logSink,
             "Клиент Minecraft"
         );
@@ -94,6 +112,8 @@ public final class MinecraftBootstrapService {
         PlatformInfo platform = PlatformInfo.current();
         List<NativeLibrary> nativeLibraries = new ArrayList<NativeLibrary>();
         LinkedHashMap<String, Path> classpathEntries = new LinkedHashMap<String, Path>();
+        List<Callable<Void>> libraryDownloadTasks = new ArrayList<Callable<Void>>();
+        Set<String> scheduledLibraryTargets = new LinkedHashSet<String>();
 
         for (Library library : mergedLibraries) {
             if (!isAllowed(library, platform)) {
@@ -103,10 +123,24 @@ public final class MinecraftBootstrapService {
             if (library.downloads != null && library.downloads.artifact != null && hasText(library.downloads.artifact.path)) {
                 Path artifactPath = librariesDirectory.resolve(toSystemPath(library.downloads.artifact.path)).normalize();
                 Download artifactDownload = library.downloads.artifact;
-                if (isForgeLibrary(library)) {
-                    verifyExistingFile(artifactPath, artifactDownload);
-                } else {
-                    ensureFileDownloaded(artifactPath, artifactDownload, logSink, "Библиотека " + library.name);
+                if (scheduledLibraryTargets.add(pathKey(artifactPath))) {
+                    if (isForgeLibrary(library)) {
+                        libraryDownloadTasks.add(() -> {
+                            verifyExistingFile(artifactPath, artifactDownload, verifiedFileCache);
+                            return null;
+                        });
+                    } else {
+                        libraryDownloadTasks.add(() -> {
+                            ensureFileDownloaded(
+                                artifactPath,
+                                artifactDownload,
+                                verifiedFileCache,
+                                logSink,
+                                "Библиотека " + library.name
+                            );
+                            return null;
+                        });
+                    }
                 }
                 classpathEntries.put(artifactPath.toString(), artifactPath);
             }
@@ -114,20 +148,32 @@ public final class MinecraftBootstrapService {
             Download nativeDownload = resolveNativeDownload(library, platform);
             if (nativeDownload != null) {
                 Path nativeArchive = librariesDirectory.resolve(toSystemPath(nativeDownload.path)).normalize();
-                ensureFileDownloaded(nativeArchive, nativeDownload, logSink, "Native-библиотека " + library.name);
+                if (scheduledLibraryTargets.add(pathKey(nativeArchive))) {
+                    libraryDownloadTasks.add(() -> {
+                        ensureFileDownloaded(
+                            nativeArchive,
+                            nativeDownload,
+                            verifiedFileCache,
+                            logSink,
+                            "Native-библиотека " + library.name
+                        );
+                        return null;
+                    });
+                }
                 nativeLibraries.add(new NativeLibrary(nativeArchive, library.extract == null
                     ? Collections.<String>emptyList()
                     : library.extract.exclude));
             }
         }
+        ParallelIo.run("minecraft-libraries", libraryDownloadTasks);
 
         classpathEntries.put(clientJar.toString(), clientJar);
 
-        Path assetIndexFile = ensureAssetIndex(assetsDirectory, baseVersion.assetIndex, logSink);
+        Path assetIndexFile = ensureAssetIndex(assetsDirectory, baseVersion.assetIndex, verifiedFileCache, logSink);
         AssetIndex assetIndex = readJson(assetIndexFile, AssetIndex.class);
-        ensureAssets(settings, assetsDirectory, assetIndex, logSink);
+        ensureAssets(settings, assetsDirectory, assetIndex, verifiedFileCache, logSink);
 
-        Path loggingConfigFile = ensureLoggingConfig(assetsDirectory, baseVersion.logging, logSink);
+        Path loggingConfigFile = ensureLoggingConfig(assetsDirectory, baseVersion.logging, verifiedFileCache, logSink);
         Path nativesDirectory = ensureNatives(gameDirectory, forgeVersionId, platform, nativeLibraries, logSink);
 
         String launchTemplate = buildLaunchTemplate(
@@ -178,6 +224,7 @@ public final class MinecraftBootstrapService {
         Path versionsDirectory,
         Path librariesDirectory,
         Path cacheDirectory,
+        VerifiedFileCache verifiedFileCache,
         ModpackSyncService.LogSink logSink
     ) throws IOException {
         Path versionDirectory = Files.createDirectories(versionsDirectory.resolve(forgeVersionId));
@@ -191,7 +238,7 @@ public final class MinecraftBootstrapService {
                 : librariesDirectory.resolve(toSystemPath(forgeArtifact.path)).normalize();
             if (forgeArtifactPath != null && Files.isRegularFile(forgeArtifactPath)
                 && matchesExistingFile(forgeArtifactPath, forgeArtifact == null ? null : forgeArtifact.sha1,
-                    forgeArtifact == null ? null : forgeArtifact.size)) {
+                    forgeArtifact == null ? null : forgeArtifact.size, verifiedFileCache)) {
                 return new ForgeInstallData(existingVersion, versionJsonPath, forgeArtifactPath);
             }
         }
@@ -201,9 +248,9 @@ public final class MinecraftBootstrapService {
             : defaultForgeInstallerUrl(minecraftVersion, forgeVersion);
         Path installerDirectory = Files.createDirectories(cacheDirectory.resolve("forge"));
         Path installerFile = installerDirectory.resolve("forge-" + forgeVersionId + "-installer.jar");
-        downloadIfNeeded(new URL(installerUrl), installerFile, null, null, logSink, "Установщик Forge");
+        downloadIfNeeded(new URL(installerUrl), installerFile, null, null, verifiedFileCache, logSink, "Установщик Forge");
 
-        return extractForgeInstaller(installerFile, versionJsonPath, librariesDirectory, forgeVersionId, logSink);
+        return extractForgeInstaller(installerFile, versionJsonPath, librariesDirectory, forgeVersionId, verifiedFileCache, logSink);
     }
 
     private ForgeInstallData extractForgeInstaller(
@@ -211,6 +258,7 @@ public final class MinecraftBootstrapService {
         Path versionJsonPath,
         Path librariesDirectory,
         String forgeVersionId,
+        VerifiedFileCache verifiedFileCache,
         ModpackSyncService.LogSink logSink
     ) throws IOException {
         byte[] versionBytes;
@@ -249,7 +297,7 @@ public final class MinecraftBootstrapService {
                 Path legacyForgeArtifactPath = librariesDirectory.resolve(toSystemPath(legacyForgeArtifact.path)).normalize();
                 writeJson(versionJsonPath, versionMetadata);
                 writeBytes(legacyForgeArtifactPath, forgeArtifactBytes);
-                verifyExistingFile(legacyForgeArtifactPath, legacyForgeArtifact);
+                verifyExistingFile(legacyForgeArtifactPath, legacyForgeArtifact, verifiedFileCache);
                 log(logSink, "Метаданные Forge установлены: " + forgeVersionId);
                 return new ForgeInstallData(versionMetadata, versionJsonPath, legacyForgeArtifactPath);
             }
@@ -268,7 +316,7 @@ public final class MinecraftBootstrapService {
             Path forgeArtifactPath = librariesDirectory.resolve(toSystemPath(forgeArtifact.path)).normalize();
             writeBytes(versionJsonPath, versionBytes);
             writeBytes(forgeArtifactPath, forgeArtifactBytes);
-            verifyExistingFile(forgeArtifactPath, forgeArtifact);
+            verifyExistingFile(forgeArtifactPath, forgeArtifact, verifiedFileCache);
             log(logSink, "Метаданные Forge установлены: " + forgeVersionId);
             return new ForgeInstallData(versionMetadata, versionJsonPath, forgeArtifactPath);
         }
@@ -332,6 +380,7 @@ public final class MinecraftBootstrapService {
     private Path ensureFileDownloaded(
         Path target,
         Download download,
+        VerifiedFileCache verifiedFileCache,
         ModpackSyncService.LogSink logSink,
         String label
     ) throws IOException {
@@ -339,17 +388,23 @@ public final class MinecraftBootstrapService {
             throw new IllegalArgumentException(label + " download metadata is missing.");
         }
         String rawUrl = requireText(download.url, label + " URL is missing.");
-        downloadIfNeeded(new URL(rawUrl), target, download.sha1, download.size, logSink, label);
+        downloadIfNeeded(new URL(rawUrl), target, download.sha1, download.size, verifiedFileCache, logSink, label);
         return target;
     }
 
-    private static void verifyExistingFile(Path target, Download download) throws IOException {
+    private static void verifyExistingFile(Path target, Download download, VerifiedFileCache verifiedFileCache)
+        throws IOException {
         if (download != null) {
-            verifyExistingFile(target, download.sha1, download.size);
+            verifyExistingFile(target, download.sha1, download.size, verifiedFileCache);
         }
     }
 
-    private static void verifyExistingFile(Path target, String expectedSha1, Long expectedSize) throws IOException {
+    private static void verifyExistingFile(
+        Path target,
+        String expectedSha1,
+        Long expectedSize,
+        VerifiedFileCache verifiedFileCache
+    ) throws IOException {
         if (!Files.isRegularFile(target)) {
             throw new IOException("Не найден обязательный файл: " + target);
         }
@@ -360,11 +415,20 @@ public final class MinecraftBootstrapService {
             }
         }
         if (hasText(expectedSha1)) {
+            if (verifiedFileCache != null && verifiedFileCache.matches(target, "SHA-1", expectedSha1, expectedSize)) {
+                return;
+            }
             String actualSha1 = ChecksumUtils.sha1(target);
             if (!actualSha1.equalsIgnoreCase(expectedSha1.trim())) {
+                if (verifiedFileCache != null) {
+                    verifiedFileCache.remove(target);
+                }
                 throw new IOException(
                     "SHA-1 не совпал для " + target + ". Ожидалось " + expectedSha1 + ", получено " + actualSha1 + "."
                 );
+            }
+            if (verifiedFileCache != null) {
+                verifiedFileCache.recordVerified(target, "SHA-1", expectedSha1);
             }
         }
     }
@@ -374,14 +438,16 @@ public final class MinecraftBootstrapService {
         Path target,
         String expectedSha1,
         Long expectedSize,
+        VerifiedFileCache verifiedFileCache,
         ModpackSyncService.LogSink logSink,
         String label
     ) throws IOException {
         if (Files.isRegularFile(target)) {
-            if (matchesExistingFile(target, expectedSha1, expectedSize)) {
+            if (matchesExistingFile(target, expectedSha1, expectedSize, verifiedFileCache)) {
                 log(logSink, "Переиспользовано: " + target.getFileName());
                 return;
             }
+            verifiedFileCache.remove(target);
             Files.deleteIfExists(target);
         }
 
@@ -393,8 +459,9 @@ public final class MinecraftBootstrapService {
         try {
             log(logSink, "Скачиваем " + label + ": " + url);
             download(url, tempFile);
-            verifyExistingFile(tempFile, expectedSha1, expectedSize);
+            verifyExistingFile(tempFile, expectedSha1, expectedSize, null);
             Files.move(tempFile, target, StandardCopyOption.REPLACE_EXISTING);
+            verifiedFileCache.recordVerified(target, "SHA-1", expectedSha1);
         } finally {
             Files.deleteIfExists(tempFile);
         }
@@ -403,6 +470,7 @@ public final class MinecraftBootstrapService {
     private Path ensureAssetIndex(
         Path assetsDirectory,
         AssetIndexReference assetIndex,
+        VerifiedFileCache verifiedFileCache,
         ModpackSyncService.LogSink logSink
     ) throws IOException {
         if (assetIndex == null) {
@@ -411,7 +479,15 @@ public final class MinecraftBootstrapService {
         String assetIndexId = requireText(assetIndex.id, "Не указан id asset index Minecraft.");
         String assetIndexUrl = requireText(assetIndex.url, "Не указан URL asset index Minecraft.");
         Path target = assetsDirectory.resolve("indexes").resolve(assetIndexId + ".json");
-        downloadIfNeeded(new URL(assetIndexUrl), target, assetIndex.sha1, assetIndex.size, logSink, "Индекс ресурсов " + assetIndexId);
+        downloadIfNeeded(
+            new URL(assetIndexUrl),
+            target,
+            assetIndex.sha1,
+            assetIndex.size,
+            verifiedFileCache,
+            logSink,
+            "Индекс ресурсов " + assetIndexId
+        );
         return target;
     }
 
@@ -419,6 +495,7 @@ public final class MinecraftBootstrapService {
         MinecraftBootstrapSettings settings,
         Path assetsDirectory,
         AssetIndex assetIndex,
+        VerifiedFileCache verifiedFileCache,
         ModpackSyncService.LogSink logSink
     ) throws IOException {
         if (assetIndex == null || assetIndex.objects == null || assetIndex.objects.isEmpty()) {
@@ -429,25 +506,36 @@ public final class MinecraftBootstrapService {
         URL assetsBaseUrl = new URL(baseUrl.endsWith("/") ? baseUrl : baseUrl + "/");
         log(logSink, "Asset-объектов: " + assetIndex.objects.size());
 
+        List<Callable<Void>> assetDownloadTasks = new ArrayList<Callable<Void>>(assetIndex.objects.size());
+        Set<String> scheduledAssetTargets = new LinkedHashSet<String>();
         for (Map.Entry<String, AssetObject> entry : assetIndex.objects.entrySet()) {
             AssetObject assetObject = entry.getValue();
             String hash = requireText(assetObject.hash, "Не указан hash asset для " + entry.getKey() + ".");
             String relativePath = hash.substring(0, 2) + "/" + hash;
             Path target = assetsDirectory.resolve("objects").resolve(toSystemPath(relativePath));
-            downloadIfNeeded(
-                new URL(assetsBaseUrl, relativePath),
-                target,
-                hash,
-                assetObject.size,
-                logSink,
-                "Ресурс " + entry.getKey()
-            );
+            if (!scheduledAssetTargets.add(pathKey(target))) {
+                continue;
+            }
+            assetDownloadTasks.add(() -> {
+                downloadIfNeeded(
+                    new URL(assetsBaseUrl, relativePath),
+                    target,
+                    hash,
+                    assetObject.size,
+                    verifiedFileCache,
+                    logSink,
+                    "Ресурс " + entry.getKey()
+                );
+                return null;
+            });
         }
+        ParallelIo.run("minecraft-assets", assetDownloadTasks);
     }
 
     private Path ensureLoggingConfig(
         Path assetsDirectory,
         Logging logging,
+        VerifiedFileCache verifiedFileCache,
         ModpackSyncService.LogSink logSink
     ) throws IOException {
         if (logging == null || logging.client == null || logging.client.file == null || !hasText(logging.client.file.id)) {
@@ -456,7 +544,15 @@ public final class MinecraftBootstrapService {
 
         Download file = logging.client.file;
         Path target = assetsDirectory.resolve("log_configs").resolve(file.id);
-        downloadIfNeeded(new URL(requireText(file.url, "Не указан URL конфига логирования.")), target, file.sha1, file.size, logSink, "Конфиг логирования");
+        downloadIfNeeded(
+            new URL(requireText(file.url, "Не указан URL конфига логирования.")),
+            target,
+            file.sha1,
+            file.size,
+            verifiedFileCache,
+            logSink,
+            "Конфиг логирования"
+        );
         return target;
     }
 
@@ -612,6 +708,10 @@ public final class MinecraftBootstrapService {
         return path.toAbsolutePath().normalize().toString().replace('\\', '/');
     }
 
+    private static String pathKey(Path path) {
+        return path.toAbsolutePath().normalize().toString();
+    }
+
     private static String buildNativeFingerprint(List<NativeLibrary> nativeLibraries) {
         StringBuilder builder = new StringBuilder();
         for (NativeLibrary nativeLibrary : nativeLibraries) {
@@ -651,9 +751,14 @@ public final class MinecraftBootstrapService {
         }
     }
 
-    private static boolean matchesExistingFile(Path target, String expectedSha1, Long expectedSize) {
+    private static boolean matchesExistingFile(
+        Path target,
+        String expectedSha1,
+        Long expectedSize,
+        VerifiedFileCache verifiedFileCache
+    ) {
         try {
-            verifyExistingFile(target, expectedSha1, expectedSize);
+            verifyExistingFile(target, expectedSha1, expectedSize, verifiedFileCache);
             return true;
         } catch (IOException ignored) {
             return false;
@@ -878,7 +983,17 @@ public final class MinecraftBootstrapService {
 
     private static void log(ModpackSyncService.LogSink logSink, String message) {
         if (logSink != null) {
-            logSink.log(message);
+            synchronized (logSink) {
+                logSink.log(message);
+            }
+        }
+    }
+
+    private static void saveCache(VerifiedFileCache verifiedFileCache, ModpackSyncService.LogSink logSink) {
+        try {
+            verifiedFileCache.save();
+        } catch (IOException exception) {
+            log(logSink, "Кеш проверенных файлов не сохранен: " + exception.getMessage());
         }
     }
 

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.Callable;
 
 public final class ModpackSyncService {
 
@@ -46,18 +47,30 @@ public final class ModpackSyncService {
         int reusedFiles = 0;
         long downloadBytes = 0L;
         List<ModpackSyncPreviewEntry> entries = new ArrayList<ModpackSyncPreviewEntry>(prepared.manifest.getFiles().size());
+        VerifiedFileCache verifiedFileCache = VerifiedFileCache.open(prepared.gameDirectory);
 
-        for (ModpackFile file : prepared.manifest.getFiles()) {
-            FileInspection inspection = inspectFile(prepared.gameDirectory, file);
-            entries.add(toPreviewEntry(file, inspection));
-            if (inspection.isReused()) {
-                reusedFiles++;
-            } else {
-                downloadFiles++;
-                if (file.getSize() != null && file.getSize().longValue() > 0L) {
-                    downloadBytes += file.getSize().longValue();
+        try {
+            List<FileInspection> inspections = inspectFiles(
+                prepared.gameDirectory,
+                prepared.manifest.getFiles(),
+                verifiedFileCache
+            );
+
+            for (int index = 0; index < prepared.manifest.getFiles().size(); index++) {
+                ModpackFile file = prepared.manifest.getFiles().get(index);
+                FileInspection inspection = inspections.get(index);
+                entries.add(toPreviewEntry(file, inspection));
+                if (inspection.isReused()) {
+                    reusedFiles++;
+                } else {
+                    downloadFiles++;
+                    if (file.getSize() != null && file.getSize().longValue() > 0L) {
+                        downloadBytes += file.getSize().longValue();
+                    }
                 }
             }
+        } finally {
+            saveCache(verifiedFileCache, logSink);
         }
 
         log(
@@ -90,34 +103,47 @@ public final class ModpackSyncService {
         int downloadedFiles = 0;
         int reusedFiles = 0;
         long downloadedBytes = 0L;
+        VerifiedFileCache verifiedFileCache = VerifiedFileCache.open(gameDirectory);
 
-        for (ModpackFile file : manifest.getFiles()) {
-            FileSyncOutcome outcome = syncFile(gameDirectory, loadedManifest, manifest, file, logSink);
-            if (outcome.isDownloaded()) {
-                downloadedFiles++;
-                downloadedBytes += outcome.getDownloadedBytes();
-            } else {
-                reusedFiles++;
-            }
-        }
+        try {
+            List<FileSyncOutcome> outcomes = syncFiles(
+                gameDirectory,
+                loadedManifest,
+                manifest,
+                verifiedFileCache,
+                logSink
+            );
 
-        RuntimeResolution runtimeResolution = runtimeSyncService.sync(loadedManifest, manifest, gameDirectory, logSink);
-        if (runtimeResolution != null) {
-            resolvedConfig.setJavaCommand(runtimeResolution.getJavaExecutable().toString());
-        }
+            for (FileSyncOutcome outcome : outcomes) {
+                if (outcome.isDownloaded()) {
+                    downloadedFiles++;
+                    downloadedBytes += outcome.getDownloadedBytes();
+                } else {
+                    reusedFiles++;
+                }
+            }
 
-        MinecraftBootstrapResult bootstrapResult = minecraftBootstrapService.bootstrap(
-            manifest.getMinecraft(),
-            gameDirectory,
-            logSink
-        );
-        if (bootstrapResult != null) {
-            if (hasText(bootstrapResult.getLaunchTemplate())) {
-                resolvedConfig.setLaunchTemplate(bootstrapResult.getLaunchTemplate());
+            RuntimeResolution runtimeResolution = runtimeSyncService.sync(loadedManifest, manifest, gameDirectory, logSink);
+            if (runtimeResolution != null) {
+                resolvedConfig.setJavaCommand(runtimeResolution.getJavaExecutable().toString());
             }
-            if (hasText(bootstrapResult.getWorkingDirectory())) {
-                resolvedConfig.setWorkingDirectory(bootstrapResult.getWorkingDirectory());
+
+            MinecraftBootstrapResult bootstrapResult = minecraftBootstrapService.bootstrap(
+                manifest.getMinecraft(),
+                gameDirectory,
+                logSink,
+                verifiedFileCache
+            );
+            if (bootstrapResult != null) {
+                if (hasText(bootstrapResult.getLaunchTemplate())) {
+                    resolvedConfig.setLaunchTemplate(bootstrapResult.getLaunchTemplate());
+                }
+                if (hasText(bootstrapResult.getWorkingDirectory())) {
+                    resolvedConfig.setWorkingDirectory(bootstrapResult.getWorkingDirectory());
+                }
             }
+        } finally {
+            saveCache(verifiedFileCache, logSink);
         }
 
         int removedFiles = cleanupObsoleteModEntries(gameDirectory, manifest, logSink);
@@ -148,14 +174,41 @@ public final class ModpackSyncService {
         return new PreparedSyncContext(resolvedConfig, loadedManifest, manifest, gameDirectory);
     }
 
+    private static List<FileInspection> inspectFiles(
+        Path gameDirectory,
+        List<ModpackFile> files,
+        VerifiedFileCache verifiedFileCache
+    ) throws IOException {
+        List<Callable<FileInspection>> tasks = new ArrayList<Callable<FileInspection>>(files.size());
+        for (ModpackFile file : files) {
+            tasks.add(() -> inspectFile(gameDirectory, file, verifiedFileCache));
+        }
+        return ParallelIo.run("modpack-preview", tasks);
+    }
+
+    private List<FileSyncOutcome> syncFiles(
+        Path gameDirectory,
+        LoadedManifest loadedManifest,
+        ModpackManifest manifest,
+        VerifiedFileCache verifiedFileCache,
+        LogSink logSink
+    ) throws IOException {
+        List<Callable<FileSyncOutcome>> tasks = new ArrayList<Callable<FileSyncOutcome>>(manifest.getFiles().size());
+        for (ModpackFile file : manifest.getFiles()) {
+            tasks.add(() -> syncFile(gameDirectory, loadedManifest, manifest, file, verifiedFileCache, logSink));
+        }
+        return ParallelIo.run("modpack-sync", tasks);
+    }
+
     private FileSyncOutcome syncFile(
         Path gameDirectory,
         LoadedManifest loadedManifest,
         ModpackManifest manifest,
         ModpackFile file,
+        VerifiedFileCache verifiedFileCache,
         LogSink logSink
     ) throws IOException {
-        FileInspection inspection = inspectFile(gameDirectory, file);
+        FileInspection inspection = inspectFile(gameDirectory, file, verifiedFileCache);
         Path target = inspection.getTarget();
 
         if (inspection.isReused()) {
@@ -176,6 +229,7 @@ public final class ModpackSyncService {
             long downloadedBytes = download(downloadUrl, tempFile);
             verifyDownloadedFile(tempFile, file, inspection.getExpectedSha256());
             Files.move(tempFile, target, StandardCopyOption.REPLACE_EXISTING);
+            verifiedFileCache.recordVerified(target, "SHA-256", inspection.getExpectedSha256());
 
             if (file.isExecutable()) {
                 target.toFile().setExecutable(true, false);
@@ -187,7 +241,11 @@ public final class ModpackSyncService {
         }
     }
 
-    private static FileInspection inspectFile(Path gameDirectory, ModpackFile file) throws IOException {
+    private static FileInspection inspectFile(
+        Path gameDirectory,
+        ModpackFile file,
+        VerifiedFileCache verifiedFileCache
+    ) throws IOException {
         Path target = resolveTargetPath(gameDirectory, file.getPath());
         String expectedSha256 = requireText(file.getSha256(), "Для файла " + file.getPath() + " не указан sha256.");
 
@@ -196,21 +254,29 @@ public final class ModpackSyncService {
         }
 
         if (!Files.isRegularFile(target)) {
+            verifiedFileCache.remove(target);
             return FileInspection.download(target, expectedSha256, "missing");
         }
 
         if (file.getSize() != null && file.getSize().longValue() >= 0L) {
             long existingSize = Files.size(target);
             if (existingSize != file.getSize().longValue()) {
+                verifiedFileCache.remove(target);
                 return FileInspection.download(target, expectedSha256, "size-mismatch");
             }
         }
 
-        String existingSha256 = ChecksumUtils.sha256(target);
-        if (existingSha256.equalsIgnoreCase(expectedSha256)) {
+        if (verifiedFileCache.matches(target, "SHA-256", expectedSha256, file.getSize())) {
             return FileInspection.reused(target, expectedSha256);
         }
 
+        String existingSha256 = ChecksumUtils.sha256(target);
+        if (existingSha256.equalsIgnoreCase(expectedSha256)) {
+            verifiedFileCache.recordVerified(target, "SHA-256", expectedSha256);
+            return FileInspection.reused(target, expectedSha256);
+        }
+
+        verifiedFileCache.remove(target);
         return FileInspection.download(target, expectedSha256, "sha256-mismatch");
     }
 
@@ -421,7 +487,17 @@ public final class ModpackSyncService {
 
     private static void log(LogSink logSink, String message) {
         if (logSink != null) {
-            logSink.log(message);
+            synchronized (logSink) {
+                logSink.log(message);
+            }
+        }
+    }
+
+    private static void saveCache(VerifiedFileCache verifiedFileCache, LogSink logSink) {
+        try {
+            verifiedFileCache.save();
+        } catch (IOException exception) {
+            log(logSink, "Кеш проверенных файлов не сохранен: " + exception.getMessage());
         }
     }
 
