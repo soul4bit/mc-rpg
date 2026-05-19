@@ -40,6 +40,7 @@ $distLauncherRoot = Join-Path $distFullPath "launcher"
 
 $serverModPaths = @(
     "mods/[___MixinCompat-1.1-1.12.2___].jar",
+    "mods/AutoRegLib-1.3-32.jar",
     "mods/Baubles-1.12-1.5.2.jar",
     "mods/bettercaves-1.12.2-1.6.0.jar",
     "mods/BetterQuesting-3.5.329.jar",
@@ -57,9 +58,12 @@ $serverModPaths = @(
     "mods/Erebus-1.0.32.jar",
     "mods/foamfix-0.10.10-1.12.2.jar",
     "mods/ironchest-1.12.2-7.0.71.846.jar",
+    "mods/IvToolkit-1.3.3-1.12.jar",
     "mods/Mantle-1.12-1.3.3.55.jar",
     "mods/Patchouli-1.0-23.6.jar",
+    "mods/Quark-r1.6-179.jar",
     "mods/randompatches-1.12.2-1.21.0.0.jar",
+    "mods/RecurrentComplex-1.4.8.6.jar",
     "mods/RoguelikeDungeons-1.12.2-1.8.0.jar",
     "mods/savemystronghold-1.12.2-1.0.0.jar",
     "mods/SereneSeasons_1.12.2_1.2.18_universal.jar",

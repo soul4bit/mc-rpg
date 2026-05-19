@@ -1,0 +1,2 @@
+# Modpack release inputs are hashed byte-for-byte in manifest.json.
+modpack/client/** -text

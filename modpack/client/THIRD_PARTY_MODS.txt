@@ -3,6 +3,9 @@ Third-party mod credits
 Mixin 0.7-0.8 Compatibility
 Official page: https://www.curseforge.com/minecraft/mc-mods/mixin-0-7-0-8-compatibility
 
+AutoRegLib
+Official page: https://modrinth.com/mod/autoreglib
+
 Baubles
 Official page: https://www.curseforge.com/minecraft/mc-mods/baubles
 
@@ -60,6 +63,9 @@ Official page: https://www.curseforge.com/minecraft/mc-mods/hwyla
 Inventory Tweaks
 Official page: https://www.curseforge.com/minecraft/mc-mods/inventory-tweaks
 
+IvToolkit
+Official page: https://www.curseforge.com/minecraft/mc-mods/ivtoolkit
+
 Iron Chests
 Official page: https://www.curseforge.com/minecraft/mc-mods/iron-chests
 
@@ -78,8 +84,14 @@ Official page: https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks
 Patchouli
 Official page: https://modrinth.com/mod/patchouli
 
+Quark
+Official page: https://modrinth.com/mod/quark
+
 RandomPatches
 Official page: https://www.curseforge.com/minecraft/mc-mods/randompatches
+
+Recurrent Complex
+Official page: https://www.curseforge.com/minecraft/mc-mods/recurrent-complex
 
 Roguelike Dungeons
 Official page: https://www.curseforge.com/minecraft/mc-mods/roguelike-dungeons

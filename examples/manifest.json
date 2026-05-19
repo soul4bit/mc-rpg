@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "id":  "mc-rpg",
-    "version":  "2026.05.19.1",
+    "version":  "2026.05.19.6",
     "baseUrl":  "http://obsidiangates.duckdns.org:8080/client/",
     "launcher":  {
                      "serverHost":  "obsidiangates.duckdns.org",
@@ -12,9 +12,9 @@
                      "launchTemplate":  ""
                  },
     "launcherUpdate":  {
-                           "version":  "2026.05.19.1",
+                           "version":  "2026.05.19.6",
                            "url":  "client/launcher/obsidian-gate-launcher.jar",
-                           "sha256":  "6d5b78af50c3bc27eb91e21e0efbd3254dde48e04e10127c584d763607138851",
+                           "sha256":  "a8d48113c9ccdbca848d7342f2ef7143c47aaf1364d7c215e39d4c37d9c70da8",
                            "size":  15609690,
                            "required":  false,
                            "artifactVersion":  "0.1.4-test",
@@ -805,9 +805,21 @@
                       "executable":  false
                   },
                   {
+                      "path":  "config/quark.cfg",
+                      "sha256":  "169528dcb6e01cf1f95a261ec7ecb704eb6eb0c935b57f90048c2caf3e54c5d3",
+                      "size":  100716,
+                      "executable":  false
+                  },
+                  {
                       "path":  "config/randompatches.cfg",
                       "sha256":  "addc007e9292e343e9767fdfe874bba0b5de5825a15d27ec2d7ce6f9fb0741e7",
                       "size":  9417,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "config/reccomplex.cfg",
+                      "sha256":  "a590802b587b1fbe2f1b5d025f10acdb45fb33b411e4c3e6651782b782d0036b",
+                      "size":  8949,
                       "executable":  false
                   },
                   {
@@ -898,6 +910,12 @@
                       "path":  "mods/[___MixinCompat-1.1-1.12.2___].jar",
                       "sha256":  "84bf7e2d3debebde099310052b662fc83779947df32f0b2284c6de998e58b353",
                       "size":  867021,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/AutoRegLib-1.3-32.jar",
+                      "sha256":  "d8610a94da8f30815db4612b3291ecdcfd8204eaf1a4db8c5d0663c7b1191d91",
+                      "size":  108306,
                       "executable":  false
                   },
                   {
@@ -1015,6 +1033,12 @@
                       "executable":  false
                   },
                   {
+                      "path":  "mods/IvToolkit-1.3.3-1.12.jar",
+                      "sha256":  "ffb745111790e27cb7810a2e03d5270265dee7ebd3ef98fde897c409d58b1e59",
+                      "size":  455763,
+                      "executable":  false
+                  },
+                  {
                       "path":  "mods/jei_1.12.2-4.15.0.291.jar",
                       "sha256":  "51e4410e1bfb30e3b31fa79bfa7e09a7a83f320d7c665767ee505a8d03b3fb90",
                       "size":  651473,
@@ -1040,7 +1064,7 @@
                   },
                   {
                       "path":  "mods/obsidiangate-forge-auth-client-0.1.0-SNAPSHOT.jar",
-                      "sha256":  "f824b7a4168a9a71a0791eaf06b8f7850742b3112ba738b4e50cf947bf8ed94c",
+                      "sha256":  "40d112d05bbd380715f6b99d73283cb8e3424efdad4faba6edd0c6498f9e24be",
                       "size":  31606,
                       "executable":  false
                   },
@@ -1051,9 +1075,21 @@
                       "executable":  false
                   },
                   {
+                      "path":  "mods/Quark-r1.6-179.jar",
+                      "sha256":  "b72490ac2de814df2fd764afd6071e4e8731281ef68b3862f282c5233224259d",
+                      "size":  3877577,
+                      "executable":  false
+                  },
+                  {
                       "path":  "mods/randompatches-1.12.2-1.21.0.0.jar",
                       "sha256":  "2a039e714ef010556a0186dd3fb75cc1d841819225e76e7b71a21f2f23b230d1",
                       "size":  283420,
+                      "executable":  false
+                  },
+                  {
+                      "path":  "mods/RecurrentComplex-1.4.8.6.jar",
+                      "sha256":  "253226e6c7efe61ae255df0cc2e19d1420945cb7e86f7cd79f51d5db10fd9de8",
+                      "size":  5749924,
                       "executable":  false
                   },
                   {
@@ -1202,8 +1238,8 @@
                   },
                   {
                       "path":  "THIRD_PARTY_MODS.txt",
-                      "sha256":  "764282b9450e16fa6789f80406073ab572a1335bb65ad9ce2ff04875ce872cd5",
-                      "size":  3939,
+                      "sha256":  "5dc828af354424226d1af4da3d1a073fffb07c1a0190e7314c758292501ebc4b",
+                      "size":  4233,
                       "executable":  false
                   }
               ]
