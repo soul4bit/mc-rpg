@@ -44,7 +44,7 @@ final class SpawnProtectionCommand {
                 return COMMAND_NAME;
             }
             if ("getUsage".equals(name) || "func_71518_a".equals(name)) {
-                return "/" + COMMAND_NAME + " <info|on|off|radius|center|worldspawn|region|reload>";
+                return "/" + COMMAND_NAME + " <info|test|on|off|radius|center|worldspawn|region|reload>";
             }
             if ("getAliases".equals(name) || "func_71514_a".equals(name)) {
                 return Collections.emptyList();
@@ -87,6 +87,10 @@ final class SpawnProtectionCommand {
             String action = args.length == 0 ? "info" : args[0].trim().toLowerCase();
             if ("info".equals(action)) {
                 sendInfo(sender);
+                return;
+            }
+            if ("test".equals(action)) {
+                testPosition(sender);
                 return;
             }
             if ("on".equals(action)) {
@@ -146,7 +150,7 @@ final class SpawnProtectionCommand {
                 }
                 return;
             }
-            ServerChat.usage(sender, "/" + COMMAND_NAME + " <info|on|off|radius|center|worldspawn|region|reload>");
+            ServerChat.usage(sender, "/" + COMMAND_NAME + " <info|test|on|off|radius|center|worldspawn|region|reload>");
         }
 
         private void sendInfo(Object sender) {
@@ -238,6 +242,21 @@ final class SpawnProtectionCommand {
         private int dimensionFromSender(Object sender) {
             Object player = TeleportSupport.resolvePlayer(sender);
             return player == null ? 0 : TeleportSupport.playerDimension(player);
+        }
+
+        private void testPosition(Object sender) {
+            Object player = TeleportSupport.resolvePlayer(sender);
+            if (player == null) {
+                ServerChat.status(sender, ServerChat.Tone.ERROR, SUBJECT, "команду " + ServerChat.command("/" + COMMAND_NAME + " test") + " может использовать только игрок.");
+                return;
+            }
+            boolean protectedPosition = service.isProtectedPlayerPosition(player);
+            ServerChat.status(
+                sender,
+                protectedPosition ? ServerChat.Tone.SUCCESS : ServerChat.Tone.WARNING,
+                SUBJECT,
+                service.describePlayerPosition(player)
+            );
         }
     }
 

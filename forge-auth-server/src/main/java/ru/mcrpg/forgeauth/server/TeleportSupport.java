@@ -87,7 +87,13 @@ final class TeleportSupport {
 
         Class<?> type = value.getClass();
         while (type != null) {
-            if (PLAYER_CLASS_NAME.equals(type.getName())) {
+            String name = type.getName();
+            if (
+                PLAYER_CLASS_NAME.equals(name)
+                    || "net.minecraft.entity.player.EntityPlayer".equals(name)
+                    || "oq".equals(name)
+                    || "aed".equals(name)
+            ) {
                 return true;
             }
             type = type.getSuperclass();
@@ -96,32 +102,36 @@ final class TeleportSupport {
     }
 
     static String playerName(Object player) {
-        Object name = invokeZeroArgIfPresent(player, "getName", "func_70005_c_");
+        Object name = invokeZeroArgIfPresent(player, "getName", "func_70005_c_", "h_");
         return name == null ? "unknown" : name.toString();
     }
 
     static double playerX(Object player) {
-        return readDoubleField(player, 0.0D, "posX", "field_70165_t");
+        return readDoubleField(player, 0.0D, "posX", "field_70165_t", "p");
     }
 
     static double playerY(Object player) {
-        return readDoubleField(player, 0.0D, "posY", "field_70163_u");
+        return readDoubleField(player, 0.0D, "posY", "field_70163_u", "q");
     }
 
     static double playerZ(Object player) {
-        return readDoubleField(player, 0.0D, "posZ", "field_70161_v");
+        return readDoubleField(player, 0.0D, "posZ", "field_70161_v", "r");
     }
 
     static float playerYaw(Object player) {
-        return readFloatField(player, 0.0F, "rotationYaw", "field_70177_z");
+        return readFloatField(player, 0.0F, "rotationYaw", "field_70177_z", "v");
     }
 
     static float playerPitch(Object player) {
-        return readFloatField(player, 0.0F, "rotationPitch", "field_70125_A");
+        return readFloatField(player, 0.0F, "rotationPitch", "field_70125_A", "w");
     }
 
     static int playerDimension(Object player) {
-        return readIntField(player, 0, "dimension", "field_71093_bK");
+        Object value = readFieldIfPresent(player, "dimension", "field_71093_bK");
+        if (value instanceof Number) {
+            return ((Number) value).intValue();
+        }
+        return worldDimension(readFieldIfPresent(player, "world", "field_70170_p", "l"), 0);
     }
 
     static Object teleportToPlayer(Object movingPlayer, Object destinationPlayer) {
@@ -243,10 +253,10 @@ final class TeleportSupport {
     }
 
     static void resetMotion(Object player) {
-        setFloatField(player, 0.0F, "fallDistance", "field_70143_R");
-        setDoubleField(player, 0.0D, "motionX", "field_70159_w");
-        setDoubleField(player, 0.0D, "motionY", "field_70181_x");
-        setDoubleField(player, 0.0D, "motionZ", "field_70179_y");
+        setFloatField(player, 0.0F, "fallDistance", "field_70143_R", "G");
+        setDoubleField(player, 0.0D, "motionX", "field_70159_w", "s");
+        setDoubleField(player, 0.0D, "motionY", "field_70181_x", "t");
+        setDoubleField(player, 0.0D, "motionZ", "field_70179_y", "u");
     }
 
     static boolean isFinite(double value) {
@@ -469,8 +479,9 @@ final class TeleportSupport {
         }
     }
 
-    private static int readIntField(Object target, int fallback, String... fieldNames) {
-        Object value = readFieldIfPresent(target, fieldNames);
+    private static int worldDimension(Object world, int fallback) {
+        Object provider = readFieldIfPresent(world, "provider", "field_73011_w", "s");
+        Object value = invokeZeroArgIfPresent(provider, "getDimension", "func_186058_p", "i");
         return value instanceof Number ? ((Number) value).intValue() : fallback;
     }
 

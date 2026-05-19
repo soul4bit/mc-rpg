@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
@@ -38,21 +37,20 @@ class SpawnProtectionServiceTest {
         FakeWorld overworld = new FakeWorld(0);
         FakeWorld nether = new FakeWorld(-1);
 
-        assertTrue(isProtected(service, overworld, new FakeBlockPos(0, 64, 0)));
-        assertFalse(isProtected(service, overworld, new FakeBlockPos(11, 64, 0)));
-        assertFalse(isProtected(service, overworld, new FakeBlockPos(0, 90, 0)));
-        assertFalse(isProtected(service, nether, new FakeBlockPos(0, 64, 0)));
+        assertTrue(service.isProtectedBlockPosition(overworld, new FakeBlockPos(0, 64, 0)));
+        assertFalse(service.isProtectedBlockPosition(overworld, new FakeBlockPos(11, 64, 0)));
+        assertFalse(service.isProtectedBlockPosition(overworld, new FakeBlockPos(0, 90, 0)));
+        assertFalse(service.isProtectedBlockPosition(nether, new FakeBlockPos(0, 64, 0)));
     }
 
-    private static boolean isProtected(SpawnProtectionService service, Object world, Object pos) throws Exception {
-        Method method = SpawnProtectionService.class.getDeclaredMethod(
-            "isProtected",
-            Object.class,
-            Object.class,
-            SpawnProtectionService.Config.class
-        );
-        method.setAccessible(true);
-        return ((Boolean) method.invoke(service, world, pos, service.config())).booleanValue();
+    @Test
+    void obfuscatedWorldAndBlockPositionNamesAreSupported() throws Exception {
+        Path configPath = tempDirectory.resolve("obsidiangate-spawn-protection.properties");
+        SpawnProtectionService service = new SpawnProtectionService(Logger.getLogger("test"), configPath);
+        service.setBoxRegion(0, -10.0D, 40.0D, -20.0D, 10.0D, 80.0D, 20.0D);
+
+        assertTrue(service.isProtectedBlockPosition(new FakeObfuscatedWorld(0), new FakeObfuscatedBlockPos(0, 64, 0)));
+        assertFalse(service.isProtectedBlockPosition(new FakeObfuscatedWorld(0), new FakeObfuscatedBlockPos(0, 90, 0)));
     }
 
     static final class FakeWorld {
@@ -95,6 +93,50 @@ class SpawnProtectionServiceTest {
         }
 
         public int getZ() {
+            return z;
+        }
+    }
+
+    static final class FakeObfuscatedWorld {
+        public final FakeObfuscatedProvider s;
+
+        FakeObfuscatedWorld(int dimension) {
+            this.s = new FakeObfuscatedProvider(dimension);
+        }
+    }
+
+    static final class FakeObfuscatedProvider {
+        private final int dimension;
+
+        FakeObfuscatedProvider(int dimension) {
+            this.dimension = dimension;
+        }
+
+        public int i() {
+            return dimension;
+        }
+    }
+
+    static final class FakeObfuscatedBlockPos {
+        private final int x;
+        private final int y;
+        private final int z;
+
+        FakeObfuscatedBlockPos(int x, int y, int z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public int p() {
+            return x;
+        }
+
+        public int q() {
+            return y;
+        }
+
+        public int r() {
             return z;
         }
     }
