@@ -112,17 +112,7 @@ final class SpawnCommand {
 
             float yaw = readFloatField(player, 0.0F, "rotationYaw", "field_70177_z");
             float pitch = readFloatField(player, 0.0F, "rotationPitch", "field_70125_A");
-            invokeZeroArgIfPresent(player, "dismountRidingEntity", "func_184210_p");
-
-            if (readIntField(player, 0, "dimension", "field_71093_bK") != 0) {
-                player = TeleportSupport.changeDimension(player, 0, x, y, z, yaw, pitch);
-            }
-
-            teleport(player, x, y, z, yaw, pitch);
-            setFloatField(player, 0.0F, "fallDistance", "field_70143_R");
-            setDoubleField(player, 0.0D, "motionX", "field_70159_w");
-            setDoubleField(player, 0.0D, "motionY", "field_70181_x");
-            setDoubleField(player, 0.0D, "motionZ", "field_70179_y");
+            player = TeleportSupport.teleportToDimension(server, player, 0, x, y, z, yaw, pitch);
             ServerChat.success(player, "Вы телепортированы на спавн.");
         } catch (RuntimeException exception) {
             ServerChat.error(sender, "Не удалось телепортировать на спавн: " + exception.getMessage());

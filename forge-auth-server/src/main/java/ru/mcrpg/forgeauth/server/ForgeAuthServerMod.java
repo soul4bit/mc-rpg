@@ -30,6 +30,11 @@ public final class ForgeAuthServerMod {
     private static final SpawnProtectionService SPAWN_PROTECTION = new SpawnProtectionService(LOGGER);
     private static final ItemCleanupService ITEM_CLEANUP = new ItemCleanupService(LOGGER);
     private static final KitService KIT_SERVICE = new KitService(LOGGER);
+    private static final HomeService HOME_SERVICE = new HomeService(LOGGER);
+    private static final TeleportGuardService TELEPORT_GUARD = new TeleportGuardService();
+    private static final PlayerRegionService PLAYER_REGIONS = new PlayerRegionService(LOGGER);
+    private static final PlayerRegionProtectionService PLAYER_REGION_PROTECTION =
+        new PlayerRegionProtectionService(LOGGER, PLAYER_REGIONS);
 
     static ForgeAuthServerLifecycle getLifecycle() {
         return LIFECYCLE;
@@ -42,9 +47,13 @@ public final class ForgeAuthServerMod {
         SPAWN_PROTECTION.load();
         ITEM_CLEANUP.load();
         KIT_SERVICE.load();
+        HOME_SERVICE.load();
+        PLAYER_REGIONS.load();
         MinecraftForge.EVENT_BUS.register(LIFECYCLE);
         MinecraftForge.EVENT_BUS.register(SPAWN_PROTECTION);
+        MinecraftForge.EVENT_BUS.register(PLAYER_REGION_PROTECTION);
         MinecraftForge.EVENT_BUS.register(ITEM_CLEANUP);
+        MinecraftForge.EVENT_BUS.register(TELEPORT_GUARD);
 
         AuthServerConfig config = AuthServerConfig.fromSystem();
         if (config.isReady()) {
@@ -68,6 +77,9 @@ public final class ForgeAuthServerMod {
         WaypointTeleportCommand.register(event);
         CallCommand.register(event);
         KitCommand.register(event, KIT_SERVICE);
+        HomeCommand.register(event, HOME_SERVICE, TELEPORT_GUARD);
+        RandomTeleportCommand.register(event, TELEPORT_GUARD);
+        PlayerRegionCommand.register(event, PLAYER_REGIONS);
         SpawnProtectionCommand.register(event, SPAWN_PROTECTION);
     }
 

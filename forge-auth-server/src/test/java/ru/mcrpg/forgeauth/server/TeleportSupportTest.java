@@ -51,6 +51,25 @@ class TeleportSupportTest {
         assertEquals(15.0F, (Float) readField(entity, "pitch"));
     }
 
+    @Test
+    void teleportToDimensionLoadsDestinationChunkAndTeleports() {
+        FakeTeleportServer server = new FakeTeleportServer();
+        FakeTeleportPlayer player = new FakeTeleportPlayer();
+
+        Object moved = TeleportSupport.teleportToDimension(server, player, 0, 33.5D, 72.0D, -17.5D, 45.0F, 5.0F);
+
+        assertSame(player, moved);
+        assertEquals(2, server.world.provider.loadedChunkX);
+        assertEquals(-2, server.world.provider.loadedChunkZ);
+        assertTrue(server.world.provider.loadCount >= 1);
+        assertEquals(33.5D, player.x);
+        assertEquals(72.0D, player.y);
+        assertEquals(-17.5D, player.z);
+        assertEquals(45.0F, player.yaw);
+        assertEquals(5.0F, player.pitch);
+        assertTrue(player.motionReset());
+    }
+
     private static Object invokeZeroArg(Object target, String methodName) throws Exception {
         Method method = target.getClass().getMethod(methodName);
         return method.invoke(target);
@@ -79,6 +98,61 @@ class TeleportSupportTest {
             this.vanillaChangeDimensionCalled = true;
             this.dimension = destinationDimension;
             return this;
+        }
+    }
+
+    static final class FakeTeleportServer {
+        private final FakeTeleportWorld world = new FakeTeleportWorld();
+
+        public FakeTeleportWorld getWorld(int dimension) {
+            return world;
+        }
+    }
+
+    static final class FakeTeleportWorld {
+        private final FakeChunkProvider provider = new FakeChunkProvider();
+
+        public FakeChunkProvider getChunkProvider() {
+            return provider;
+        }
+    }
+
+    static final class FakeChunkProvider {
+        private int loadedChunkX;
+        private int loadedChunkZ;
+        private int loadCount;
+
+        public Object loadChunk(int x, int z) {
+            this.loadedChunkX = x;
+            this.loadedChunkZ = z;
+            this.loadCount++;
+            return new Object();
+        }
+    }
+
+    static final class FakeTeleportPlayer {
+        private int dimension = 0;
+        private double motionX = 1.0D;
+        private double motionY = 1.0D;
+        private double motionZ = 1.0D;
+        private double x;
+        private double y;
+        private double z;
+        private float yaw;
+        private float pitch;
+        public void dismountRidingEntity() {
+        }
+
+        public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.yaw = yaw;
+            this.pitch = pitch;
+        }
+
+        boolean motionReset() {
+            return motionX == 0.0D && motionY == 0.0D && motionZ == 0.0D;
         }
     }
 }

@@ -66,6 +66,19 @@ class SpawnProtectionServiceTest {
         assertTrue(service.describePlayerPosition(player).contains("protected=true"));
     }
 
+    @Test
+    void playerPositionProtectionUsesWorldSpawnCenter() throws Exception {
+        Path configPath = tempDirectory.resolve("obsidiangate-spawn-protection.properties");
+        SpawnProtectionService service = new SpawnProtectionService(Logger.getLogger("test"), configPath);
+        service.load();
+        service.setRadius(40);
+
+        FakeWorldWithSpawn world = new FakeWorldWithSpawn(0, 100, 64, 100);
+
+        assertTrue(service.isProtectedPlayerPosition(new FakePlayerWithWorld(world, 0, 120.0D, 70.0D, 90.0D)));
+        assertFalse(service.isProtectedPlayerPosition(new FakePlayerWithWorld(world, 0, 141.0D, 70.0D, 100.0D)));
+    }
+
     static final class FakeWorld {
         public final FakeProvider provider;
 
@@ -107,6 +120,36 @@ class SpawnProtectionServiceTest {
 
         public int getZ() {
             return z;
+        }
+    }
+
+    static final class FakeWorldWithSpawn {
+        public final FakeProvider provider;
+        private final FakeBlockPos spawn;
+
+        FakeWorldWithSpawn(int dimension, int spawnX, int spawnY, int spawnZ) {
+            this.provider = new FakeProvider(dimension);
+            this.spawn = new FakeBlockPos(spawnX, spawnY, spawnZ);
+        }
+
+        public FakeBlockPos getSpawnPoint() {
+            return spawn;
+        }
+    }
+
+    static final class FakePlayerWithWorld {
+        public final FakeWorldWithSpawn world;
+        public final int dimension;
+        public final double posX;
+        public final double posY;
+        public final double posZ;
+
+        FakePlayerWithWorld(FakeWorldWithSpawn world, int dimension, double x, double y, double z) {
+            this.world = world;
+            this.dimension = dimension;
+            this.posX = x;
+            this.posY = y;
+            this.posZ = z;
         }
     }
 

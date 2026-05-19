@@ -164,8 +164,8 @@ public final class SpawnProtectionService {
         if (!snapshot.enabled || !snapshot.denyExplosions) {
             return;
         }
-        Object world = invokeZeroArgIfPresent(event, "getWorld");
         Object explosion = invokeZeroArgIfPresent(event, "getExplosion");
+        Object world = explosionWorld(event, explosion);
         double x = readExplosionCoordinate(explosion, 0, "explosionX", "field_77284_b");
         double y = readExplosionCoordinate(explosion, 1, "explosionY", "field_77286_c");
         double z = readExplosionCoordinate(explosion, 2, "explosionZ", "field_77285_d");
@@ -180,9 +180,17 @@ public final class SpawnProtectionService {
         if (!snapshot.enabled || !snapshot.denyExplosions) {
             return;
         }
-        Object world = invokeZeroArgIfPresent(event, "getWorld");
+        Object explosion = invokeZeroArgIfPresent(event, "getExplosion");
+        Object world = explosionWorld(event, explosion);
         Object affectedBlocks = invokeZeroArgIfPresent(event, "getAffectedBlocks");
         if (!(affectedBlocks instanceof List<?>)) {
+            return;
+        }
+        double x = readExplosionCoordinate(explosion, 0, "explosionX", "field_77284_b");
+        double y = readExplosionCoordinate(explosion, 1, "explosionY", "field_77286_c");
+        double z = readExplosionCoordinate(explosion, 2, "explosionZ", "field_77285_d");
+        if (isProtected(world, x, y, z, snapshot)) {
+            ((List<?>) affectedBlocks).clear();
             return;
         }
         Iterator<?> iterator = ((List<?>) affectedBlocks).iterator();
@@ -338,12 +346,17 @@ public final class SpawnProtectionService {
     }
 
     boolean isProtectedPlayerPosition(Object player) {
+        Config snapshot = config();
+        Object world = actorWorld(player);
+        if (isProtected(world, TeleportSupport.playerX(player), TeleportSupport.playerY(player), TeleportSupport.playerZ(player), snapshot)) {
+            return true;
+        }
         return isProtected(
             TeleportSupport.playerDimension(player),
             TeleportSupport.playerX(player),
             TeleportSupport.playerY(player),
             TeleportSupport.playerZ(player),
-            config()
+            snapshot
         );
     }
 
@@ -445,6 +458,10 @@ public final class SpawnProtectionService {
         if (isProtected(world, position, snapshot)) {
             return true;
         }
+        Object actorWorld = actorWorld(actor);
+        if (isProtected(actorWorld, position, snapshot)) {
+            return true;
+        }
         return actor != null && position != null && isProtected(
             TeleportSupport.playerDimension(actor),
             position.x,
@@ -495,10 +512,7 @@ public final class SpawnProtectionService {
         if (REGION_MODE_BOX.equals(snapshot.regionMode)) {
             return isInsideBox(x, y, z, snapshot);
         }
-        if (CENTER_MODE_FIXED.equals(snapshot.centerMode)) {
-            return Math.abs(x - snapshot.centerX) <= snapshot.radius && Math.abs(z - snapshot.centerZ) <= snapshot.radius;
-        }
-        return false;
+        return Math.abs(x - snapshot.centerX) <= snapshot.radius && Math.abs(z - snapshot.centerZ) <= snapshot.radius;
     }
 
     private static boolean isInsideBox(double x, double y, double z, Config snapshot) {
@@ -524,6 +538,10 @@ public final class SpawnProtectionService {
         );
     }
 
+    private static Object actorWorld(Object actor) {
+        return readFieldIfPresent(actor, "world", "field_70170_p", "l");
+    }
+
     private boolean canBypass(Object entity, Config snapshot) {
         if (entity == null || !snapshot.allowOperatorBypass) {
             return false;
@@ -541,6 +559,14 @@ public final class SpawnProtectionService {
         } catch (ClassNotFoundException ignored) {
             return entity.getClass().getName().contains(".monster.");
         }
+    }
+
+    private static Object explosionWorld(Object event, Object explosion) {
+        Object world = invokeZeroArgIfPresent(event, "getWorld");
+        if (world != null) {
+            return world;
+        }
+        return readFieldIfPresent(explosion, "world", "worldObj", "field_77287_j");
     }
 
     private int dimension(Object world) {

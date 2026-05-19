@@ -171,6 +171,44 @@ final class TeleportSupport {
         return currentPlayer;
     }
 
+    static Object teleportToPlayer(Object server, Object movingPlayer, Object destinationPlayer) {
+        if (movingPlayer == null || destinationPlayer == null) {
+            throw new IllegalArgumentException("Игрок для телепортации не найден.");
+        }
+
+        return teleportToDimension(
+            server,
+            movingPlayer,
+            playerDimension(destinationPlayer),
+            playerX(destinationPlayer),
+            playerY(destinationPlayer),
+            playerZ(destinationPlayer),
+            playerYaw(destinationPlayer),
+            playerPitch(destinationPlayer)
+        );
+    }
+
+    static Object teleportToDimension(Object server, Object player, int destinationDimension, double x, double y, double z, float yaw, float pitch) {
+        if (player == null) {
+            throw new IllegalArgumentException("Игрок для телепортации не найден.");
+        }
+
+        Object destinationWorld = world(server, destinationDimension);
+        prepareDestinationChunk(destinationWorld, x, z);
+
+        Object currentPlayer = player;
+        invokeZeroArgIfPresent(currentPlayer, "dismountRidingEntity", "func_184210_p");
+        if (playerDimension(currentPlayer) != destinationDimension) {
+            String currentName = playerName(currentPlayer);
+            currentPlayer = changeDimension(currentPlayer, destinationDimension, x, y, z, yaw, pitch);
+            currentPlayer = refreshOnlinePlayer(server, currentPlayer, currentName);
+        }
+
+        prepareDestinationChunk(destinationWorld, x, z);
+        teleport(currentPlayer, x, y, z, yaw, pitch);
+        return currentPlayer;
+    }
+
     static Object changeDimension(Object player, int destinationDimension, double x, double y, double z, float yaw, float pitch) {
         if (player == null) {
             throw new IllegalArgumentException("Игрок для телепортации не найден.");
@@ -261,6 +299,28 @@ final class TeleportSupport {
 
     static boolean isFinite(double value) {
         return !Double.isNaN(value) && !Double.isInfinite(value);
+    }
+
+    private static Object world(Object server, int dimension) {
+        return invokeIfPresent(server, new Object[] { Integer.valueOf(dimension) }, "getWorld", "func_71218_a");
+    }
+
+    private static Object refreshOnlinePlayer(Object server, Object fallback, String playerName) {
+        Object onlinePlayer = findOnlinePlayer(server, playerName);
+        return onlinePlayer == null ? fallback : onlinePlayer;
+    }
+
+    private static void prepareDestinationChunk(Object world, double x, double z) {
+        if (world == null) {
+            return;
+        }
+        int chunkX = ((int) Math.floor(x)) >> 4;
+        int chunkZ = ((int) Math.floor(z)) >> 4;
+        Object provider = invokeZeroArgIfPresent(world, "getChunkProvider", "func_72863_F");
+        if (invokeMethodIfPresent(provider, new Object[] { Integer.valueOf(chunkX), Integer.valueOf(chunkZ) }, "loadChunk", "func_186025_d")) {
+            return;
+        }
+        invokeMethodIfPresent(world, new Object[] { Integer.valueOf(chunkX), Integer.valueOf(chunkZ) }, "getChunkFromChunkCoords", "func_72964_e");
     }
 
     private static Object forgeTeleporter(final double x, final double y, final double z, final float yaw, final float pitch) {

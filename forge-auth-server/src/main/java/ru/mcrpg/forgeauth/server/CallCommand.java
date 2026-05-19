@@ -201,13 +201,13 @@ final class CallCommand {
 
         try {
             if (request.direction == TeleportDirection.TO_TARGET) {
-                Object moved = TeleportSupport.teleportToPlayer(requester, target);
+                Object moved = TeleportSupport.teleportToPlayer(server, requester, target);
                 ServerChat.status(moved, ServerChat.Tone.SUCCESS, SUBJECT, "игрок " + ServerChat.value(TeleportSupport.playerName(target)) + " принял запрос. Телепорт выполнен.");
                 ServerChat.status(target, ServerChat.Tone.SUCCESS, SUBJECT, "вы приняли запрос от " + ServerChat.value(TeleportSupport.playerName(moved)) + ".");
                 return;
             }
 
-            Object moved = TeleportSupport.teleportToPlayer(target, requester);
+            Object moved = TeleportSupport.teleportToPlayer(server, target, requester);
             ServerChat.status(moved, ServerChat.Tone.SUCCESS, SUBJECT, "вы приняли запрос и телепортированы к " + ServerChat.value(TeleportSupport.playerName(requester)) + ".");
             ServerChat.status(requester, ServerChat.Tone.SUCCESS, SUBJECT, "игрок " + ServerChat.value(TeleportSupport.playerName(moved)) + " принял ваш запрос.");
         } catch (RuntimeException exception) {
